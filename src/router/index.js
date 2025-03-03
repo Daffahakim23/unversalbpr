@@ -41,7 +41,7 @@ import DataPekerjaanPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/d
 import KonfirmasiDataPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/konfirmasi-data.vue";
 import EmailOTPPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/otp-no-hp.vue";
 import HalamanSuksesPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/halaman-sukses.vue";
-import HomePage from "@/views/HomePage.vue";
+import HomePage from "../views/HomePage.vue";
 import FotoDiriPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/foto-diri.vue";
 
 // Pembukaan Rekening Existing
