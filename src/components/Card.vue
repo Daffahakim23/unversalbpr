@@ -1,24 +1,82 @@
 <template>
-  <div class="card">
+  <div v-if="type == 1" class="w-full flex flex-col bg-white rounded-3xl p-6 border-1 border-neutral-200">
     <!-- Icon and Header -->
-    <div class="icon-header-container">
-      <h3 class="header">{{ title }}</h3>
+    <div class="flex justify-between items-center mb-2">
       <div>
-        <img :src="iconPath" class="icon" />
+        <img :src="iconPath" class="h-16 sm:h-18 md:h-20" />
       </div>
     </div>
 
     <!-- Description (List of Features) -->
-    <div class="description-container">
-      <div v-for="(feature, index) in features" :key="index" class="feature-item">
-        <div class="feature-content" @click= "handleFeatureClick(index)">
-          <p class="feature-label">{{ feature.label }}</p>
-          <p v-if="feature.description" class="feature-description">{{ feature.description }}</p>
+    <div class="flex flex-col mb-10">
+      <div v-for="(feature, index) in features" :key="index"
+        class="flex justify-between items-center p-2 rounded-lg gap-x-8">
+        <div class="flex-1">
+          <p class="text-lg sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-800">
+            {{ feature.label }}
+          </p>
+          <p v-if="feature.description" class="text-base sm:text-base md:text-base lg:text-base text-neutral-700 mt-3">
+            {{ feature.description }}
+          </p>
+          <!-- List of Features -->
+          <ul class="mt-4 space-y-2 text-neutral-700">
+            <li v-for="(item, index) in items" :key="index" class="flex items-start gap-2">
+              <span class="text-neutral-900 font-bold">•</span> {{ item }}
+            </li>
+          </ul>
+          <div class="mt-4">
+            <p v-if="feature.bottom" class="text-base sm:text-base md:text-base lg:text-base text-neutral-700 mt-3">
+              {{ feature.bottom }}
+            </p>
+          </div>
+          <div v-if="feature.dokumen" class="mt-4">
+            <img src="@/assets/document-divider-icon.svg" class="h-1 sm:h-1 md:h-1" />
+            <p class="text-base sm:text-base md:text-base lg:text-base text-neutral-900 mt-3 font-semibold">
+              Dokumen yang diperlukan
+            </p>
+            <div class="flex flex-row gap-2">
+              <img :src="iconPathDokumen" class="h-12 sm:h-12 md:h-12" />
+              <p class="text-base sm:text-base md:text-base lg:text-base text-neutral-900 mt-3">
+                {{ feature.dokumen }}
+              </p>
+            </div>
+          </div>
         </div>
-        <div>
-          <span>
-            <img src="@/assets/right-arrow-circle-orange.svg" alt="Icon" class="arrow" />
-          </span>
+      </div>
+    </div>
+
+    <div v-if="buttonString" class="flex mt-auto w-full">
+      <div @click="handleBtnClick"
+        class="w-full bg-white hover:bg-primary  hover:text-white text-primary flex items-center justify-between border-2 border-grey px-4 py-4 rounded-full cursor-pointer">
+        <p class="ml-3 font-medium text-base sm:text-base md:text-base lg:text-base"> {{
+          buttonString }}
+        </p>
+        <img src="@/assets/right-arrow-circle-orange.svg" alt="Arrow Icon" class="h-6 sm:h-6 md:h-6 lg:h-6 ml-auto" />
+      </div>
+    </div>
+  </div>
+
+  <div v-if="type == 2" class="w-full flex flex-col bg-white rounded-2xl p-6 border-1 border-[#F3F3F2] items-center">
+    <!-- Icon and Header -->
+    <div class="w-full flex items-center mb-4">
+      <p class="font-semibold text-2xl sm:text-xl md:text-2xl lg:text-3xl">{{ title }}</p>
+      <img :src="iconPath" class="h-20 ml-auto" />
+    </div>
+
+
+    <!-- Description (List of Features) -->
+    <div class="w-full flex flex-col my-10">
+      <div v-for="(feature, index) in features" :key="index"
+        class="w-full flex justify-between items-center py-2 rounded-lg gap-x-8">
+        <div class="flex-1">
+          <div class="flex mt-auto w-full">
+            <div @click="handleFeatureClick(feature)"
+              class="w-full py-[32px] bg-white hover:bg-primary flex items-center justify-between border-2 border-grey px-4 rounded-[12px] cursor-pointer">
+              <p class="ml-3 text-primary font-medium sm:text-base md:text-lg lg:text-xl"> {{ feature.label }} </p>
+              <img src="@/assets/right-arrow-circle-orange.svg" alt="Arrow Icon"
+                class="h-6 sm:h-6 md:h-6 lg:h-6 ml-auto" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -27,203 +85,138 @@
 
 <script>
 export default {
-  name: 'Card',
+  name: "Card",
   props: {
-    title: String,
-    features: Array, 
-    icon: String, 
-    onFeatureClick: {
+    type: String,
+    title: {
+      type: String,
+      required: false
+    },
+    items: {
+      type: Array,
+      required: false
+    },
+    features: {
+      type: Array,
+      required: false
+    },
+    icon: String,
+    iconDokumen: String,
+    buttonString: {
+      type: String,
+      required: false
+    },
+    onBtnClick: {
       type: Function,
-      required: true,
+      required: false, // Properti tidak wajib
     },
   },
+  emits: ["cardClick"],
   computed: {
     iconPath() {
-      return new URL(`../assets/${this.icon}`, import.meta.url).href;
-    }
-  },
-  methods: {
-    handleFeatureClick(index) {
-      this.onFeatureClick(index);  // Pass the index to the parent method
+      return new URL(`/src/assets/${this.icon}`, import.meta.url).href;
+    },
+    iconPathDokumen() {
+      return new URL(`/src/assets/${this.iconDokumen}`, import.meta.url).href;
     },
   },
+  methods: {
+    handleFeatureClick(feature) {
+      // Check if there's an onBtnClick for this feature
+      if (typeof feature.onBtnClick === "function") {
+        feature.onBtnClick();  // Execute feature's specific onClick handler
+      }
+    },
 
+    handleBtnClick() {
+      // Validasi sebelum memanggil fungsi
+      if (typeof this.onBtnClick === "function") {
+        this.onBtnClick();
+      }
+      this.$emit("cardClick");
+    },
+  },
 };
 </script>
 
 <style scoped>
-.card {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 400px;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.icon-header-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.icon {
-  width: 40px;
-  height: 40px;
-}
-
-.header {
-  font-size: 24px;
-  color: #333;
-}
-
-.description-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.feature-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.feature-content {
-  flex: 1;
-}
-
-.feature-label {
-  text-align: start;
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-.feature-description {
-  text-align: start;
-  margin: 5px 0 0;
-  font-size: 14px;
-  color: #777;
-  transition: color 0.3s ease;
-}
-
-.feature-item:hover {
-  background-color: #f0f0f0; /* Change background color on hover */
-  transform: scale(1.02); /* Slightly scale up the item */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
-}
-
-.feature-item:hover .feature {
-  color: #333; /* Change text color on hover */
-}
-
-.arrow {
-  height: 25px;
-  width: 25px;
-  color: white; /* Arrow color */
-  transition: transform 0.3s ease;
-}
-
+/* Responsiveness for Text and Icon */
 @media (max-width: 768px) {
-  .card {
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 243px;
+  .text-xl {
+    font-size: 1.25rem;
   }
 
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  .text-2xl {
+    font-size: 1.5rem;
   }
 
-  .icon-header-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+  .text-4xl {
+    font-size: 2.25rem;
   }
 
-  .icon {
-    width: 40px;
-    height: 40px;
+  .h-32 {
+    height: 8rem;
+    /* 32px height */
   }
 
-  .header {
-    font-size: 18px;
-    color: #333;
+  .h-36 {
+    height: 9rem;
   }
 
-  .description-container {
-    display: flex;
-    flex-direction: column;
+  .h-40 {
+    height: 10rem;
   }
 
-  .feature-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    transition: all 0.3s ease;
-    cursor: pointer;
+  .h-8 {
+    height: 2rem;
   }
 
-  .feature-content {
-    flex: 1; /* Allow feature content to take up remaining space */
+  .h-10 {
+    height: 2.5rem;
   }
 
-  .feature-label {
-    text-align: start;
-    margin: 0;
-    font-size: 14px;
-    color: #333;
-    font-weight: bold;
-    transition: color 0.3s ease;
-  }
-
-  .feature-description {
-    text-align: start;
-    margin: 5px 0 0;
-    font-size: 12px;
-    color: #777;
-    transition: color 0.3s ease;
-  }
-
-  .feature-item:hover {
-    background-color: #f0f0f0; /* Change background color on hover */
-    transform: scale(1.02); /* Slightly scale up the item */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
-  }
-
-  .feature-item:hover .feature {
-    color: #333; /* Change text color on hover */
-  }
-
-  .arrow {
-    height: 25px;
-    width: 25px;
-    color: white; /* Arrow color */
-    transition: transform 0.3s ease;
+  .h-12 {
+    height: 3rem;
   }
 }
 
+@media (max-width: 640px) {
+  .text-xl {
+    font-size: 1rem;
+    /* Slightly smaller text */
+  }
+
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .text-4xl {
+    font-size: 1.75rem;
+  }
+
+  .h-32 {
+    height: 6rem;
+    /* Adjusted for smaller screens */
+  }
+
+  .h-36 {
+    height: 7rem;
+  }
+
+  .h-40 {
+    height: 8rem;
+  }
+
+  .h-8 {
+    height: 2rem;
+  }
+
+  .h-10 {
+    height: 2.5rem;
+  }
+
+  .h-12 {
+    height: 3rem;
+  }
+}
 </style>

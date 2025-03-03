@@ -1,0 +1,86 @@
+<template>
+  <form @submit.prevent="handleSubmit">
+    <div class="flex flex-col items-center">
+      <img src="@/assets/emailVerif.svg" alt="Email Verification" class="h-24 md:h-32 lg:h-36 mb-4" />
+
+      <div class="flex justify-center gap-2 m-4">
+        <input v-for="(digit, index) in otp" :key="index" v-model="otp[index]"
+          class="w-12 h-12 text-center border rounded-md text-lg font-medium focus:ring-2 focus:ring-primary-500"
+          type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" @input="focusNext(index, $event)" />
+      </div>
+      <p v-if="errorMessage" class="text-red-500 text-center m-2">{{ errorMessage }}</p>
+      <p class="text-base text-neutral-700 text-center">
+        Kami telah mengirimkan kode OTP ke <strong>{{ email }}</strong>. Masukkan kode OTP di bawah untuk melanjutkan.
+      </p>
+
+      <ButtonComponent type="submit" class="mt-6">
+        Lanjutkan
+      </ButtonComponent>
+    </div>
+  </form>
+</template>
+
+<script>
+import api from "@/API/api";
+import { useFileStore } from "@/stores/filestore";
+import ButtonComponent from "@/components/button.vue";
+
+export default {
+  components: {
+    ButtonComponent,
+  },
+  data() {
+    return {
+      otp: ['', '', '', ''],
+      errorMessage: "",
+      fileStore: useFileStore(),
+    };
+  },
+  computed: {
+    email() {
+      const fileStore = useFileStore();
+      return fileStore.alamat_email || "user@example.com";
+    },
+    isButtonDisabled() {
+      return this.otp.some(digit => digit === '');
+    },
+  },
+  methods: {
+    focusNext(index, event) {
+      if (event.target.value && index < 3) {
+        this.$nextTick(() => {
+          this.$el.querySelectorAll('input')[index + 1].focus();
+        });
+      }
+    },
+    async handleSubmit() {
+      const kodeOtp = this.otp.join('');
+      if (kodeOtp.length !== 4) {
+        this.errorMessage = "OTP harus terdiri dari 4 digit.";
+        return;
+      }
+
+      try {
+        const requestData = {
+          verified: true,
+          kode_otp: kodeOtp,
+          uuid: this.fileStore.uuid,
+        };
+
+        console.log("Mengirim data:", requestData);
+
+        const response = await api.post("/verification-email-deposito", requestData, { headers: { "Content-Type": "application/json" } });
+
+        if (response.status === 200 || response.status === 201) {
+          console.log("OTP berhasil diverifikasi");
+          this.$router.push({ path: "/dashboard/dataPenempatanDepositoNTB" });
+        } else {
+          this.errorMessage = "Verifikasi OTP gagal. Silakan coba lagi.";
+        }
+      } catch (error) {
+        this.errorMessage = error.response?.data?.message || "Terjadi kesalahan saat verifikasi.";
+      }
+    },
+  },
+};
+</script>

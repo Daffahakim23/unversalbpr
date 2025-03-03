@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'Section',
+  name: "Section",
 };
 </script>
 
@@ -30,19 +30,16 @@ export default {
   flex-direction: row;
   align-items: stretch;
   justify-content: center;
-  justify-items: center;
-  gap: 53px;
+  gap: 35px;
 }
 
 @media (max-width: 768px) {
   .cards-container {
     display: flex;
-    flex-direction: column; 
     align-items: stretch;
     justify-items: center;
-    justify-items: center;
-    gap: 30px; 
+    flex-direction: column;
+    gap: 30px;
   }
 }
-
 </style>

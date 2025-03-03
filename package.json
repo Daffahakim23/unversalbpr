@@ -1,5 +1,5 @@
 {
-  "name": "bpr-universal-microsite",
+  "name": "cmsweareui",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,17 +9,32 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/vue-fontawesome": "^3.0.8",
-    "pinia": "^2.3.0",
-    "vue": "^3.5.13",
-    "vue-carousel": "^0.18.0",
-    "vue-router": "^4.0.13"
+    "apexcharts": "^3.45.1",
+    "axios": "^1.7.9",
+    "firebase": "^11.2.0",
+    "flowbite-datepicker": "^1.2.6",
+    "font-awesome": "^4.7.0",
+    "pinia": "^2.3.1",
+    "vue": "^3.3.11",
+    "vue-datepicker": "^1.3.0",
+    "vue-recaptcha": "^3.0.0-alpha.6",
+    "vue-router": "^4.2.5",
+    "vue-webcam": "^2.0.4",
+    "vue3-apexcharts": "^1.4.4",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.1",
-    "@vitejs/plugin-vue-jsx": "^4.1.1",
-    "vite": "^6.0.5",
-    "vite-plugin-vue-devtools": "^7.6.8"
+    "@vitejs/plugin-vue": "^4.5.2",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "eslint-plugin-vue": "^9.32.0",
+    "postcss": "^8.4.33",
+    "postcss-import": "^16.0.1",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.0.10",
+    "vite-plugin-vue-devtools": "^7.7.0"
   }
 }
