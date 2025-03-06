@@ -8,7 +8,7 @@
       <div class="flex items-start">
         <div class="container mx-auto py-9">
           <div class="rounded-xl max-w-2xl mx-auto bg-neutral-white py-9 px-10 shadow-md">
-            <div class="flex flex-col mb-4 gap-1">
+            <div class="flex flex-col mb-6 gap-2">
               <div class="flex justify-between items-center">
                 <h2 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left">
                   {{ pageTitle }}
@@ -75,5 +75,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

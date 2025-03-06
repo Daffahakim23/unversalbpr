@@ -78,7 +78,8 @@ export default {
 
   computed: {
     isButtonDisabled() {
-      if (!this.form.produk || !this.form.email || !this.form.phone) {
+      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
+      if (!this.form.produk || !emailValid || !this.form.phone) {
         return true;
       }
       if (!this.form.belumPunyaRekening && !this.form.nomorRekening) {

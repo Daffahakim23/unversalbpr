@@ -90,7 +90,8 @@ export default {
 
   computed: {
     isButtonDisabled() {
-      if (!this.form.produk || !this.form.email || !this.form.phone || !this.form.memilikiTabungan) {
+      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
+      if (!this.form.produk || !emailValid || !this.form.phone || !this.form.memilikiTabungan) {
         return true;
       }
       if (!this.form.belumPunyaRekening && (!this.form.nomorRekening || this.form.nomorRekening.length < 10)) {

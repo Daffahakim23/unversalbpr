@@ -7,7 +7,7 @@ import PembukaanRekeningNTB from "../views/PembukaanRekeningNTB/pembukaan-rekeni
 import verifikasiEmailPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/verifikasi-email.vue";
 import UploadFilePembukaanRekeningNTB from "../views/PembukaanRekeningNTB/upload-dokumen.vue";
 import NpwpNTB from "../views/PembukaanRekeningNTB/npwp-s&k.vue";
-import PreviewScreenPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/hasil-foto.vue";
+import PreviewScreenPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/preview-dokumen.vue";
 import FotoDiriPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/foto-diri.vue";
 import DataPribadiPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-pribadi.vue";
 import DataKTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-ktp.vue";
@@ -20,7 +20,7 @@ import HalamanSuksesPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/hal
 import PembukaanRekeningExisting from "../views/PembukaanRekeningExisting/pembukaan-rekening-existing.vue";
 import verifikasiEmailPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/verifikasi-email.vue";
 import UploadFilePembukaanRekeningExisting from "../views/PembukaanRekeningExisting/upload-dokumen.vue";
-import PreviewScreenPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/hasil-foto.vue";
+import PreviewScreenPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/preview-dokumen.vue";
 import PerubahanDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/perubahan-data.vue";
 import DataKTPPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/data-ktp.vue";
 import KonfirmasiDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/konfirmasi-data.vue";
@@ -34,7 +34,7 @@ import VerifikasiEmailPenempatanDepositoNTB from "../views/PenempatanDepositoNTB
 import DataPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-penempatan.vue";
 import NpwpDepositoNTB from "../views/PenempatanDepositoNTB/npwp-s&k.vue";
 import UploadFilePenempatanDepositoNTB from "../views/PenempatanDepositoNTB/upload-dokumen.vue";
-import PreviewScreenPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/hasil-foto.vue";
+import PreviewScreenPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/preview-dokumen.vue";
 import DataPribadiPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-pribadi.vue";
 import DataKTPPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-ktp.vue";
 import DataPekerjaanPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-pekerjaan.vue";
@@ -49,7 +49,7 @@ import PenempatanDepositoExisting from "../views/PenempatanDepositoExisting/pene
 import verifikasiEmailPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/verifikasi-email.vue";
 import DataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/data-penempatan.vue";
 import UploadFilePenempatanDepositoExisting from "../views/PenempatanDepositoExisting/upload-dokumen.vue";
-import PreviewScreenPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/hasil-foto-ktp.vue";
+import PreviewScreenPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/preview-dokumen.vue";
 import PerubahanDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/perubahan-data.vue";
 import DataKTPPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/data-ktp.vue";
 import KonfirmasiDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/konfirmasi-data.vue";
@@ -60,7 +60,7 @@ import FotoDiriPenempatanDepositoExisting from "../views/PenempatanDepositoExist
 // Pembukaan Rekening Existing
 import PengkinianData from "../views/PengkinianData/pengkinian-data.vue";
 import UploadDokumenPengkinianData from "../views/PengkinianData/upload-dokumen.vue";
-import PreviewScreenPengkinianData from "../views/PengkinianData/hasil-foto.vue";
+import PreviewScreenPengkinianData from "../views/PengkinianData/preview-dokumen.vue";
 import DataPribadiPengkinianData from "../views/PengkinianData/data-pribadi.vue";
 import DataKTPPengkinianData from "../views/PengkinianData/data-ktp.vue";
 import DataPekerjaanPengkinianData from "../views/PengkinianData/data-pekerjaan.vue";
@@ -103,7 +103,7 @@ const routes = [
         path: "uploadDokumenPembukaanRekeningNTB",
         name: "UploadDokumenPembukaanRekeningNTB",
         component: UploadFilePembukaanRekeningNTB,
-        meta: { title: "Upload Dokumen" },
+        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
       },
       {
         path: "npwpNTB",
@@ -209,7 +209,7 @@ const routes = [
         path: "uploadDokumenPembukaanRekeningExisting",
         name: "UploadDokumenPembukaanRekeningExisting",
         component: UploadFilePembukaanRekeningExisting,
-        meta: { title: "Upload Dokumen Existing" },
+        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
       },
       {
         path: "previewScreenPembukaanRekeningExisting",
@@ -415,7 +415,7 @@ const routes = [
         path: "uploadDokumenPenempatanDepositoExisting",
         name: "UploadDokumenPenempatanDepositoExisting",
         component: UploadFilePenempatanDepositoExisting,
-        meta: { title: "Upload Dokumen Existing" },
+        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
       },
       {
         path: "previewScreenPenempatanDepositoExisting",
@@ -493,7 +493,7 @@ const routes = [
         path: "uploadDokumenPengkinianData",
         name: "uploadDokumenPengkinianData",
         component: UploadDokumenPengkinianData,
-        meta: { title: "Upload Dokumen" },
+        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
       }, {
         path: "previewPengkinianData",
         name: "PreviewScreenPengkinianData",
@@ -514,7 +514,7 @@ const routes = [
         meta: {
           title: "Data KTP",
           subtitle:
-            "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
+            "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
         },
       },
       {

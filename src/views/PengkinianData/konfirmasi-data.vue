@@ -153,19 +153,6 @@ export default {
         Object.entries(fileStore.formPekerjaan || {}).filter(([_, value]) => value)
       );
     },
-    // formPekerjaan() {
-    //   const fileStore = useFileStore();
-
-    //   return Object.fromEntries(
-    //     Object.entries(fileStore.formPekerjaan || {})
-    //       .filter(([_, value]) => value) // Hanya menyertakan data yang tidak kosong
-    //       .map(([key, value]) => {
-    //         if (key === "pekerjaan") return [key, getLabel(value, pekerjaanOptions)];
-    //         if (key === "penghasilan") return [key, getLabel(value, penghasilanOptions)];
-    //         return [key, value];
-    //       })
-    //   );
-    // },
     uploadedFiles() {
       const fileStore = useFileStore();
       return Object.fromEntries(
@@ -185,14 +172,7 @@ export default {
   },
 
   methods: {
-    // previewFile(key) {
-    //   const fileStore = useFileStore();
-    //   const file = fileStore.uploadedFiles[key];
 
-    //   if (file) {
-    //     this.$emit("open-modal", file); // Emit event untuk menampilkan modal preview
-    //   }
-    // },
     goBack() {
       this.$router.push({ path: "/dashboard/dataPekerjaanPengkinianData" });
     },
@@ -294,16 +274,6 @@ export default {
       };
       return icons[key] || "/src/assets/default.svg";
     },
-
-
-    //     handleFileUpload(event, key) {
-    //   const file = event.target.files[0];
-    //   if (file) {
-    //     const fileStore = useFileStore();
-    //     fileStore.uploadedFiles[key] = URL.createObjectURL(file);
-    //   }
-    // },
-
     async handleSubmit() {
       if (!this.agreement) {
         alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
@@ -323,7 +293,7 @@ export default {
       };
 
       try {
-        const response = await api.post("/buka-rekening", requestData, {
+        const response = await api.post("/buka-pengkinian-data", requestData, {
           headers: { "Content-Type": "application/json" },
         });
         console.log("Response:", response.data);

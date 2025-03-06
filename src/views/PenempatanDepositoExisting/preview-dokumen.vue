@@ -5,7 +5,7 @@
         <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
         <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
       </button>
-      <img :src="fileUrl" alt="Preview Dokumen" class="w-full rounded-lg" @error="handleFileNotFound" />
+      <img :src="fileUrl" class="w-full rounded-lg" @error="handleFileNotFound" />
       <div v-if="!fileUrl && documentType !== 'fotoDiri'"
         class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-14 rounded-lg cursor-pointer hover:bg-gray-50"
         @click="openFilePicker">
@@ -52,11 +52,9 @@
     <input type="file" ref="fileInput" class="hidden" @change="handleFileUpload" accept="image/*" />
   </div>
   <!-- Modal untuk Verifikasi Gagal -->
-  <ModalError :isOpen="isModalErrorOpen" :features="modalContent" icon="data-failed-illus.svg"
-    @close=" isModalErrorOpen = false" @buttonClick1="reuploadFile" />
-
+  <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
+    @buttonClick1="retakePhoto" />
 </template>
-
 
 <script>
 // import axios from "axios";
@@ -71,7 +69,9 @@ import ModalError from "@/components/ModalError.vue";
 
 export default {
   props: {
-    documentType: String,
+    documentType: {
+      type: String,
+    },
   },
   emits: ["update-progress"],
   components: {
@@ -85,7 +85,7 @@ export default {
     return {
       isModalOpen: true,
       isUploading: false,
-      isModalErrorOpen: false,
+      isModalError: false,
       modalContent: [
         {
           label: "Verifikasi Gagal",
@@ -113,11 +113,6 @@ export default {
     },
     // documentType() {
     //   return this.$route.query.documentType;
-    // },
-  },
-  setup() {
-    const fileStore = useFileStore();
-    return { fileStore };
   },
 
   setup() {
@@ -130,17 +125,30 @@ export default {
     const stream = ref(null);
     const isUploading = ref(false);
     const documentType = computed(() => route.query.documentType);
-    const isModalErrorOpen = ref(false);
-    const modalContent = ref({
-      label: "",
-      description: "",
-    });
+    const isModalError = ref(false);
+    const modalContent = ref([
+      {
+        label: "",
+        description: "",
+        icon: "",
+        buttonString1: "",
+        buttonString2: "",
+      },
+    ]);
 
-    const showErrorModal = (title, message) => {
-      modalContent.value.label = title;
-      modalContent.value.description = message;
-      isModalErrorOpen.value = true;
+    const showErrorModal = (title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") => {
+      modalContent.value = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      isModalError.value = true;
     };
+
     const startWebcam = async () => {
       if (documentType.value !== "fotoDiri") return; // 🔥 Kamera hanya aktif untuk fotoDiri
 
@@ -179,6 +187,7 @@ export default {
     const retakePhoto = () => {
       photoUrl.value = null;
       startWebcam();
+      isModalError.value = false;
     };
 
     const uploadPhoto = async () => {
@@ -193,7 +202,6 @@ export default {
 
         const uuid = fileStore.uuid;
         if (!uuid) {
-          showErrorModal("Upload gagal", "Silakan coba lagi atau periksa koneksi internet Anda.");
           console.error("UUID tidak ditemukan di fileStore");
           throw new Error("UUID tidak ditemukan");
         }
@@ -214,9 +222,8 @@ export default {
         console.log("Foto disimpan ke fileStore:", fileStore.formFotoDiri);
         router.push({ path: "/dashboard/uploadDokumenPenempatanDepositoExisting" });
       } catch (error) {
-        showErrorModal("Upload gagal", "Silakan coba lagi atau periksa koneksi internet Anda.");
+        showErrorModal("Foto Diri Gagal", "Email Anda belum terdaftar. Silakan kembali ke halaman awal untuk mendaftarkan email Anda.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
         console.error("Gagal mengunggah:", error.response?.data || error.message);
-        // alert(`Upload gagal: ${error.message}`);
         fileStore.isFotoDiriUploaded = false;
       } finally {
         isUploading.value = false;
@@ -231,6 +238,8 @@ export default {
     });
 
     return {
+      isModalError,
+      modalContent,
       showErrorModal,
       capturePhoto,
       uploadPhoto,
@@ -239,15 +248,22 @@ export default {
       video,
       canvas,
       documentType,
+      fileStore,
     };
   },
 
   methods: {
-    showErrorModal(title, message) {
-      this.modalContent.label = title;
-      this.modalContent.description = message;
-      this.isModalErrorOpen = true;
+    showModalError(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") {
+      this.modalContent = [{
+        label: title,
+        description: message,
+        icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+        buttonString1: btnString1,
+        buttonString2: btnString2,
+      }];
+      this.isModalError = true;
     },
+
     handleFileNotFound() {
       console.warn("File URL tidak ditemukan, redirecting...");
       this.$router.replace("/dashboard/uploadDokumenPenempatanDepositoExisting");
@@ -326,8 +342,8 @@ export default {
           query: { fileUrl: this.fileUrl, documentType: "ktp" },
         });
       } catch (error) {
-        this.showErrorModal("Upload gagal", "Silakan coba lagi atau periksa koneksi internet Anda.");
         console.error("❌ Gagal upload:", error.response?.data || error.message);
+        this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
       } finally {
         this.isUploading = false;
       }
@@ -337,7 +353,7 @@ export default {
       if (this.isClicking) return;
       this.isClicking = true;
       this.isAgreementChecked = false;
-      this.isModalErrorOpen = false;
+      this.isModalError = false;
 
       setTimeout(() => {
         this.$refs.fileInput.click();

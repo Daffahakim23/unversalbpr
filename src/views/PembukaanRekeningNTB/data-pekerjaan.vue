@@ -185,8 +185,7 @@ import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import { FormModelDataPekerjaan } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { penghasilanOptions, jumlahPenghasilanOptions, hubunganNasabahOptions, statusPerkawinanOptions, bidangPekerjaanDKOptions, korespondensiOptions, hubunganPemohonKDOptions, jenisIdentitasBOOptions, kewarganegaraanOptions, jenisKelaminOptions, pekerjaanOptions } from "@/data/option.js";
-import { reactive } from "vue";
+import { penghasilanOptions, jumlahPenghasilanOptions, hubunganNasabahOptions, statusPerkawinanOptions, bidangPekerjaanDKOptions, korespondensiOptions, hubunganPemohonKDOptions, jenisIdentitasBOOptions, kewarganegaraanOptions, jenisKelaminOptions } from "@/data/option.js";
 
 export default {
   components: {
@@ -507,23 +506,23 @@ export default {
       }
     },
 
-    async fetchData() {
-      try {
-        const response = await axios.get("https://testapi.io/api/daffa/data-pekerjaan");
-        console.log("Response data:", response.data);
-        const data = Array.isArray(response.data) ? response.data[0] : response.data;
+    // async fetchData() {
+    //   try {
+    //     const response = await axios.get("https://testapi.io/api/daffa/data-pekerjaan");
+    //     console.log("Response data:", response.data);
+    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
 
-        if (data) {
-          Object.keys(this.form).forEach((key) => {
-            if (data[key] !== undefined) {
-              this.form[key] = data[key];
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    },
+    //     if (data) {
+    //       Object.keys(this.form).forEach((key) => {
+    //         if (data[key] !== undefined) {
+    //           this.form[key] = data[key];
+    //         }
+    //       });
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // },
     goBack() {
       this.$router.push({ path: "/dashboard/dataPribadiPembukaanRekeningNTB" });
     },
@@ -633,7 +632,7 @@ export default {
     this.fetchJabatan();
   },
   created() {
-    this.fetchData();
+    // this.fetchData();
   },
 };
 </script>

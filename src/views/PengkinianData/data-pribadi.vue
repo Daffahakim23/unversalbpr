@@ -1,25 +1,30 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <FormField label="Nama Alias/Panggilan" id="namaPanggilan" :isDropdown="false" v-model="form.namaPanggilan"
-      placeholder="Masukan Nama Alias" :required="true" />
-    <RadioButtonChoose label="Tujuan Membuka Rekening*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
-    <FormField label="Pilih Kantor Cabang Pembukaan Rekening*" id="kantorCabang" :isDropdown="true"
-      v-model="form.kantorCabang" placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
-    <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
-        v-model="form.alamatKantorCabang" :readonly="true" />
-    </div>
+      placeholder="Masukan Nama Alias" />
+
     <FormField label="Pendidikan Terakhir" id="pendidikanTerakhir" :isDropdown="true" v-model="form.pendidikanTerakhir"
-      :options="pendidikanOptions" :required="true" placeholder="Pilih Pendidikan Terakhir Anda" />
+      :options="pendidikanOptions" placeholder="Pilih Pendidikan Terakhir Anda" />
+
     <FormField label="Hobi" id="hobi" :isDropdown="true" v-model="form.hobi" :options="hobiOptions"
       placeholder="Pilih Hobi Anda" />
-    <FormField label="Nomor Telepon (Opsional)" id="nomorTelepon" type="Number" v-model="form.nomorTelepon"
-      placeholder="Masukkan Nomor Telepon" />
+
+    <RadioButtonChoose label="Apakah anda ingin mengubah No. Telepon Anda? (Opsional)" :options="trueFalseOptions"
+      v-model="form.ubahNoTelepon" name="ubahNoTelepon" />
+    <div v-if="form.ubahNoTelepon === true" class="mt-4">
+      <FormField label="Nomor Telepon Terikini*" id="nomorTelepon" type="Number" v-model="form.nomorTelepon"
+        placeholder="Masukkan Nomor Telepon Terkini Anda" />
+    </div>
+
     <FormField label="Nomor Fax (opsional)" id="nomorFax" type="Number" v-model="form.nomorFax"
       placeholder="Masukkan Nomor Fax" />
+
+    <FormField label="Email (Opsional)" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+      hint="Pastikan Anda mengisi alamat email yang aktif" />
+
     <RadioButtonChoose label="Apakah alamat domisili sesuai dengan alamat E-KTP?*" :options="alamatSesuaiEktpOptions"
       v-model="form.alamatSesuaiEktp" name="alamatSesuaiEktp" />
-    <div v-if="form.alamatSesuaiEktp === false" class="mt-4">
+    <div v-if="form.alamatSesuaiEktp === false" class="">
       <FormField label="Alamat" id="alamat" v-model="form.alamat" :required="true" placeholder="Masukkan Alamat Anda" />
       <div class="flex flex-row gap-4 w-full">
         <FormField label="RT" id="rt" v-model="form.rt" :required="true" placeholder="Masukkan RT" class="flex-1" />
@@ -36,6 +41,7 @@
         placeholder="Masukan Kelurahan" />
       <FormField label="Kode Pos" id="kodePos" v-model="form.kodePos" :required="true" placeholder="Masukan Kode Pos" />
     </div>
+
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
       <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
@@ -51,7 +57,7 @@ import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import { FormModelDataPribadi } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { pendidikanOptions, hobiOptions, tujuanOptions, alamatSesuaiEktpOptions } from "@/data/option.js";
+import { pendidikanOptions, hobiOptions, alamatSesuaiEktpOptions, trueFalseOptions } from "@/data/option.js";
 
 export default {
   components: { FormField, RadioButtonChoose, ButtonComponent },
@@ -60,8 +66,8 @@ export default {
       form: new FormModelDataPribadi(),
       pendidikanOptions,
       hobiOptions,
-      tujuanOptions,
       alamatSesuaiEktpOptions,
+      trueFalseOptions,
       fileStore: useFileStore(),
       kantorCabangOptions: [],
       kantorCabangAlamat: {},
@@ -74,11 +80,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const isFormFilled =
-        this.form.namaPanggilan &&
-        this.form.tujuan &&
-        this.form.kantorCabang &&
-        this.form.pendidikanTerakhir &&
-        this.form.nomorTelepon;
+        this.form.alamatSesuaiEktp;
 
       const isAddressFilled = this.form.alamat &&
         this.form.rt &&
@@ -92,14 +94,15 @@ export default {
       if (this.form.alamatSesuaiEktp === false) {
         return !(isFormFilled && isAddressFilled);
       }
-      return !isFormFilled;
+
+      if (this.form.ubahNoTelepon === true) {
+        return !(this.form.nomorTelepon);
+      }
+      return !(isFormFilled);
     }
   },
 
   watch: {
-    "form.kantorCabang"(newVal) {
-      this.form.alamatKantorCabang = this.kantorCabangAlamat[newVal] || "Alamat tidak ditemukan";
-    },
     "form.provinsi": function (newProvinsi) {
       if (!newProvinsi) {
         this.form.kabupaten = "";
@@ -121,26 +124,6 @@ export default {
   },
 
   methods: {
-    async fetchBranches() {
-      try {
-        const response = await axios.get("http://10.14.52.233:8001/list-branch");
-
-        if (response.data && response.data.branch) {
-          this.kantorCabangOptions = response.data.branch.map(branch => ({
-            label: branch.branch_name,
-            value: branch.branch_code
-          }));
-
-          this.kantorCabangAlamat = response.data.branch.reduce((acc, branch) => {
-            acc[branch.branch_code] = branch.branch_address.Valid ? branch.branch_address.String : "Alamat tidak tersedia";
-            return acc;
-          }, {});
-        }
-      } catch (error) {
-        console.error("Gagal mengambil data kantor cabang:", error);
-      }
-    },
-
     async fetchProvinsi() {
       try {
         const response = await axios.get("http://10.14.52.233:8001/provinsi");
@@ -219,7 +202,7 @@ export default {
     //   }
     // },
     goBack() {
-      this.$router.push({ path: "/dashboard/dataKTPPengkinianData" });
+      this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
     },
     async handleSubmit() {
       try {
@@ -231,21 +214,14 @@ export default {
           return;
         }
 
-        const selectedBranch = this.kantorCabangOptions.find(
-          branch => branch.value === this.form.kantorCabang
-        );
-
         const requestData = {
           uuid: uuid,
-          // uuid: "4d0083ea-1509-4a6a-a8e0-89a218ddf366",
           nama_alias_panggilan: this.form.namaPanggilan,
-          tujuan_buka_rekening: Number(this.form.tujuan),
-          kantor_cabang: selectedBranch ? selectedBranch.label : "",
-          kode_kantor_cabang: this.form.kantorCabang,
           pendidikan_terakhir: Number(this.form.pendidikanTerakhir),
           hobi: Number(this.form.hobi),
           nomor_telp: this.form.nomorTelepon,
           nomor_fax: this.form.nomorFax,
+          email: this.form.email,
           detail_alamat: this.form.alamat,
           rt: this.form.rt,
           rw: this.form.rw,
@@ -253,12 +229,12 @@ export default {
           kota_kabupaten: this.form.kabupaten,
           kecamatan: this.form.kecamatan,
           desa_kelurahan: this.form.kelurahan,
-          kode_pos: Number(this.form.kodePos)
+          kode_pos: Number(this.form.kodePos),
         };
 
         console.log("Request data:", requestData);
 
-        const response = await api.post("/data-pribadi", requestData, {
+        const response = await api.post("/data-pribadi-pengkinian-data", requestData, {
           headers: { 'Content-Type': 'application/json' }
         });
 
@@ -283,7 +259,6 @@ export default {
   },
   mounted() {
     this.$emit("update-progress", 60);
-    this.fetchBranches();
     this.fetchProvinsi();
   },
   // created() {

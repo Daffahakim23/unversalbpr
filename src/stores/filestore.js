@@ -25,6 +25,7 @@ export const useFileStore = defineStore("fileStore", {
     formNPWP: {},
     formPembaruanData: {},
     formPenempatanDeposito: {},
+    formPengkinianData: {},
   }),
   actions: {
     resetStore() {
@@ -79,6 +80,9 @@ export const useFileStore = defineStore("fileStore", {
     },
     setFormPenempatanDeposito(data) {
       this.formPenempatanDeposito = data;
+    },
+    setFormPengkinianData(data) {
+      this.formPengkinianData = data;
     },
   },
 });

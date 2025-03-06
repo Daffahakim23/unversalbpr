@@ -47,7 +47,6 @@
 <script>
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
-import CaptchaComponent from "@/components/Captcha.vue";
 
 export default {
   props: {
@@ -56,7 +55,6 @@ export default {
   data() {
     return {
       pendingUpload: null,
-      showNpwpModal: false,
     };
   },
   emits: ["update-progress"],

@@ -1,13 +1,13 @@
 export class FormModelDataKTP {
   constructor() {
-    this.kewarganegaraan = Boolean;
+    this.kewarganegaraan = "";
     this.kewarganegaraanLainnya = "";
     this.nik = "";
     this.namaLengkap = "";
     this.tanggalLahir = "";
     this.tempatLahir = "";
-    this.jenisKelamin = Boolean;
-    this.agama = Number;
+    this.jenisKelamin = "";
+    this.agama = "";
     this.alamat = "";
     this.rt = "";
     this.rw = "";
@@ -16,7 +16,7 @@ export class FormModelDataKTP {
     this.kecamatan = "";
     this.kelurahan = "";
     this.kodePos = "";
-    this.statusPerkawinan = Number;
+    this.statusPerkawinan = "";
     this.masaAktifKtp = "";
     this.namaIbuKandung = "";
   }
@@ -29,10 +29,12 @@ export class FormModelDataPribadi {
     this.kantorCabang = "";
     this.alamatKantorCabang = "";
     this.pendidikanTerakhir = "";
+    this.email = "";
     this.hobi = "";
     this.nomorTelepon = "";
     this.nomorFax = "";
     this.alamatSesuaiEktp = "";
+    this.ubahNoTelepon = "";
     this.alamat = "";
     this.rt = "";
     this.rw = "";
@@ -91,6 +93,8 @@ export class FormModelRequestEmailVerification {
     this.belumPunyaRekening = false;
     this.alamatKantorCabang = "";
     this.memilikiTabungan = "";
+    this.namaLengkap = "";
+    this.tandaPengenal = "";
   }
 }
 
@@ -157,5 +161,6 @@ export class FormModelDataPekerjaan {
     this.hubunganPemohonKD = "";
     this.alamatKD = "";
     this.nomorTeleponKD = "";
+    this.ubahPekerjaan = "";
   }
 }

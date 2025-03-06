@@ -56,11 +56,12 @@ export default {
 
   computed: {
     isButtonDisabled() {
+      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
       // console.log("isButtonDisabled:", !(this.form.email && this.form.phone && this.form.sumber));
       if (this.form.sumber === "lainnya") {
         return !this.form.sumberLainnya.trim();
       }
-      return !(this.form.email && this.form.phone && this.form.sumber);
+      return !(emailValid && this.form.phone && this.form.sumber);
     },
   },
 

@@ -65,6 +65,9 @@
     </div>
     <input type="file" ref="fileInput" class="hidden" @change="handleFileUpload" accept="image/*" />
   </div>
+  <!-- Modal untuk Verifikasi Gagal -->
+  <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
+    @buttonClick1="retakePhoto" />
 </template>
 
 <script>
@@ -75,13 +78,38 @@ import { useRouter, useRoute } from "vue-router";
 import ModalPanduanFoto from "@/components/ModalPanduan.vue";
 import ButtonComponent from "@/components/button.vue"
 import FormField from "@/components/FormField.vue";
+import ModalError from "@/components/ModalError.vue";
 
 export default {
+  props: {
+    documentType: {
+      type: String,
+    },
+  },
   emits: ["update-progress"],
   components: {
     FormField,
     ModalPanduanFoto,
     ButtonComponent,
+    ModalError,
+  },
+
+  data() {
+    return {
+      isModalOpen: true,
+      isUploading: false,
+      isModalError: false,
+      isAgreementChecked: false,
+      nomorNpwp: "",
+      modalContent: [
+        {
+          label: "Verifikasi Gagal",
+          description: "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.",
+          buttonString1: "Ulangi Verifikasi",
+          buttonString2: "Hubungi Customer Care",
+        },
+      ],
+    };
   },
 
   computed: {
@@ -97,9 +125,9 @@ export default {
     fileUrl() {
       return this.$route.query.fileUrl;
     },
-    documentType() {
-      return this.$route.query.documentType;
-    },
+    // documentType() {
+    //   return this.$route.query.documentType;
+    // },
     isButtonDisabled() {
       if (this.documentType === "npwp") {
         return !this.nomorNpwp.trim();
@@ -113,21 +141,38 @@ export default {
 
   setup() {
     const fileStore = useFileStore();
-    return { fileStore };
-  },
-
-  setup() {
-    const fileStore = useFileStore();
     const router = useRouter();
     const route = useRoute();
-
     const photoUrl = ref(null);
     const video = ref(null);
     const canvas = ref(null);
     const stream = ref(null);
     const isUploading = ref(false);
-
     const documentType = computed(() => route.query.documentType);
+    const isModalError = ref(false);
+    const modalContent = ref([
+      {
+        label: "",
+        description: "",
+        icon: "",
+        buttonString1: "",
+        buttonString2: "",
+      },
+    ]);
+
+    const showErrorModal = (title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") => {
+      modalContent.value = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      isModalError.value = true;
+    };
+
     const startWebcam = async () => {
       if (documentType.value !== "fotoDiri") return; // 🔥 Kamera hanya aktif untuk fotoDiri
 
@@ -148,13 +193,11 @@ export default {
 
     const capturePhoto = () => {
       if (!canvas.value || !video.value) return;
-
       const ctx = canvas.value.getContext("2d");
       canvas.value.width = video.value.videoWidth;
       canvas.value.height = video.value.videoHeight;
       ctx.drawImage(video.value, 0, 0, canvas.value.width, canvas.value.height);
       photoUrl.value = canvas.value.toDataURL("image/png");
-
       stopWebcam();
     };
 
@@ -168,6 +211,7 @@ export default {
     const retakePhoto = () => {
       photoUrl.value = null;
       startWebcam();
+      isModalError.value = false;
     };
 
     const uploadPhoto = async () => {
@@ -181,8 +225,11 @@ export default {
         const file = new File([blob], "foto_diri.jpg", { type: "image/jpeg" });
 
         const uuid = fileStore.uuid;
-        // const uuid = "b6bd92bb-80d0-46cb-94fa-906c4e48ca38";
-        if (!uuid) throw new Error("UUID tidak ditemukan di fileStore");
+        if (!uuid) {
+          console.error("UUID tidak ditemukan di fileStore");
+          throw new Error("UUID tidak ditemukan");
+        }
+
         const formData = new FormData();
         formData.append("user_foto", file);
         formData.append("uuid", uuid);
@@ -191,20 +238,16 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("Unggah sukses:", uploadResponse.data);
-
-        // Simpan hanya jika upload berhasil
         fileStore.$patch((state) => {
           state.uploadedFiles["fotoDiri"] = "dummyImageFile";
           state.isFotoDiriUploaded = true;
         });
-
         fileStore.setFormDataFotoDiri(uploadResponse.data);
         console.log("Foto disimpan ke fileStore:", fileStore.formFotoDiri);
         router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningNTB" });
-
       } catch (error) {
+        showErrorModal(error.response?.data?.message || "Terjadi Kesalahan", "Email Anda belum terdaftar. Silakan kembali ke halaman awal untuk mendaftarkan email Anda.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
         console.error("Gagal mengunggah:", error.response?.data || error.message);
-        alert(`Upload gagal: ${error.message}`);
         fileStore.isFotoDiriUploaded = false;
       } finally {
         isUploading.value = false;
@@ -219,6 +262,9 @@ export default {
     });
 
     return {
+      isModalError,
+      modalContent,
+      showErrorModal,
       capturePhoto,
       uploadPhoto,
       retakePhoto,
@@ -226,19 +272,22 @@ export default {
       video,
       canvas,
       documentType,
-    };
-  },
-
-  data() {
-    return {
-      isModalOpen: true,
-      nomorNpwp: "",
-      isUploading: false,
-      isAgreementChecked: false,
+      fileStore,
     };
   },
 
   methods: {
+    showModalError(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") {
+      this.modalContent = [{
+        label: title,
+        description: message,
+        icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+        buttonString1: btnString1,
+        buttonString2: btnString2,
+      }];
+      this.isModalError = true;
+    },
+
     handleFileNotFound() {
       console.warn("File URL tidak ditemukan, redirecting...");
       this.$router.replace("/dashboard/uploadDokumenPembukaanRekeningNTB");
@@ -315,7 +364,6 @@ export default {
         const fileStore = useFileStore();
         formData.append(fileField, file);
         formData.append("uuid", fileStore.uuid);
-        // formData.append("uuid", "b6bd92bb-80d0-46cb-94fa-906c4e48ca38");
 
         if (this.documentType === "npwp") {
           if (!this.nomorNpwp.trim()) {
@@ -355,7 +403,7 @@ export default {
         }
       } catch (error) {
         console.error("❌ Gagal upload:", error.response?.data || error.message);
-        alert("Upload gagal, coba lagi!");
+        this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
       } finally {
         this.isUploading = false;
       }

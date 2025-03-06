@@ -50,9 +50,46 @@
       </div>
     </div> -->
 
+    <div class="py-4">
+      <h1 class="text-base sm:text-base md:text-lg font-semibold text-primary text-left mb-4">
+        Pernyataan dan Persetujuan Nasabah
+      </h1>
+      <div>
+        <RadioButtonChoose
+          label="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*"
+          :options="trueFalseOptions" v-model="form.persetujuan" name="persetujuan" />
+      </div>
+
+      <label class="block mb-2 text-xs sm:text-sm md:text-sm font-medium text-neutral-900">Pernyataan dan Persetujuan
+        Nasabah</label>
+      <div class="space-y-3 text-gray-700 text-sm">
+        <p>
+          Dengan ini, saya/kami menyatakan bahwa: Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening pada
+          <span class="font-semibold">PT. BPR Universal</span> (selanjutnya disebut "Bank") ini adalah data yang
+          sebenar-benarnya.
+        </p>
+        <ul class="list-decimal list-inside text-neutral-700 space-y-2">
+          <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
+            ini.</li>
+          <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik Produk Bank yang akan saya/kami
+            manfaatkan.</li>
+          <li>Saya/kami telah menerima, membaca, mengerti, dan menyetujui isi Ketentuan Umum dan Persyaratan Pembukaan
+            Rekening.</li>
+          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening.
+            <ul class="list-disc list-inside ml-2 mt-2 space-y-1">
+              <li>Saya/kami tidak mematuhi ketentuan <span class="italic">Prinsip Mengenal Nasabah (Knowing Your
+                  Customer)</span>.</li>
+              <li>Data yang saya/kami berikan kepada Bank tidak benar atau diragukan kebenarannya.</li>
+              <li>Saya/kami menyalahgunakan rekening.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <!-- Checkbox Persetujuan -->
-    <div class="flex items-center mt-4">
-      <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 " />
+    <div class="flex items-center">
+      <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />
       <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
         Saya menyetujui syarat dan ketentuan serta bersedia memberikan informasi tambahan
       </label>
@@ -69,13 +106,18 @@
 </template>
 
 <script>
-import api from "@/API/api"
+import api from "@/API/api";
+import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
+import { trueFalseOptions } from "@/data/option";
+import { FormModelKonfirmasiData } from "@/models/formModel";
+
 
 export default {
   components: {
     ButtonComponent,
+    RadioButtonChoose,
   },
   name: "DataPribadi",
   computed: {
@@ -104,6 +146,9 @@ export default {
 
   data() {
     return {
+      form: new FormModelKonfirmasiData(),
+      trueFalseOptions,
+      RadioButtonChoose,
       agreement: false,
       isSubmitting: false,
     };
