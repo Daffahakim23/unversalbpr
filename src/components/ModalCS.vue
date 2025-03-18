@@ -4,7 +4,7 @@
             <div class="w-full max-w-lg flex flex-col bg-white rounded-3xl p-6 border border-neutral-200 relative">
                 <!-- Close Button -->
                 <button @click="$emit('close')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-                    <img src="@/assets/close-icon.svg" alt="Close" class="h-6 w-6" />
+                    <img src="@/assets/close-icon.svg" alt="Close" class="h-8 w-8" />
                 </button>
 
                 <!-- Icon and Header -->

@@ -1,11 +1,9 @@
 <template>
-    <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" role="dialog"
-        aria-hidden="true">
+    <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" role="dialog">
         <div tabindex="0"
-            class="w-1/3 max-w-lg flex flex-col bg-white rounded-3xl py-10 px-5 border border-neutral-200 relative">
+            class="w-1/2 sm:w-1/2 max-w-lg flex flex-col bg-white rounded-3xl py-16 px-8 border border-neutral-200 relative">
             <div class="flex flex-col">
                 <div v-for="(feature, index) in features" :key="index" class="rounded-lg text-center">
-                    <!-- Icon and Header -->
                     <div class="flex justify-center items-center mb-8">
                         <img :src="feature.icon" class="h-24 sm:h-36 md:h-45" />
                     </div>

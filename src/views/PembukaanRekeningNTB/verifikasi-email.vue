@@ -27,6 +27,8 @@
       <ButtonComponent type="submit" class="mt-6" :disabled="isButtonDisabled">
         Lanjutkan
       </ButtonComponent>
+      <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg"
+        @close="isModalError = false" @buttonClick1="handleCloseModal" />
     </div>
   </form>
 </template>
@@ -37,21 +39,52 @@ import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import ModalError from "@/components/ModalError.vue";
+import { useRoute } from "vue-router";
 
 export default {
-  components: { ButtonComponent },
+  emits: ["update-progress"],
+  components: {
+    ButtonComponent,
+    ModalError,
+  },
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const fileStore = useFileStore();
     const otp = ref(["", "", "", ""]);
     const errorMessage = ref("");
     const resendCount = ref(0);
     const isResending = ref(false);
     const countdown = ref(60);
+    const isModalError = ref(false);
+    const documentType = computed(() => route.query.documentType);
     let countdownInterval = null;
+    const modalContent = ref([
+      {
+        label: "",
+        description: "",
+        icon: "",
+        buttonString1: "",
+        buttonString2: "",
+      },
+    ]);
 
     const email = computed(() => fileStore.alamat_email || "user@example.com");
     const isButtonDisabled = computed(() => otp.value.some(digit => digit === ""));
+
+    const showErrorModal = (title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") => {
+      modalContent.value = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      isModalError.value = true;
+    };
 
     const focusNext = (index, event) => {
       if (event.target.value && index < otp.value.length - 1) {
@@ -59,11 +92,20 @@ export default {
       }
     };
 
+    const handleCloseModal = () => {
+      isModalError.value = false;
+    };
+
     const handleSubmit = async () => {
       const kodeOtp = otp.value.join("");
       if (kodeOtp.length !== 4) {
         errorMessage.value = "OTP harus terdiri dari 4 digit.";
         return;
+      }
+
+      if (!fileStore.uuid) {
+        showErrorModal("Terjadi Kesalahan", "Tipe dokumen tidak valid atau UUID tidak ditemukan.");
+        throw new Error("documentType atau UUID tidak valid.");
       }
 
       try {
@@ -84,9 +126,10 @@ export default {
           router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningNTB" });
         } else {
           errorMessage.value = "Verifikasi OTP gagal. Silakan coba lagi.";
+          showErrorModal("Kode OTP Salah", "Kode OTP yang Anda Kirimkan Salah", "Verifikasi Ulang", "Hubungi Customer Care"); // Tambahkan description
         }
       } catch (error) {
-        errorMessage.value = error.response?.data?.message || "Terjadi kesalahan saat verifikasi.";
+        showErrorModal("Kode OTP Salah", "Kode OTP yang Anda Kirimkan Salah", "Coba Lagi", "Hubungi Customer Care");
       }
     };
 
@@ -113,9 +156,10 @@ export default {
 
         console.log("Resend OTP sukses:", response.data);
         resendCount.value += 1;
-        startCountdown(); // Mulai countdown setelah berhasil kirim ulang OTP
+        startCountdown();
       } catch (error) {
         console.error("Gagal mengirim ulang OTP:", error.response?.data || error.message);
+        showErrorModal(error.response?.data?.Message, "Kode OTP yang Anda Kirimkan Salah", "Verifikasi Ulang", "Tutup");
       } finally {
         isResending.value = false;
       }
@@ -126,6 +170,7 @@ export default {
     });
 
     return {
+      isModalError,
       otp,
       errorMessage,
       email,
@@ -136,6 +181,9 @@ export default {
       isResending,
       isButtonDisabled,
       countdown,
+      showErrorModal,
+      modalContent,
+      handleCloseModal,
     };
   },
 };

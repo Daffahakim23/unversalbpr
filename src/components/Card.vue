@@ -21,7 +21,7 @@
           <!-- List of Features -->
           <ul class="mt-4 space-y-2 text-neutral-700">
             <li v-for="(item, index) in items" :key="index" class="flex items-start gap-2">
-              <span class="text-neutral-900 font-bold">•</span> {{ item }}
+              <span class="text-neutral-900 font-bold">✓</span> {{ item }}
             </li>
           </ul>
           <div class="mt-4">
@@ -32,13 +32,16 @@
           <div v-if="feature.dokumen" class="mt-4">
             <img src="@/assets/document-divider-icon.svg" class="h-1 sm:h-1 md:h-1" />
             <p class="text-base sm:text-base md:text-base lg:text-base text-neutral-900 mt-3 font-semibold">
-              Dokumen yang diperlukan
+              Hal-hal yang diperlukan
             </p>
-            <div class="flex flex-row gap-2">
-              <img :src="iconPathDokumen" class="h-12 sm:h-12 md:h-12" />
-              <p class="text-base sm:text-base md:text-base lg:text-base text-neutral-900 mt-3">
-                {{ feature.dokumen }}
-              </p>
+            <div class="flex lg:flex-row gap-2 flex-wrap">
+              <div v-for="(doc, index) in feature.dokumen" :key="index"
+                class="flex flex-row gap-2 border-2 border-neutral-100 items-center mt-2 rounded-xl px-2 py-2 w-fit">
+                <img :src="getDokumenIconPath(doc.icon)" class="h-4 sm:h-4 md:h-4" />
+                <p class=" item-center font-semibold text-xs sm:text-xs md:text-xs lg:text-xs text-neutral-700">
+                  {{ doc.text }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -126,6 +129,9 @@ export default {
       if (typeof feature.onBtnClick === "function") {
         feature.onBtnClick();  // Execute feature's specific onClick handler
       }
+    },
+    getDokumenIconPath(icon) {
+      return new URL(`/src/assets/${icon}`, import.meta.url).href;
     },
 
     handleBtnClick() {

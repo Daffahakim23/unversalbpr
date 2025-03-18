@@ -111,8 +111,6 @@ export default {
     fileUrl() {
       return this.$route.query.fileUrl;
     },
-    // documentType() {
-    //   return this.$route.query.documentType;
   },
 
   setup() {
@@ -150,7 +148,7 @@ export default {
     };
 
     const startWebcam = async () => {
-      if (documentType.value !== "fotoDiri") return; // 🔥 Kamera hanya aktif untuk fotoDiri
+      if (documentType.value !== "fotoDiri") return;
 
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -366,3 +364,16 @@ export default {
   },
 };
 </script>
+
+
+// Tampilkan toaster success
+this.toasterType = 'success';
+this.toasterMessage = 'Upload berhasil!';
+this.showToaster = true;
+} catch (error) {
+console.error("❌ Gagal upload:", error.response?.data || error.message);
+
+// Tampilkan toaster error
+this.toasterType = 'error';
+this.toasterMessage = 'Gagal upload. Silakan coba lagi.';
+this.showToaster = true;

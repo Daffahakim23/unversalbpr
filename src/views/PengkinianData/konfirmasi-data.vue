@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="">
-      <h1 class="text-base sm:text-base md:text-lg font-semibold text-primary text-left mb-4">
+      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Data KTP
       </h1>
       <div v-if="formKTP" class="form-container">
@@ -12,8 +12,10 @@
       </div>
     </div>
 
+    <div class="border-t border-neutral-200 my-4"></div>
+
     <div class="py-4">
-      <h1 class="text-base sm:text-base md:text-lg font-semibold text-primary text-left mb-4">
+      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Dokumen
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -38,8 +40,22 @@
       </div>
     </div>
 
+    <div class="border-t border-neutral-200 my-4"></div>
+
+    <!-- <div class="py-4">
+      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
+        Data Pribadi
+      </h1>
+      <div v-if="formPribadi" class="form-container">
+        <div class="form-item" v-for="(value, key) in formPribadi" :key="key">
+          <div class="form-label">{{ formatLabel(key) }}:</div>
+          <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div>
+    </div> -->
+
     <div class="py-4">
-      <h1 class="text-base sm:text-base md:text-lg font-semibold text-primary text-left mb-4">
+      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Data Pribadi
       </h1>
       <div v-if="formPribadi" class="form-container">
@@ -50,9 +66,11 @@
       </div>
     </div>
 
+    <div class="border-t border-neutral-200 my-4"></div>
+
     <div class="py-4">
-      <h1 class="text-base sm:text-base md:text-lg font-semibold text-primary text-left mb-4">
-        Data Pekerjaan
+      <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
+        Data Pekerjaan & Finansial
       </h1>
       <div v-if="formPekerjaan" class="form-container">
         <div class="form-item" v-for="(value, key) in formPekerjaan" :key="key">
@@ -62,18 +80,26 @@
       </div>
     </div>
 
+    <div class="border-t border-neutral-200 my-4"></div>
+
     <div class="py-4">
-      <h1 class="text-base sm:text-base md:text-lg font-semibold text-primary text-left mb-4">
+      <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
+        Kontak Darurat
+      </h1>
+      <div v-if="formKontakDarurat" class="form-container">
+        <div class="form-item" v-for="(value, key) in formKontakDarurat" :key="key">
+          <div class="form-label"> {{ formatLabel(key) }}:</div>
+          <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-neutral-200 my-4"></div>
+
+    <div class="py-4">
+      <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
-      <div>
-        <RadioButtonChoose
-          label="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*"
-          :options="trueFalseOptions" v-model="form.persetujuan" name="persetujuan" />
-      </div>
-
-      <label class="block mb-2 text-xs sm:text-sm md:text-sm font-medium text-neutral-900">Pernyataan dan Persetujuan
-        Nasabah</label>
       <div class="space-y-3 text-gray-700 text-sm">
         <p>
           Dengan ini, saya/kami menyatakan bahwa: Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening pada
@@ -103,7 +129,14 @@
     <div class="flex items-center">
       <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />
       <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
-        Saya menyetujui syarat dan ketentuan serta bersedia memberikan informasi tambahan
+        Saya setuju dengan pernyataan dan persetujuan di atas
+      </label>
+    </div>
+
+    <div class="flex items-center mt-4">
+      <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer items-baseline" />
+      <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
+        Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
       </label>
     </div>
 
@@ -114,21 +147,28 @@
       </ButtonComponent>
     </div>
   </div>
-</template>
+  <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
+    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" />
+</template>s
 
 <script>
+import { computed } from 'vue';
 import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
 import { trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
+import ModalOTP from "@/components/ModalOTP.vue";
+import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, } from '@/data/option.js';
 
 
 export default {
+  emits: ['updateProgress'],
   components: {
     ButtonComponent,
     RadioButtonChoose,
+    ModalOTP,
   },
   name: "DataPribadi",
   computed: {
@@ -137,28 +177,108 @@ export default {
     },
     formKTP() {
       const fileStore = useFileStore();
-      return Object.fromEntries(
-        Object.entries(fileStore.formKTP || {}).filter(([_, value]) => value)
-      );
+      const data = fileStore.formKTP || {};
+      const processedData = {};
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && data[key]) {
+          let value = data[key];
+
+          if (key === "agama") {
+            value = this.getLabelFromOptions(value, agamaOptions);
+          }
+          if (key === "statusPerkawinan") {
+            value = this.getLabelFromOptions(value, statusPerkawinanOptions);
+          }
+          processedData[key] = value;
+        }
+      }
+      return processedData;
     },
+    // formPribadi() {
+    //   const fileStore = useFileStore();
+    //   return Object.fromEntries(
+    //     Object.entries(fileStore.formPribadi || {}).filter(([_, value]) => value)
+    //   );
+    // },
     formPribadi() {
       const fileStore = useFileStore();
-      return Object.fromEntries(
-        Object.entries(fileStore.formPribadi || {}).filter(([_, value]) => value)
-      );
+      const data = fileStore.formPribadi || {};
+      const processedData = {};
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && data[key]) {
+          let value = data[key];
+
+          if (key === "pendidikanTerakhir") {
+            value = this.getLabelFromOptions(value, pendidikanOptions);
+          }
+          if (key === "tujuan") {
+            value = this.getLabelFromOptions(value, tujuanOptions);
+          }
+          if (key === "hobi") {
+            value = this.getLabelFromOptions(value, hobiOptions);
+          }
+          processedData[key] = value;
+        }
+      }
+      return processedData;
     },
     formPekerjaan() {
       const fileStore = useFileStore();
+      const data = fileStore.formPekerjaan || {};
+      const processedData = {};
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && data[key]) {
+          let value = data[key];
+
+          if (key === "penghasilan") {
+            value = this.getLabelFromOptions(value, penghasilanOptions);
+          }
+          if (key === "jumlahPenghasilan") {
+            value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
+          }
+          if (key === "bidangPekerjaanDK") {
+            value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
+          }
+          if (key === "korespondensi") {
+            value = this.getLabelFromOptions(value, korespondensiOptions);
+          }
+          processedData[key] = value;
+        }
+      }
+      return processedData;
+    },
+    formKontakDarurat() {
+      const fileStore = useFileStore();
       return Object.fromEntries(
-        Object.entries(fileStore.formPekerjaan || {}).filter(([_, value]) => value)
+        Object.entries(fileStore.formPekerjaan || {})
+          .filter(([key, value]) => value && key.endsWith('KD'))
       );
     },
+    // formPekerjaan() {
+    //   const fileStore = useFileStore();
+
+    //   return Object.fromEntries(
+    //     Object.entries(fileStore.formPekerjaan || {})
+    //       .filter(([_, value]) => value) // Hanya menyertakan data yang tidak kosong
+    //       .map(([key, value]) => {
+    //         if (key === "pekerjaan") return [key, getLabel(value, pekerjaanOptions)];
+    //         if (key === "penghasilan") return [key, getLabel(value, penghasilanOptions)];
+    //         return [key, value];
+    //       })
+    //   );
+    // },
     uploadedFiles() {
       const fileStore = useFileStore();
       return Object.fromEntries(
         Object.entries(fileStore.uploadedFiles || {}).filter(([_, value]) => value)
       );
     },
+  },
+  setup() {
+
+    const fileStore = useFileStore();
+    const no_hp = computed(() => fileStore.no_hp || "user@example.com");
+    return { no_hp }
   },
 
   data() {
@@ -168,18 +288,32 @@ export default {
       RadioButtonChoose,
       agreement: false,
       isSubmitting: false,
+      isModalOTPOpen: false,
+      features: [
+        {
+          label: 'Pilih Metode Konfirmasi OTP',
+          description: 'Kode OTP akan dikirimkan melalui metode yang Anda pilih',
+          label1: 'WhatsApp',
+          icon1: new URL('@/assets/whatsapp-icon.svg', import.meta.url).href,
+          method1: 'whatsapp',
+          label2: 'SMS',
+          icon2: new URL('@/assets/sms-icon.svg', import.meta.url).href,
+          method2: 'sms'
+        },
+      ],
     };
   },
 
   methods: {
-
+    getLabelFromOptions(value, options) {
+      const option = options.find((opt) => opt.value === value);
+      return option ? option.label : value;
+    },
     goBack() {
       this.$router.push({ path: "/dashboard/dataPekerjaanPengkinianData" });
     },
     formatLabel(key) {
       const labels = {
-
-        // KTP
         nik: "NIK",
         namaLengkap: "Nama Lengkap",
         tanggalLahir: "Tanggal Lahir",
@@ -190,13 +324,14 @@ export default {
         rt: "RT",
         rw: "RW",
         provinsi: "Provinsi",
-        kota: "Kota / Kabupaten",
+        kabupaten: "Kota / Kabupaten",
         kecamatan: "Kecamatan",
         kelurahan: "Kelurahan",
         kodePos: "Kode Pos",
         statusPerkawinan: "Status Perkawinan",
         masaAktifKtp: "Masa Aktif KTP",
         namaIbuKandung: "Nama Ibu Kandung",
+        kewarganegaraan: "Kewarganegaraan",
 
         // Data Pribadi
         namaPanggilan: "Nama Alias / Panggilan",
@@ -206,6 +341,9 @@ export default {
         hobi: "Hobi",
         nomorTelepon: "Nomor Telepon",
         nomorFax: "Nomor Fax",
+        kantorCabang: "Kantor Cabang",
+        alamatKantorCabang: "Alamat Kantor Cabang",
+        alamatSesuaiEktp: "Alamat Sesuai EKTP",
 
         // Data Pekerjaan (Beneficial Owner)
         pekerjaan: "Pekerjaan",
@@ -213,6 +351,9 @@ export default {
         jumlahPenghasilan: "Jumlah Penghasilan",
         hubunganNasabah: "Hubungan Nasabah",
         jenisIdentitasBO: "Jenis Identitas Beneficial Owner",
+        hubunganNasabahBO: "Hubungan dengan Nasabah",
+        kotaPerusahaanBO: "Kota Perusahaan",
+        kodePosPerushaanBO: "Kode Pos Perusahaan",
         kewarganegaraanBO: "Kewarganegaraan Beneficial Owner",
         namaLengkapBO: "Nama Beneficial Owner",
         nomorDokumenIdentitasBO: "Nomor Dokumentasi Identitas",
@@ -241,6 +382,9 @@ export default {
         namaPerusahaanDK: "Nama Perusahaan",
         bidangPekerjaanDK: "Bidang Pekerjaan",
         jabatanDK: "Jabatan",
+        kotaPerusahaanDK: "Kota Perusahaan",
+        kodePosPerusahaanDK: "Kode Pos Perusahaan",
+        hubunganPemohonKD: "Hubungan Pemohon",
         lamaBekerjaTahunDK: "Lama Bekerja Tahun",
         lamaBekerjaBulanDK: "Lama Bekerja Bulan",
         nomorTeleponKantorDK: "Nomor Telepon Kantor",
@@ -279,29 +423,54 @@ export default {
         alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
         return;
       }
-
-      if (this.isSubmitting) return;
-      this.isSubmitting = true;
-
       const fileStore = useFileStore();
-      const requestData = {
-        uuid: fileStore.uuid || "",
-        s_k_nasabah_bersedia_info_tambahan: true,
-        // "s_k_pembukaan_rekening": true,
-        // "s_k_penggunaan_data": true,
-        "s_k_data_benar_dipertanggungjawabkan": true
-      };
+      try {
+        this.requestData = {
+          uuid: fileStore.uuid || "",
+          s_k_nasabah_bersedia_info_tambahan: true,
+          s_k_data_benar_dipertanggungjawabkan: true
+        };
+        console.log("Data sementara disimpan:", this.requestData);
+        this.isModalOTPOpen = true;
+      } catch (error) {
+        console.error("Error saat membuka modal:", error);
+      }
+    },
+    async handleOTPMethodSelected(method) {
+      console.log('Metode OTP yang dipilih:', method);
 
       try {
-        const response = await api.post("/buka-pengkinian-data", requestData, {
+        if (!this.requestData) {
+          console.error("Error: Data request tidak ditemukan.");
+          this.isSubmitting = false;
+          return;
+        }
+
+        const finalData = {
+          ...this.requestData,
+          otp_wa: method === 'whatsapp', // Set otp_wa berdasarkan metode
+        };
+
+        console.log("Mengirim data:", finalData);
+
+        const response = await api.post("/buka-pengkinian-data", finalData, {
           headers: { "Content-Type": "application/json" },
         });
-        console.log("Response:", response.data);
-        this.$router.push({ path: "/dashboard/emailOTPPengkinianData" });
+
+        if (response.status === 200) {
+          this.$router.push({ path: "/dashboard/emailOTPPengkinianData" });
+        } else {
+          console.error("Gagal mengirim data, status:", response.status);
+        }
+
       } catch (error) {
-        console.error("Error submitting data:", error);
+        if (error.response) {
+          console.error("Error response data:", error.response.data);
+        }
+        console.error("Error saat mengirim data:", error);
       } finally {
         this.isSubmitting = false;
+        this.isModalOTPOpen = false; // Tutup modal setelah request selesai
       }
     },
   },

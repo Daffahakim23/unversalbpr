@@ -1,30 +1,41 @@
 <template>
-  <!-- Footer section -->
-  <div class="p-6  bg-neutral-100">
-    <div class="flex flex-col items-center justify-center gap-y-2 sm:justify-between md:justify-between">
-      <div>
-        <button class="flex flex-wrap items-center text-primary">
-          <img src="@/assets/Instagram.png" alt="Instagram" class="h-4 sm:h-6 md:h-6 mx-6 my-2" />
-          <img src="@/assets/twitter.png" alt="Twitter" class="h-4 sm:h-6 md:h-6 mx-6" my-2 />
-          <img src="@/assets/website.png" alt="Website" class="h-4 sm:h-6 md:h-6 mx-6 my-2" />
-          <img src="@/assets/facebook.png" alt="Facebook" class="h-4 sm:h-6 md:h-6 mx-6 my-2" />
-        </button>
+  <div class="p-6 bg-neutral-100">
+    <div class="flex flex-col items-center justify-center gap-y-4">
+      <div class="flex space-x-8 text-primary text-sm">
+        <a href="#" class="hover:underline">Info Produk</a>
+        <img src="@/assets/divider-vertical.png" alt="divider-vertical" class="h-6" />
+        <a href="#" class="hover:underline">FAQ</a>
+        <img src="@/assets/divider-vertical.png" alt="divider-vertical" class="h-6" />
+        <a href="#" class="hover:underline">Tentang</a>
       </div>
-      <div class="lex flex-col gap-8 text-center text-neutral-800 text-xs sm:text-xs md:text-sm">
-        <div>
-          <p>
-            Bank Universal BPR berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK)
-            dan Bank Indonesia (BI) serta merupakan peserta penjaminan Lembaga
-            Penjamin Simpanan (LPS)
-          </p>
-        </div>
-        <div>
-          <p>
-            <b>
-              © 2025 UniversalBPR
-            </b>
-          </p>
-        </div>
+
+      <div class="flex space-x-8">
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <img src="@/assets/Instagram.png" alt="Instagram" class="h-6" />
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <img src="@/assets/Tiktok.png" alt="TikTok" class="h-6" />
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <img src="@/assets/Youtube.png" alt="YouTube" class="h-6" />
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <img src="@/assets/Facebook.png" alt="Facebook" class="h-6" />
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <img src="@/assets/Website.png" alt="Website" class="h-6" />
+        </a>
+      </div>
+
+      <div class="text-center text-neutral-700 text-xs sm:text-sm">
+        <p>
+          Bank Universal BPR berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan Bank Indonesia (BI) serta
+          merupakan peserta penjaminan Lembaga Penjamin Simpanan (LPS)
+        </p>
+      </div>
+
+      <div class="text-center text-neutral-800 text-xs sm:text-sm">
+        <b>© 2025 UniversalBPR</b>
       </div>
     </div>
   </div>

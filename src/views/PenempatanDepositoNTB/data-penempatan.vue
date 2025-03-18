@@ -1,55 +1,61 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Pilih Produk Deposito*" id="produk" :isDropdown="true" v-model="form.produk"
+    <FormField label="Pilih Produk Deposito*" id="produkDeposito" :isDropdown="true" v-model="form.produkDeposito"
       placeholder="Pilih produk yang Anda inginkan" :options="produkDepositoOptions" required />
 
     <FormField label="Nominal Deposito*" id="nominal" type="text" :isDropdown="false" v-model="formattedNominal"
-      placeholder="Masukkan Nominal Penempatan Deposito" :disabled="!form.produk" :required="true"
+      placeholder="Masukkan Nominal Penempatan Deposito" :disabled="!form.produkDeposito" :required="true"
       @input="updateNominal" />
 
     <FormField label="Terbilang" id="terbilang" :isDropdown="false" v-model="form.terbilang" :required="true"
       placeholder="Masukkan Nominal Penempatan Deposito" :readonly="true" />
 
-    <div v-if="form.produk == 1" class="mt-4">
+    <div v-if="form.produkDeposito == 1" class="mt-4">
       <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
         v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
         :options="jangkaWaktuDepositoUniversalOptions" required />
     </div>
-    <div v-if="form.produk == 2" class="mt-4">
+    <div v-if="form.produkDeposito == 2" class="mt-4">
       <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
         v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
         :options="jangkaWaktuDepositoPeduliOptions" required />
     </div>
-    <div v-if="form.produk == 3" class="mt-4">
+    <div v-if="form.produkDeposito == 3" class="mt-4">
       <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
         v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
         :options="jangkaWaktuDepositoDEBUTSanmereOptions" required />
     </div>
-    <div v-if="form.produk == 4" class="mt-4">
+    <div v-if="form.produkDeposito == 4" class="mt-4">
       <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
         v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
         :options="jangkaWaktuDepositoDEBUTMatiusOptions" required />
     </div>
-    <div v-if="form.produk == 5" class="mt-4">
+    <div v-if="form.produkDeposito == 5" class="mt-4">
       <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
         v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
         :options="jangkaWaktuDepositoGreenOptions" required />
     </div>
 
+    <div class="mb-6">
+      <label class="text-neutral-800">Perkiraan Bunga yang didapatkan (-20% Pajak)</label>
+      <p class="text-2xl font-semibold mt-2 text-secondary-base">
+        {{ formattedBunga }}
+      </p>
+    </div>
+
     <FormField label="Saat Jatuh Tempo Nominal*" id="metodePencairan" :isDropdown="true" v-model="form.metodePencairan"
       placeholder="Pilih Perlakuan Nominal Deposito Saat Jatuh Tempo" :options="metodePencairanOptions" required />
 
-    <FormField label="Pilih Metode Pembayaran Bunga*" id="pembayaranBunga" :isDropdown="true"
-      v-model="form.pembayaranBunga" placeholder="Pilih Metode Pembayaran Bunga" :options="pembayaranBungaOptions"
-      required />
+    <FormField label="Metode Pembayaran Bunga*" id="pembayaranBunga" :isDropdown="true" v-model="form.pembayaranBunga"
+      placeholder="PIlih Metode Pembayaran Bunga" :options="pembayaranBungaOptions" required />
 
     <!-- Jika opsi value = 2 -->
     <div v-if="form.pembayaranBunga == 2" class="mt-4">
-      <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
-        placeholder="Masukkan Nomor Rekening" required />
+      <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaPemilikRekening"
+        v-model="form.namaPemilikRekening" placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required />
 
-      <FormField label="Nama Pemilik Rekening*" id="namaPemilikRekening" v-model="form.namaPemilikRekening"
-        placeholder="Masukkan Nama Pemilik Rekening" required />
+      <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
+        placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
     </div>
 
     <!-- Jika opsi value = 3 -->
@@ -67,13 +73,16 @@
 
     <!-- Jika opsi value = 4 -->
     <div v-if="form.pembayaranBunga == 4" class="mt-4">
-      <FormField label="Nama Bank*" id="namaBank" v-model="form.namaBank" placeholder="Masukkan Nama Bank" required />
+      <FormField label="Nama Pemilik Rekening*" id="namaPemilikRekening" v-model="form.namaPemilikRekening"
+        placeholder="Masukkan Nama Pemilik Rekening" required />
 
       <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
         placeholder="Masukkan Nomor Rekening" required />
 
-      <FormField label="Nama Pemilik Rekening*" id="namaPemilikRekening" v-model="form.namaPemilikRekening"
-        placeholder="Masukkan Nama Pemilik Rekening" required />
+      <!-- <FormField label="Nama Bank*" id="namaBank" v-model="form.namaBank" placeholder="Masukkan Nama Bank" required /> -->
+
+      <FormField label="Nama Bank*" id="namaBank" :isDropdown="true" v-model="form.namaBank"
+        placeholder="Pilih Nama Bank" :options="bankOptions" required />
 
       <label class="flex items-baseline space-x-2 mt-4">
         <input type="checkbox" v-model="form.setujuBiayaTransfer" required />
@@ -84,22 +93,14 @@
       </label>
     </div>
 
-    <div class="mb-6">
-      <label class="text-neutral-800">Perkiraan Bunga yang didapatkan (-20% Pajak)</label>
-      <p class="text-2xl font-semibold mt-2 text-secondary-base">
-        {{ formattedBunga }}
-      </p>
-    </div>
-
-    <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-1">
+    <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
       Cara Penyetoran
     </h2>
-    <p class="text-sm  text-gray-900 dark:text-gray-300 my-2">
-      Debet Rekening Tabungan Universal
-    </p>
+    <FormField label="Metode Metode Penyetoran*" id="pembayaranBunga" :isDropdown="true" v-model="form.metodePenyetoran"
+      placeholder="PIlih Metode Metode Penyetoran" :options="metodePenyetoranNTBOptions" required />
     <div class=" flex items-baseline mb-6">
       <input id="modal-checkbox" type="checkbox" v-model="isChecked"
-        class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600 self-start mt-1" />
+        class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600 self-start" />
       <p for="modal-checkbox" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">
         Saya Setuju bahwa penyetoran untuk penempatan deposito akan dilakukan pendebetan melalui rekening Tabungan
         Universal atas nama saya sendiri yang akan dibuat oleh Petugas Bank dan diinformasikan kepada saya melalui email
@@ -123,8 +124,12 @@ import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
-import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoGreenOptions, metodePencairanOptions, pembayaranBungaOptions, produkDepositoOptions, } from "@/data/option.js";
+import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoGreenOptions, metodePencairanOptions, pembayaranBungaOptions, produkDepositoOptions, metodePenyetoranNTBOptions } from "@/data/option.js";
 import { FormModelPenempatanDeposito } from "@/models/formModel";
+import { hitungBungaUniversal, hitungBungaPeduli, hitungBungaDEBUTSanmere, hitungBungaDEBUTMatius, hitungBungaGreen, } from "@/data/bunga-deposito.js";
+
+console.log("Universal:", hitungBungaUniversal(1000000, "1"));
+console.log("Peduli:", hitungBungaPeduli(1000000, "1"));
 
 export default {
   components: {
@@ -147,7 +152,8 @@ export default {
       jangkaWaktuDepositoDEBUTSanmereOptions,
       jangkaWaktuDepositoPeduliOptions,
       jangkaWaktuDepositoGreenOptions,
-      pembayaranBungaOptions
+      pembayaranBungaOptions,
+      metodePenyetoranNTBOptions
 
     };
   },
@@ -176,15 +182,38 @@ export default {
       );
     },
 
+    // formattedBunga() {
+    //   const nominal = parseFloat(this.form.nominal) || 0;
+    //   if (nominal <= 0) return "Rp 0";
+
+    //   let bunga = nominal * 0.06 * 0.8;
+    //   return new Intl.NumberFormat("id-ID", {
+    //     style: "currency",
+    //     currency: "IDR",
+    //   }).format(bunga);
+    // },
     formattedBunga() {
       const nominal = parseFloat(this.form.nominal) || 0;
-      if (nominal <= 0) return "Rp 0";
+      const jangkaWaktu = this.form.jangkaWaktu;
+      console.log("Nominal:", nominal);
+      console.log("Jangka Waktu:", jangkaWaktu);
+      console.log("Produk:", this.form.produkDeposito);
 
-      let bunga = nominal * 0.06 * 0.8;
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-      }).format(bunga);
+      if (nominal <= 0 || !jangkaWaktu) return "Rp 0";
+      switch (this.form.produkDeposito) {
+        case "1":
+          return hitungBungaUniversal(nominal, jangkaWaktu);
+        case "2":
+          return hitungBungaPeduli(nominal, jangkaWaktu);
+        case "3":
+          return hitungBungaDEBUTSanmere(nominal, jangkaWaktu);
+        case "4":
+          return hitungBungaDEBUTMatius(nominal, jangkaWaktu);
+        case "5":
+          return hitungBungaGreen(nominal, jangkaWaktu);
+        default:
+          return "Rp 0";
+      }
     },
   },
   watch: {
@@ -193,22 +222,39 @@ export default {
     },
   },
   methods: {
+    async fetchData() {
+      try {
+        const fileStore = useFileStore();
+        const data = fileStore.formEmailRequestDepositoNTB;
+
+        console.log("Data from Pinia:", data);
+
+        if (data) {
+          Object.keys(this.form).forEach((key) => {
+            if (data[key] !== undefined) {
+              this.form[key] = data[key];
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+    async fetchBankOptions() {
+      try {
+        const response = await axios.get("http://10.14.52.233:8001/list-bank");
+        this.bankOptions = response.data.bank.map((bank) => ({
+          label: bank.bank_name,
+          value: bank.bank_name,
+        }));
+      } catch (error) {
+        console.error("Error fetching bank options:", error);
+      }
+    },
     updateNominal(value) {
       const rawValue = value.replace(/\D/g, "");
       this.form.nominal = rawValue ? parseInt(rawValue, 10) : 0;
     },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/penempatan-deposito");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
     goBack() {
       this.$router.go(-1);
     },
@@ -328,9 +374,8 @@ export default {
   },
   mounted() {
     this.$emit("update-progress", 60);
+    this.fetchData();
+    this.fetchBankOptions();
   },
-  // created() {
-  //   this.fetchData();
-  // },
 };
 </script>

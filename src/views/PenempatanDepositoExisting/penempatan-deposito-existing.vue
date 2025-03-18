@@ -4,46 +4,77 @@
       Deposito sebagai Nasabah Universal BPR, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
       dipergunakan sebagai tempat penyetoran nominal Deposito Anda.</label>
 
-    <RadioButtonChoose label="Apakah Anda sudah memiliki Tabungan Universal?" :options="memilikiTabunganOptions"
-      v-model="form.memilikiTabungan" name="memilikiTabungan" required />
+    <RadioButtonChoose label="Apakah Anda sudah memiliki Tabungan Universal?" id="memilikiTabungan" :isDropdown="true"
+      :options="memilikiTabunganOptions" v-model="form.memilikiTabungan" name="memilikiTabungan" required />
 
-    <FormField label="Pilih Produk yang Diinginkan" id="produk" :isDropdown="true" v-model="form.produk"
-      placeholder="Pilih Produk yang Anda Inginkan" :options="produkOptions" required />
-
-    <FormField label="Pilih Produk Deposito" id="produk" :isDropdown="true" v-model="form.produkDeposito"
-      placeholder="Pilih Produk Deposito yang Anda Inginkan" :options="produkDepositoOptions" required />
-
-    <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekening"
-      placeholder="Masukkan Nomor Rekening" required :readonly="form.belumPunyaRekening"
-      @input="handleNomorRekeningInput"
-      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank." />
-
-    <div class="flex items-center mb-6">
-      <input type="checkbox" id="belumPunyaRekening" v-model="form.belumPunyaRekening" @change="handleCheckboxChange"
-        class="mr-2" />
+    <div class="flex items-center mb-6" v-if="form.memilikiTabungan == 1">
+      <input type="checkbox" id="belumPunyaRekening" v-model="form.belumPunyaRekening" class="mr-2" />
       <label for="belumPunyaRekening" class="text-sm font-semibold text-neutral-800 cursor-pointer">
         Belum Punya Rekening Tabungan Universal
       </label>
     </div>
 
-    <FormField v-if="form.belumPunyaRekening" label="Pilih Kantor Cabang *" id="kantorCabang" :isDropdown="true"
-      v-model="form.kantorCabang" placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
+    <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekening"
+      placeholder="Masukkan Nomor Rekening" required
+      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank."
+      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
+
+    <FormField label="Pilih Kantor Cabang *" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
+      placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
     <div v-if="form.kantorCabang" class="mt-4">
       <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
         v-model="form.alamatKantorCabang" :readonly="true" />
     </div>
 
-    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan email Anda"
-      hint="Pastikan Anda mengisi alamat email yang aktif" required />
+    <FormField label="Pilih Produk Deposito" id="produk" :isDropdown="true" v-model="form.produkDeposito"
+      placeholder="Pilih Produk Deposito yang Anda Inginkan" :options="produkDepositoOptions" required />
 
-    <FormField label="Nomor Handphone *" id="phone" type="text" v-model="form.phone"
-      hint="Pastikan Anda mengisi nomor handphone yang aktif" placeholder="Masukkan nomor handphone Anda" required
-      @input="form.phone = form.phone.replace(/\D/g, '')" />
+    <FlagBox type="info" closable class="mb-4">
+      <p class="text-sm font-normal">Informasi mengenai Produk dan Layanan dapat diakses melalui website
+        universalbpr.co.id atau dengan mengklik tombol "Info Produk" di bagian atas halaman ini.</p>
+    </FlagBox>
+
+    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekening"
+      placeholder="Masukkan Nomor Rekening" required :readonly="form.belumPunyaRekening"
+      @input="handleNomorRekeningInput"
+      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank." /> -->
+
+    <!-- <div class="flex items-center mb-6">
+      <input type="checkbox" id="belumPunyaRekening" v-model="form.belumPunyaRekening" @change="handleCheckboxChange"
+        class="mr-2" />
+      <label for="belumPunyaRekening" class="text-sm font-semibold text-neutral-800 cursor-pointer">
+        Belum Punya Rekening Tabungan Universal
+      </label>
+    </div> -->
+
+    <!-- <FormField v-if="form.belumPunyaRekening" label="Pilih Kantor Cabang *" id="kantorCabang" :isDropdown="true"
+      v-model="form.kantorCabang" placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
+    <div v-if="form.kantorCabang" class="mt-4">
+      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
+        v-model="form.alamatKantorCabang" :readonly="true" />
+    </div> -->
+
+    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      required :error="emailError" @blur="handleEmailBlur" />
+
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
+      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
+      :error="phoneError" @blur="handlePhoneBlur" />
+    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
+
+    <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
+      :options="penghasilanOptions" placeholder="Pilih Sumber Dana Anda" />
+
+    <div v-if="form.sumberDana === 'lainnya'" class="">
+      <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" type="text" v-model="form.sumberDanaLainnya"
+        placeholder="Masukkan Sumber Penghasilan Lainnya" />
+    </div>
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text"
-      hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani."
-      v-model="form.namaFundingOfficer" placeholder="Masukkan nama funding officer" />
-
+      v-model="form.namaFundingOfficer" placeholder="Masukkan nama funding officer"
+      hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
         Lanjutkan
@@ -51,20 +82,25 @@
     </div>
   </form>
 
-  <ReusableModal :title="'Syarat dan Ketentuan'" :isOpen="isModalOpen" @close="isModalOpen = false"
-    @confirm="handleModalConfirm" />
+  <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
+    @close="isModalOpen = false" @confirm="handleModalConfirm" />
+  <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
+    @buttonClick1="handleModalClose" @buttonClick2="handleToDeposito" />
 </template>
 
 <script>
 import axios from "axios";
 import api from "@/API/api"
 import FormField from "@/components/FormField.vue";
+import FlagBox from "@/components/flagbox.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import ReusableModal from "@/components/ModalT&C.vue";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { produkDepositoOptions, memilikiRekeningOptions, memilikiTabunganOptions, produkOptions } from "@/data/option.js";
+import { produkDepositoOptions, memilikiRekeningOptions, memilikiTabunganOptions, produkOptions, tujuanOptions, penghasilanOptions } from "@/data/option.js";
+import ModalError from "@/components/ModalError.vue";
+import errorIcon from "@/assets/icon-deposito.svg";
 
 export default {
   emits: ["update-progress"],
@@ -73,31 +109,49 @@ export default {
     ButtonComponent,
     RadioButtonChoose,
     ReusableModal,
+    FlagBox,
+    ModalError,
   },
   data() {
     return {
+      apiUrl: "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_OPEN_DEPOSIT",
       form: new FormModelRequestEmailVerification(),
+      touched: {
+        email: false,
+        phone: false,
+      },
+      tujuanOptions,
+      penghasilanOptions,
       produkDepositoOptions,
       produkOptions,
       memilikiRekeningOptions,
       memilikiTabunganOptions,
+      selectedCountryCode: "ID",
+      isModalError: false,
       isModalOpen: false,
       isSubmitting: false,
+      emailError: false,
+      phoneError: false,
       kantorCabangOptions: [],
       kantorCabangAlamat: {},
+      modalContent: [
+        {
+          label: "Konfirmasi Penempatan Deposito",
+          icon: errorIcon,
+          description:
+            "Apakah Anda yakin ingin melanjutkan penempatan deposito nasabah baru?",
+          buttonString1: "Tetap Dihalaman Ini",
+          buttonString2: "Penempatan Deposito Nasabah Baru",
+        },
+      ],
     };
   },
 
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      if (!this.form.produk || !emailValid || !this.form.phone || !this.form.memilikiTabungan) {
-        return true;
-      }
-      if (!this.form.belumPunyaRekening && (!this.form.nomorRekening || this.form.nomorRekening.length < 10)) {
-        return true;
-      }
-      if (this.form.belumPunyaRekening && !this.form.kantorCabang) {
+      const phoneValid = this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
+      if (!this.form.produkDeposito || !this.form.nomorRekening || !this.form.tujuan || !this.form.sumberDana || !emailValid || !phoneValid || !this.form.memilikiTabungan) {
         return true;
       }
       return false;
@@ -105,6 +159,31 @@ export default {
   },
 
   methods: {
+    handleToDeposito() {
+      this.$router.push({ path: "/dashboard/penempatanDepositoNTB" });
+    },
+    handleModalClose() {
+      this.isModalError = false;
+      this.form.memilikiTabungan = '';
+    },
+    validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    },
+    validatePhone(phone) {
+      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+    },
+    handleEmailBlur() {
+      this.touched.email = true;
+      if (this.form.email) {
+        this.emailError = !this.validateEmail(this.form.email);
+      }
+    },
+    handlePhoneBlur() {
+      this.touched.phone = true;
+      if (this.form.phone) {
+        this.phoneError = !this.validatePhone(this.form.phone);
+      }
+    },
     handleNomorRekeningInput() {
       this.form.nomorRekening = this.form.nomorRekening.replace(/\D/g, "").slice(0, 10);
 
@@ -114,28 +193,32 @@ export default {
       }
     },
 
-    handleCheckboxChange() {
-      if (this.form.belumPunyaRekening) {
-        // Jika dicentang, reset Nomor Rekening & Kantor Cabang
-        this.form.nomorRekening = "";
-        this.form.kantorCabang = "";
-        this.form.alamatKantorCabang = ""; // Reset alamat kantor cabang juga
-      } else {
-        // Jika di-uncheck, reset Kantor Cabang & Alamatnya
-        this.form.kantorCabang = "";
-        this.form.alamatKantorCabang = "";
-      }
-    },
+    // handleCheckboxChange() {
+    //   if (this.form.belumPunyaRekening) {
+    //     // Jika dicentang, reset Nomor Rekening & Kantor Cabang
+    //     this.form.nomorRekening = "";
+    //     this.form.kantorCabang = "";
+    //     this.form.alamatKantorCabang = ""; // Reset alamat kantor cabang juga
+    //   } else {
+    //     // Jika di-uncheck, reset Kantor Cabang & Alamatnya
+    //     this.form.kantorCabang = "";
+    //     this.form.alamatKantorCabang = "";
+    //   }
+    // },
 
     async fetchBranches() {
       try {
         const response = await axios.get("http://10.14.52.233:8001/list-branch");
 
         if (response.data && response.data.branch) {
-          this.kantorCabangOptions = response.data.branch.map(branch => ({
-            label: branch.branch_name,
-            value: branch.branch_code
-          }));
+          this.kantorCabangOptions = response.data.branch.map(branch => {
+            const label = branch.branch_name.replace(/\s*\(\d+\)$/, '');
+
+            return {
+              label: label.trim(),
+              value: branch.branch_code
+            };
+          });
 
           this.kantorCabangAlamat = response.data.branch.reduce((acc, branch) => {
             acc[branch.branch_code] = branch.branch_address.Valid ? branch.branch_address.String : "Alamat tidak tersedia";
@@ -163,7 +246,6 @@ export default {
     async handleSubmit() {
       try {
         let kodeKantorCabang = this.form.kantorCabang;
-
         if (!kodeKantorCabang && this.form.nomorRekening) {
           kodeKantorCabang = this.form.nomorRekening.slice(0, 3);
         }
@@ -174,12 +256,14 @@ export default {
           no_hp: this.form.phone,
           nama_fo: this.form.namaFundingOfficer,
           kategori_nasabah: Number("1"),
-          sumber_data_nasabah: Number(this.form.sumber),
-          sumber_data_nasabah_lainnya: this.form.sumberLainnya,
+          // sumber_data_nasabah: Number(this.form.sumber),
+          // sumber_data_nasabah_lainnya: this.form.sumberLainnya,
           tanggal: new Date().toISOString().split("T")[0],
-          produk_yang_diinginkan: Number(this.form.produk),
+          produk_yang_diinginkan: Number(this.form.produkDeposito),
           nomor_rekening_lama: this.form.nomorRekening,
-          kantor_cabang: selectedBranch ? selectedBranch.label : ""
+          kantor_cabang: selectedBranch ? selectedBranch.label : "",
+          tujuan_simpanan: Number(this.form.tujuan),
+          sumber_dana: Number(this.form.sumberDana),
         };
         console.log("Data sementara disimpan:", this.requestData);
         this.isModalOpen = true;
@@ -218,8 +302,10 @@ export default {
 
         if (response.status === 200) {
           const fileStore = useFileStore();
+          fileStore.setFormEmailRequestDepositoNTB(this.form);
           fileStore.setUuid(response.data.uuid);
           fileStore.setEmail(this.requestData.alamat_email);
+          fileStore.setNoHP(this.requestData.no_hp);
           console.log("UUID :", response.data.uuid);
           console.log("Email :", this.requestData.alamat_email);
 
@@ -241,13 +327,20 @@ export default {
   },
 
   watch: {
-    'form.memilikiRekening': function (newValue, oldValue) {
-      if (newValue === 'YA') {
-        this.form.kantorCabang = '';
-      } else if (newValue === 'TIDAK') {
-        this.form.nomorRekening = '';
-      }
-    },
+    // 'form.memilikiRekening': function (newValue, oldValue) {
+    //   if (newValue === 'YA') {
+    //     this.form.kantorCabang = '';
+    //   } else if (newValue === 'TIDAK') {
+    //     this.form.nomorRekening = '';
+    //   }
+    // },
+    // 'form.belumPunyaRekening': function (newValue, oldValue) {
+    //   if (newValue === 'YA') {
+    //     this.form.kantorCabang = '';
+    //   } else if (newValue === 'TIDAK') {
+    //     this.form.nomorRekening = '';
+    //   }
+    // },
     "form.kantorCabang"(newVal) {
       if (!newVal) {
         this.form.alamatKantorCabang = "";
@@ -255,6 +348,23 @@ export default {
         this.form.alamatKantorCabang = this.kantorCabangAlamat[newVal] || "Alamat tidak ditemukan";
       }
     },
+    // 'form.memilikiTabungan'(newVal) {
+    //   if (newVal == 1) {
+    //     this.isModalError = true;
+    //     this.$nextTick(() => {
+    //       this.form.memilikiTabungan = '';
+    //     });
+    //   }
+    // }
+    'form.belumPunyaRekening'(newVal) {
+      if (newVal == 1) {
+        this.isModalError = true;
+        this.$nextTick(() => {
+          this.form.memilikiTabungan = '';
+          this.form.belumPunyaRekening = '';
+        });
+      }
+    }
   },
 
   mounted() {

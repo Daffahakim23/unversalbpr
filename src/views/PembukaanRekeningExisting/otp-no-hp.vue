@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div class="flex flex-col items-center">
-      <img src="@/assets/emailVerif.svg" alt="Email Verification" class="h-24 md:h-32 lg:h-36 mb-4" />
+      <img src="@/assets/otp-icon.svg" alt="Email Verification" class="h-24 md:h-32 lg:h-36 mb-4" />
 
       <div class="flex justify-center gap-2 m-4">
         <input v-for="(digit, index) in otp" :key="index" v-model="otp[index]"
@@ -10,11 +10,12 @@
       </div>
       <p v-if="errorMessage" class="text-red-500 text-center m-2">{{ errorMessage }}</p>
       <p class="text-base text-neutral-700 text-center">
-        Kami telah mengirimkan kode OTP ke <strong>""</strong>. Masukkan kode OTP di bawah untuk melanjutkan.
+        Kami telah mengirimkan kode OTP konfirmasi ke nomor <strong class="text-primary">{{ no_hp }}</strong>. Silahkan
+        Masukkan kode yang telah Anda terima untuk melanjutkan
       </p>
 
       <ButtonComponent type="submit" class="mt-6" :disabled="isButtonDisabled">
-        Lanjutkan
+        Konfirmasi
       </ButtonComponent>
     </div>
   </form>
@@ -22,6 +23,7 @@
 
 <script>
 // import axios from "axios";
+import { computed } from 'vue';
 import api from "@/API/api"
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
@@ -29,6 +31,11 @@ import ButtonComponent from "@/components/button.vue";
 export default {
   components: {
     ButtonComponent,
+  },
+  setup() {
+    const fileStore = useFileStore();
+    const no_hp = computed(() => fileStore.no_hp || "Nomor Handphone");
+    return { no_hp }
   },
   data() {
     return {

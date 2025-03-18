@@ -12,7 +12,7 @@ export class FormModelDataKTP {
     this.rt = "";
     this.rw = "";
     this.provinsi = "";
-    this.kota = "";
+    this.kabupaten = "";
     this.kecamatan = "";
     this.kelurahan = "";
     this.kodePos = "";
@@ -48,6 +48,7 @@ export class FormModelDataPribadi {
 
 export class FormModelPerubahanData {
   constructor() {
+    this.perubahanData = "";
     this.alamat = "";
     this.rt = "";
     this.rw = "";
@@ -72,8 +73,14 @@ export class FormModelPenempatanDeposito {
     this.namaBank = "";
     this.nomorRekening = "";
     this.namaPemilik = "";
-    this.produk = "";
+    this.produkDeposito = "";
     this.pembayaranBunga = "";
+    this.metodePenyetoran = "";
+    this.nomorRekeningDeposito = "";
+    this.tanggalInstruksiPencairanDeposito = "";
+    this.tanggalJatuhTempoDeposito = "";
+    this.alasanPencairan = "";
+
   }
 }
 
@@ -95,6 +102,10 @@ export class FormModelRequestEmailVerification {
     this.memilikiTabungan = "";
     this.namaLengkap = "";
     this.tandaPengenal = "";
+    this.nomorRekeningDeposito = "";
+    this.tujuan = "";
+    this.sumberDana = "";
+    this.sumberDanaLainnya = "";
   }
 }
 
@@ -112,11 +123,11 @@ export class FormModelDataPekerjaan {
     this.penghasilanLainnya = "";
     this.jumlahPenghasilan = "";
     this.hubunganNasabahBO = "";
-    this.hubunganNasabahBOLainnya = "";
+    this.hubunganNasabahLainnyaBO = "";
     this.jenisIdentitasBO = "";
-    this.jenisIdentitasBOLainnya = "";
+    this.jenisIdentitasLainnyaBO = "";
     this.kewarganegaraanBO = "";
-    this.kewarganegaraanBOLainnya = "";
+    this.kewarganegaraanLainnyaBO = "";
     this.namaLengkapBO = "";
     this.nomorDokumenIdentitasBO = "";
     this.alamatBO = "";
@@ -139,8 +150,8 @@ export class FormModelDataPekerjaan {
     this.alamatPerusahaanBO = "";
     this.jabatanBO = "";
     this.jabatanLainnyaBO = "";
-    this.lamaBekerjaTahunBO = "";
-    this.lamaBekerjaBulanBO = "";
+    this.lamaBekerjaTahunBO = 0;
+    this.lamaBekerjaBulanBO = 0;
     this.penghasilanBO = "";
     this.penghasilanLainnyaBO = "";
     this.jumlahPenghasilanBO = "";
@@ -159,8 +170,11 @@ export class FormModelDataPekerjaan {
     this.korespondensi = "";
     this.namaLengkapKD = "";
     this.hubunganPemohonKD = "";
+    this.hubunganPemohonKDLainnya = "";
     this.alamatKD = "";
     this.nomorTeleponKD = "";
     this.ubahPekerjaan = "";
+    this.npwp = "";
+    this.pernyataanChecked = false;
   }
 }

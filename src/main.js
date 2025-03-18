@@ -4,6 +4,8 @@ import router from "./router";
 import "./assets/tailwind.css";
 import VueApexCharts from "vue3-apexcharts";
 import { createPinia } from 'pinia';
+/* src/assets/main.css */
+import "flag-icons/css/flag-icons.css";
 
 
 const app = createApp(App);

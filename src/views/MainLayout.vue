@@ -1,22 +1,43 @@
 <template class="bg-neutral-50">
   <div class="flex flex-col h-screen bg-neutral-50">
-    <Navbar />
+    <div class="bg-neutral-white p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <button @click="isModalError = true" class="flex items-center text-neutral-900 pl-2">
+            <img src="@/assets/home-icon.svg" alt="Logo" class="h-10 mr-2" />
+            <p class="text-base font-semibold text-left">{{ featureTitle }}</p>
+          </button>
+        </div>
+
+        <div class="flex text-center">
+          <button @click="isModalError = true" class="hidden sm:block">
+            <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 mr-2" />
+          </button>
+        </div>
+
+        <div>
+          <button class="flex items-center text-primary">
+            <img src="@/assets/cs-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="flex-grow flex flex-col">
       <div class="w-full rounded-full h-1.5">
-        <div class="bg-secondary-base h-1.5 rounded-full" :style="{ width: progress + '%' }"></div>
+        <div class="bg-secondary-base h-1.5 rounded-r-full" :style="{ width: progress + '%' }"></div>
       </div>
       <div class="flex items-start">
         <div class="container mx-auto py-9">
           <div class="rounded-xl max-w-2xl mx-auto bg-neutral-white py-9 px-10 shadow-md">
             <div class="flex flex-col mb-6 gap-2">
               <div class="flex justify-between items-center">
-                <h2 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left">
+                <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-left">
                   {{ pageTitle }}
                 </h2>
-                <button v-if="$route.name === 'pembukaanRekeningNTB'" @click="downloadProductDetails"
+                <!-- <button v-if="$route.name === 'pembukaanRekeningNTB'" @click="downloadProductDetails"
                   class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700 transition">
                   Detail Produk
-                </button>
+                </button> -->
               </div>
               <p v-if="pageSubtitle" class="text-sm text-gray-600">
                 {{ pageSubtitle }}
@@ -28,23 +49,40 @@
       </div>
     </div>
   </div>
+  <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
+    @buttonClick1="handleModalClose" @buttonClick2="goBack" />
 </template>
 
 <script>
-import Navbar from "@/components/Navbar.vue";
+// import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
+import ModalError from "@/components/ModalError.vue";
+import errorIcon from "@/assets/account-icon.svg";
 
 export default {
   name: "MainLayout",
   components: {
-    Navbar,
+    // Navbar,
     Footer,
+    ModalError,
   },
   data() {
     return {
       pageTitle: "",
       pageSubtitle: "",
+      featureTitle: "",
       progress: 0,
+      isModalError: false,
+      modalContent: [
+        {
+          label: "Apakah Anda Yakin Ingin Keluar?",
+          icon: errorIcon,
+          description:
+            "Data yang sudah Anda isi akan hilang dan Anda diharuskan untuk mengisi dari awal lagi.",
+          buttonString1: "Tetap di Halaman Ini",
+          buttonString2: "Keluar",
+        }
+      ],
     };
   },
   watch: {
@@ -53,7 +91,17 @@ export default {
     },
   },
   methods: {
+    handleModalClose() {
+      this.isModalError = false;
+    },
+    goBack() {
+      window.location.href = "/";
+    },
+    goToHome() {
+      this.$router.push("/");
+    },
     updatePageTitle(route) {
+      this.featureTitle = route.meta.feature || "";
       this.pageTitle = route.meta.title || "";
       this.pageSubtitle = route.meta.subtitle || "";
     },

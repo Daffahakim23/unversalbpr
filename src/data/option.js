@@ -14,6 +14,15 @@ export const pekerjaanOptions = [
   { label: "Lainnya", value: "lainnya" },
 ];
 
+export const metodePenyetoranNTBOptions = [
+  { label: " Debet Rekening Tabungan Universal", value: "1" },
+];
+
+export const metodePenyetoranExisitingOptions = [
+  { label: " Debet Rekening Tabungan Universal", value: "1" },
+  { label: " Debet Rekening Tabungan Universal", value: "2" },
+];
+
 export const jangkaWaktuDepositoUniversalOptions = [
   { label: "1 Bulan (5.5% per tahun)", value: "1" },
   { label: "3 Bulan (6,25% per tahun)", value: "2" },
@@ -47,6 +56,25 @@ export const jangkaWaktuDepositoPeduliOptions = [
   { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3" },
 ];
 
+export const jangkaWaktuDepositoOptions = [
+  { label: "1 Bulan", value: "1" },
+  { label: "3 Bulan", value: "3" },
+  { label: "6 Bulan", value: "6" },
+  { label: "9 Bulan", value: "9" },
+  { label: "12 Bulan", value: "12" },
+  { label: "24 Bulan", value: "24" },
+  { label: "36 Bulan", value: "36" },
+];
+
+export const sukuBungaDepositoOptions = [
+  { label: "5,50%", value: "5,50" },
+  { label: "5,75%", value: "5,75" },
+  { label: "6,00%", value: "6,00" },
+  { label: "6,25%", value: "6,25" },
+  { label: "6,50%", value: "6,50" },
+  { label: "6,75%", value: "6,75" },
+];
+
 export const tandaPengenalOptions = [
   { label: "KTP", value: "1" },
 ];
@@ -54,14 +82,13 @@ export const tandaPengenalOptions = [
 export const memilikiTabunganOptions = [
   { label: "Saya belum punya Rekening Tabungan Universal", value: "1" },
   { label: "Saya sudah punya Rekening Tabungan Universal dan masih aktif", value: "2" },
-  { label: "Saya sudah punya Rekening Tabungan Universal tetapi sudah tidak aktif", value: "3" },
 ];
 
 
 export const pembayaranBungaOptions = [
-  { label: "Pada Saat Jatuh Tempo Nominal, Bunga Ditambahkan ke Nominal", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal atas Nama Anda", value: "1" },
-  { label: "Pindah buku ke rekening Tabungan Universal atas nama pihak lain", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal atas nama pihak lain", value: "2" },
-  { label: "Pindah Buku Ke Rekening Tabungan Universal atas nama saya", subtitle: "Bunga Deposito akan dipindahbuku melalui transfer ke rekening bank lain", value: "3" },
+  { label: "Tambahkan ke Nominal Deposito", subtitle: " Bunga akan ditambahkan ke nominal Deposito saat jatuh tempo", value: "1" },
+  { label: "Pindah buku ke Rekening Tabungan Universal atas nama pihak lain", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal atas nama pihak lain", value: "2" },
+  { label: "Pindah buku ke Rekening Tabungan Universal atas nama saya ", subtitle: "Bunga Deposito akan dipindahbuku melalui transfer ke rekening bank lain", value: "3" },
   { label: "Transfer ke Rekening Bank lain", subtitle: " Bunga akan ditambahkan ke nominal Deposito saat jatuh tempo", value: "4" },
 ];
 
@@ -121,6 +148,18 @@ export const jabatanOptions = [
   { label: "Lainnya", value: "26" },
 ];
 
+export const masaAktifKTPOptions = [
+  { label: "Seumur Hidup", value: "1" },
+];
+
+export const getMasaAktifKTPOptions = (tanggalBerlakuSampai) => {
+  const options = [{ label: "Seumur Hidup", value: "1" }];
+  if (tanggalBerlakuSampai) {
+    options.push({ label: tanggalBerlakuSampai, value: tanggalBerlakuSampai });
+  }
+  return options;
+};
+
 export const produkOptions = [
   { label: "Tabungan Universal", value: "1" },
   { label: "Deposito Berjangka", value: "2" },
@@ -136,7 +175,7 @@ export const produkDepositoOptions = [
 
 export const korespondensiOptions = [
   { label: "Alamat Tempat Tinggal sesuai KTP", value: "1" },
-  { label: "Alamat Tinggal Terkini", value: "2" },
+  { label: "Alamat Tempat Tinggal Terkini", value: "2" },
   { label: "Alamat kantor", value: "3" },
 ];
 
@@ -151,6 +190,7 @@ export const hubunganNasabahOptions = [
 export const hubunganPemohonKDOptions = [
   { label: "Suami / Istri", value: "Suami / Istri" },
   { label: "Orang Tua / Anak", value: "Orang Tua / Anak" },
+  { label: "Lainnya", value: "lainnya" },
 ];
 
 export const jenisIdentitasBOOptions = [
@@ -174,14 +214,14 @@ export const jumlahPenghasilanOptions = [
   { label: "25jt - < 50jt", value: "3" },
   { label: "50jt - < 100jt", value: "4" },
   { label: "100jt - < 500jt", value: "5" },
-  { label: "< 500jt", value: "6" },
+  { label: "≥ 500jt", value: "6" },
 ];
 
 export const statusPerkawinanOptions = [
-  { label: "Menikah", value: "1" },
-  { label: "Belum Menikah", value: "2" },
-  { label: "Cerai Hidup", value: "3" },
-  { label: "Cerai Mati", value: "4" },
+  { label: "Menikah", value: 1 },
+  { label: "Belum Menikah", value: 2 },
+  { label: "Cerai Hidup", value: 3 },
+  { label: "Cerai Mati", value: 4 },
 ];
 
 export const pendidikanOptions = [
@@ -196,25 +236,38 @@ export const pendidikanOptions = [
 
 export const hobiOptions = [
   { label: "Olahraga", value: "1" },
-  { label: "Membaca", value: "2" },
-  { label: "Berkebun", value: "3" },
-  { label: "Musik", value: "4" },
-  { label: "Fotografi", value: "5" },
+  { label: "Jalan - Jalan", value: "2" },
+  { label: "Seni", value: "3" },
+  { label: "Belanja", value: "4" },
+  { label: "Lainnya", value: "lainnya" },
 ];
 
 export const tujuanOptions = [
-  { label: "Menabung", value: "1" },
+  { label: "Simpanan", value: "1" },
   { label: "Transaksi", value: "2" },
   { label: "Investasi", value: "3" },
 ];
 
+export const alasanPencairanOptions = [
+  { label: "Pencairan Deposito Sesuai Jatuh Tempo", value: "1" },
+  { label: "Keperluan Pribadi", value: "2" },
+  { label: "Kebutuhan Data Mendesak", value: "3" },
+  { label: "Perubahan Rencana Keuangan", value: "4" },
+  { label: "Investasi atau Peluang Bisnis Bar", value: "5" },
+];
+
+export const rekeningTujuanOptions = [
+  { label: "Rekening Universal BPR", value: "1" },
+  { label: "Rekening Bank Lain", value: "2" },
+];
+
 export const alamatSesuaiEktpOptions = [
-  { label: "YA", value: true },
+  { label: "IYA", value: true },
   { label: "TIDAK", value: false },
 ];
 
 export const trueFalseOptions = [
-  { label: "YA", value: true },
+  { label: "IYA", value: true },
   { label: "TIDAK", value: false },
 ];
 
@@ -224,8 +277,8 @@ export const memilikiRekeningOptions = [
 ];
 
 export const npwpOptions = [
-  { label: "Sudah memiliki NPWP", value: true },
-  { label: "Belum memiliki NPWP", value: false },
+  { label: "Belum memiliki NPWP", value: true },
+  { label: "Berdasarkan peraturan tidak diwajibkan memiliki NPWP", value: false },
 ];
 
 export const npwp2Options = [
@@ -249,15 +302,29 @@ export const sumberDataNasabahOptions = [
 ];
 
 export const agamaOptions = [
-  { label: "Islam", value: "1" },
-  { label: "Kristen", value: "2" },
-  { label: "Katholik", value: "3" },
-  { label: "Hindu", value: "4" },
-  { label: "Budha", value: "5" },
-  { label: "Konghucu", value: "6" },
+  { label: "Islam", value: 1 },
+  { label: "Kristen", value: 2 },
+  { label: "Katholik", value: 3 },
+  { label: "Hindu", value: 4 },
+  { label: "Budha", value: 5 },
+  { label: "Konghucu", value: 6 },
 ];
 
 export const kewarganegaraanOptions = [
   { label: "WNI", value: true },
   { label: "Lainnya", value: false },
+];
+
+export const kewarganegaraanBOOptions = [
+  { label: "Indonesia", value: "1" },
+  { label: "Amerika Serikat", value: "2" },
+  { label: "Kanada", value: "3" },
+  { label: "Inggris", value: "4" },
+  { label: "Australia", value: "5" },
+  { label: "Jepang", value: "6" },
+  { label: "Tiongkok", value: "7" },
+  { label: "Jerman", value: "8" },
+  { label: "Prancis", value: "9" },
+  { label: "Italia", value: "10" },
+  { label: "Singapura", value: "11" },
 ];

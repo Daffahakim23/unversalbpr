@@ -3,8 +3,9 @@
     <FormField label="Nama Lengkap*" id="namaLengkap" type="text" v-model="form.namaLengkap"
       placeholder="Masukkan Nama Lengkap Anda" />
 
-    <FormField label="Email (Opsional)" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      hint="Pastikan Anda mengisi alamat email yang aktif" required />
+    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      required :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening"
       placeholder="Masukkan Nomor Rekening Anda" required
@@ -14,7 +15,7 @@
       placeholder="Pilih Tanda Pengenal Anda" :options="tandaPengenalOptions" required />
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
-        Konfirmasi Email
+        Lanjutkan
       </ButtonComponent>
     </div>
   </form>
@@ -40,8 +41,12 @@ export default {
   data() {
     return {
       form: new FormModelRequestEmailVerification(),
+      touched: {
+        email: false,
+      },
       tandaPengenalOptions,
       isSubmitting: false,
+      emailError: false,
     };
   },
 
@@ -61,18 +66,28 @@ export default {
     //     console.error("Navigation error:", error);
     //   }
     // },
-    async fetchData() {
-      try {
-        const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-        console.log("Response data:", response.data);
-        const data = Array.isArray(response.data) ? response.data[0] : response.data;
-        if (data) {
-          Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    },
+    handleEmailBlur() {
+      this.touched.email = true;
+      if (this.form.email) {
+        this.emailError = !this.validateEmail(this.form.email);
       }
     },
+
+    // async fetchData() {
+    //   try {
+    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
+    //     console.log("Response data:", response.data);
+    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
+    //     if (data) {
+    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // },
 
     async handleSubmit() {
       try {
@@ -115,7 +130,7 @@ export default {
   },
 
   created() {
-    this.fetchData();
+    // this.fetchData();
   },
 };
 </script>

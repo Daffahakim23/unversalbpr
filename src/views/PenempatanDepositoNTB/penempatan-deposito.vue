@@ -2,33 +2,42 @@
   <form @submit.prevent="handleSubmit">
     <FormField label="Pilih Produk yang Diinginkan" id="produk" :isDropdown="true" v-model="form.produk"
       placeholder="Pilih Produk yang Anda Inginkan" :options="produkOptions" required />
-    <FormField label="Pilih Produk Deposito" id="produk" :isDropdown="true" v-model="form.produkDeposito"
+
+    <FormField label="Pilih Produk Deposito" id="produkDeposito" :isDropdown="true" v-model="form.produkDeposito"
       placeholder="Pilih Produk Deposito yang Anda Inginkan" :options="produkDepositoOptions" required />
+
     <FlagBox type="info" closable class="mb-4">
       <p class="text-sm font-normal">Informasi mengenai Produk dan Layanan dapat diakses melalui website
         universalbpr.co.id atau dengan mengklik tombol "Info Produk" di bagian atas halaman ini.</p>
     </FlagBox>
+
     <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      hint="Pastikan Anda Mengisi Alamat Email yang Aktif" required />
-    <FormField label="Nomor Handphone *" id="phone" type="text" v-model="form.phone"
-      placeholder="Masukkan Nomor Handphone Anda" hint="Pastikan Anda mengisi Nomor Handphone yang Aktif" required
-      @input="form.phone = form.phone.replace(/\D/g, '')" />
+      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      required :error="emailError" @blur="handleEmailBlur" />
+
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
+      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
+      :error="phoneError" @blur="handlePhoneBlur" />
+
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer Adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
+
     <RadioButtonChoose label="Dari mana Anda Mengetahui Tentang Kami" :options="sumberDataNasabahOptions"
       v-model="form.sumber" name="sumber" />
     <div v-if="form.sumber === 'lainnya'">
       <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder=" " required />
     </div>
+
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
         Lanjutkan
       </ButtonComponent>
     </div>
   </form>
-  <ReusableModal :title="'Syarat dan Ketentuan'" :isOpen="isModalOpen" @close="isModalOpen = false"
-    @confirm="handleModalConfirm" />
+  <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
+    @close="isModalOpen = false" @confirm="handleModalConfirm" />
 </template>
 
 <script>
@@ -54,40 +63,66 @@ export default {
   },
   data() {
     return {
+      apiUrl: "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_OPEN_DEPOSIT",
       form: new FormModelRequestEmailVerification(),
+      touched: {
+        email: false,
+        phone: false,
+      },
       sumberDataNasabahOptions,
       produkDepositoOptions,
       produkOptions,
       selectedProduk: "",
+      selectedCountryCode: "ID",
       isModalOpen: false,
       isSubmitting: false,
+      emailError: false,
+      phoneError: false,
     };
   },
 
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      // console.log("isButtonDisabled:", !(this.form.email && this.form.phone && this.form.sumber));
+      const phoneValid = this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
       if (this.form.sumber === "lainnya") {
         return !this.form.sumberLainnya.trim();
       }
-      return !(emailValid && this.form.phone && this.form.sumber);
+      return !(emailValid && phoneValid && this.form.sumber && this.form.produk && this.form.produkDeposito);
     },
   },
 
   methods: {
-    //   async fetchData() {
-    //     try {
-    //       const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //       console.log("Response data:", response.data);
-    //       const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //       if (data) {
-    //         Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //       }
-    //     } catch (error) {
-    //       console.error("Error fetching data:", error);
-    //     }
-    //   },
+    validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    },
+    handleEmailBlur() {
+      this.touched.email = true;
+      if (this.form.email) {
+        this.emailError = !this.validateEmail(this.form.email);
+      }
+    },
+    validatePhone(phone) {
+      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+    },
+    handlePhoneBlur() {
+      this.touched.phone = true;
+      if (this.form.phone) {
+        this.phoneError = !this.validatePhone(this.form.phone);
+      }
+    },
+    async fetchData() {
+      try {
+        const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
+        console.log("Response data:", response.data);
+        const data = Array.isArray(response.data) ? response.data[0] : response.data;
+        if (data) {
+          Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
 
     async handleSubmit() {
       try {
@@ -109,8 +144,8 @@ export default {
     },
 
     async handleModalConfirm() {
-      if (this.isSubmitting) return; // Cegah jika sudah dalam proses submit
-      this.isSubmitting = true; // Set agar tidak bisa submit lagi sementara
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
 
       try {
         if (!this.requestData) {
@@ -138,10 +173,13 @@ export default {
 
         if (response.status === 200) {
           const fileStore = useFileStore();
+          fileStore.setFormEmailRequestDepositoNTB(this.form);
           fileStore.setUuid(response.data.uuid);
+          fileStore.setNoHP(this.requestData.no_hp);
           fileStore.setEmail(this.requestData.alamat_email);
           console.log("UUID :", response.data.uuid);
           console.log("Email :", this.requestData.alamat_email);
+          console.log("Nomor Handphone :", this.requestData.no_hp);
 
           this.$router.push({ path: "/dashboard/verifikasiEmailPenempatanDepositoNTB" });
 
@@ -162,7 +200,7 @@ export default {
 
   mounted() {
     this.$emit("update-progress", 15);
-    // this.fetchData();
+    this.fetchData();
   },
 };
 </script>

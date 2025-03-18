@@ -74,7 +74,7 @@ export default {
     border-radius: 8px;
     padding: 12px;
     gap: 8px;
-    font-weight: 500;
+    font-weight: 300;
     position: relative;
     /* Untuk memastikan tombol close tetap dalam box */
 }
@@ -93,8 +93,8 @@ export default {
 }
 
 .close-icon {
-    width: 16px;
-    height: 16px;
+    width: 32px;
+    height: 32px;
 }
 
 /* Info */
@@ -113,9 +113,9 @@ export default {
 
 /* Warning */
 .flag-warning {
-    border: 1px solid #FFFDBD;
-    background-color: #FFFEE0;
-    color: #BDB600;
+    border: 1px solid #FFE1E0;
+    background-color: #FFF5F5;
+    color: #540401;
 }
 
 /* Success */

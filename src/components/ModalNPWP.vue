@@ -2,7 +2,7 @@
     <transition name="fade">
         <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div
-                class="flex flex-col bg-white rounded-2xl shadow-lg dark:bg-gray-700 max-w-sm w-full p-6 relative animate-fadeIn">
+                class="flex flex-col bg-white rounded-2xl shadow-lg dark:bg-gray-700 w-1/3 sm:w-1/3 max-w-lg p-8 relative animate-fadeIn">
                 <div class="relative text-center items-baseline">
                     <h3 class="text-xl font-semibold text-primary dark:text-white px-6">
                         Apakah Anda sudah memiliki NPWP (Nomor Wajib Pajak)?
@@ -11,20 +11,19 @@
                         hover:text-red-500 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                         &times;
                     </button> -->
-                    <button @click="$emit('close')"
-                        class="absolute right-0 top-1 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">
+                    <button @click="$emit('close')" class="absolute right-0 top-0 p-1 rounded-lg hover:bg-gray-200">
                         <img src="@/assets/close-icon.svg" alt="Close" class="h-6 w-6">
                     </button>
                 </div>
                 <p class="text-neutral-800 dark:text-gray-300 text-center mt-2">
                     Pilih salah satu status NPWP anda terkini.
                 </p>
-                <div class="flex justify-between mt-4 gap-2">
-                    <ButtonComponent @click="handleNpwpYes" class="flex-1">
+                <div class="flex flex-col justify-between mt-4 gap-2">
+                    <ButtonComponent @click="handleNpwpYes" class="flex-1 w-full">
                         Saya memiliki NPWP
                     </ButtonComponent>
-                    <ButtonComponent @click="handleNpwpNo" variant="outline" class="flex-1">
-                        Saya belum/tidak memiliki NPWP
+                    <ButtonComponent @click="handleNpwpNo" variant="ghost" class="flex-1 w-full">
+                        Saya tidak memiliki NPWP
                     </ButtonComponent>
                 </div>
             </div>

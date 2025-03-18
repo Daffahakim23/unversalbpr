@@ -6,7 +6,7 @@
                     Panduan Upload {{ documentTypeText }}
                 </h3>
                 <p class="text-neutral-800 dark:text-gray-300 mt-2">Pastikan hal berikut saat upload {{ documentTypeText
-                    }}:</p>
+                }}:</p>
             </div>
 
             <div class="mt-4 space-y-4">

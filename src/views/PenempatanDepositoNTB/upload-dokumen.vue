@@ -46,8 +46,8 @@
       <div class="flex items-center">
         <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
         <div>
-          <span class="text-sm font-medium text-neutral-900">Liveness</span>
-          <p class="text-xs text-neutral-500">Foto Liveness Anda</p>
+          <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
+          <p class="text-xs text-neutral-500">Foto Diri Anda</p>
         </div>
       </div>
       <div>

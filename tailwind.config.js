@@ -12,7 +12,7 @@ export default {
         "neutral-300": "#BEBEBB",
         "neutral-400": "#AFB0AB",
         "neutral-500": "#93938F",
-        "neutral-600": "#E7D7D7",
+        "neutral-600": "#7D7D78",
         "neutral-700": "#60605C",
         "neutral-800": "#464643",
         "neutral-900": "#1C1C17",

@@ -9,7 +9,7 @@
         <FormField label="Pekerjaan Lainnya *" id="pekerjaanLainnya" type="text" v-model="form.pekerjaanLainnya"
           placeholder="Masukkan Pekerjaan Lainnya" />
       </div>
-      <FormField label="Sumber Penghasilan" id="penghasilan" :isDropdown="true" v-model="form.penghasilan"
+      <FormField label="Sumber Dana" id="penghasilan" :isDropdown="true" v-model="form.penghasilan"
         :options="penghasilanOptions" placeholder="Pilih Sumber Penghasilan Anda" :required="true" />
       <div v-if="form.penghasilan === 'lainnya'" class="">
         <FormField label="penghasilan Lainnya *" id="penghasilanLainnya" type="text" v-model="form.penghasilanLainnya"
@@ -44,10 +44,13 @@
         <FormField label="Kode Pos" id="kodePosDK" v-model="form.kodePosPerusahaanDK" type="Number"
           placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
       </div>
-      <FormField label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunDK" v-model="form.lamaBekerjaTahunDK"
-        placeholder="Masukkan Lama Bekerja Anda" />
-      <FormField label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanDK" v-model="form.lamaBekerjaBulanDK"
-        placeholder="Masukkan Lama Bekerja Anda" />
+      <div class="flex flex-row gap-4">
+        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunDK" v-model="form.lamaBekerjaTahunDK" :min="1"
+          :max="50" :required="true" />
+
+        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanDK" v-model="form.lamaBekerjaBulanDK" :min="1"
+          :max="50" :required="true" />
+      </div>
       <FormField label="Nomor Telepon Kantor (Opsional)" id="nomorTeleponKantorDK" v-model="form.nomorTeleponKantorDK"
         placeholder="Masukkan Nomor Telepon Kantor Anda" />
       <FormField label="Nomor Telepon Fax (Opsional)" id="nomorTeleponFaxDK" v-model="form.nomorTeleponFaxDK"
@@ -137,11 +140,14 @@
         <FormField label="Jabatan Lainnya *" id="jabatanLainnyaBO" type="text" v-model="form.jabatanLainnyaBO"
           placeholder="Masukkan Jabatan Lainnya" />
       </div>
-      <FormField label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunBO" type="Number" v-model="form.lamaBekerjaTahunBO"
-        placeholder="Masukkan Lama Bekerja Beneficial Owner Anda" />
-      <FormField label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanBO" type="Number" v-model="form.lamaBekerjaBulanBO"
-        placeholder="Masukkan Lama Bekerja Beneficial Owner Anda" />
-      <FormField label="Penghasilan" id="penghasilanBO" :isDropdown="true" v-model="form.penghasilanBO"
+      <div class="flex flex-row gap-4">
+        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunBO" v-model="form.lamaBekerjaTahunBO" :min="1"
+          :max="50" :required="true" />
+
+        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanBO" v-model="form.lamaBekerjaBulanBO" :min="1"
+          :max="50" :required="true" />
+      </div>
+      <FormField label="Sumber Dana" id="penghasilanBO" :isDropdown="true" v-model="form.penghasilanBO"
         placeholder="Pilih Penghasilan Beneficial Owner Anda" :options="penghasilanOptions" />
       <div v-if="form.penghasilanBO === 'lainnya'" class="">
         <FormField label="Penghasilan Lainnya *" id="penghasilanLainnyaBO" type="text"

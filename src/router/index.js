@@ -68,6 +68,21 @@ import KonfirmasiDataPengkinianData from "../views/PengkinianData/konfirmasi-dat
 import EmailOTPPengkinianData from "../views/PengkinianData/otp-no-hp.vue";
 import HalamanSuksesPengkinianData from "../views/PengkinianData/halaman-sukses.vue";
 
+// Pencairan Deposito
+import PencairanDeposito from "../views/PencairanDeposito/pencairan-deposito.vue";
+import verifikasiEmailPencairanDeposito from "../views/PencairanDeposito/verifikasi-email.vue";
+import UploadDokumenPencairanDeposito from "../views/PencairanDeposito/upload-dokumen.vue";
+import PreviewScreenPencairanDeposito from "../views/PencairanDeposito/preview-dokumen.vue";
+import DataKTPPencairanDeposito from "../views/PencairanDeposito/data-ktp.vue";
+import DataInstruksiPencairanDeposito from "../views/PencairanDeposito/instruksi-pencairan-deposito.vue";
+import DataPencairanDepositoOnUs from "../views/PencairanDeposito/data-pencairan-onUs.vue";
+import DataPencairanDepositoOfUs from "../views/PencairanDeposito/data-pencairan-ofUs.vue";
+import KonfirmasiDataPencairanDeposito from "../views/PencairanDeposito/konfirmasi-data.vue";
+import EmailOTPPencairanDeposito from "../views/PencairanDeposito/otp-no-hp.vue";
+import HalamanSuksesPencairanDeposito from "../views/PencairanDeposito/halaman-sukses.vue";
+
+
+
 const routes = [
   {
     path: "/",
@@ -89,6 +104,7 @@ const routes = [
         name: "pembukaanRekeningNTB",
         component: PembukaanRekeningNTB,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Halo, Senang Bertemu Dengan Anda.",
           subtitle: "Yuk, pilih produk yang diinginkan dan isi data dirimu terlebih dahulu",
         },
@@ -97,25 +113,37 @@ const routes = [
         path: "verifikasiEmailPembukaanRekeningNTB",
         name: "VerifikasiEmailPembukaanRekeningNTB",
         component: verifikasiEmailPembukaanRekeningNTB,
-        meta: { title: "Email Verifikasi" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Verifikasi Email"
+        },
       },
       {
         path: "uploadDokumenPembukaanRekeningNTB",
         name: "UploadDokumenPembukaanRekeningNTB",
         component: UploadFilePembukaanRekeningNTB,
-        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Upload Dokumen",
+          subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
+        },
       },
       {
         path: "npwpNTB",
         name: "NpwpNTB",
         component: NpwpNTB,
-        meta: { title: "Pernyatan berkaitan NPWP", subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening," },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Pernyatan berkaitan NPWP",
+          subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,"
+        },
       },
       {
         path: "fotoDiriPembukaanRekeningNTB",
         name: "FotoDiriPembukaanRekeningNTB",
         component: FotoDiriPembukaanRekeningNTB,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Foto Diri",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -129,6 +157,7 @@ const routes = [
         name: "PreviewScreenPembukaanRekeningNTB",
         component: PreviewScreenPembukaanRekeningNTB,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Hasil Foto",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -142,7 +171,8 @@ const routes = [
         name: "DataKTPPembukaanRekeningNTB",
         component: DataKTPPembukaanRekeningNTB,
         meta: {
-          title: "Data KTP",
+          feature: "Pembukaan Rekening Baru",
+          title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
         },
@@ -155,6 +185,7 @@ const routes = [
         name: "DataPribadiPembukaanRekeningNTB",
         component: DataPribadiPembukaanRekeningNTB,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Data Pribadi",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
@@ -164,13 +195,18 @@ const routes = [
         path: "konfirmasiDataPembukaanRekeningNTB",
         name: "konfirmasiDataPembukaanRekeningNTB",
         component: KonfirmasiDataPembukaanRekeningNTB,
-        meta: { title: "Konfirmasi Data" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Yuk, Konfirmasi Semua Data Anda",
+          subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi",
+        },
       },
       {
         path: "dataPekerjaanPembukaanRekeningNTB",
         name: "DataPekerjaanPembukaanRekeningNTB",
         component: DataPekerjaanPembukaanRekeningNTB,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Data Pekerjaan & Finansial",
           subtitle:
             "Untuk melanjutkan proses, kami memerlukan informasi tambahan mengenai pekerjaan Anda.",
@@ -180,13 +216,18 @@ const routes = [
         path: "emailOTPPembukaanRekeningNTB",
         name: "emailOTPPembukaanRekeningNTB",
         component: EmailOTPPembukaanRekeningNTB,
-        meta: { title: "OTP dan Submit E-Form" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Konfirmasi OTP"
+        },
       },
       {
         path: "halamanSuksesPembukaanRekeningNTB",
         name: "halamanSuksesPembukaanRekeningNTB",
         component: HalamanSuksesPembukaanRekeningNTB,
-        meta: { title: "" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+        },
       },
 
       // Pembukaan Rekening Existing
@@ -195,6 +236,7 @@ const routes = [
         name: "pembukaanRekeningExisting",
         component: PembukaanRekeningExisting,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Halo, Senang Bertemu dengan Anda Kembali",
           subtitle: "Yuk, pilih produk yang diinginkan dan isi data dirimu terlebih dahulu"
         },
@@ -203,19 +245,27 @@ const routes = [
         path: "verifikasiEmailPembukaanRekeningExisting",
         name: "VerifikasiEmailPembukaanRekeningExisting",
         component: verifikasiEmailPembukaanRekeningExisting,
-        meta: { title: "Email Verifikasi Existing" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Verifikasi Email"
+        },
       },
       {
         path: "uploadDokumenPembukaanRekeningExisting",
         name: "UploadDokumenPembukaanRekeningExisting",
         component: UploadFilePembukaanRekeningExisting,
-        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Upload Dokumen",
+          subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
+        },
       },
       {
         path: "previewScreenPembukaanRekeningExisting",
         name: "PreviewScreenPembukaanRekeningExisting",
         component: PreviewScreenPembukaanRekeningExisting,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Hasil Foto Existing",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -229,6 +279,7 @@ const routes = [
         name: "FotoDiriPembukaanRekeningExisting",
         component: FotoDiriPembukaanRekeningExisting,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Foto Diri",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -242,7 +293,8 @@ const routes = [
         name: "DataKTPPembukaanRekeningExisting",
         component: DataKTPPembukaanRekeningExisting,
         meta: {
-          title: "Data KTP Existing",
+          feature: "Pembukaan Rekening Baru",
+          title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
         },
@@ -255,6 +307,7 @@ const routes = [
         name: "PerubahanDataPembukaanRekeningExisting",
         component: PerubahanDataPembukaanRekeningExisting,
         meta: {
+          feature: "Pembukaan Rekening Baru",
           title: "Perubahan Data Existing",
           subtitle:
             "Untuk melanjutkan proses, kami memerlukan informasi tambahan yang tidak tercakup dalam KTP Anda.",
@@ -264,38 +317,54 @@ const routes = [
         path: "konfirmasiDataPembukaanRekeningExisting",
         name: "konfirmasiDataPembukaanRekeningExisting",
         component: KonfirmasiDataPembukaanRekeningExisting,
-        meta: { title: "Konfirmasi Data Existing" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi"
+        },
       },
       {
         path: "emailOTPPembukaanRekeningExisting",
         name: "emailOTPPembukaanRekeningExisting",
         component: EmailOTPPembukaanRekeningExisting,
-        meta: { title: "OTP dan Submit E-Form Existing" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Konfirmasi OTP"
+        },
       },
       {
         path: "halamanSuksesPembukaanRekeningExisting",
         name: "halamanSuksesPembukaanRekeningExisting",
         component: HalamanSuksesPembukaanRekeningExisting,
-        meta: { title: "" },
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+        },
       },
 
       {
         path: "penempatanDepositoNTB",
         name: "PenempatanDepositoNTB",
         component: PenempatanDepositoNTB,
-        meta: { title: "Halo, Senang Bertemu Dengan Anda Kembali", subtitle: "Sebagai Calon Nasabah Universal BPR yang hendak membuka deposito, Anda diwajibkan memiliki rekening Tabungan Universal, dan mengisi data diri Anda terlebih dahulu. Silakan pilih produk Tabungan Universal dibawah ini." },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Halo, Senang Bertemu Dengan Anda Kembali",
+          subtitle: "Sebagai Calon Nasabah Universal BPR yang hendak membuka deposito, Anda diwajibkan memiliki rekening Tabungan Universal, dan mengisi data diri Anda terlebih dahulu. Silakan pilih produk Tabungan Universal dibawah ini."
+        },
       },
       {
         path: "verifikasiEmailPenempatanDepositoNTB",
         name: "verifikasiEmailPenempatanDepositoNTB",
         component: VerifikasiEmailPenempatanDepositoNTB,
-        meta: { title: "Verifikasi Email" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Verifikasi Email"
+        },
       },
       {
         path: "dataPenempatanDepositoNTB",
         name: "dataPenempatanDepositoNTB",
         component: DataPenempatanDepositoNTB,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Atur Penempatan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
@@ -305,13 +374,18 @@ const routes = [
         path: "npwpDepositoNTB",
         name: "NpwpDepositoNTB",
         component: NpwpDepositoNTB,
-        meta: { title: "Pernyatan berkaitan NPWP", subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening," },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Pernyatan berkaitan NPWP",
+          subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,"
+        },
       },
       {
         path: "uploadDokumenPenempatanDepositoNTB",
         name: "UploadDokumenPenempatanDepositoNTB",
         component: UploadFilePenempatanDepositoNTB,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Upload Dokumen",
           subtitle:
             "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening",
@@ -322,6 +396,7 @@ const routes = [
         name: "PreviewScreenPenempatanDepositoNTB",
         component: PreviewScreenPenempatanDepositoNTB,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Hasil Foto",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -335,6 +410,7 @@ const routes = [
         name: "FotoDiriPenempatanDepositoNTB",
         component: FotoDiriPenempatanDepositoNTB,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Foto Diri",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -348,7 +424,8 @@ const routes = [
         name: "DataKTPPenempatanDepositoNTB",
         component: DataKTPPenempatanDepositoNTB,
         meta: {
-          title: "Data KTP",
+          feature: "Penempatan Deposito",
+          title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
         },
@@ -358,6 +435,7 @@ const routes = [
         name: "DataPribadiPenempatanDepositoNTB",
         component: DataPribadiPenempatanDepositoNTB,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Data Pribadi",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
@@ -367,25 +445,36 @@ const routes = [
         path: "konfirmasiDataPenempatanDepositoNTB",
         name: "konfirmasiDataPenempatanDepositoNTB",
         component: KonfirmasiDataPenempatanDepositoNTB,
-        meta: { title: "Konfirmasi Data" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi",
+        },
       },
       {
         path: "dataPekerjaanPenempatanDepositoNTB",
         name: "DataPekerjaanPenempatanDepositoNTB",
         component: DataPekerjaanPenempatanDepositoNTB,
-        meta: { title: "Data Pekerjaan & Finansial" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Data Pekerjaan & Finansial"
+        },
       },
       {
         path: "emailOTPPenempatanDepositoNTB",
         name: "emailOTPPenempatanDepositoNTB",
         component: EmailOTPPenempatanDepositoNTB,
-        meta: { title: "OTP dan Submit E-Form" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Konfirmasi OTP"
+        },
       },
       {
         path: "halamanSuksesPenempatanDepositoNTB",
         name: "halamanSuksesPenempatanDepositoNTB",
         component: HalamanSuksesPenempatanDepositoNTB,
-        meta: { title: "" },
+        meta: {
+          feature: "Penempatan Deposito",
+        },
       },
 
       // Penempatan Deposito Existing
@@ -393,19 +482,27 @@ const routes = [
         path: "penempatanDepositoExisting",
         name: "penempatanDepositoExisting",
         component: PenempatanDepositoExisting,
-        meta: { title: "Halo, Senang Bertemu Dengan Anda Kembali", subtitle: "Yuk, pilih produk yang diinginkan dan isi data dirimu terlebih dahulu!" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Halo, Senang Bertemu Dengan Anda Kembali",
+          subtitle: "Yuk, pilih produk yang diinginkan dan isi data dirimu terlebih dahulu!"
+        },
       },
       {
         path: "verifikasiEmailPenempatanDepositoExisting",
         name: "VerifikasiEmailPenempatanDepositoExisting",
         component: verifikasiEmailPenempatanDepositoExisting,
-        meta: { title: "Email Verifikasi Existing" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Email Verifikasi Existing"
+        },
       },
       {
         path: "dataPenempatanDepositoExisting",
         name: "dataPenempatanDepositoExisting",
         component: DataPenempatanDepositoExisting,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Atur Penempatan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
@@ -415,13 +512,18 @@ const routes = [
         path: "uploadDokumenPenempatanDepositoExisting",
         name: "UploadDokumenPenempatanDepositoExisting",
         component: UploadFilePenempatanDepositoExisting,
-        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Upload Dokumen",
+          subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
+        },
       },
       {
         path: "previewScreenPenempatanDepositoExisting",
         name: "PreviewScreenPenempatanDepositoExisting",
         component: PreviewScreenPenempatanDepositoExisting,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Hasil Foto Existing",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -435,6 +537,7 @@ const routes = [
         name: "FotoDiriPenempatanDepositoExisting",
         component: FotoDiriPenempatanDepositoExisting,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Foto Diri",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -448,7 +551,8 @@ const routes = [
         name: "DataKTPPenempatanDepositoExisting",
         component: DataKTPPenempatanDepositoExisting,
         meta: {
-          title: "Data KTP Existing",
+          feature: "Penempatan Deposito",
+          title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
         },
@@ -458,6 +562,7 @@ const routes = [
         name: "PerubahanDataPenempatanDepositoExisting",
         component: PerubahanDataPenempatanDepositoExisting,
         meta: {
+          feature: "Penempatan Deposito",
           title: "Perubahan Data Existing",
           subtitle:
             "Untuk melanjutkan proses, kami memerlukan informasi tambahan yang tidak tercakup dalam KTP Anda.",
@@ -467,19 +572,27 @@ const routes = [
         path: "konfirmasiDataPenempatanDepositoExisting",
         name: "konfirmasiDataPenempatanDepositoExisting",
         component: KonfirmasiDataPenempatanDepositoExisting,
-        meta: { title: "Konfirmasi Data Existing" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
+        },
       },
       {
         path: "emailOTPPenempatanDepositoExisting",
         name: "emailOTPPenempatanDepositoExisting",
         component: EmailOTPPenempatanDepositoExisting,
-        meta: { title: "OTP dan Submit E-Form Existing" },
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Konfirmasi OTP Existing"
+        },
       },
       {
         path: "halamanSuksesPenempatanDepositoExisting",
         name: "halamanSuksesPenempatanDepositoExisting",
         component: HalamanSuksesPenempatanDepositoExisting,
-        meta: { title: "" },
+        meta: {
+          feature: "Penempatan Deposito",
+        },
       },
 
       // Pengkinian Data
@@ -487,18 +600,27 @@ const routes = [
         path: "pengkinianData",
         name: "pengkinianData",
         component: PengkinianData,
-        meta: { title: "Pengkinian Data" },
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Pengkinian Data",
+          subtitle: ""
+        },
       },
       {
         path: "uploadDokumenPengkinianData",
         name: "uploadDokumenPengkinianData",
         component: UploadDokumenPengkinianData,
-        meta: { title: "Upload Dokumen", subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening" },
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Upload Dokumen",
+          subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
+        },
       }, {
         path: "previewPengkinianData",
         name: "PreviewScreenPengkinianData",
         component: PreviewScreenPengkinianData,
         meta: {
+          feature: "Pengkinian Data",
           title: "Hasil Foto",
           subtitle:
             "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
@@ -512,7 +634,8 @@ const routes = [
         name: "DataKTPPengkinianData",
         component: DataKTPPengkinianData,
         meta: {
-          title: "Data KTP",
+          feature: "Pengkinian Data",
+          title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
         },
@@ -522,6 +645,7 @@ const routes = [
         name: "DataPribadiPengkinianData",
         component: DataPribadiPengkinianData,
         meta: {
+          feature: "Pengkinian Data",
           title: "Data Pribadi",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
@@ -531,27 +655,153 @@ const routes = [
         path: "konfirmasiDataPengkinianData",
         name: "konfirmasiDataPengkinianData",
         component: KonfirmasiDataPengkinianData,
-        meta: { title: "Konfirmasi Data" },
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi"
+        },
       },
       {
         path: "dataPekerjaanPengkinianData",
         name: "DataPekerjaanPengkinianData",
         component: DataPekerjaanPengkinianData,
-        meta: { title: "Data Pekerjaan & Finansial" },
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Data Pekerjaan & Finansial"
+        },
       },
       {
         path: "emailOTPPengkinianData",
         name: "emailOTPPengkinianData",
         component: EmailOTPPengkinianData,
-        meta: { title: "OTP dan Submit E-Form" },
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Konfirmasi OTP"
+        },
       },
       {
         path: "halamanSuksesPengkinianData",
         name: "halamanSuksesPengkinianData",
         component: HalamanSuksesPengkinianData,
-        meta: { title: "" },
+        meta: {
+          feature: "Pengkinian Data",
+        },
       },
 
+      // Pencairan Deposito
+      {
+        path: "pencairanDeposito",
+        name: "pencairanDeposito",
+        component: PencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Formulir Permohonan Pencairan Deposito",
+          subtitle: "Silakan isi formulir berikut untuk mengajukan pencairan deposito Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
+        },
+      },
+      {
+        path: "verifikasiEmailPencairanDeposito",
+        name: "VerifikasiEmailPencairanDeposito",
+        component: verifikasiEmailPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Email Verifikasi"
+        },
+      },
+      {
+        path: "uploadDokumenPencairanDeposito",
+        name: "uploadDokumenPencairanDeposito",
+        component: UploadDokumenPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Upload Dokumen",
+          subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
+        },
+      },
+      {
+        path: "previewPencairanDeposito",
+        name: "PreviewScreenPencairanDeposito",
+        component: PreviewScreenPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Hasil Foto",
+          subtitle:
+            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+        },
+        props: (route) => ({
+          documentType: route.params.documentType,
+        }),
+      },
+      {
+        path: "dataKTPPencairanDeposito",
+        name: "DataKTPPencairanDeposito",
+        component: DataKTPPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Data E-KTP",
+          subtitle:
+            "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
+        },
+      },
+      {
+        path: "dataInstruksiPencairanDeposito",
+        name: "dataInstruksiPencairanDeposito",
+        component: DataInstruksiPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Instruksi Pencairan Deposito",
+          subtitle:
+            "Untuk dapat memproses pencairan deposito Anda, kami memerlukan beberapa informasi tambahan. Mohon lengkapi informasi yang diperlukan agar proses dapat berjalan dengan lancar",
+        },
+      },
+      {
+        path: "dataPencairanDepositoOnUs",
+        name: "dataPencairanDepositoOnUs",
+        component: DataPencairanDepositoOnUs,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Pencairan Deposito ke Sesama Bank Universal BPR",
+          subtitle:
+            "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
+        },
+      },
+      {
+        path: "dataPencairanDepositoOfUs",
+        name: "dataPencairanDepositoOfUs",
+        component: DataPencairanDepositoOfUs,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Pencairan Deposito ke Bank Lain",
+          subtitle:
+            "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
+        },
+      },
+      {
+        path: "konfirmasiDataPencairanDeposito",
+        name: "konfirmasiDataPencairanDeposito",
+        component: KonfirmasiDataPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Konfirmasi Semua Data Anda",
+          subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
+        },
+      },
+      {
+        path: "emailOTPPencairanDeposito",
+        name: "emailOTPPencairanDeposito",
+        component: EmailOTPPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "halamanSuksesPencairanDeposito",
+        name: "halamanSuksesPencairanDeposito",
+        component: HalamanSuksesPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+        },
+      },
     ],
   },
 ];

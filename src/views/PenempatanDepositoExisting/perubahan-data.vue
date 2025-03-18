@@ -2,31 +2,49 @@
   <form @submit.prevent="handleSubmit">
     <RadioButtonChoose label="Apakah Anda ingin melakukan pembaharuan data" :options="sumberOptions"
       v-model="form.perubahanData" name="perubahaDataD" />
+
     <div v-if="form.perubahanData === true" class="mt-4">
-      <FormField label="Alamat" id="alamat" :isDropdown="false" v-model="form.alamat" :required="true" />
-      <FormField label="RT" id="rt" :isDropdown="false" v-model="form.rt" :required="true" />
-      <FormField label="RW" id="rw" :isDropdown="false" v-model="form.rw" :required="true" />
+      <FormField label="Alamat Tempat Tinggal" id="alamat" :isDropdown="false" v-model="form.alamat"
+        placeholder="Masukan Alamat Tempat Tinggal Anda" :required="false" />
+
+      <FormField label="RT" id="rt" :isDropdown="false" v-model="form.rt" placeholder="Masukan RT Anda"
+        :required="false" />
+
+      <FormField label="RW" id="rw" :isDropdown="false" v-model="form.rw" placeholder="Masukan RW Anda"
+        :required="false" />
+
       <FormField label="Provinsi" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
-        placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
+        placeholder="Pilih Provinsi" @change="fetchKabupaten" :required="false" />
+
       <FormField label="Kabupaten/Kota" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
         :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota" @change="fetchKecamatan"
-        :disabled="!form.provinsi" required />
+        :disabled="!form.provinsi" :required="false" />
+
       <FormField label="Kecamatan" id="kecamatan" :isDropdown="true" v-model="form.kecamatan"
-        :options="kecamatanOptions" placeholder="Pilih Kecamatan" :disabled="!form.kabupaten" required />
-      <FormField label="Kelurahan" id="kelurahan" :isDropdown="false" v-model="form.kelurahan" :required="true" />
-      <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" :required="true" />
-      <FormField label="Alamat Kantor" id="alamat_kantor" :isDropdown="false" v-model="form.alamat_kantor"
-        :required="true" />
-      <FormField label="Nomor Telepon" id="nomor_telp" type="number" v-model="form.nomor_telp"
-        placeholder="Masukkan Nomor Telepon" :required="true" />
-      <FormField label="Nomor Fax" id="nomor_fax" type="number" v-model="form.nomor_fax"
+        :options="kecamatanOptions" placeholder="Pilih Kecamatan" :disabled="!form.kabupaten" :required="false" />
+
+      <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan"
+        :options="kelurahanOptions" placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
+
+      <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" placeholder="Masukan Kode Pos Anda"
+        :required="false" />
+
+      <FormField label="Alamat Kantor (Opsional)" id="alamat_kantor" :isDropdown="false" v-model="form.alamat_kantor"
+        placeholder="Masukan Alamat Kantor Anda" :required="false" />
+
+      <FormField label="Nomor Telepon (Opsional)" id="nomor_telp" type="number" v-model="form.nomor_telp"
+        placeholder="Masukkan Nomor Telepon" :required="false" />
+
+      <FormField label="Nomor Fax (Opsional)" id="nomor_fax" type="number" v-model="form.nomor_fax"
         placeholder="Masukkan Nomor Fax" :required="false" />
-      <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan email Anda"
-        required />
+
+      <FormField label="Alamat Email (Opsional)" id="email" type="email" v-model="form.email"
+        placeholder="Masukkan email Anda" :required="false" />
+
     </div>
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">
+      <ButtonComponent type="submit">
         Lanjutkan
       </ButtonComponent>
     </div>
@@ -59,28 +77,55 @@ export default {
       provinsiOptions: [],
       kabupatenOptions: [],
       kecamatanOptions: [],
+      kelurahanOptions: [],
     };
   },
-  computed: {
-    isButtonDisabled() {
-      if (this.form.perubahanData === false) {
-        return false;
+  watch: {
+    "form.provinsi": function (newProvinsi) {
+      if (!newProvinsi) {
+        this.kabupatenOptions = [];
+        this.kecamatanOptions = [];
+        this.kelurahanOptions = [];
+      } else {
+        this.fetchKabupaten();
       }
-      if (this.form.perubahanData === true) {
-        return !(
-          this.form.alamat &&
-          this.form.rt &&
-          this.form.rw &&
-          this.form.provinsi &&
-          this.form.kota &&
-          this.form.kecamatan &&
-          this.form.kelurahan &&
-          this.form.kodePos &&
-          this.form.email
-        );
-      }
-      return true;
     },
+    "form.kabupaten": function (newKabupaten) {
+      if (!newKabupaten) {
+        this.kecamatanOptions = [];
+        this.kelurahanOptions = [];
+      } else {
+        this.fetchKecamatan();
+      }
+    },
+    "form.kecamatan": function (newKecamatan) {
+      if (!newKecamatan) {
+        this.kelurahanOptions = [];
+      } else {
+        this.fetchKelurahan();
+      }
+    },
+  },
+  computed: {
+    // isButtonDisabled() {
+    //   if (this.form.perubahanData === false) {
+    //     return false;
+    //   }
+    //   if (this.form.perubahanData === true) {
+    //     return !(
+    //       this.form.alamat &&
+    //       this.form.rt &&
+    //       this.form.rw &&
+    //       this.form.provinsi &&
+    //       this.form.kota &&
+    //       this.form.kecamatan &&
+    //       this.form.kelurahan &&
+    //       this.form.kodePos &&
+    //       this.form.email
+    //     );
+    //   }
+    //   return true;
+    // },
   },
   methods: {
     // async fetchData() {
@@ -95,17 +140,35 @@ export default {
     //     console.error("Error fetching data:", error);
     //   }
     // },
+    async fetchData() {
+      try {
+        const fileStore = useFileStore();
+        const data = fileStore.formPembaruanData;
+
+        console.log("Data from Pinia:", data);
+
+        if (data) {
+          Object.keys(this.form).forEach((key) => {
+            if (data[key] !== undefined) {
+              this.form[key] = data[key];
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
     async fetchProvinsi() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/provinsi");
-        console.log("Data provinsi diterima:", response.data); // Debugging
+        const response = await api.get("/provinsi");
+        console.log("Data provinsi diterima:", response.data);
 
-        if (response.data && response.data.provinsi) { // Pastikan data tersedia
+        if (response.data && response.data.provinsi) {
           this.provinsiOptions = response.data.provinsi.map(p => ({
             label: p.provinsi,
             value: p.provinsi
           }));
-          console.log("Provinsi options:", this.provinsiOptions); // Debugging
+          console.log("Provinsi options:", this.provinsiOptions);
         }
       } catch (error) {
         console.error("Gagal mengambil data provinsi:", error);
@@ -113,16 +176,15 @@ export default {
     },
 
     async fetchKabupaten() {
-      this.form.kabupaten = "";
-      this.form.kecamatan = "";
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
+      this.kelurahanOptions = [];
 
       if (!this.form.provinsi) return;
 
       try {
-        const response = await axios.get(`http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}`);
-        console.log("Data kabupaten diterima:", response.data); // Debugging
+        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
+        console.log("Data kabupaten diterima:", response.data);
 
         if (response.data && response.data.kabupaten) {
           this.kabupatenOptions = response.data.kabupaten.map(k => ({
@@ -137,8 +199,8 @@ export default {
     },
 
     async fetchKecamatan() {
-      this.form.kecamatan = "";
       this.kecamatanOptions = [];
+      this.kelurahanOptions = [];
 
       if (!this.form.provinsi || !this.form.kabupaten) return;
 
@@ -146,7 +208,7 @@ export default {
         const response = await axios.get(
           `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
-        console.log("Data kecamatan diterima:", response.data); // Debugging
+        console.log("Data kecamatan diterima:", response.data);
 
         if (response.data && response.data.kecamatan) {
           this.kecamatanOptions = response.data.kecamatan.map(kec => ({
@@ -159,8 +221,31 @@ export default {
         console.error("Gagal mengambil data kecamatan:", error);
       }
     },
+
+    async fetchKelurahan() {
+      this.kelurahanOptions = [];
+
+      if (!this.form.provinsi || !this.form.kabupaten || !this.form.kecamatan) return;
+
+      try {
+        const response = await axios.get(
+          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
+        );
+        console.log("Data kelurahan diterima:", response.data);
+
+        if (response.data && response.data.kelurahan) {
+          this.kelurahanOptions = response.data.kelurahan.map(kel => ({
+            label: kel.kelurahan,
+            value: kel.kelurahan
+          }));
+          console.log("kelurahan options:", this.kelurahanOptions);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data kelurahan:", error);
+      }
+    },
     goBack() {
-      this.$router.go(-1);
+      this.$router.push({ path: "/dashboard/uploadDokumenPenempatanDepositoExisting" });
     },
     async handleSubmit() {
       try {
@@ -173,7 +258,7 @@ export default {
         }
 
         const requestData = {
-          uuid: uuid,
+          uuid,
           alamat: this.form.alamat,
           rt: this.form.rt,
           rw: this.form.rw,
@@ -185,6 +270,7 @@ export default {
           alamat_kantor: this.form.alamat_kantor,
           nomor_telp: String(this.form.nomor_telp),
           nomor_fax: String(this.form.nomor_fax),
+
           email: this.form.email,
         };
 
@@ -216,9 +302,13 @@ export default {
   mounted() {
     this.$emit("update-progress", 80);
     this.fetchProvinsi();
+    this.fetchKabupaten();
+    this.fetchKecamatan();
+    this.fetchKelurahan();
+    this.fetchData();
   },
-  // created() {
-  //   this.fetchData();
-  // },
+  created() {
+    // this.fetchData();
+  },
 };
 </script>

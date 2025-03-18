@@ -1,13 +1,13 @@
 <template>
   <button :type="type" :disabled="disabled" @click="handleClick" :class="[
-    'px-4 py-4 w-fit rounded-lg focus:outline-none focus:ring-2 font-semibold mt-2 transition-all',
+    'px-4 py-4 w-fit min-w-32 rounded-xl font-semibold mt-2 transition-all',
     disabled
-      ? 'bg-neutral-300 cursor-not-allowed text-white'
+      ? 'bg-neutral-200 cursor-not-allowed text-neutral-300'
       : variant === 'outline'
         ? 'bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-[0.875rem] py-[0.875rem]'
         : variant === 'ghost'
-          ? 'bg-transparent text-primary hover:text-neutral-white hover:bg-primary-600'
-          : 'bg-primary hover:bg-primary-900 text-white focus:ring-blue-400',
+          ? 'bg-transparent text-primary hover:text-primay hover:bg-primary-50'
+          : 'bg-gradient-to-b from-primary-700 to-primary hover:bg-primary-900 text-white',
   ]">
     <slot />
   </button>

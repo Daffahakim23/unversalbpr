@@ -29,57 +29,118 @@
         <Section v-if="this.$route.query.userType == 'nasabah'" class="flex flex-col justify-center w-full">
           <div class="flex flex-col gap-4">
             <div class="flex flex-col md:flex-row gap-4">
-              <Card type="1"
-                :features="[{ label: 'Pembukaan Rekening Tabungan', description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.', dokumen: 'Foto/Scan KTP Elektronik' }]"
-                iconDokumen="ektp.svg" icon="homepage-icon.svg"
-                :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningExisting')" @cardClick="handleCardClick"
-                buttonString="Ajukan Pembukaan Rekening Tabungan" />
-              <Card type="1"
-                :features="[{ label: 'Penempatan Deposito', description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.', dokumen: 'Foto/Scan KTP Elektronik' }]"
-                iconDokumen="ektp.svg" icon="icon-deposito.svg"
-                :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoExisting')" @cardClick="handleCardClick"
-                buttonString="Ajukan Penempatan Deposito" />
+              <Card type="1" :features="[
+                {
+                  label: 'Pembukaan Rekening Tabungan',
+                  description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.',
+                  dokumen: [
+                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
+                    { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
+                    { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
+                  ]
+                }
+              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningExisting')"
+                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
+              <Card type="1" :features="[
+                {
+                  label: 'Penempatan Deposito',
+                  description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
+                  dokumen: [
+                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
+                    { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
+                    { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
+                  ]
+                }
+              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoExisting')"
+                @cardClick="handleCardClick" buttonString="Ajukan Penempatan Deposito" />
             </div>
 
             <div class="flex flex-col md:flex-row gap-4">
-              <Card type="1"
-                :features="[{ label: 'Pencairan Deposito', description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice', dokumen: 'Foto/Scan KTP Elektronik' }]"
-                iconDokumen="ektp.svg" icon="homepage-icon.svg" :onBtnClick="() => openCSModal({
+              <Card type="1" :features="[
+                {
                   label: 'Pencairan Deposito',
                   description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
-                  dokumen: 'Foto/Scan KTP Elektronik'
-                })" @cardClick="handleCardClick" buttonString="Ajukan Pencairan Deposito" />
+                  dokumen: [
+                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
+                    { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
+                    { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
+                  ]
+                }
+              ]" icon="homepage-icon.svg" :onBtnClick="() => openCSModal({
+                label: 'Pencairan Deposito',
+                description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
+              })" @cardClick="handleCardClick" buttonString="Ajukan Pencairan Deposito" />
 
-              <Card type="1"
-                :features="[{ label: 'Pemindah Bukuan', description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan', dokumen: 'Foto/Scan KTP Elektronik' }]"
-                iconDokumen="ektp.svg" icon="icon-deposito.svg" :onBtnClick="() => openCSModal({
-                  label: 'Pemindah Bukuan',
+              <Card type="1" :features="[
+                {
+                  label: 'Pemindahbukuan',
                   description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
-                  dokumen: 'Foto/Scan KTP Elektronik',
-                })" @cardClick="handleCardClick" buttonString="Ajukan Pemindahbukuan" />
+                  dokumen: [
+                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
+                    { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
+                    { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
+                  ]
+                }
+              ]" icon="icon-deposito.svg" :onBtnClick="() => openCSModal({
+                label: 'Pemindah Bukuan',
+                description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
+                dokumen: 'Foto/Scan KTP Elektronik',
+              })" @cardClick="handleCardClick" buttonString="Ajukan Pemindahbukuan" />
 
-              <Card type="1"
-                :features="[{ label: 'Pengkinian Data', description: 'Perbarui data Anda untuk meningkatkan keamanan dan kenyamanan dalam bertransaksi', dokumen: 'Foto/Scan KTP Elektronik' }]"
-                iconDokumen="ektp.svg" icon="icon-deposito.svg"
-                :onBtnClick="() => navigateTo('/dashboard/pengkinianData')" @cardClick="handleCardClick"
-                buttonString="Ajukan Pengkinian Data" />
+              <Card type="1" :features="[
+                {
+                  label: 'Pengkinian Data',
+                  description: 'Perbarui data Anda untuk meningkatkan keamanan dan kenyamanan dalam bertransaksi',
+                  dokumen: [
+                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
+                    { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
+                    { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
+                  ]
+                }
+              ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/pengkinianData')"
+                @cardClick="handleCardClick" buttonString="Ajukan Pengkinian Data" />
             </div>
           </div>
         </Section>
 
         <Section v-if="this.$route.query.userType == 'non-nasabah'" class="flex flex-col justify-center w-full">
           <div class="flex flex-col gap-4">
-            <div class="flex flex-col md:flex-row gap-4">
-              <Card type="1"
-                :features="[{ label: 'Pembukaan Rekening Baru', description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.', dokumen: 'Foto/Scan KTP Elektronik' }]"
-                iconDokumen="ektp.svg" icon="homepage-icon.svg"
-                :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningNTB')" @cardClick="handleCardClick"
-                buttonString="Ajukan Pembukaan Rekening Tabungan" />
-              <Card type="1"
-                :features="[{ label: 'Penempatan Deposito', description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.', dokumen: 'Foto/Scan KTP Elektronik' }]"
-                iconDokumen="ektp.svg" icon="icon-deposito.svg"
-                :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoNTB')" @cardClick="handleCardClick"
-                buttonString="Ajukan Penempatan Deposito" />
+            <div class="flex flex-col md:flex-row gap-4 w-full">
+              <Card type="1" :features="[
+                {
+                  label: 'Pembukaan Rekening Tabungan',
+                  description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.',
+                  dokumen: [
+                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'npwp.svg', text: 'NPWP' },
+                    { icon: 'tanda-tangan.svg', text: 'Tanda Tangan Basah' },
+                    { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
+                    { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
+                    { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
+                  ]
+                }
+              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningNTB')"
+                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
+              <Card type="1" :features="[
+                {
+                  label: 'Penempatan Deposito',
+                  description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
+                  dokumen: [
+                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'npwp.svg', text: 'NPWP' },
+                    { icon: 'tanda-tangan.svg', text: 'Tanda Tangan Basah' },
+                    { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
+                    { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
+                    { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
+                  ]
+                }
+              ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoNTB')"
+                @cardClick="handleCardClick" buttonString="Ajukan Penempatan Deposito" />
             </div>
           </div>
         </Section>
