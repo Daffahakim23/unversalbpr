@@ -153,9 +153,9 @@
         placeholder="Pilih Penghasilan Beneficial Owner Anda" v-model="form.jumlahPenghasilanBO"
         :options="jumlahPenghasilanOptions" />
 
-      <label class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900">
-        Pernyataan Kebenaran identitas maupun dana dari pemilik manfaat*
-      </label>
+      <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-1">
+        Pernyataan dan Persetujuan Nasabah
+      </h2>
       <div class="flex items-baseline pt-2 pb-6">
         <input type="checkbox" v-model="form.pernyataanChecked"
           class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600">
@@ -169,8 +169,7 @@
             <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang saya/kami berikan dalam Formulir
               Beneficial Owner ini.</li>
             <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening,
-              apabila menurut pertimbangan Bank :</li>
-            <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening.
+              apabila menurut pertimbangan Bank :
               <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
                 <li>Saya/kami tidak mematuhi ketentuan Prinsip Mengenal Nasabah (Knowing Your Customer)</li>
                 <li>Data yang saya/kami berikan kepada Bank tidak benar atau diragukan kebenarannya.</li>
@@ -405,9 +404,9 @@ export default {
     "form.pekerjaan": function (newPekerjaan, oldPekerjaan) {
       console.log("Pekerjaan dipilih:", newPekerjaan);
 
-      if (newPekerjaan !== oldPekerjaan) {
-        this.resetFormKecualiPekerjaan();
-      }
+      // if (newPekerjaan !== oldPekerjaan) {
+      //   this.resetFormKecualiPekerjaan();
+      // }
 
       if (!newPekerjaan) {
         this.form.jabatanDK = "";
@@ -512,7 +511,7 @@ export default {
     },
     async fetchPekerjaan() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/list-pekerjaan");
+        const response = await api.get("/list-pekerjaan");
         console.log("Data pekerjaan diterima:", response.data);
 
         if (response.data && response.data.pekerjaan) {
@@ -531,7 +530,7 @@ export default {
 
     async fetchBidangPekerjaan() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/list-bidang-pekerjaan");
+        const response = await api.get("/list-bidang-pekerjaan");
         console.log("Data bidang pekerjaan diterima:", response.data);
 
         if (response.data && response.data.bidangPekerjaan) {
@@ -551,7 +550,7 @@ export default {
     async fetchJabatan(kodePekerjaan) {
       try {
         console.log("Mengambil jabatan untuk pekerjaan:", kodePekerjaan); // Cek kode pekerjaan
-        const response = await axios.get("http://10.14.52.233:8001/list-jabatan");
+        const response = await api.get("/list-jabatan");
         console.log("Data jabatan diterima:", response.data);
 
         if (response.data && response.data.jabatan) {
@@ -618,8 +617,8 @@ export default {
       if (!this.form.provinsiBO || !this.form.kabupatenBO) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsiBO}&kabupaten=${this.form.kabupatenBO}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsiBO}&kabupaten=${this.form.kabupatenBO}`
         );
         console.log("Data kecamatan diterima:", response.data);
 
@@ -641,8 +640,8 @@ export default {
       if (!this.form.provinsiBO || !this.form.kabupatenBO || !this.form.kecamatanBO) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsiBO}&kabupaten=${this.form.kabupatenBO}&kecamatan=${this.form.kecamatanBO}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsiBO}&kabupaten=${this.form.kabupatenBO}&kecamatan=${this.form.kecamatanBO}`
         );
         console.log("Data kelurahan diterima:", response.data);
 
@@ -789,7 +788,7 @@ export default {
     this.fetchData();
   },
   created() {
-    // this.fetchData();
+    this.fetchData();
   },
 };
 </script>

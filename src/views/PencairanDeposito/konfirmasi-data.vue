@@ -42,24 +42,18 @@
 
     <div class="border-t border-neutral-200 my-4"></div>
 
-    <!-- <div class="py-4">
-      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Data Pribadi
-      </h1>
-      <div v-if="formPribadi" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPribadi" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
-        </div>
-      </div>
-    </div> -->
-
     <div class="py-4">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Instruksi Pencairan Deposito
       </h1>
       <div v-if="formInstruksiPencairan" class="form-container">
         <div class="form-item" v-for="(value, key) in formInstruksiPencairan" :key="key">
+          <div class="form-label">{{ formatLabel(key) }}:</div>
+          <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div>
+      <div v-if="formDataPencairan" class="form-container">
+        <div class="form-item" v-for="(value, key) in formDataPencairan" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
@@ -156,10 +150,10 @@ import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
-import { trueFalseOptions } from "@/data/option";
+import { rekeningTujuanOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalOTP from "@/components/ModalOTP.vue";
-import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, } from '@/data/option.js';
+import { alasanPencairanOptions, sukuBungaDepositoOptions, jangkaWaktuDepositoOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, } from '@/data/option.js';
 
 
 export default {
@@ -196,47 +190,33 @@ export default {
 
     formInstruksiPencairan() {
       const fileStore = useFileStore();
-      const data = fileStore.formInstruksiPencarianDeposito || {};
+      const data = fileStore.formInstruksiPencairanDeposito || {};
       const processedData = {};
       for (const key in data) {
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
           if (key === "sukuBunga") {
-            value = this.getLabelFromOptions(value, sukuBungaOptions);
+            value = this.getLabelFromOptions(value, sukuBungaDepositoOptions);
           }
           if (key === "jangkaWaktu") {
-            value = this.getLabelFromOptions(value, jangkaWaktuOptions);
+            value = this.getLabelFromOptions(value, jangkaWaktuDepositoOptions);
           }
           if (key === "alasanPencairan") {
             value = this.getLabelFromOptions(value, alasanPencairanOptions);
+          }
+          if (key === "rekeningTujuan") {
+            value = this.getLabelFromOptions(value, rekeningTujuanOptions);
           }
           processedData[key] = value;
         }
       }
       return processedData;
     },
-    formPribadi() {
+    formDataPencairan() {
       const fileStore = useFileStore();
-      const data = fileStore.setFormPembaruanData || {};
-      const processedData = {};
-      for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key]) {
-          let value = data[key];
-
-          if (key === "pendidikanTerakhir") {
-            value = this.getLabelFromOptions(value, pendidikanOptions);
-          }
-          if (key === "tujuan") {
-            value = this.getLabelFromOptions(value, tujuanOptions);
-          }
-          if (key === "hobi") {
-            value = this.getLabelFromOptions(value, hobiOptions);
-          }
-          processedData[key] = value;
-        }
-      }
-      return processedData;
+      return Object.fromEntries(
+        Object.entries(fileStore.formDataPencairanDeposito || {}).filter(([key, value]) => value && key));
     },
 
     uploadedFiles() {
@@ -281,7 +261,7 @@ export default {
       return option ? option.label : value;
     },
     goBack() {
-      this.$router.push({ path: "/dashboard/dataPencairanDeposito" });
+      this.$router.push({ path: "/dashboard/dataInstruksiPencairanDeposito" });
     },
     formatLabel(key) {
       const labels = {
@@ -316,67 +296,15 @@ export default {
         alamatKantorCabang: "Alamat Kantor Cabang",
         alamatSesuaiEktp: "Alamat Sesuai EKTP",
 
-        // Data Pekerjaan (Beneficial Owner)
-        pekerjaan: "Pekerjaan",
-        penghasilan: "Penghasilan",
-        jumlahPenghasilan: "Jumlah Penghasilan",
-        hubunganNasabah: "Hubungan Nasabah",
-        jenisIdentitasBO: "Jenis Identitas Beneficial Owner",
-        hubunganNasabahBO: "Hubungan dengan Nasabah",
-        kotaPerusahaanBO: "Kota Perusahaan",
-        kodePosPerushaanBO: "Kode Pos Perusahaan",
-        kewarganegaraanBO: "Kewarganegaraan Beneficial Owner",
-        namaLengkapBO: "Nama Beneficial Owner",
-        nomorDokumenIdentitasBO: "Nomor Dokumentasi Identitas",
-        alamatBO: "Alamat Beneficial Owner",
-        rtBO: "RT Beneficial Owner",
-        rwBO: "RW Beneficial Owner",
-        provinsiBO: "Provinsi Beneficial Owner",
-        kabupatenBO: "Kota / Kabupaten Beneficial Owner",
-        kecamatanBO: "Kecamatan Beneficial Owner",
-        kelurahanBO: "Kelurahan Beneficial Owner",
-        kodePosBO: "Kode Pos Beneficial Owner",
-        tempatLahirBO: "Tempat Lahir Beneficial Owner",
-        tanggalLahirBO: "Tanggal Lahir Beneficial Owner",
-        jenisKelaminBO: "Jenis Kelamin Beneficial Owner",
-        statusPerkawinanBO: "Status Perkawinan",
-        pekerjaanBO: "Pekerjaan Beneficial Owner",
-        namaPerusahaanBO: "Nama Perusahaan Beneficial Owner",
-        alamatPerusahaanBO: "Alamat Perusahaan Beneficial Owner",
-        jabatanBO: "Jabatan Beneficial Owner",
-        lamaBekerjaTahunBO: "Lama Bekerja Tahun",
-        lamaBekerjaBulanBO: "Lama Bekerja Bulan",
-        penghasilanBO: "Penghasilan Beneficial Owner",
-        jumlahPenghasilanBO: "Jumlah Penghasilan Beneficial Owner",
-
-        // Data Pekerjaan (Detail Pekerjaan)
-        namaPerusahaanDK: "Nama Perusahaan",
-        bidangPekerjaanDK: "Bidang Pekerjaan",
-        jabatanDK: "Jabatan",
-        kotaPerusahaanDK: "Kota Perusahaan",
-        kodePosPerusahaanDK: "Kode Pos Perusahaan",
-        hubunganPemohonKD: "Hubungan Pemohon",
-        lamaBekerjaTahunDK: "Lama Bekerja Tahun",
-        lamaBekerjaBulanDK: "Lama Bekerja Bulan",
-        nomorTeleponKantorDK: "Nomor Telepon Kantor",
-        nomorTeleponFaxDK: "Nomor Telepon Fax",
-        alamatDK: "Alamat Kantor",
-        korespondensi: "Korespondensi",
-
-        // Data Pekerjaan (Detail Pekerjaan)
-        nomorRekeningDeposito: "Nomor Rekening Deposito",
-        tanggalJatuhTempoDeposito: "Tanggal Jatuh Tempo Deposito",
-        tanggalInstruksiPencairanDeposito: "Tanggal Instruksi Pencairan Deposito",
+        // Instruksi Pencairan Deposito
         nominal: "Nominal Deposito",
-        sukuBunga: "Suku Bunga Deposito",
-        jangkaWaktu: "Jangka Waktu Deposito",
-        alasanPencairan: "Alasan Pencairan Deposito",
-
-        // kontak Darurat
-        namaLengkapKD: "Nama Lengkap Kontak Darurat",
-        hubunganKD: "Hubungan Kontak Darurat",
-        nomorTeleponKD: "Nomor Telepon Kontak Darurat",
-        alamatKD: "Alamat Kontak Darurat",
+        terbilang: "Terbilang",
+        jangkaWaktu: "Jangka Waktu",
+        sukuBunga: "Suku Bunga",
+        nomorRekeningDeposito: "Nomor Rekening Deposito",
+        tanggalInstruksiPencairanDeposito: "Tanggal Instruksi Pencairan Deposito",
+        tanggalJatuhTempoDeposito: "Tanggal Jatuh Tempo Deposito",
+        alasanPencairan: "Suku Bunga",
       };
       return labels[key] || key;
     },

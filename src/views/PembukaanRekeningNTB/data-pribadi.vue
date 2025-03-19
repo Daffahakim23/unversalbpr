@@ -155,7 +155,7 @@ export default {
   methods: {
     async fetchBranches() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/list-branch");
+        const response = await api.get("/list-branch");
 
         if (response.data && response.data.branch) {
           this.kantorCabangOptions = response.data.branch.map(branch => {
@@ -179,7 +179,7 @@ export default {
 
     async fetchProvinsi() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/provinsi");
+        const response = await api.get("/provinsi");
         console.log("Data provinsi diterima:", response.data); // Debugging
 
         if (response.data && response.data.provinsi) {
@@ -203,7 +203,7 @@ export default {
       if (!this.form.provinsi) return;
 
       try {
-        const response = await axios.get(`http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}`);
+        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
         console.log("Data kabupaten diterima:", response.data); // Debugging
 
         if (response.data && response.data.kabupaten) {
@@ -225,8 +225,8 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
         console.log("Data kecamatan diterima:", response.data); // Debugging
 
@@ -249,8 +249,8 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten || !this.form.kecamatan) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
         );
         console.log("Data kelurahan diterima:", response.data); // Debugging
 

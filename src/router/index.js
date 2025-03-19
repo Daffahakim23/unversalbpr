@@ -602,7 +602,7 @@ const routes = [
         component: PengkinianData,
         meta: {
           feature: "Pengkinian Data",
-          title: "Pengkinian Data",
+          title: "Formulir Pengkinian Data",
           subtitle: ""
         },
       },

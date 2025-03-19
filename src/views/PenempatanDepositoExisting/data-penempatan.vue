@@ -124,9 +124,6 @@ import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOpt
 import { FormModelPenempatanDeposito } from "@/models/formModel";
 import { hitungBungaUniversal, hitungBungaPeduli, hitungBungaDEBUTSanmere, hitungBungaDEBUTMatius, hitungBungaGreen, } from "@/data/bunga-deposito.js";
 
-console.log("Universal:", hitungBungaUniversal(1000000, "1"));
-console.log("Peduli:", hitungBungaPeduli(1000000, "1"));
-
 export default {
   components: {
     FormField,
@@ -238,7 +235,7 @@ export default {
     },
     async fetchBankOptions() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/list-bank");
+        const response = await api.get("/list-bank");
         this.bankOptions = response.data.bank.map((bank) => ({
           label: bank.bank_name,
           value: bank.bank_name,

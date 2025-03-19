@@ -170,7 +170,7 @@ export default {
     },
     async fetchBranches() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/list-branch");
+        const response = await api.get("/list-branch");
 
         if (response.data && response.data.branch) {
           this.kantorCabangOptions = response.data.branch.map(branch => {

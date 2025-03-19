@@ -80,6 +80,19 @@
       </div>
     </div>
 
+    <div class="py-4" v-if="hasBeneficialOwner">
+      <div class="border-t border-neutral-200 my-4"></div>
+      <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
+        Beneficial Owner
+      </h1>
+      <div v-if="formBeneficialOwner" class="form-container">
+        <div class="form-item" v-for="(value, key) in formBeneficialOwner" :key="key">
+          <div class="form-label"> {{ formatLabel(key) }}:</div>
+          <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div>
+    </div>
+
     <div class="border-t border-neutral-200 my-4"></div>
 
     <div class="py-4">
@@ -157,10 +170,10 @@ import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
-import { trueFalseOptions } from "@/data/option";
+import { jenisIdentitasBOOptions, jenisKelaminOptions, kewarganegaraanBOOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalOTP from "@/components/ModalOTP.vue";
-import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, } from '@/data/option.js';
+import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, masaAktifKTPOptions, hubunganNasabahOptions } from '@/data/option.js';
 
 
 export default {
@@ -175,6 +188,9 @@ export default {
     isButtonDisabled() {
       return !this.agreement; // Tombol dinonaktifkan jika agreement belum dicentang
     },
+    hasBeneficialOwner() {
+      return this.formBeneficialOwner && Object.keys(this.formBeneficialOwner).length > 0;
+    },
     formKTP() {
       const fileStore = useFileStore();
       const data = fileStore.formKTP || {};
@@ -182,12 +198,14 @@ export default {
       for (const key in data) {
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
-
           if (key === "agama") {
             value = this.getLabelFromOptions(value, agamaOptions);
           }
           if (key === "statusPerkawinan") {
             value = this.getLabelFromOptions(value, statusPerkawinanOptions);
+          }
+          if (key === "masaAktifKtp") {
+            value = this.getLabelFromOptions(value, masaAktifKTPOptions);
           }
           processedData[key] = value;
         }
@@ -227,7 +245,7 @@ export default {
       const data = fileStore.formPekerjaan || {};
       const processedData = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key]) {
+        if (data.hasOwnProperty(key) && data[key] && !key.endsWith('BO') && !key.endsWith('KD')) {
           let value = data[key];
 
           if (key === "penghasilan") {
@@ -254,6 +272,44 @@ export default {
           .filter(([key, value]) => value && key.endsWith('KD'))
       );
     },
+
+    formBeneficialOwner() {
+      const fileStore = useFileStore();
+      const data = fileStore.formPekerjaan || {};
+      const processedData = {};
+
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && data[key] && key.endsWith('BO')) {
+          let value = data[key];
+
+          if (key === "hubunganNasabahBO") {
+            value = this.getLabelFromOptions(value, hubunganNasabahOptions);
+          }
+          if (key === "kewarganegaraanBO") {
+            value = this.getLabelFromOptions(value, kewarganegaraanBOOptions);
+          }
+          if (key === "jenisIdentitasBO") {
+            value = this.getLabelFromOptions(value, jenisIdentitasBOOptions);
+          }
+          if (key === "jenisKelaminBO") {
+            value = this.getLabelFromOptions(value, jenisKelaminOptions);
+          }
+          if (key === "statusPerkawinanBO") {
+            value = this.getLabelFromOptions(value, statusPerkawinanOptions);
+          }
+          if (key === "penghasilanBO") {
+            value = this.getLabelFromOptions(value, penghasilanOptions);
+          }
+          if (key === "jumlahPenghasilanBO") {
+            value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
+          }
+
+          processedData[key] = value;
+        }
+      }
+
+      return processedData;
+    },
     // formPekerjaan() {
     //   const fileStore = useFileStore();
 
@@ -275,7 +331,6 @@ export default {
     },
   },
   setup() {
-
     const fileStore = useFileStore();
     const no_hp = computed(() => fileStore.no_hp || "user@example.com");
     return { no_hp }
@@ -364,11 +419,12 @@ export default {
         kabupatenBO: "Kota / Kabupaten Beneficial Owner",
         kecamatanBO: "Kecamatan Beneficial Owner",
         kelurahanBO: "Kelurahan Beneficial Owner",
-        kodePosBO: "Kode Pos Beneficial Owner",
+        kodePosPerusahaanBO: "Kode Pos Perusahaan Beneficial Owner",
         tempatLahirBO: "Tempat Lahir Beneficial Owner",
         tanggalLahirBO: "Tanggal Lahir Beneficial Owner",
         jenisKelaminBO: "Jenis Kelamin Beneficial Owner",
         statusPerkawinanBO: "Status Perkawinan",
+        kodePosBO: "Kode Pos Beneficial Owner",
         pekerjaanBO: "Pekerjaan Beneficial Owner",
         namaPerusahaanBO: "Nama Perusahaan Beneficial Owner",
         alamatPerusahaanBO: "Alamat Perusahaan Beneficial Owner",
@@ -531,11 +587,13 @@ h2 {
 /* Gaya untuk label dan value */
 .form-label {
   font-weight: 500;
-  color: #555;
+  font-size: 14px;
+  color: #7D7D78;
 }
 
 .form-value {
-  font-weight: bold;
-  color: #333;
+  font-weight: 500;
+  font-size: 16px;
+  color: #1C1C17;
 }
 </style>

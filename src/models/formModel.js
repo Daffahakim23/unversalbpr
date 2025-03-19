@@ -65,12 +65,13 @@ export class FormModelPerubahanData {
 }
 
 export class FormModelPenempatanDeposito {
-  constructor() {
+  constructor(namaBank = "") {
     this.nominal = "";
     this.terbilang = "";
     this.jangkaWaktu = "";
+    this.sukuBunga = "";
     this.metodePencairan = "";
-    this.namaBank = "";
+    this.namaBank = namaBank;
     this.nomorRekening = "";
     this.namaPemilik = "";
     this.produkDeposito = "";
@@ -83,8 +84,6 @@ export class FormModelPenempatanDeposito {
 
   }
 }
-
-
 
 export class FormModelRequestEmailVerification {
   constructor() {
@@ -163,8 +162,8 @@ export class FormModelDataPekerjaan {
     this.jabatanDK = "";
     this.jabatanLainnyaDK = "";
     this.alamatDK = "";
-    this.lamaBekerjaTahunDK = "";
-    this.lamaBekerjaBulanDK = "";
+    this.lamaBekerjaTahunDK = 0;
+    this.lamaBekerjaBulanDK = 0;
     this.nomorTeleponKantorDK = "";
     this.nomorTeleponFaxDK = "";
     this.korespondensi = "";

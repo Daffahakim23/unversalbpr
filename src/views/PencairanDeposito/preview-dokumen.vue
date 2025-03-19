@@ -427,7 +427,7 @@ export default {
         showFlag.value = true;
         flagType.value = 'warning';
         if (documentType.value === "fotoDiri") {
-          flagMessage.value = error.response?.data?.message || "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
+          flagMessage.value = error.response?.data?.Subtext || "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
         } else if (documentType.value === "ktp") {
           flagMessage.value = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (documentType.value === "npwp") {

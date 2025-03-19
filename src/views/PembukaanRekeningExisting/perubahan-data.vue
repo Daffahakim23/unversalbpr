@@ -205,8 +205,8 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
         console.log("Data kecamatan diterima:", response.data);
 
@@ -228,8 +228,8 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten || !this.form.kecamatan) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
         );
         console.log("Data kelurahan diterima:", response.data);
 

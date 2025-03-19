@@ -110,6 +110,11 @@ export default {
           const fileStore = useFileStore();
           console.log("Data berhasil dikirim:", response.data);
           fileStore.setFormPengkinianData(this.form);
+          fileStore.setUuid(response.data.uuid);
+          // fileStore.setEmail(this.requestData.email);
+          // fileStore.setNoHP(this.requestData.no_hp);
+          console.log("UUID :", response.data.uuid);
+          // console.log("Email :", this.requestData.email);
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
         } else {

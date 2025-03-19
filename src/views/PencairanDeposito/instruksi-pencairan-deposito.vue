@@ -23,25 +23,6 @@
     <FormField label="Jangka Waktu*" id="jangkaWaktu" :isDropdown="true" v-model="form.jangkaWaktu"
       placeholder="Pilih Jangka Waktu & Suku Bunga" :options="jangkaWaktuDepositoOptions" required />
 
-    <!-- <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-1">
-      Biaya Pinalti
-    </h2>
-    <p class="text-sm text-gray-600 mb-4">
-      Pencairan Deposito sebelum jatuh tempo akan dikenakan biaya penalti sesuai dengan Ketentuan PT. BPR Universal
-    </p>
-    <FlagBox type="warning" closable class="mb-4">
-      <p class="text-sm font-normal">*Biaya Penalti akan dikenakan berdasarkan produk/program Deposito Anda sebagai
-        berikut berikut:</p>
-      <ul style="list-style-type: disc;" class="ml-8">
-        <li>Deposito Universal: 0,5%</li>
-        <li>Deposito Berdonasi Umat Sanmare: 0,5%</li>
-        <li>Deposito Berdonasi Umat Matius: 0,5%</li>
-        <li>Deposito Peduli: 1%</li>
-        <li>Deposito Peduli Lingkungan (Green Deposit): 1%</li>
-      </ul>
-      <p>Dari nominal deposito Anda.</p>
-    </FlagBox> -->
-
     <div v-if="isPenaltyApplicable">
       <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-1">
         Biaya Pinalti
@@ -114,7 +95,7 @@ export default {
   computed: {
     isPenaltyApplicable() {
       if (!this.form.tanggalInstruksiPencairanDeposito || !this.form.tanggalJatuhTempoDeposito) {
-        return false; // Jika salah satu tanggal tidak diisi, jangan tampilkan penalti
+        return false;
       }
       return new Date(this.form.tanggalInstruksiPencairanDeposito) < new Date(this.form.tanggalJatuhTempoDeposito);
     },
@@ -162,17 +143,17 @@ export default {
       }
     },
     async fetchData() {
-      await this.fetchDataFromStore('formEmailRequestPencarianDeposito');
+      await this.fetchDataFromStore('formEmailRequestPencairanDeposito');
     },
     async fetchDataInstruksi() {
-      await this.fetchDataFromStore('formInstruksiPencarianDeposito');
+      await this.fetchDataFromStore('formInstruksiPencairanDeposito');
     },
     updateNominal(value) {
       const rawValue = value.replace(/\D/g, "");
       this.form.nominal = rawValue ? parseInt(rawValue, 10) : 0;
     },
     goBack() {
-      this.$router.push('/uploadDokumenPencairanDeposito');
+      this.$router.push({ path: "/dashboard/uploadDokumenPencairanDeposito" });
     },
     async handleSubmit() {
       try {
@@ -206,6 +187,8 @@ export default {
 
         if (response.status === 201 || response.status === 200) {
           console.log("Data berhasil dikirim:", response.data);
+          console.log("fileStore:", this.fileStore);
+          console.log("form:", this.form);
           this.fileStore.setFormInstruksiPencairanDeposito(this.form);
           window.scrollTo(0, 0);
           if (this.form.rekeningTujuan === "1") {
@@ -299,6 +282,7 @@ export default {
   created() {
     this.fetchData();
     this.fetchDataInstruksi();
+    this.fetchDataFromStore();
   },
 };
 </script>

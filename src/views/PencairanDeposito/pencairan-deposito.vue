@@ -7,9 +7,8 @@
     <FormField label="Nama Lengkap*" id="namaLengkap" type="text" v-model="form.namaLengkap"
       placeholder="Masukkan Nama Lengkap Anda" /> -->
 
-
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
-      placeholder="Masukkan nomor handphone Anda"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
       :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
       :error="phoneError" @blur="handlePhoneBlur" />
 
@@ -23,7 +22,7 @@
       </ButtonComponent>
     </div>
   </form>
-  <ReusableModal :title="'Syarat dan Ketentuan'" :isOpen="isModalOpen" @close="isModalOpen = false"
+  <ReusableModal :title="'Syarat dan Ketentuan'" :isOpen="isModalOpen" :apiUrl="apiUrl" @close="isModalOpen = false"
     @confirm="handleModalConfirm" />
 </template>
 
@@ -46,6 +45,7 @@ export default {
   },
   data() {
     return {
+      apiUrl: "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_CLOSE_DEPOSIT",
       form: new FormModelRequestEmailVerification(),
       touched: {
         email: false,
@@ -53,6 +53,7 @@ export default {
       },
       tandaPengenalOptions,
       isModalOpen: false,
+      selectedCountryCode: "ID",
       isSubmitting: false,
       emailError: false,
       phoneError: false,
@@ -106,13 +107,22 @@ export default {
     // },
 
     async handleSubmit() {
+      if (this.emailError) {
+        console.error("Email tidak valid.");
+        return;
+      }
+
+      if (this.phoneError) {
+        console.error("Nomor telepon tidak valid.");
+        return;
+      }
       try {
         this.requestData = {
           alamat_email: this.form.email,
           no_hp: this.form.phone,
           // nama_lengkap: this.form.namaLengkap,
           nomor_deposito: this.form.nomorRekeningDeposito,
-          // tanggal: new Date().toISOString().split("T")[0],
+          tanggal: new Date().toISOString().split("T")[0],
         };
         console.log("Data sementara disimpan:", this.requestData);
         this.isModalOpen = true;
