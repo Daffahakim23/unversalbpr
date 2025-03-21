@@ -31,6 +31,10 @@ export const useFileStore = defineStore("fileStore", {
     formEmailRequestPencairanDeposito: {},
     formInstruksiPencairanDeposito: {},
     formDataPencairanDeposito: {},
+    formDataPemindahbukuan: {},
+    formDataPengirimPemindahbukuan: {},
+    formDataPenerimaPemindahbukuan: {},
+
   }),
   actions: {
     resetStore() {
@@ -103,6 +107,15 @@ export const useFileStore = defineStore("fileStore", {
     },
     setFormDataPencairanDeposito(data) {
       this.formDataPencairanDeposito = data;
+    },
+    setFormDataPemindahbukuan(data) {
+      this.formDataPemindahbukuan = data;
+    },
+    setFormDataPengirimPemindahbukuan(data) {
+      this.formDataPengirimPemindahbukuan = data;
+    },
+    setFormDataPenerimaPemindahbukuan(data) {
+      this.formDataPenerimaPemindahbukuan = data;
     },
   },
 });

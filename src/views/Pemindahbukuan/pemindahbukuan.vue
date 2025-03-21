@@ -1,15 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Pilih Produk yang Diinginkan" id="produk" :isDropdown="true" v-model="form.produk"
-      placeholder="Pilih Produk yang Anda Inginkan" :options="produkOptions" required />
-
-    <FormField label="Pilih Produk Deposito" id="produkDeposito" :isDropdown="true" v-model="form.produkDeposito"
-      placeholder="Pilih Produk Deposito yang Anda Inginkan" :options="produkDepositoOptions" required />
-
-    <FlagBox type="info" closable class="mb-4">
-      <p class="text-sm font-normal">Informasi mengenai Produk dan Layanan dapat diakses melalui website
-        universalbpr.co.id atau dengan mengklik tombol "Info Produk" di bagian atas halaman ini.</p>
-    </FlagBox>
+    <FormField label="Tanggal Pengajuan Pemindahbukuan*" id="tanggalPengajuan" type="date"
+      v-model="form.tanggalPengajuan" placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
 
     <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
       :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
@@ -20,15 +12,23 @@
       :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
       :error="phoneError" @blur="handlePhoneBlur" />
 
-    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text"
-      v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
-      hint="Funding Officer Adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
+    <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
+      :options="sumberDanaOptions" placeholder="Pilih Sumber Dana Anda" />
 
-    <RadioButtonChoose label="Dari mana Anda Mengetahui Tentang Kami" :options="sumberDataNasabahOptions"
-      v-model="form.sumber" name="sumber" />
-    <div v-if="form.sumber === 'lainnya'">
-      <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder=" " required />
+    <div v-if="form.sumberDana === 'lainnya'" class="">
+      <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" type="text" v-model="form.sumberDanaLainnya"
+        placeholder="Masukkan Sumber Penghasilan Lainnya" />
     </div>
+
+    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening"
+      placeholder="Masukkan Nomor Rekening Anda" required
+      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
+
+    <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" type="text" v-model="form.namaLengkap"
+      placeholder="Masukkan Nama Pemilik Sumber Dana" />
+
+    <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
+      @close="isModalOpen = false" @confirm="handleModalConfirm" />
 
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
@@ -36,21 +36,18 @@
       </ButtonComponent>
     </div>
   </form>
-  <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
-    @close="isModalOpen = false" @confirm="handleModalConfirm" />
 </template>
 
 <script>
-import api from "@/API/api";
 import axios from "axios";
+import api from "@/API/api"
 import FormField from "@/components/FormField.vue";
-import FlagBox from "@/components/flagbox.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import ReusableModal from "@/components/ModalT&C.vue";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { sumberDataNasabahOptions, produkDepositoOptions, produkOptions } from "@/data/option.js";
+import { sumberDanaOptions } from "@/data/option.js";
 
 export default {
   emits: ["update-progress"],
@@ -59,25 +56,21 @@ export default {
     ButtonComponent,
     RadioButtonChoose,
     ReusableModal,
-    FlagBox,
   },
   data() {
     return {
-      apiUrl: "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_OPEN_DEPOSIT",
+      apiUrl: "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_OPEN_SAVING",
       form: new FormModelRequestEmailVerification(),
       touched: {
         email: false,
         phone: false,
       },
-      sumberDataNasabahOptions,
-      produkDepositoOptions,
-      produkOptions,
-      selectedProduk: "",
-      selectedCountryCode: "ID",
-      isModalOpen: false,
+      sumberDanaOptions,
       isSubmitting: false,
       emailError: false,
       phoneError: false,
+      selectedCountryCode: "ID",
+      isModalOpen: false,
     };
   },
 
@@ -85,14 +78,28 @@ export default {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
       const phoneValid = this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
-      if (this.form.sumber === "lainnya") {
-        return !this.form.sumberLainnya.trim();
-      }
-      return !(emailValid && phoneValid && this.form.sumber && this.form.produk && this.form.produkDeposito);
+      const sumberDanaValid = this.form.sumberDana;
+      const sumberDanaLainnyaValid = this.form.sumberDana === 'lainnya' ? !!this.form.sumberDanaLainnya : true;
+      const nomorRekeningValid = !!this.form.nomorRekening;
+      const namaPemilikSumberDanaValid = !!this.form.namaLengkap;
+      const tanggalPengajuanValid = !!this.form.tanggalPengajuan;
+
+      return !(
+        emailValid &&
+        phoneValid &&
+        sumberDanaValid &&
+        sumberDanaLainnyaValid &&
+        nomorRekeningValid &&
+        namaPemilikSumberDanaValid &&
+        tanggalPengajuanValid
+      );
     },
   },
 
   methods: {
+    validatePhone(phone) {
+      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+    },
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
@@ -102,39 +109,31 @@ export default {
         this.emailError = !this.validateEmail(this.form.email);
       }
     },
-    validatePhone(phone) {
-      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
-    },
     handlePhoneBlur() {
       this.touched.phone = true;
       if (this.form.phone) {
         this.phoneError = !this.validatePhone(this.form.phone);
       }
     },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
 
     async handleSubmit() {
+      if (this.emailError) {
+        console.error("Email tidak valid.");
+        return;
+      }
+
+      if (this.phoneError) {
+        console.error("Nomor telepon tidak valid.");
+        return;
+      }
       try {
         this.requestData = {
           alamat_email: this.form.email,
           no_hp: this.form.phone,
-          nama_fo: this.form.namaFundingOfficer,
-          kategori_nasabah: Number("1"),
-          sumber_data_nasabah: Number(this.form.sumber),
-          sumber_data_nasabah_lainnya: this.form.sumberLainnya,
-          tanggal: new Date().toISOString().split("T")[0],
-          produk_yang_diinginkan: Number(this.form.produk),
+          sumber_dana: Number(this.form.sumberDana),
+          nomor_rekening: this.form.nomorRekening,
+          nama_lengkap: this.form.namaLengkap,
+          tanggal: this.form.tanggalPengajuan
         };
         console.log("Data sementara disimpan:", this.requestData);
         this.isModalOpen = true;
@@ -157,14 +156,24 @@ export default {
         const finalData = {
           ...this.requestData,
           syarat_ketentuan: true,
-          dek_pajak_indo: true,
-          dek_pajak_amerika: false,
-          dek_pajak_amerika_penduduk_us: null,
+          dek_cutoff: true,
         };
 
         console.log("Mengirim data:", finalData);
 
-        const response = await api.post("/pembukaan-deposito", finalData, {
+        // const fileStore = useFileStore();
+        // fileStore.setFormDataPemindahbukuan(this.form);
+        // // fileStore.setUuid(response.data.uuid);
+        // fileStore.setEmail(this.requestData.email);
+        // fileStore.setNoHP(this.requestData.no_hp);
+        // // console.log("UUID :", response.data.uuid);
+        // console.log("Email :", this.requestData.email);
+        // console.log("Phone :", this.requestData.phone);
+        // window.scrollTo(0, 0);
+        // // this.$router.push({ path: "/dashboard/verifikasiEmailPemindahbukuan" });
+        // this.$router.push({ path: "/dashboard/dataPengirimPemindahbukuan" });
+
+        const response = await api.post("/pemindah-bukuan", finalData, {
           headers: { "Content-Type": "application/json" },
         });
 
@@ -173,16 +182,15 @@ export default {
 
         if (response.status === 200) {
           const fileStore = useFileStore();
-          fileStore.setFormEmailRequestDepositoNTB(this.form);
+          fileStore.setFormDataPemindahbukuan(this.form);
           fileStore.setUuid(response.data.uuid);
-          fileStore.setNoHP(this.requestData.no_hp);
-          fileStore.setEmail(this.requestData.alamat_email);
+          fileStore.setEmail(this.requestData.email);
+          fileStore.setNoHP(this.requestData.phone);
           console.log("UUID :", response.data.uuid);
-          console.log("Email :", this.requestData.alamat_email);
-          console.log("Nomor Handphone :", this.requestData.no_hp);
-
-          this.$router.push({ path: "/dashboard/verifikasiEmailPenempatanDepositoNTB" });
-
+          console.log("Email :", this.requestData.email);
+          console.log("Phone :", this.requestData.phone);
+          window.scrollTo(0, 0);
+          this.$router.push({ path: "/dashboard/verifikasiEmailPemindahbukuan" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
@@ -195,12 +203,21 @@ export default {
       } finally {
         this.isSubmitting = false;
       }
-    },
+
+      // } catch (error) {
+      //   console.error("Error saat menyimpan data:", error);
+      // } finally {
+      //   this.isSubmitting = false;
+      // }
+    }
   },
 
   mounted() {
     this.$emit("update-progress", 15);
-    this.fetchData();
+  },
+
+  created() {
+    // this.fetchData();
   },
 };
 </script>

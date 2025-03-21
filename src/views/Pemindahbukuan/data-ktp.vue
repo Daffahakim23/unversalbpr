@@ -48,8 +48,8 @@
     <FormField label="Masa Aktif KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
       :options="masaAktifKTPOptions" required />
 
-    <FormField label="Nama Gadis Ibu Kandung*" id="ibuKandung" v-model="form.namaIbuKandung" :required="true"
-      placeholder="Masukan Nama Gadis Ibu Kandung" />
+    <!-- <FormField label="Nama Gadis Ibu Kandung*" id="ibuKandung" v-model="form.namaIbuKandung" :required="true"
+      placeholder="Masukan Nama Gadis Ibu Kandung" /> -->
 
 
     <div class="flex justify-between mt-4">
@@ -255,7 +255,7 @@ export default {
 
     goBack() {
       this.$router.push({
-        name: "PreviewScreenPembukaanRekeningNTB",
+        name: "PreviewScreenPemindahbukuan",
         query: {
           documentType: "ktp",
           fileUrl: this.$route.query.fileUrl,
@@ -304,13 +304,12 @@ export default {
           kewarganegaraan: Boolean(this.form.kewarganegaraan),
           kewarganegaraanLainnya: this.form.kewarganegaraanLainnya,
           is_ekstrak_ktp_ocr: true,
-          nama_ibu_kandung: this.form.namaIbuKandung
         };
 
         console.log("Request data:", requestData);
 
         console.log("Formatted Request Data:", JSON.stringify(requestData, null, 2));
-        const response = await api.post("/save-ktp", requestData, {
+        const response = await api.post("/save-ktp-pindah-buku", requestData, {
           headers: { "Content-Type": "application/json" },
         });
 
@@ -320,7 +319,7 @@ export default {
           this.fileStore.isKtpUploaded = true;
           this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
           window.scrollTo(0, 0);
-          this.$router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningNTB" });
+          this.$router.push({ path: "/dashboard/uploadDokumenPemindahbukuan" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }

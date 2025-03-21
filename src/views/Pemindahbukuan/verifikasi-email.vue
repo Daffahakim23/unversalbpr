@@ -117,13 +117,13 @@ export default {
 
         console.log("Mengirim data:", requestData);
 
-        const response = await api.post("/verification-email-existing", requestData, {
+        const response = await api.post("/verification-email-pindah-buku", requestData, {
           headers: { "Content-Type": "application/json" }
         });
 
         if (response.status === 200 || response.status === 201) {
           console.log("OTP berhasil diverifikasi");
-          router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningExisting" });
+          router.push({ path: "/dashboard/uploadDokumenPemindahbukuan" });
         } else {
           errorMessage.value = "Verifikasi OTP gagal. Silakan coba lagi.";
           showErrorModal("Kode OTP Salah", "Kode OTP yang Anda Kirimkan Salah", "Verifikasi Ulang", "Hubungi Customer Care"); // Tambahkan description
@@ -151,7 +151,7 @@ export default {
       try {
         const response = await api.post("/request-otp-email", {
           uuid: fileStore.uuid,
-          page: "pembukaan-rekening-existing",
+          page: "Pembukaan Rekening NTB",
         });
 
         console.log("Resend OTP sukses:", response.data);

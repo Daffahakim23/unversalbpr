@@ -152,6 +152,10 @@ export const masaAktifKTPOptions = [
   { label: "Seumur Hidup", value: "1" },
 ];
 
+export const sumberDanaOptions = [
+  { label: "Rekening Tabungan Universal", value: "1" },
+];
+
 export const getMasaAktifKTPOptions = (tanggalBerlakuSampai) => {
   const options = [{ label: "Seumur Hidup", value: "1" }];
   if (tanggalBerlakuSampai) {

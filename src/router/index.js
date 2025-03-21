@@ -81,7 +81,17 @@ import KonfirmasiDataPencairanDeposito from "../views/PencairanDeposito/konfirma
 import EmailOTPPencairanDeposito from "../views/PencairanDeposito/otp-no-hp.vue";
 import HalamanSuksesPencairanDeposito from "../views/PencairanDeposito/halaman-sukses.vue";
 
-
+// Pemindahbukuan
+import Pemindahbukuan from "../views/Pemindahbukuan/pemindahbukuan.vue";
+import verifikasiEmailPemindahbukuan from "../views/Pemindahbukuan/verifikasi-email.vue";
+import UploadDokumenPemindahbukuan from "../views/Pemindahbukuan/upload-dokumen.vue";
+import PreviewScreenPemindahbukuan from "../views/Pemindahbukuan/preview-dokumen.vue";
+import DataKTPPemindahbukuan from "../views/Pemindahbukuan/data-ktp.vue";
+import DataPengirimPemindahbukuan from "../views/Pemindahbukuan/data-pengirim.vue";
+import DataPenerimaPemindahbukuan from "../views/Pemindahbukuan/data-penerima.vue";
+import KonfirmasiDataPemindahbukuan from "../views/Pemindahbukuan/konfirmasi-data.vue";
+import EmailOTPPemindahbukuan from "../views/Pemindahbukuan/otp-no-hp.vue";
+import HalamanSuksesPemindahbukuan from "../views/Pemindahbukuan/halaman-sukses.vue";
 
 const routes = [
   {
@@ -800,6 +810,110 @@ const routes = [
         component: HalamanSuksesPencairanDeposito,
         meta: {
           feature: "Pencairan Deposito",
+        },
+      },
+
+
+      //Pemindahbukuan
+      {
+        path: "pemindahbukuan",
+        name: "pemindahbukuan",
+        component: Pemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Formulir Pengajuan Pemindahbukuan",
+          subtitle: "Silahkan isi formulir berikut untuk mengajukan transaksi pemindahbukuan Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
+        },
+      },
+      {
+        path: "verifikasiEmailPemindahbukuan",
+        name: "VerifikasiEmailPemindahbukuan",
+        component: verifikasiEmailPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Verifikasi Email"
+        },
+      },
+      {
+        path: "uploadDokumenPemindahbukuan",
+        name: "uploadDokumenPemindahbukuan",
+        component: UploadDokumenPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Upload Dokumen",
+          subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
+        },
+      }, {
+        path: "previewPemindahbukuan",
+        name: "PreviewScreenPemindahbukuan",
+        component: PreviewScreenPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Hasil Foto",
+          subtitle:
+            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+        },
+        props: (route) => ({
+          documentType: route.params.documentType,
+        }),
+      },
+      {
+        path: "dataKTPPemindahbukuan",
+        name: "DataKTPPemindahbukuan",
+        component: DataKTPPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Data E-KTP",
+          subtitle:
+            "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
+        },
+      },
+      {
+        path: "konfirmasiDataPemindahbukuan",
+        name: "konfirmasiDataPemindahbukuan",
+        component: KonfirmasiDataPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi"
+        },
+      },
+      {
+        path: "dataPengirimPemindahbukuan",
+        name: "DataPengirimPemindahbukuan",
+        component: DataPengirimPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Lengkapi Data Pengirim dan Penerima",
+          subtitle: "Untuk melanjutkan proses, kami memerlukan informasi tambahan terkait data penerima sumber dana."
+
+        },
+      },
+      {
+        path: "dataPenerimaPemindahbukuan",
+        name: "DataPenerimaPemindahbukuan",
+        component: DataPenerimaPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Lengkapi Data Penerima",
+          subtitle: "Untuk melanjutkan proses, kami memerlukan informasi tambahan terkait data penerima sumber dana."
+
+        },
+      },
+      {
+        path: "emailOTPPemindahbukuan",
+        name: "emailOTPPemindahbukuan",
+        component: EmailOTPPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "halamanSuksesPemindahbukuan",
+        name: "halamanSuksesPemindahbukuan",
+        component: HalamanSuksesPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
         },
       },
     ],

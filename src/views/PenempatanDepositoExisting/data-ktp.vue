@@ -48,6 +48,9 @@
     <FormField label="Masa Aktif KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
       :options="masaAktifKTPOptions" required />
 
+    <!-- <FormField label="Nama Gadis Ibu Kandung*" id="ibuKandung" v-model="form.namaIbuKandung" :required="true"
+      placeholder="Masukan Nama Gadis Ibu Kandung" /> -->
+
 
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -63,7 +66,7 @@ import FormField from "@/components/FormField.vue";
 import ButtonComponent from "@/components/button.vue";
 import { FormModelDataKTP } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { agamaOptions, jenisKelaminOptions, kewarganegaraanOptions, statusPerkawinanOptions, masaAktifKTPOptions, getMasaAktifKTPOptions } from "@/data/option.js";
+import { agamaOptions, jenisKelaminOptions, kewarganegaraanOptions, statusPerkawinanOptions, getMasaAktifKTPOptions } from "@/data/option.js";
 
 export default {
   components: {
@@ -88,9 +91,6 @@ export default {
   watch: {
     "form.provinsi": function (newProvinsi) {
       if (!newProvinsi) {
-        this.form.kabupaten = "";
-        this.form.kecamatan = "";
-        this.form.kelurahan = "";
         this.kabupatenOptions = [];
         this.kecamatanOptions = [];
         this.kelurahanOptions = [];
@@ -100,8 +100,6 @@ export default {
     },
     "form.kabupaten": function (newKabupaten) {
       if (!newKabupaten) {
-        this.form.kecamatan = "";
-        this.form.kelurahan = "";
         this.kecamatanOptions = [];
         this.kelurahanOptions = [];
       } else {
@@ -110,7 +108,6 @@ export default {
     },
     "form.kecamatan": function (newKecamatan) {
       if (!newKecamatan) {
-        this.form.kelurahan = "";
         this.kelurahanOptions = [];
       } else {
         this.fetchKelurahan();
@@ -130,8 +127,11 @@ export default {
       });
     },
   },
+
   methods: {
     async fetchProvinsi() {
+      this.provinsiOptions = [];
+      this.kabupatenOptions = [];
       try {
         const response = await api.get("/provinsi");
         console.log("Data provinsi diterima:", response.data);
@@ -142,6 +142,7 @@ export default {
             value: p.provinsi
           }));
           console.log("Provinsi options:", this.provinsiOptions);
+          this.fetchKabupaten();
         }
       } catch (error) {
         console.error("Gagal mengambil data provinsi:", error);
@@ -151,7 +152,6 @@ export default {
     async fetchKabupaten() {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
-      this.kelurahanOptions = [];
 
       if (!this.form.provinsi) return;
 
@@ -165,6 +165,7 @@ export default {
             value: k.kabupaten
           }));
           console.log("Kabupaten options:", this.kabupatenOptions);
+          this.fetchKecamatan();
         }
       } catch (error) {
         console.error("Gagal mengambil data kabupaten:", error);
@@ -178,8 +179,8 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await api.get(
-          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
+        const response = await axios.get(
+          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
         console.log("Data kecamatan diterima:", response.data);
 
@@ -189,6 +190,7 @@ export default {
             value: kec.kecamatan
           }));
           console.log("Kecamatan options:", this.kecamatanOptions);
+          this.fetchKelurahan(); // Panggil fetchKelurahan setelah kecamatan dipilih
         }
       } catch (error) {
         console.error("Gagal mengambil data kecamatan:", error);
@@ -196,13 +198,11 @@ export default {
     },
 
     async fetchKelurahan() {
-      this.kelurahanOptions = [];
-
       if (!this.form.provinsi || !this.form.kabupaten || !this.form.kecamatan) return;
 
       try {
-        const response = await api.get(
-          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
+        const response = await axios.get(
+          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
         );
         console.log("Data kelurahan diterima:", response.data);
 
@@ -247,6 +247,7 @@ export default {
           statusPerkawinan: message.status_pernikahan,
           masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "1" : ""),
           kewarganegaraanLainnya: message.kewarganegaraan_lainya || "",
+          // nama_gadis_ibu_kandung: "ini ibu",
         };
         console.log("Form filled:", this.form);
       }

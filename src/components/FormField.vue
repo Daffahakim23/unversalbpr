@@ -93,7 +93,7 @@
           </button>
 
           <div v-if="isOpen" ref="dropdown"
-            class="absolute w-full bg-white border border-neutral-200 rounded-md shadow-md z-10 mt-1">
+            class="absolute w-full bg-white border border-neutral-200 rounded-md shadow-md z-10 mt-1 max-h-60 overflow-y-auto">
             <div v-for="(option, index) in options" :key="index" @click="selectOption(option)"
               class="p-3 hover:bg-blue-100 cursor-pointer border-b border-gray-200">
               <p class="text-sm text-neutral-800">{{ option.label }}</p>

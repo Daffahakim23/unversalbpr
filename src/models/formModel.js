@@ -46,6 +46,29 @@ export class FormModelDataPribadi {
   }
 }
 
+export class FormModelPengirimPemindahbukuan {
+  constructor() {
+    this.namaLengkap = "";
+    this.tanggalPengajuan = "";
+    this.nomorRekening = "";
+    this.sumberDana = "";
+  }
+}
+
+export class FormModelPenerimaPemindahbukuan {
+  constructor() {
+    this.namaLengkap = "";
+    this.phone = "";
+    this.alamat = "";
+    this.nomorRekening = "";
+    this.namaBank = "";
+    this.keteranganTransaksi = "";
+    this.nominal = "";
+    this.metodeTransfer = "";
+    this.biayaTransfer = "";
+  }
+}
+
 export class FormModelPerubahanData {
   constructor() {
     this.perubahanData = "";
@@ -81,7 +104,6 @@ export class FormModelPenempatanDeposito {
     this.tanggalInstruksiPencairanDeposito = "";
     this.tanggalJatuhTempoDeposito = "";
     this.alasanPencairan = "";
-
   }
 }
 
@@ -105,6 +127,7 @@ export class FormModelRequestEmailVerification {
     this.tujuan = "";
     this.sumberDana = "";
     this.sumberDanaLainnya = "";
+    this.tanggalPengajuan = "";
   }
 }
 
