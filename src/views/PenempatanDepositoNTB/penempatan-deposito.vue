@@ -200,7 +200,7 @@ export default {
 
   mounted() {
     this.$emit("update-progress", 15);
-    this.fetchData();
+    // this.fetchData();
   },
 };
 </script>

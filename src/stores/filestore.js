@@ -10,6 +10,10 @@ export const useFileStore = defineStore("fileStore", {
       fotoDiri: null,
       tandaTangan: null,
     },
+    ktpImage: null, // Properti untuk menyimpan gambar KTP
+    tandaTanganImage: null, // Properti untuk menyimpan gambar tanda tangan
+    npwpImage: null, // Properti untuk menyimpan gambar NPWP
+    fotoDiriImage: null, //Properti untuk menyimpan gambar foto diri
     isKtpUploaded: false,
     isNpwpUploaded: false,
     isFotoDiriUploaded: false,
@@ -117,5 +121,17 @@ export const useFileStore = defineStore("fileStore", {
     setFormDataPenerimaPemindahbukuan(data) {
       this.formDataPenerimaPemindahbukuan = data;
     },
+    setKtpImage(imageData) {
+      this.ktpImage = imageData;
+    },
+    setTandaTanganImage(imageData) {
+      this.tandaTanganImage = imageData;
+    },
+    setNpwpImage(imageData) {
+      this.npwpImage = imageData;
+    },
+    setFotoDiriImage(imageData) {
+      this.fotoDiriImage = imageData;
+    }
   },
 });

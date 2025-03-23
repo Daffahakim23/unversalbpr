@@ -96,7 +96,7 @@ export class FormModelPenempatanDeposito {
     this.metodePencairan = "";
     this.namaBank = namaBank;
     this.nomorRekening = "";
-    this.namaPemilik = "";
+    this.namaLengkap = "";
     this.produkDeposito = "";
     this.pembayaranBunga = "";
     this.metodePenyetoran = "";
@@ -104,6 +104,9 @@ export class FormModelPenempatanDeposito {
     this.tanggalInstruksiPencairanDeposito = "";
     this.tanggalJatuhTempoDeposito = "";
     this.alasanPencairan = "";
+    this.biayaTransfer = "";
+    this.metodeTransfer = "";
+    this.setujuBiayaTransfer = "";
   }
 }
 

@@ -627,17 +627,27 @@ export default {
 
         console.log("✅ Upload sukses:", uploadResponse.data);
 
-        if (this.documentType === "ktp") {
-          fileStore.setFormDataKTP(uploadResponse.data);
-        } else if (this.documentType === "tandaTangan") {
-          fileStore.setFormDataTandaTangan(uploadResponse.data);
-          fileStore.isTandaTanganUploaded = true;
-          fileStore.uploadedFiles["tandaTangan"] = "Foto Tanda Tangan";
-        } else if (this.documentType === "npwp") {
-          fileStore.setFormDataNPWP(uploadResponse.data);
-          fileStore.isNpwpUploaded = true;
-          fileStore.uploadedFiles["npwp"] = "Foto NPWP";
-        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          if (this.documentType === "ktp") {
+            fileStore.setKtpImage(base64data);
+            fileStore.setFormDataKTP(uploadResponse.data);
+          } else if (this.documentType === "tandaTangan") {
+            fileStore.setTandaTanganImage(base64data);
+            fileStore.setFormDataTandaTangan(uploadResponse.data);
+            fileStore.isTandaTanganUploaded = true;
+            fileStore.uploadedFiles["tandaTangan"] = "Foto Tanda Tangan";
+          } else if (this.documentType === "npwp") {
+            fileStore.setNpwpImage(base64data);
+            fileStore.setFormDataNPWP(uploadResponse.data);
+            fileStore.isNpwpUploaded = true;
+            fileStore.uploadedFiles["npwp"] = "Foto NPWP";
+          } else if (this.documentType === "fotoDiri") {
+            fileStore.setFotoDiriImage(base64data);
+          }
+        };
+        reader.readAsDataURL(file);
 
         if (this.documentType === "ktp") {
           this.$router.push({
@@ -683,6 +693,7 @@ export default {
   },
   mounted() {
     this.$emit("update-progress", 45);
+    this.fetchData();
   },
 };
 </script>

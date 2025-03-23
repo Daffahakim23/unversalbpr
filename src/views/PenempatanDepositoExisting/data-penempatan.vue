@@ -5,7 +5,7 @@
 
     <FormField label="Nominal Deposito*" id="nominal" type="text" :isDropdown="false" v-model="formattedNominal"
       placeholder="Masukkan Nominal Penempatan Deposito" :disabled="!form.produkDeposito" :required="true"
-      @input="updateNominal" />
+      :hint="nominalError" :error="nominalError" @input="updateNominal" />
 
     <FormField label="Terbilang" id="terbilang" :isDropdown="false" v-model="form.terbilang" :required="true"
       placeholder="Masukkan Nominal Penempatan Deposito" :readonly="true" />
@@ -51,8 +51,8 @@
 
     <!-- Jika opsi value = 2 -->
     <div v-if="form.pembayaranBunga == 2" class="mt-4">
-      <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaPemilikRekening"
-        v-model="form.namaPemilikRekening" placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required />
+      <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaLengkap" v-model="form.namaLengkap"
+        placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required />
 
       <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
         placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
@@ -60,28 +60,56 @@
 
     <!-- Jika opsi value = 3 -->
     <div v-if="form.pembayaranBunga == 3" class="mt-2">
-      <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaPemilikRekening"
-        v-model="form.namaPemilikRekening" placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required />
-
-      <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
-        placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
+      <div class=" flex items-baseline mb-6">
+        <input id="modal-checkbox" type="checkbox" v-model="isChecked"
+          class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600 self-start" />
+        <p for="modal-checkbox" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">
+          Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
+          sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi
+          Universal BPR: <strong>notifikasi@universalbpr.co.id</strong>
+        </p>
+      </div>
     </div>
 
     <!-- Jika opsi value = 4 -->
     <div v-if="form.pembayaranBunga == 4" class="mt-4">
-      <FormField label="Nama Pemilik Rekening*" id="namaPemilikRekening" v-model="form.namaPemilikRekening"
-        placeholder="Masukkan Nama Pemilik Rekening" required />
-
-      <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
-        placeholder="Masukkan Nomor Rekening" required />
-
-      <!-- <FormField label="Nama Bank*" id="namaBank" v-model="form.namaBank" placeholder="Masukkan Nama Bank" required /> -->
-
-      <FormField label="Nama Bank*" id="namaBank" :isDropdown="true" v-model="form.namaBank"
-        placeholder="Pilih Nama Bank" :options="bankOptions" required />
+      <div class="mb-4">
+        <div v-if="form.namaLengkap && form.nomorRekening && form.namaBank">
+          <div class="flex flex-row items-center justify-between mb-2 w-full">
+            <h2 class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900">Detail Penerima</h2>
+            <button @click="openModal"
+              class="flex items-center gap-2 text-primary-500 hover:text-primary-600 focus:outline-none">
+              <h2 class="text-xs sm:text-sm md:text-sm font-medium text-primary">Ubah</h2>
+              <img src="@/assets/icon-edit.svg" alt="Icon" class="w-5 h-5" />
+            </button>
+          </div>
+          <div class="border border-gray-300 rounded-md px-4 py-4">
+            <div class="flex justify-between items-center w-full">
+              <div class="flex flex-col gap-2">
+                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nama Lengkap</p>
+                <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.namaLengkap }}</p>
+              </div>
+              <div class="flex flex-col gap-2">
+                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nomor rekening</p>
+                <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.nomorRekening }}</p>
+              </div>
+              <div class="flex flex-col gap-2">
+                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nomor rekening</p>
+                <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.namaBank }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="border border-dashed border-gray-300 rounded-md px-4 py-3 flex items-center justify-between">
+          <span class="text-gray-500">Belum Ada Penerima</span>
+          <ButtonComponent variant="outline" @click="openModal" class="mb-1">
+            Masukkan
+          </ButtonComponent>
+        </div>
+      </div>
 
       <label class="flex items-baseline space-x-2 mt-4">
-        <input type="checkbox" v-model="form.setujuBiayaTransfer" required />
+        <input type="checkbox" v-model="setujuBiayaTransfer" required />
         <p class="ms-2 text-sm text-gray-900 dark:text-gray-300 mb-4">
           Saya menyetujui pemotongan biaya administrasi transfer pembayaran bunga deposito ke Rekening Bank Lain,
           sesuai dengan ketentuan BPR Universal.
@@ -106,11 +134,14 @@
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent variant="default" type="submit" :disabled="isButtonDisabled">
+      <ButtonComponent variant="default" @click="openModalTransfer" :disabled="isButtonDisabled">
         Lanjutkan
       </ButtonComponent>
     </div>
   </form>
+  <ReusableModal :isOpen="isModalOpen" @close="isModalOpen = false" :handleTransfer="handleTransferFromModal" />
+  <ModalTransfer :isOpen="isModalTransferOpen" :methods="filteredTransferMethods" :selectedMethod="selectedMethod"
+    @update:selectedMethod="selectedMethod = $event" @confirm="handleSubmit" @close="isModalTransferOpen = false" />
 </template>
 
 <script>
@@ -123,13 +154,18 @@ import { useFileStore } from "@/stores/filestore";
 import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoGreenOptions, metodePencairanOptions, pembayaranBungaOptions, produkDepositoOptions, metodePenyetoranNTBOptions } from "@/data/option.js";
 import { FormModelPenempatanDeposito } from "@/models/formModel";
 import { hitungBungaUniversal, hitungBungaPeduli, hitungBungaDEBUTSanmere, hitungBungaDEBUTMatius, hitungBungaGreen, } from "@/data/bunga-deposito.js";
+import ModalTransfer from "@/components/ModalTransfer.vue";
+import ReusableModal from "@/components/ModalRekeningDeposito.vue";
 
 export default {
   components: {
     FormField,
     RadioButtonChoose,
     ButtonComponent,
+    ModalTransfer,
+    ReusableModal,
   },
+  emits: ['updateProgress'],
   setup() {
     const fileStore = useFileStore();
     return { fileStore };
@@ -138,6 +174,7 @@ export default {
     return {
       form: new FormModelPenempatanDeposito(),
       isChecked: false,
+      setujuBiayaTransfer: false,
       metodePencairanOptions,
       produkDepositoOptions,
       jangkaWaktuDepositoUniversalOptions,
@@ -146,8 +183,38 @@ export default {
       jangkaWaktuDepositoPeduliOptions,
       jangkaWaktuDepositoGreenOptions,
       pembayaranBungaOptions,
-      metodePenyetoranNTBOptions
-
+      metodePenyetoranNTBOptions,
+      nominalError: false,
+      isModalTransferOpen: false,
+      selectedMethod: null,
+      isModalOpen: false, transferMethods: [
+        {
+          id: "llg",
+          name: "LLG",
+          fee: "Rp2.900",
+          limit: "Limit Rp50.000.001-100.000.000",
+          availability: "Tersedia pukul 08:30-12:00 WIB di hari kerja. Pengajuan transaksi di luar jam kerja ini akan diproses di hari kerja berikutnya.",
+        },
+        {
+          id: "online",
+          name: "Transfer Online",
+          fee: "Rp7.500",
+          limit: "Limit Rp 10.000-50.000.000",
+          availability: "Tersedia pukul 08:30-14:00 WIB di hari kerja. Pengajuan transaksi di luar jam ini akan diproses di hari kerja berikutnya.",
+        },
+        {
+          id: "rtgs",
+          name: "RTGS",
+          fee: "Rp30.000",
+          limit: "> Rp 100.000.001",
+          availability: "Tersedia pukul 08:30-12:00 WIB di hari kerja. Pengajuan transaksi di luar jam ini akan diproses di hari kerja berikutnya.",
+        },
+      ],
+      modelData: {
+        namaLengkap: "",
+        nomorRekening: "",
+        namaBank: "",
+      },
     };
   },
   computed: {
@@ -161,7 +228,16 @@ export default {
         this.updateNominal(value);
       }
     },
-
+    filteredTransferMethods() {
+      const nominal = parseInt(this.form.nominal) || 0;
+      if (nominal < 50000000) {
+        return this.transferMethods.filter((method) => method.id === "online");
+      } else if (nominal >= 50000000 && nominal <= 100000000) {
+        return this.transferMethods.filter((method) => method.id === "online" || method.id === "llg");
+      } else {
+        return this.transferMethods;
+      }
+    },
     isButtonDisabled() {
       return (
         !this.isChecked ||
@@ -170,21 +246,11 @@ export default {
         !this.form.jangkaWaktu ||
         !this.form.metodePencairan ||
         !this.form.pembayaranBunga ||
-        (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaPemilikRekening)) ||
-        (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaPemilikRekening))
+        (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaLengkap)) ||
+        (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap)) ||
+        !!this.nominalError // Tambahkan ini
       );
     },
-
-    // formattedBunga() {
-    //   const nominal = parseFloat(this.form.nominal) || 0;
-    //   if (nominal <= 0) return "Rp 0";
-
-    //   let bunga = nominal * 0.06 * 0.8;
-    //   return new Intl.NumberFormat("id-ID", {
-    //     style: "currency",
-    //     currency: "IDR",
-    //   }).format(bunga);
-    // },
     formattedBunga() {
       const nominal = parseFloat(this.form.nominal) || 0;
       const jangkaWaktu = this.form.jangkaWaktu;
@@ -210,25 +276,101 @@ export default {
     },
   },
   watch: {
+    isModalOpen(newValue) {
+      if (!newValue) {
+        this.modalData = {
+          namaLengkap: "",
+          nomorRekening: "",
+          namaBank: "",
+        };
+      }
+    },
+    "fileStore.formPenempatanDeposito": {
+      handler() {
+        this.fetchData();
+      },
+      deep: true,
+    },
     "form.nominal"(newVal) {
       this.form.terbilang = this.toTerbilang(parseInt(newVal) || 0);
+      this.validateNominal(); // Tambahkan ini
+    },
+    "form.produkDeposito"(newVal) {
+      this.validateNominal(); // Tambahkan ini
     },
   },
   methods: {
+    handleTransferFromModal(data) {
+      this.fileStore.setFormPenempatanDeposito({
+        ...this.fileStore.formPenempatanDeposito, // Salin data yang sudah ada
+        namaLengkap: data.namaLengkap,
+        namaBank: data.namaBank,
+        nomorRekening: data.nomorRekening,
+      });
+      console.log("Data dari modal:", data);
+      this.isModalOpen = false;
+    },
+    validateNominal() {
+      if (!this.form.produkDeposito || !this.form.nominal) {
+        this.nominalError = false;
+        return;
+      }
+
+      const minimalNominal = this.getMinimalNominal(this.form.produkDeposito);
+      if (this.form.nominal < minimalNominal) {
+        this.nominalError = `Minimal nominal untuk produk ini adalah Rp ${minimalNominal.toLocaleString()}`;
+      } else {
+        this.nominalError = false;
+      }
+    },
+    getMinimalNominal(produkDeposito) {
+      const produk = this.produkDepositoOptions.find(
+        (option) => option.value === produkDeposito
+      );
+      if (produk) {
+        const minimalNominal = produk.subtitle.match(/Rp ([\d.]+)/);
+        return minimalNominal ? parseInt(minimalNominal[1].replace(/\./g, "")) : 0;
+      }
+      return 0;
+    },
+    openModal() {
+      console.log("Modal dibuka!");
+      this.modalData = {
+        namaLengkap: this.form.namaLengkap,
+        nomorRekening: this.form.nomorRekening,
+        namaBank: this.form.namaBank,
+      };
+      this.isModalOpen = true;
+    },
+    openModalTransfer() {
+      console.log("Modal dibuka!");
+      this.isModalTransferOpen = true;
+    },
     async fetchData() {
       try {
         const fileStore = useFileStore();
-        const data = fileStore.formEmailRequestDepositoNTB;
+        const emailData = fileStore.formEmailRequestDepositoNTB;
+        const depositoData = fileStore.formPenempatanDeposito; // Tambahkan ini
 
-        console.log("Data from Pinia:", data);
+        console.log("Data from Pinia (Email):", emailData);
+        console.log("Data from Pinia (Deposito):", depositoData); // Tambahkan ini
 
-        if (data) {
+        if (emailData) {
           Object.keys(this.form).forEach((key) => {
-            if (data[key] !== undefined) {
-              this.form[key] = data[key];
+            if (emailData[key] !== undefined) {
+              this.form[key] = emailData[key];
             }
           });
         }
+
+        if (depositoData) { // Tambahkan ini
+          Object.keys(this.form).forEach((key) => {
+            if (depositoData[key] !== undefined) {
+              this.form[key] = depositoData[key];
+            }
+          });
+        }
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -251,7 +393,7 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
-    async handleSubmit() {
+    async handleSubmit(methodId) {
       try {
         const uuid = this.fileStore.uuid || "";
 
@@ -261,16 +403,30 @@ export default {
           return;
         }
 
+        console.log("Metode yang dipilih:", methodId);
+        this.isModalTransferOpen = false;
+
+        // Temukan metode transfer yang dipilih
+        const selectedMethod = this.transferMethods.find(
+          (method) => method.id === methodId
+        );
+
+        const namaBank = this.form.pembayaranBunga == 4 ? this.form.namaBank : "";
+        const nomorRekening = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.nomorRekening : "";
+        const namaPemilik = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.namaLengkap : "";
+
         const requestData = {
           uuid: uuid,
           nominal_deposito: Number(this.form.nominal),
           jangka_waktu: Number(this.form.jangkaWaktu),
           saat_jatuh_tempo_nominal: Number(this.form.metodePencairan),
           pembayaran_bunga: Number(this.form.pembayaranBunga),
-          nama_bank: this.form.pembayaranBunga == 4 ? this.form.namaBank : "",
-          nomor_rekening: this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.nomorRekening : "",
-          nama_pemilik: this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.namaPemilikRekening : "",
+          nama_bank: namaBank,
+          nomor_rekening: nomorRekening,
+          nama_pemilik: namaPemilik,
           s_k_penempatan_deposito: this.isChecked,
+          metodeTransfer: selectedMethod.name,
+          biayaTransfer: selectedMethod.fee,
         };
 
         console.log("Request data:", requestData);
@@ -284,7 +440,15 @@ export default {
 
         if (response.status === 201 || response.status === 200) {
           console.log("Data berhasil dikirim:", response.data);
-          this.fileStore.setFormPenempatanDeposito(this.form);
+          // this.fileStore.setFormPenempatanDeposito(this.form);
+          if (selectedMethod) {
+            this.fileStore.setFormPenempatanDeposito({
+              ...this.form,
+              metodeTransfer: selectedMethod.name,
+              biayaTransfer: selectedMethod.fee,
+            });
+          }
+
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/uploadDokumenPenempatanDepositoExisting" });
         } else {

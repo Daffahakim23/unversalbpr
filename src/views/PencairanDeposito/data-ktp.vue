@@ -131,23 +131,21 @@ export default {
     },
   },
   methods: {
+    normalizeKabupaten(kabupaten) {
+      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+    },
     async fetchProvinsi() {
+      this.provinsiOptions = [];
+      this.kabupatenOptions = [];
       try {
         const response = await api.get("/provinsi");
-        console.log("Data provinsi diterima:", response.data);
 
         if (response.data && response.data.provinsi) {
           this.provinsiOptions = response.data.provinsi.map(p => ({
             label: p.provinsi,
             value: p.provinsi
           }));
-          console.log("Provinsi options:", this.provinsiOptions);
-
-          // Atur nilai provinsi pertama jika ada
-          if (this.provinsiOptions.length > 0) {
-            this.form.provinsi = this.provinsiOptions[0].value;
-            this.fetchKabupaten(); // Panggil fetchKabupaten setelah provinsi dipilih
-          }
+          this.fetchKabupaten();
         }
       } catch (error) {
         console.error("Gagal mengambil data provinsi:", error);
@@ -157,26 +155,18 @@ export default {
     async fetchKabupaten() {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
-      this.kelurahanOptions = [];
 
       if (!this.form.provinsi) return;
 
       try {
         const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
-        console.log("Data kabupaten diterima:", response.data);
 
         if (response.data && response.data.kabupaten) {
           this.kabupatenOptions = response.data.kabupaten.map(k => ({
-            label: k.kabupaten,
+            label: this.normalizeKabupaten(k.kabupaten), // Normalisasi data API
             value: k.kabupaten
           }));
-          console.log("Kabupaten options:", this.kabupatenOptions);
-
-          // Atur nilai kabupaten pertama jika ada
-          if (this.kabupatenOptions.length > 0) {
-            this.form.kabupaten = this.kabupatenOptions[0].value;
-            this.fetchKecamatan(); // Panggil fetchKecamatan setelah kabupaten dipilih
-          }
+          this.fetchKecamatan();
         }
       } catch (error) {
         console.error("Gagal mengambil data kabupaten:", error);
@@ -193,20 +183,13 @@ export default {
         const response = await api.get(
           `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
-        console.log("Data kecamatan diterima:", response.data);
 
         if (response.data && response.data.kecamatan) {
           this.kecamatanOptions = response.data.kecamatan.map(kec => ({
             label: kec.kecamatan,
             value: kec.kecamatan
           }));
-          console.log("Kecamatan options:", this.kecamatanOptions);
-
-          // Atur nilai kecamatan pertama jika ada
-          if (this.kecamatanOptions.length > 0) {
-            this.form.kecamatan = this.kecamatanOptions[0].value;
-            this.fetchKelurahan(); // Panggil fetchKelurahan setelah kecamatan dipilih
-          }
+          this.fetchKelurahan();
         }
       } catch (error) {
         console.error("Gagal mengambil data kecamatan:", error);
@@ -220,19 +203,12 @@ export default {
         const response = await api.get(
           `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
         );
-        console.log("Data kelurahan diterima:", response.data);
 
         if (response.data && response.data.kelurahan) {
           this.kelurahanOptions = response.data.kelurahan.map(kel => ({
             label: kel.kelurahan,
             value: kel.kelurahan
           }));
-          console.log("kelurahan options:", this.kelurahanOptions);
-
-          // Atur nilai kelurahan pertama jika ada
-          if (this.kelurahanOptions.length > 0) {
-            this.form.kelurahan = this.kelurahanOptions[0].value;
-          }
         }
       } catch (error) {
         console.error("Gagal mengambil data kelurahan:", error);

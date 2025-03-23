@@ -89,28 +89,46 @@ export default {
     };
   },
   watch: {
-    "form.provinsi": function (newProvinsi) {
-      if (!newProvinsi) {
+    "form.provinsi": async function (provinsiTerpilih) {
+      if (!provinsiTerpilih) {
         this.kabupatenOptions = [];
         this.kecamatanOptions = [];
         this.kelurahanOptions = [];
       } else {
-        this.fetchKabupaten();
+        try {
+          await this.fetchKabupaten();
+        } catch (error) {
+          console.error("Gagal mengambil data kabupaten:", error);
+          // Tampilkan pesan kesalahan kepada pengguna
+          alert("Gagal mengambil data kabupaten. Silakan coba lagi.");
+        }
       }
     },
-    "form.kabupaten": function (newKabupaten) {
-      if (!newKabupaten) {
+    "form.kabupaten": async function (kabupatenTerpilih) {
+      if (!kabupatenTerpilih) {
         this.kecamatanOptions = [];
         this.kelurahanOptions = [];
       } else {
-        this.fetchKecamatan();
+        try {
+          await this.fetchKecamatan();
+        } catch (error) {
+          console.error("Gagal mengambil data kecamatan:", error);
+          // Tampilkan pesan kesalahan kepada pengguna
+          alert("Gagal mengambil data kecamatan. Silakan coba lagi.");
+        }
       }
     },
-    "form.kecamatan": function (newKecamatan) {
-      if (!newKecamatan) {
+    "form.kecamatan": async function (kecamatanTerpilih) {
+      if (!kecamatanTerpilih) {
         this.kelurahanOptions = [];
       } else {
-        this.fetchKelurahan();
+        try {
+          await this.fetchKelurahan();
+        } catch (error) {
+          console.error("Gagal mengambil data kelurahan:", error);
+          // Tampilkan pesan kesalahan kepada pengguna
+          alert("Gagal mengambil data kelurahan. Silakan coba lagi.");
+        }
       }
     },
   },
@@ -129,19 +147,20 @@ export default {
   },
 
   methods: {
+    normalizeKabupaten(kabupaten) {
+      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+    },
     async fetchProvinsi() {
       this.provinsiOptions = [];
       this.kabupatenOptions = [];
       try {
         const response = await api.get("/provinsi");
-        console.log("Data provinsi diterima:", response.data);
 
         if (response.data && response.data.provinsi) {
           this.provinsiOptions = response.data.provinsi.map(p => ({
             label: p.provinsi,
             value: p.provinsi
           }));
-          console.log("Provinsi options:", this.provinsiOptions);
           this.fetchKabupaten();
         }
       } catch (error) {
@@ -157,14 +176,12 @@ export default {
 
       try {
         const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
-        console.log("Data kabupaten diterima:", response.data);
 
         if (response.data && response.data.kabupaten) {
           this.kabupatenOptions = response.data.kabupaten.map(k => ({
-            label: k.kabupaten,
+            label: this.normalizeKabupaten(k.kabupaten), // Normalisasi data API
             value: k.kabupaten
           }));
-          console.log("Kabupaten options:", this.kabupatenOptions);
           this.fetchKecamatan();
         }
       } catch (error) {
@@ -179,18 +196,16 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
-        console.log("Data kecamatan diterima:", response.data);
 
         if (response.data && response.data.kecamatan) {
           this.kecamatanOptions = response.data.kecamatan.map(kec => ({
             label: kec.kecamatan,
             value: kec.kecamatan
           }));
-          console.log("Kecamatan options:", this.kecamatanOptions);
-          this.fetchKelurahan(); // Panggil fetchKelurahan setelah kecamatan dipilih
+          this.fetchKelurahan();
         }
       } catch (error) {
         console.error("Gagal mengambil data kecamatan:", error);
@@ -201,17 +216,15 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten || !this.form.kecamatan) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
         );
-        console.log("Data kelurahan diterima:", response.data);
 
         if (response.data && response.data.kelurahan) {
           this.kelurahanOptions = response.data.kelurahan.map(kel => ({
             label: kel.kelurahan,
             value: kel.kelurahan
           }));
-          console.log("kelurahan options:", this.kelurahanOptions);
         }
       } catch (error) {
         console.error("Gagal mengambil data kelurahan:", error);
@@ -224,7 +237,6 @@ export default {
         const message = this.fileStore.formKTP.message;
         const [day, month, year] = (message.tanggal_lahir || "").split("-");
         const formattedTanggalLahir = year && month && day ? `${year}-${month}-${day}` : "";
-
         const tanggalBerlakuSampai = message.berlaku_sampai;
         this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
 
@@ -240,7 +252,7 @@ export default {
           rt: message.rt || "",
           rw: message.rw || "",
           provinsi: message.provinsi || "",
-          kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          kabupaten: this.normalizeKabupaten(message.kota || ""),
           kecamatan: message.kecamatan || "",
           kelurahan: message.desa_kelurahan || "",
           kodePos: Number(message.kode_pos) || "",
@@ -252,7 +264,6 @@ export default {
         console.log("Form filled:", this.form);
       }
     },
-
     goBack() {
       this.$router.push({
         name: "PreviewScreenPenempatanDepositoNTB",
@@ -331,11 +342,11 @@ export default {
   },
   mounted() {
     this.$emit("update-progress", 60);
-    this.fetchData();
     this.fetchProvinsi();
     this.fetchKabupaten();
     this.fetchKecamatan();
     this.fetchKelurahan();
+    this.fetchData();
   },
 };
 </script>

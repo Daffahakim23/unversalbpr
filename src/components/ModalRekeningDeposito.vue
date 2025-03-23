@@ -2,6 +2,14 @@
     <transition name="fade">
         <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div class="w-full max-w-lg flex flex-col bg-white rounded-3xl p-6 border border-neutral-200 relative">
+                <button @click="$emit('close')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
                 <div v-if="rekeningDitemukan" class="flex flex-col mt-6 items-center">
                     <div class="flex justify-center items-center mb-8">
                         <img :src="iconPath" alt="Icon" class="h-24 sm:h-28 md:h-32" />
@@ -15,7 +23,7 @@
                         <p class="text-sm">{{ form.namaBank }}-{{ form.nomorRekening }}</p>
                     </div>
                     <div class="mt-6">
-                        <ButtonComponent type="button" @click="handleTransfer" class="w-full">
+                        <ButtonComponent type="button" @click="emitTransfer" class="w-full">
                             Transfer
                         </ButtonComponent>
                     </div>
@@ -42,7 +50,7 @@
 import api from "@/API/api";
 import FormField from "@/components/FormField.vue";
 import { useFileStore } from "@/stores/filestore";
-import { FormModelPenerimaPemindahbukuan } from "@/models/formModel";
+import { FormModelPenempatanDeposito } from "@/models/formModel";
 import ButtonComponent from "@/components/button.vue";
 
 export default {
@@ -52,6 +60,7 @@ export default {
     },
     props: {
         isOpen: Boolean,
+        handleTransfer: Function,
     },
     emits: ["close", "cardClick"],
     computed: {
@@ -61,7 +70,7 @@ export default {
     },
     data() {
         return {
-            form: new FormModelPenerimaPemindahbukuan(),
+            form: new FormModelPenempatanDeposito(),
             bankOptions: [],
             fileStore: useFileStore(),
             rekeningDitemukan: false,
@@ -91,11 +100,6 @@ export default {
             this.rekeningDitemukan = true;
             this.form.namaLengkap = this.rekeningData.namaLengkap;
         },
-        handleTransfer() {
-            console.log("Transfer ke rekening:", this.rekeningData);
-            this.$emit("close");
-            this.fileStore.setFormDataPenerimaPemindahbukuan(this.form);
-        },
         getInitials(name) {
             if (!name) return "";
             const names = name.split(" ");
@@ -107,13 +111,23 @@ export default {
             }
             return initials;
         },
+        emitTransfer() {
+            if (this.handleTransfer) {
+                this.handleTransfer({
+                    namaLengkap: this.rekeningData.namaLengkap,
+                    namaBank: this.form.namaBank,
+                    nomorRekening: this.form.nomorRekening,
+                });
+            }
+            this.$emit("close");
+        },
     },
 };
 </script>
 
 <style scoped>
 .bg-primary {
-    background-color: #004AAD;
+    background-color: #004aad;
 }
 
 .fade-enter-active,
@@ -134,10 +148,9 @@ export default {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #D9E2EA;
+    background-color: #d9e2ea;
     font-size: 24px;
     font-weight: bold;
-    color: #003B70;
-
+    color: #003b70;
 }
 </style>
