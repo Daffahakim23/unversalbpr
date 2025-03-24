@@ -1,16 +1,9 @@
 <template>
     <transition name="fade">
         <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-            <div class="w-full max-w-lg flex flex-col bg-white rounded-3xl p-6 border border-neutral-200 relative">
-                <button @click="$emit('close')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-
-                <div v-if="rekeningDitemukan" class="flex flex-col mt-6 items-center">
+            <div
+                class="w-full max-w-lg flex flex-col bg-white rounded-3xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
+                <div v-if="rekeningDitemukan" class="flex flex-col items-center py-4">
                     <div class="flex justify-center items-center mb-8">
                         <img :src="iconPath" alt="Icon" class="h-24 sm:h-28 md:h-32" />
                     </div>
@@ -28,14 +21,24 @@
                         </ButtonComponent>
                     </div>
                 </div>
-                <div v-else class="flex flex-col mt-6">
+                <div v-else class="flex flex-col w-full ">
+                    <div class="flex justify-between items-center w-full mb-2">
+                        <h2 class="text-xl font-semibold mb-4">Masukkan Detail Penerima</h2>
+                        <button @click="$emit('close')" class=" text-gray-500 hover:text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
                     <FormField label="Nama Bank*" id="namaBank" :isDropdown="true" v-model="form.namaBank"
                         placeholder="Pilih Nama Bank" :options="bankOptions" required />
 
                     <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
                         placeholder="Masukan Nomor Rekening" required />
 
-                    <div class="text-right mt-4">
+                    <div class="text-right mt-4 w-full">
                         <ButtonComponent type="button" @click="handleSubmit" class="w-full">
                             Lanjutkan
                         </ButtonComponent>
@@ -81,10 +84,26 @@ export default {
             },
         };
     },
+    watch: {
+        isOpen(newVal) {
+            if (newVal) {
+                this.resetForm();
+            }
+        },
+    },
     created() {
         this.fetchBankOptions();
     },
     methods: {
+        resetForm() {
+            this.form = new FormModelPenempatanDeposito();
+            this.rekeningDitemukan = false;
+            this.rekeningData = {
+                namaLengkap: "Mira Setiawan",
+                bank: "",
+                nomorRekening: "",
+            };
+        },
         async fetchBankOptions() {
             try {
                 const response = await api.get("/list-bank");

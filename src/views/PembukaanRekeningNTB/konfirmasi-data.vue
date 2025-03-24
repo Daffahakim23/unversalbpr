@@ -274,22 +274,24 @@ export default {
       const data = fileStore.formPekerjaan || {};
       const processedData = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key] && !key.endsWith('BO') && !key.endsWith('KD')) {
+        if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
-          if (key === "penghasilan") {
-            value = this.getLabelFromOptions(value, penghasilanOptions);
+          if (!key.endsWith("KD")) {
+            if (key === "penghasilan") {
+              value = this.getLabelFromOptions(value, penghasilanOptions);
+            }
+            if (key === "jumlahPenghasilan") {
+              value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
+            }
+            if (key === "bidangPekerjaanDK") {
+              value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
+            }
+            if (key === "korespondensi") {
+              value = this.getLabelFromOptions(value, korespondensiOptions);
+            }
+            processedData[key] = value;
           }
-          if (key === "jumlahPenghasilan") {
-            value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
-          }
-          if (key === "bidangPekerjaanDK") {
-            value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
-          }
-          if (key === "korespondensi") {
-            value = this.getLabelFromOptions(value, korespondensiOptions);
-          }
-          processedData[key] = value;
         }
       }
       return processedData;

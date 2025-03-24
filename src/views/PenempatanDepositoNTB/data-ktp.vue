@@ -67,6 +67,7 @@ import ButtonComponent from "@/components/button.vue";
 import { FormModelDataKTP } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { agamaOptions, jenisKelaminOptions, kewarganegaraanOptions, statusPerkawinanOptions, getMasaAktifKTPOptions } from "@/data/option.js";
+import stringSimilarity from 'string-similarity';
 
 export default {
   components: {
@@ -148,7 +149,9 @@ export default {
 
   methods: {
     normalizeKabupaten(kabupaten) {
-      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+      return kabupaten
+        .replace(/^KOTA\s*|^KAB\.\s*|^KOTA\s* ADM\.\s*|^KAB\. ADM\.\s*|^ADM\.\s*/i, "")
+        .trim();
     },
     async fetchProvinsi() {
       this.provinsiOptions = [];

@@ -42,7 +42,6 @@
 
 <script>
 import api from "@/API/api";
-import axios from "axios";
 import FormField from "@/components/FormField.vue";
 import FlagBox from "@/components/flagbox.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
@@ -111,18 +110,6 @@ export default {
         this.phoneError = !this.validatePhone(this.form.phone);
       }
     },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
 
     async handleSubmit() {
       try {
@@ -200,7 +187,6 @@ export default {
 
   mounted() {
     this.$emit("update-progress", 15);
-    // this.fetchData();
   },
 };
 </script>

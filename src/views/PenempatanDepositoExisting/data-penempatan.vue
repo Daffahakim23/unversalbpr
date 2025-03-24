@@ -51,11 +51,11 @@
 
     <!-- Jika opsi value = 2 -->
     <div v-if="form.pembayaranBunga == 2" class="mt-4">
+      <FormField label="Nomor Rekening Tabungan Universal*" type="number" id="nomorRekening"
+        v-model="form.nomorRekening" placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
+
       <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaLengkap" v-model="form.namaLengkap"
         placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required />
-
-      <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
-        placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
     </div>
 
     <!-- Jika opsi value = 3 -->
@@ -77,7 +77,7 @@
         <div v-if="form.namaLengkap && form.nomorRekening && form.namaBank">
           <div class="flex flex-row items-center justify-between mb-2 w-full">
             <h2 class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900">Detail Penerima</h2>
-            <button @click="openModal"
+            <button @click="openModalUbah"
               class="flex items-center gap-2 text-primary-500 hover:text-primary-600 focus:outline-none">
               <h2 class="text-xs sm:text-sm md:text-sm font-medium text-primary">Ubah</h2>
               <img src="@/assets/icon-edit.svg" alt="Icon" class="w-5 h-5" />
@@ -122,15 +122,12 @@
     </h2>
     <FormField label="Metode Metode Penyetoran*" id="pembayaranBunga" :isDropdown="true" v-model="form.metodePenyetoran"
       placeholder="PIlih Metode Metode Penyetoran" :options="metodePenyetoranNTBOptions" required />
-    <div class=" flex items-baseline mb-6">
-      <input id="modal-checkbox" type="checkbox" v-model="isChecked"
-        class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600 self-start" />
-      <p for="modal-checkbox" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">
-        Saya Setuju bahwa penyetoran untuk penempatan deposito akan dilakukan pendebetan melalui rekening Tabungan
-        Universal atas nama saya sendiri yang akan dibuat oleh Petugas Bank dan diinformasikan kepada saya melalui email
-        resmi Universal BPR: <strong>notifikasi@universalbpr.co.id</strong>
-      </p>
-    </div>
+
+    <FormField label="Nomor Rekening Tabungan Universal*" type="number" id="nomorRekeningPenyetoran"
+      v-model="form.nomorRekeningPenyetoran" placeholder="Masukan Nomor Rekening Tabungan Universal" required />
+
+    <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaRekeningPenyetoran"
+      v-model="form.namaRekeningPenyetoran" placeholder="Masukan Nama Rekening Tabungan Universal" required />
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -139,7 +136,8 @@
       </ButtonComponent>
     </div>
   </form>
-  <ReusableModal :isOpen="isModalOpen" @close="isModalOpen = false" :handleTransfer="handleTransferFromModal" />
+  <ReusableModal :isOpen="isModalOpen" rekeningData="rekeningData" @close="isModalOpen = false"
+    :handleTransfer="handleTransferFromModal" />
   <ModalTransfer :isOpen="isModalTransferOpen" :methods="filteredTransferMethods" :selectedMethod="selectedMethod"
     @update:selectedMethod="selectedMethod = $event" @confirm="handleSubmit" @close="isModalTransferOpen = false" />
 </template>
@@ -246,7 +244,10 @@ export default {
         !this.form.jangkaWaktu ||
         !this.form.metodePencairan ||
         !this.form.pembayaranBunga ||
+        !this.form.nomorRekeningPenyetoran ||
+        !this.form.namaRekeningPenyetoran ||
         (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaLengkap)) ||
+        // (this.form.pembayaranBunga == 3 && (!this.isChecked)) ||
         (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap)) ||
         !!this.nominalError // Tambahkan ini
       );
@@ -275,7 +276,19 @@ export default {
       }
     },
   },
+
   watch: {
+    "form.pembayaranBunga": function (newValue) {
+      if (newValue !== 2 && newValue !== 4) {
+        this.form.namaLengkap = "";
+        this.form.nomorRekening = "";
+        this.form.namaBank = "";
+        this.setujuBiayaTransfer = false;
+      }
+      if (newValue !== 3) {
+        this.isChecked = false;
+      }
+    },
     isModalOpen(newValue) {
       if (!newValue) {
         this.modalData = {
@@ -333,14 +346,26 @@ export default {
       }
       return 0;
     },
+    clearRecipientData() {
+      this.fileStore.setFormPenempatanDeposito({
+        ...this.fileStore.formPenempatanDeposito,
+        namaLengkap: "",
+        nomorRekening: "",
+        namaBank: "",
+      });
+
+      this.form.namaLengkap = "";
+      this.form.nomorRekening = "";
+      this.form.namaBank = "";
+    },
     openModal() {
       console.log("Modal dibuka!");
-      this.modalData = {
-        namaLengkap: this.form.namaLengkap,
-        nomorRekening: this.form.nomorRekening,
-        namaBank: this.form.namaBank,
-      };
       this.isModalOpen = true;
+      this.clearRecipientData();
+    },
+    openModalUbah() {
+      // this.isModalOpen = true;
+      this.clearRecipientData();
     },
     openModalTransfer() {
       console.log("Modal dibuka!");

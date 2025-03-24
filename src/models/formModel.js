@@ -107,6 +107,8 @@ export class FormModelPenempatanDeposito {
     this.biayaTransfer = "";
     this.metodeTransfer = "";
     this.setujuBiayaTransfer = "";
+    this.nomorRekeningPenyetoran = "";
+    this.namaRekeningPenyetoran = "";
   }
 }
 

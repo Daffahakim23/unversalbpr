@@ -247,23 +247,26 @@ export default {
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
-          if (key === "penghasilan") {
-            value = this.getLabelFromOptions(value, penghasilanOptions);
+          if (!key.endsWith("KD")) {
+            if (key === "penghasilan") {
+              value = this.getLabelFromOptions(value, penghasilanOptions);
+            }
+            if (key === "jumlahPenghasilan") {
+              value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
+            }
+            if (key === "bidangPekerjaanDK") {
+              value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
+            }
+            if (key === "korespondensi") {
+              value = this.getLabelFromOptions(value, korespondensiOptions);
+            }
+            processedData[key] = value;
           }
-          if (key === "jumlahPenghasilan") {
-            value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
-          }
-          if (key === "bidangPekerjaanDK") {
-            value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
-          }
-          if (key === "korespondensi") {
-            value = this.getLabelFromOptions(value, korespondensiOptions);
-          }
-          processedData[key] = value;
         }
       }
       return processedData;
     },
+
     formPenempatanDeposito() {
       const fileStore = useFileStore();
       const data = fileStore.formPenempatanDeposito || {};
@@ -466,6 +469,8 @@ export default {
         produkDeposito: "Produk Deposito",
         namaPemilikRekening: "Nama Pemilik Rekening",
         setujuBiayaTransfer: " Setuju Biaya Transfer",
+        biayaTransfer: "Biaya Transfer",
+        metodeTransfer: "Metode Transfer",
 
         // kontak Darurat
         namaLengkapKD: "Nama Lengkap Kontak Darurat",
