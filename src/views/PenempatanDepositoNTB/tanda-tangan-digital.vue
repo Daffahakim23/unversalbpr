@@ -1,7 +1,5 @@
 <template>
-    <iframe
-        src="https://sandbox-sign.np.vida.id/direct-sign/287c0442-0257-4355-b890-05e6a429686f?code=ju44UfoIpgBSLBeykrJqstsXtERU%2FtCNPVOYdZ2kt7X%2Fs1l5Ozm71L6zcPxfuQhg847GTYHftp16AWVuC%2Bja9wegaExM8fnJpaWmC3nEaFTJDePc0llOeymN97G8TI0urZYuiEafqLXF6HdaTBIxYqjdVc6NcIklBvuLX8nuBR0aK6cgjzEm642%2BYXvp9tMfnCII0%2F9iMSBFUWzxXHUTOnUdtroJCC4Bib7bWGIBjQxOnsyONHDBMlc%2FlTj%2Bw0csx3fN%2FUyYDATJBD5QrvBQBbtdD5JxECXIPXZynXFQYNgrsbsyJmDm7wOP8QitELitUR0P8h%2BfuGaO1YchIZ%2F1uQ%3D%3D"
-        width="600" height="400"></iframe>
+    <iframe :src="signLink" width="600" height="400"></iframe>
     <div class="flex justify-between mt-6">
         <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
         <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
@@ -27,6 +25,12 @@ export default {
         return {
             isSubmitting: false,
         };
+    },
+    computed: {
+        signLink() {
+            const fileStore = useFileStore();
+            return fileStore.sign_url;
+        },
     },
     methods: {
         goBack() {
@@ -55,7 +59,7 @@ export default {
                 const response = await api.get(`/check-envelope?envelope_id=${envelopeId}&uuid=${uuid}`);
 
                 if (response.status === 200) {
-                    this.$router.push({ path: "/dashboard/konfirmasiPenempatanDepositoNTB" });
+                    this.$router.push({ path: "/dashboard/halamanSuksesPenempatanDepositoNTB" });
                 } else if (response.status === 400) {
                     alert("Isi tanda tangan digital dahulu.");
                 } else {

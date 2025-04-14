@@ -306,7 +306,7 @@ export default {
           kewarganegaraan: Boolean(this.form.kewarganegaraan),
           kewarganegaraanLainnya: this.form.kewarganegaraanLainnya,
           is_ekstrak_ktp_ocr: true,
-          nama_ibu_kandung: this.form.namaIbuKandung
+          nama_gadis_ibu_kandung: this.form.namaIbuKandung
         };
 
         console.log("Request data:", requestData);

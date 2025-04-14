@@ -792,7 +792,8 @@ export default {
       };
       return icons[key] || "/src/assets/default.svg";
     },
-    async handleSubmit() {
+    handleSubmit(event) {
+      event.preventDefault();
       if (!this.agreement1) {
         alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
         return;
@@ -815,6 +816,9 @@ export default {
     },
 
     async lanjutkanPengiriman() {
+      if (this.isSubmitting) {
+        return;
+      }
       const fileStore = useFileStore();
       this.isSubmitting = true;
 
@@ -833,7 +837,8 @@ export default {
 
         if (response.status === 200) {
           fileStore.setEnvelopeId(response.data.envelope_id);
-          console.log("Envelope ID:", response.data.envelope_id);
+          fileStore.setSignUrl(response.data.sign_url);
+          // console.log("Envelope ID:", response.data.envelope_id);
 
           this.$router.push({ path: "/dashboard/tandaTanganDigitalPenempatanDepositoNTB" });
         } else {
