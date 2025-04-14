@@ -76,7 +76,7 @@ export class FormModelPerubahanData {
     this.rt = "";
     this.rw = "";
     this.provinsi = "";
-    this.kota = "";
+    this.kabupaten = "";
     this.kecamatan = "";
     this.kelurahan = "";
     this.kodePos = "";

@@ -2,7 +2,7 @@
   <div class="bg-neutral-white min-h-screen flex flex-col">
     <div class="flex items-center justify-between my-6 mx-10">
       <div class="flex text-center">
-        <button>
+        <button @click="goToHome">
           <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 sm:h-12 md:h-12" />
         </button>
       </div>
@@ -181,6 +181,9 @@ export default {
     };
   },
   methods: {
+    goToHome() {
+      this.$router.push("/");
+    },
     openCSModal(feature) {
       this.selectedFeature = feature;
       this.showModalCS = true;

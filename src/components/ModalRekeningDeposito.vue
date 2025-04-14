@@ -2,7 +2,7 @@
     <transition name="fade">
         <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div
-                class="w-full max-w-lg flex flex-col bg-white rounded-3xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
+                class="w-full max-w-lg flex flex-col bg-white rounded-2xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
                 <div v-if="rekeningDitemukan" class="flex flex-col items-center py-4">
                     <div class="flex justify-center items-center mb-8">
                         <img :src="iconPath" alt="Icon" class="h-24 sm:h-28 md:h-32" />
@@ -39,7 +39,8 @@
                         placeholder="Masukan Nomor Rekening" required />
 
                     <div class="text-right mt-4 w-full">
-                        <ButtonComponent type="button" @click="handleSubmit" class="w-full">
+                        <ButtonComponent type="button" @click="handleSubmit" class="w-full"
+                            :disabled="!form.namaBank || !form.nomorRekening">
                             Lanjutkan
                         </ButtonComponent>
                     </div>
@@ -151,12 +152,19 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.3s;
+    transition: opacity 0.3s, transform 0.3s;
 }
 
 .fade-enter,
 .fade-leave-to {
     opacity: 0;
+    transform: translateY(20px);
+}
+
+.fade-to,
+.fade-leave {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .initials-circle {

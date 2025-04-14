@@ -151,7 +151,7 @@ export default {
       try {
         const response = await api.post("/request-otp-email", {
           uuid: fileStore.uuid,
-          page: "Pembukaan Rekening NTB",
+          page: "pindah-buku",
         });
 
         console.log("Resend OTP sukses:", response.data);

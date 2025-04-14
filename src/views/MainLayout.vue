@@ -1,5 +1,5 @@
-<template class="bg-neutral-50">
-  <div class="flex flex-col h-screen bg-neutral-50">
+<template class="h-full">
+  <div class="flex flex-col h-full min-h-screen bg-neutral-50">
     <div class="bg-neutral-white p-6">
       <div class="flex items-center justify-between">
         <div>
@@ -34,10 +34,6 @@
                 <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-left">
                   {{ pageTitle }}
                 </h2>
-                <!-- <button v-if="$route.name === 'pembukaanRekeningNTB'" @click="downloadProductDetails"
-                  class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700 transition">
-                  Detail Produk
-                </button> -->
               </div>
               <p v-if="pageSubtitle" class="text-sm text-gray-600">
                 {{ pageSubtitle }}

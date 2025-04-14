@@ -75,7 +75,8 @@
     </div>
   </div>
 
-  <div class="flex justify-center mt-6">
+  <div class="flex justify-between mt-6">
+    <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
     <ButtonComponent type="submit" :disabled="isButtonDisabled" @click="handleSubmit" @close="isModalOpen = false">
       Lanjutkan
     </ButtonComponent>
@@ -118,6 +119,9 @@ export default {
     },
   },
   methods: {
+    goBack() {
+      this.$router.push({ path: "/dashboard/dataPenempatanDepositoNTB" });
+    },
     createFileInput(documentType) {
       const input = document.createElement("input");
       input.type = "file";

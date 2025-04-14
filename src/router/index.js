@@ -14,6 +14,7 @@ import DataKTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-ktp.
 import DataPekerjaanPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-pekerjaan.vue";
 import KonfirmasiDataPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/konfirmasi-data.vue";
 import EmailOTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/otp-no-hp.vue";
+import TandaTanganDigitalPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/tanda-tangan-digital.vue";
 import HalamanSuksesPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/halaman-sukses.vue";
 
 // Pembukaan Rekening Existing
@@ -27,6 +28,7 @@ import KonfirmasiDataPembukaanRekeningExisting from "../views/PembukaanRekeningE
 import EmailOTPPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/otp-no-hp.vue";
 import HalamanSuksesPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/halaman-sukses.vue";
 import FotoDiriPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/foto-diri.vue";
+import TandaTanganDigitalPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/tanda-tangan-digital.vue";
 
 // Penempatan Deposito NTB
 import PenempatanDepositoNTB from "../views/PenempatanDepositoNTB/penempatan-deposito.vue";
@@ -43,6 +45,7 @@ import EmailOTPPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/otp-no
 import HalamanSuksesPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/halaman-sukses.vue";
 import HomePage from "../views/HomePage.vue";
 import FotoDiriPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/foto-diri.vue";
+import TandaTanganDigitalPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/tanda-tangan-digital.vue";
 
 // Pembukaan Rekening Existing
 import PenempatanDepositoExisting from "../views/PenempatanDepositoExisting/penempatan-deposito-existing.vue";
@@ -56,6 +59,7 @@ import KonfirmasiDataPenempatanDepositoExisting from "../views/PenempatanDeposit
 import EmailOTPPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/email-otp.vue";
 import HalamanSuksesPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/halaman-sukses.vue";
 import FotoDiriPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/foto-diri.vue";
+import TandaTanganDigitalPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/tanda-tangan-digital.vue";
 
 // Pembukaan Rekening Existing
 import PengkinianData from "../views/PengkinianData/pengkinian-data.vue";
@@ -67,6 +71,8 @@ import DataPekerjaanPengkinianData from "../views/PengkinianData/data-pekerjaan.
 import KonfirmasiDataPengkinianData from "../views/PengkinianData/konfirmasi-data.vue";
 import EmailOTPPengkinianData from "../views/PengkinianData/otp-no-hp.vue";
 import HalamanSuksesPengkinianData from "../views/PengkinianData/halaman-sukses.vue";
+import TandaTanganDigitalPengkinianData from "../views/PengkinianData/tanda-tangan-digital.vue";
+
 
 // Pencairan Deposito
 import PencairanDeposito from "../views/PencairanDeposito/pencairan-deposito.vue";
@@ -80,6 +86,7 @@ import DataPencairanDepositoOfUs from "../views/PencairanDeposito/data-pencairan
 import KonfirmasiDataPencairanDeposito from "../views/PencairanDeposito/konfirmasi-data.vue";
 import EmailOTPPencairanDeposito from "../views/PencairanDeposito/otp-no-hp.vue";
 import HalamanSuksesPencairanDeposito from "../views/PencairanDeposito/halaman-sukses.vue";
+import TandaTanganDigitalPencairanDeposito from "../views/PencairanDeposito/tanda-tangan-digital.vue";
 
 // Pemindahbukuan
 import Pemindahbukuan from "../views/Pemindahbukuan/pemindahbukuan.vue";
@@ -92,6 +99,7 @@ import DataPenerimaPemindahbukuan from "../views/Pemindahbukuan/data-penerima.vu
 import KonfirmasiDataPemindahbukuan from "../views/Pemindahbukuan/konfirmasi-data.vue";
 import EmailOTPPemindahbukuan from "../views/Pemindahbukuan/otp-no-hp.vue";
 import HalamanSuksesPemindahbukuan from "../views/Pemindahbukuan/halaman-sukses.vue";
+import TandaTanganDigitalPemindahbukuan from "../views/Pemindahbukuan/tanda-tangan-digital.vue";
 
 const routes = [
   {
@@ -126,6 +134,16 @@ const routes = [
         meta: {
           feature: "Pembukaan Rekening Baru",
           title: "Verifikasi Email"
+        },
+      },
+      {
+        path: "dataPribadiPembukaanRekeningNTB",
+        name: "DataPribadiPembukaanRekeningNTB",
+        component: DataPribadiPembukaanRekeningNTB,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Data Pribadi",
+          subtitle: "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda."
         },
       },
       {
@@ -191,17 +209,6 @@ const routes = [
         }),
       },
       {
-        path: "dataPribadiPembukaanRekeningNTB",
-        name: "DataPribadiPembukaanRekeningNTB",
-        component: DataPribadiPembukaanRekeningNTB,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Data Pribadi",
-          subtitle:
-            "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
-        },
-      },
-      {
         path: "konfirmasiDataPembukaanRekeningNTB",
         name: "konfirmasiDataPembukaanRekeningNTB",
         component: KonfirmasiDataPembukaanRekeningNTB,
@@ -229,6 +236,15 @@ const routes = [
         meta: {
           feature: "Pembukaan Rekening Baru",
           title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "tandaTanganDigitalPembukaanRekeningNTB",
+        name: "tandaTanganDigitalPembukaanRekeningNTB",
+        component: TandaTanganDigitalPembukaanRekeningNTB,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -339,6 +355,15 @@ const routes = [
         meta: {
           feature: "Pembukaan Rekening Baru",
           title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "tandaTanganDigitalPembukaanRekeningExisting",
+        name: "tandaTanganDigitalPembukaanRekeningExisting",
+        component: TandaTanganDigitalPembukaanRekeningExisting,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -479,6 +504,15 @@ const routes = [
         },
       },
       {
+        path: "tandaTanganDigitalPenempatanDepositoNTB",
+        name: "tandaTanganDigitalPenempatanDepositoNTB",
+        component: TandaTanganDigitalPenempatanDepositoNTB,
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Tanda Tangan Digital"
+        },
+      },
+      {
         path: "halamanSuksesPenempatanDepositoNTB",
         name: "halamanSuksesPenempatanDepositoNTB",
         component: HalamanSuksesPenempatanDepositoNTB,
@@ -504,7 +538,7 @@ const routes = [
         component: verifikasiEmailPenempatanDepositoExisting,
         meta: {
           feature: "Penempatan Deposito",
-          title: "Email Verifikasi Existing"
+          title: "Verifikasi Email",
         },
       },
       {
@@ -597,6 +631,15 @@ const routes = [
         },
       },
       {
+        path: "tandaTanganDigitalPenempatanDepositoExisting",
+        name: "tandaTanganDigitalPenempatanDepositoExisting",
+        component: TandaTanganDigitalPenempatanDepositoExisting,
+        meta: {
+          feature: "Penempatan Deposito",
+          title: "Tanda Tangan Digital"
+        },
+      },
+      {
         path: "halamanSuksesPenempatanDepositoExisting",
         name: "halamanSuksesPenempatanDepositoExisting",
         component: HalamanSuksesPenempatanDepositoExisting,
@@ -686,6 +729,15 @@ const routes = [
         meta: {
           feature: "Pengkinian Data",
           title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "tandaTanganDigitalPengkinianData",
+        name: "tandaTanganDigitalPengkinianData",
+        component: TandaTanganDigitalPengkinianData,
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -805,6 +857,15 @@ const routes = [
         },
       },
       {
+        path: "tandaTanganDigitalPencairanDeposito",
+        name: "tandaTanganDigitalPencairanDeposito",
+        component: TandaTanganDigitalPencairanDeposito,
+        meta: {
+          feature: "Pencairan Deposito",
+          title: "Tanda Tangan Digital"
+        },
+      },
+      {
         path: "halamanSuksesPencairanDeposito",
         name: "halamanSuksesPencairanDeposito",
         component: HalamanSuksesPencairanDeposito,
@@ -906,6 +967,15 @@ const routes = [
         meta: {
           feature: "Pemindahbukuan",
           title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "tandaTanganDigitalPemindahbukuan",
+        name: "tandaTanganDigitalPemindahbukuan",
+        component: TandaTanganDigitalPemindahbukuan,
+        meta: {
+          feature: "Pemindahbukuan",
+          title: "Tanda Tangan Digital"
         },
       },
       {

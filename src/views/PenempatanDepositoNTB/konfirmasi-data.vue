@@ -42,24 +42,12 @@
 
     <div class="border-t border-neutral-200 my-4"></div>
 
-    <!-- <div class="py-4">
-      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Data Pribadi
-      </h1>
-      <div v-if="formPribadi" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPribadi" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
-        </div>
-      </div>
-    </div> -->
-
     <div class="py-4">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Data Pribadi
       </h1>
-      <div v-if="formPribadi" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPribadi" :key="key">
+      <div v-if="formGabungan" class="form-container">
+        <div class="form-item" v-for="(value, key) in formGabungan" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
@@ -76,6 +64,45 @@
         <div class="form-item" v-for="(value, key) in formPekerjaan" :key="key">
           <div class="form-label"> {{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-4" v-if="hasBeneficialOwner">
+      <div class="border-t border-neutral-200 my-4"></div>
+      <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
+        Pemilik Manfaat
+      </h1>
+      <div v-if="formBeneficialOwner" class="form-container">
+        <div class="form-item" v-for="(value, key) in formBeneficialOwner" :key="key">
+          <div class="form-label"> {{ formatLabel(key) }}:</div>
+          <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-neutral-200 my-4"></div>
+
+    <div class="py-4">
+      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
+        Produk yang Diinginkan
+      </h1>
+      <div class="form-container">
+        <div class="form-item" v-if="formPribadi.kantorCabang">
+          <div class="form-label">Kantor cabang:</div>
+          <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
+        </div>
+        <div class="form-item" v-if="formPribadi.alamatKantorCabang">
+          <div class="form-label">Alamat Kantor cabang:</div>
+          <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
+        </div>
+        <div class="form-item" v-if="formGabungan.produk">
+          <div class="form-label">Produk yang Diinginkan:</div>
+          <strong class="form-value">{{ formGabungan.produk }}</strong>
+        </div>
+        <div class="form-item" v-if="formGabungan.namaFundingOfficer">
+          <div class="form-label">Nama Funding Officer:</div>
+          <strong class="form-value">{{ formGabungan.namaFundingOfficer }}</strong>
         </div>
       </div>
     </div>
@@ -114,22 +141,26 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
-      <div class="space-y-3 text-gray-700 text-sm">
+      <div class="space-y-3 text-neutral-900 text-sm">
         <p>
-          Dengan ini, saya/kami menyatakan bahwa: Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening pada
-          <span class="font-semibold">PT. BPR Universal</span> (selanjutnya disebut "Bank") ini adalah data yang
-          sebenar-benarnya.
+          Dengan ini, saya/kami menyatakan bahwa:
         </p>
-        <ul class="list-decimal list-inside text-neutral-700 space-y-2">
+        <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
+          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT. BPR Universal (selanjutnya
+            disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
           <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
             ini.</li>
           <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik Produk Bank yang akan saya/kami
-            manfaatkan.</li>
+            manfaatkan dan saya telah mengerti serta memahami segala konsekuensi pemanfaatan Produk Bank, termasuk
+            manfaat, risiko, dan biaya-biaya yang melekat pada produk Bank tersebut.</li>
           <li>Saya/kami telah menerima, membaca, mengerti, dan menyetujui isi Ketentuan Umum dan Persyaratan Pembukaan
-            Rekening.</li>
-          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening.
-            <ul class="list-disc list-inside ml-2 mt-2 space-y-1">
-              <li>Saya/kami tidak mematuhi ketentuan <span class="italic">Prinsip Mengenal Nasabah (Knowing Your
+            Rekening baru. Untuk itu dengan ini saya/kami menyatakan tunduk dan terikat dengan ketentuan-ketentuan
+            tersebut, serta ketentuan lain terkait produk/fasilitas yang saya/kami pilih yang berlaku di Bank beserta
+            segala bentuk perubahannya yang akan diberitahukan dengan sarana yang ditetapkan Bank.</li>
+          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening,
+            apabila menurut pertimbangan Bank :
+            <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
+              <li>Saya/kami tidak mematuhi ketentuan Prinsip Mengenal Nasabah <span class="italic">(Knowing Your
                   Customer)</span>.</li>
               <li>Data yang saya/kami berikan kepada Bank tidak benar atau diragukan kebenarannya.</li>
               <li>Saya/kami menyalahgunakan rekening.</li>
@@ -141,18 +172,19 @@
 
     <!-- Checkbox Persetujuan -->
     <div class="flex items-center">
-      <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />
-      <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
+      <input type="checkbox" id="agreement1" v-model="agreement1" class="mr-2 cursor-pointer" />
+      <label for="agreement1" class="text-sm text-neutral-900 cursor-pointer">
         Saya setuju dengan pernyataan dan persetujuan di atas
       </label>
     </div>
 
-    <div class="flex items-center mt-4">
-      <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer items-baseline" />
-      <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
+    <div class="flex items-center mt-2">
+      <input type="checkbox" id="agreement2" v-model="agreement2" class="mr-2 cursor-pointer items-baseline" />
+      <label for="agreement2" class="text-sm text-neutral-900 cursor-pointer">
         Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
       </label>
     </div>
+
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -161,8 +193,9 @@
       </ButtonComponent>
     </div>
   </div>
-  <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
-    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" />
+  <ModalKonfirmasi :isOpen="isModalOpen" @close="closeModalKonfirmasi" @yes="handleKonfirmasi" />
+  <!-- <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
+    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" /> -->
 </template>s
 
 <script>
@@ -173,8 +206,10 @@ import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
 import { alamatSesuaiEktpOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
-import ModalOTP from "@/components/ModalOTP.vue";
-import { metodePencairanOptions, pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions } from '@/data/option.js';
+// import ModalOTP from "@/components/ModalOTP.vue";
+import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
+import { kewarganegaraanOptions, metodePencairanOptions, pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, hubunganNasabahOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, persetujuanOptions, produkOptions, sumberDataNasabahOptions } from '@/data/option.js';
+import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
 
 
 export default {
@@ -182,12 +217,16 @@ export default {
   components: {
     ButtonComponent,
     RadioButtonChoose,
-    ModalOTP,
+    // ModalOTP,
+    ModalKonfirmasi,
   },
   name: "DataPribadi",
   computed: {
     isButtonDisabled() {
-      return !this.agreement; // Tombol dinonaktifkan jika agreement belum dicentang
+      return !this.agreement1 || !this.agreement2;
+    },
+    hasBeneficialOwner() {
+      return this.formBeneficialOwner && Object.keys(this.formBeneficialOwner).length > 0;
     },
     formKTP() {
       const fileStore = useFileStore();
@@ -199,6 +238,9 @@ export default {
 
           if (key === "agama") {
             value = this.getLabelFromOptions(value, agamaOptions);
+          }
+          if (key === "kewarganegaraan") {
+            value = this.getLabelFromOptions(value, kewarganegaraanOptions);
           }
           if (key === "statusPerkawinan") {
             value = this.getLabelFromOptions(value, statusPerkawinanOptions);
@@ -221,6 +263,32 @@ export default {
       for (const key in data) {
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
+          if (key === "produk") {
+            value = this.getLabelFromOptions(value, produkOptions);
+          }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
+          }
+          processedData[key] = value;
+        }
+      }
+      return processedData;
+    },
+
+    formGabungan() {
+      const fileStore = useFileStore();
+      const pribadiData = fileStore.formPribadi || {};
+      const emailData = fileStore.formEmailRequestDepositoNTB || {};
+      const gabunganData = { ...pribadiData, ...emailData };
+      const processedData = {};
+      for (const key in gabunganData) {
+        if (gabunganData.hasOwnProperty(key) && gabunganData[key]) {
+          let value = gabunganData[key];
 
           if (key === "pendidikanTerakhir") {
             value = this.getLabelFromOptions(value, pendidikanOptions);
@@ -231,8 +299,25 @@ export default {
           if (key === "hobi") {
             value = this.getLabelFromOptions(value, hobiOptions);
           }
+          if (key === "produk") {
+            value = this.getLabelFromOptions(value, produkOptions);
+          }
+          if (key === "produkDeposito") {
+            value = this.getLabelFromOptions(value, produkDepositoOptions);
+          }
+          if (key === "sumber") {
+            value = this.getLabelFromOptions(value, sumberDataNasabahOptions);
+          }
           if (key === "alamatSesuaiEktp") {
-            value = this.getLabelFromOptions(value, alamatSesuaiEktpOptions);
+            value = this.getLabelFromOptions(value, trueFalseOptions);
+          }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
           }
           processedData[key] = value;
         }
@@ -247,7 +332,10 @@ export default {
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
-          if (!key.endsWith("KD")) {
+          if (!key.endsWith("KD") && !key.endsWith("BO")) {
+            if (key === "pernyataanChecked") {
+              value = this.getLabelFromOptions(value, persetujuanOptions);
+            }
             if (key === "penghasilan") {
               value = this.getLabelFromOptions(value, penghasilanOptions);
             }
@@ -259,6 +347,37 @@ export default {
             }
             if (key === "korespondensi") {
               value = this.getLabelFromOptions(value, korespondensiOptions);
+            }
+            if (key === "pekerjaan") {
+              if (this.pekerjaanOptions && this.pekerjaanOptions.length > 0) {
+                const selectedPekerjaan = this.pekerjaanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedPekerjaan ? selectedPekerjaan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+            if (key === "jabatanDK") {
+              if (this.jabatanOptions && this.jabatanOptions.length > 0) {
+                const selectedJabatan = this.jabatanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedJabatan ? selectedJabatan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+
+            if (key === "bidangPekerjaanDK") {
+              if (this.bidangPekerjaanOptions && this.bidangPekerjaanOptions.length > 0) {
+                const selectedBidangPekerjaan = this.bidangPekerjaanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedBidangPekerjaan ? selectedBidangPekerjaan.label : value;
+              } else {
+                console.warn("");
+              }
             }
             processedData[key] = value;
           }
@@ -310,6 +429,73 @@ export default {
           .filter(([key, value]) => value && key.endsWith('KD'))
       );
     },
+    formBeneficialOwner() {
+      const fileStore = useFileStore();
+      const data = fileStore.formPekerjaan || {};
+      const processedData = {};
+
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && data[key] && key.endsWith('BO')) {
+          let value = data[key];
+
+          if (key === "hubunganNasabahBO") {
+            value = this.getLabelFromOptions(value, hubunganNasabahOptions);
+          }
+          if (key === "kewarganegaraanBO") {
+            value = this.getLabelFromOptions(value, kewarganegaraanBOOptions);
+          }
+          if (key === "jenisIdentitasBO") {
+            value = this.getLabelFromOptions(value, jenisIdentitasBOOptions);
+          }
+          if (key === "jenisKelaminBO") {
+            value = this.getLabelFromOptions(value, jenisKelaminOptions);
+          }
+          if (key === "statusPerkawinanBO") {
+            value = this.getLabelFromOptions(value, statusPerkawinanOptions);
+          }
+          if (key === "penghasilanBO") {
+            value = this.getLabelFromOptions(value, penghasilanOptions);
+          }
+          if (key === "jumlahPenghasilanBO") {
+            value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
+          }
+          if (key === "pekerjaanBO") {
+            if (this.pekerjaanOptions && this.pekerjaanOptions.length > 0) {
+              const selectedPekerjaan = this.pekerjaanOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedPekerjaan ? selectedPekerjaan.label : value;
+            } else {
+              console.warn("");
+            }
+          }
+          if (key === "jabatanBO") {
+            if (this.jabatanOptions && this.jabatanOptions.length > 0) {
+              const selectedJabatan = this.jabatanOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedJabatan ? selectedJabatan.label : value;
+            } else {
+              console.warn("");
+            }
+          }
+
+          if (key === "bidangPekerjaanBO") {
+            if (this.bidangPekerjaanOptions && this.bidangPekerjaanOptions.length > 0) {
+              const selectedBidangPekerjaan = this.bidangPekerjaanOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBidangPekerjaan ? selectedBidangPekerjaan.label : value;
+            } else {
+              console.warn("");
+            }
+          }
+          processedData[key] = value;
+        }
+      }
+
+      return processedData;
+    },
     // formPekerjaan() {
     //   const fileStore = useFileStore();
 
@@ -341,9 +527,16 @@ export default {
       form: new FormModelKonfirmasiData(),
       trueFalseOptions,
       RadioButtonChoose,
-      agreement: false,
+      agreement1: false,
+      agreement2: false,
       isSubmitting: false,
-      isModalOTPOpen: false,
+      // isModalOTPOpen: false,
+      isModalOpen: false,
+      kantorCabangOptions: [],
+      jabatanOptions: [],
+      pekerjaanOptions: [],
+      bidangPekerjaanOptions: [],
+      kantorCabangAlamat: {},
       features: [
         {
           label: 'Pilih Metode Konfirmasi OTP',
@@ -360,6 +553,101 @@ export default {
   },
 
   methods: {
+    async fetchBranches() {
+      try {
+        const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();
+        this.kantorCabangOptions = kantorCabangOptions;
+        this.kantorCabangAlamat = kantorCabangAlamat;
+      } catch (error) {
+        console.error("Gagal mengambil data kantor cabang:", error);
+      }
+    },
+    async fetchPekerjaan() {
+      try {
+        const pekerjaanOptions = await fetchPekerjaan();
+        this.pekerjaanOptions = pekerjaanOptions;
+      } catch (error) {
+        console.error("Gagal mengambil data Jabatan:", error);
+      }
+    },
+    async fetchJabatanKonfirmasi(kodePekerjaan) {
+      try {
+        const jabatanOptions = await fetchJabatanKonfirmasi(kodePekerjaan);
+        this.jabatanOptions = jabatanOptions;
+      } catch (error) {
+        console.error("Gagal mengambil data Jabatan:", error);
+      }
+    },
+
+    async fetchBidangPekerjaan() {
+      try {
+        const bidangPekerjaanOptions = await fetchBidangPekerjaan();
+        this.bidangPekerjaanOptions = bidangPekerjaanOptions;
+      } catch (error) {
+        console.error("Gagal mengambil data Bidang Pekerjaan:", error);
+      }
+    },
+    formPekerjaan() {
+      const fileStore = useFileStore();
+      const data = fileStore.formPekerjaan || {};
+      const processedData = {};
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && data[key]) {
+          let value = data[key];
+
+          if (!key.endsWith("KD") && !key.endsWith("BO")) {
+            if (key === "pernyataanChecked") {
+              value = this.getLabelFromOptions(value, persetujuanOptions);
+            }
+            if (key === "penghasilan") {
+              value = this.getLabelFromOptions(value, penghasilanOptions);
+            }
+            if (key === "jumlahPenghasilan") {
+              value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
+            }
+            if (key === "bidangPekerjaanDK") {
+              value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
+            }
+            if (key === "korespondensi") {
+              value = this.getLabelFromOptions(value, korespondensiOptions);
+            }
+            if (key === "pekerjaan") {
+              if (this.pekerjaanOptions && this.pekerjaanOptions.length > 0) {
+                const selectedPekerjaan = this.pekerjaanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedPekerjaan ? selectedPekerjaan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+            if (key === "jabatanDK") {
+              if (this.jabatanOptions && this.jabatanOptions.length > 0) {
+                const selectedJabatan = this.jabatanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedJabatan ? selectedJabatan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+
+            if (key === "bidangPekerjaanDK") {
+              if (this.bidangPekerjaanOptions && this.bidangPekerjaanOptions.length > 0) {
+                const selectedBidangPekerjaan = this.bidangPekerjaanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedBidangPekerjaan ? selectedBidangPekerjaan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+            processedData[key] = value;
+          }
+        }
+      }
+      return processedData;
+    },
     formatCurrency(amount) {
       if (typeof amount !== 'number') return amount;
 
@@ -408,39 +696,45 @@ export default {
         kantorCabang: "Kantor Cabang",
         alamatKantorCabang: "Alamat Kantor Cabang",
         alamatSesuaiEktp: "Alamat Sesuai EKTP",
+        phone: "Nomor Handphone",
+        namaFundingOfficer: "Nama Funding Officer",
+        sumber: "Sumber Informasi Nasabah",
+        email: "Email",
 
         // Data Pekerjaan (Beneficial Owner)
         pekerjaan: "Pekerjaan",
         penghasilan: "Penghasilan",
         jumlahPenghasilan: "Jumlah Penghasilan",
         hubunganNasabah: "Hubungan Nasabah",
-        jenisIdentitasBO: "Jenis Identitas Beneficial Owner",
+        jenisIdentitasBO: "Jenis Identitas",
         hubunganNasabahBO: "Hubungan dengan Nasabah",
         kotaPerusahaanBO: "Kota Perusahaan",
         kodePosPerushaanBO: "Kode Pos Perusahaan",
-        kewarganegaraanBO: "Kewarganegaraan Beneficial Owner",
-        namaLengkapBO: "Nama Beneficial Owner",
+        kewarganegaraanBO: "Kewarganegaraan",
+        namaLengkapBO: "Nama",
         nomorDokumenIdentitasBO: "Nomor Dokumentasi Identitas",
-        alamatBO: "Alamat Beneficial Owner",
-        rtBO: "RT Beneficial Owner",
-        rwBO: "RW Beneficial Owner",
-        provinsiBO: "Provinsi Beneficial Owner",
-        kabupatenBO: "Kota / Kabupaten Beneficial Owner",
-        kecamatanBO: "Kecamatan Beneficial Owner",
-        kelurahanBO: "Kelurahan Beneficial Owner",
-        kodePosBO: "Kode Pos Beneficial Owner",
-        tempatLahirBO: "Tempat Lahir Beneficial Owner",
-        tanggalLahirBO: "Tanggal Lahir Beneficial Owner",
-        jenisKelaminBO: "Jenis Kelamin Beneficial Owner",
+        alamatBO: "Alamat",
+        rtBO: "RT",
+        rwBO: "RW",
+        provinsiBO: "Provinsi",
+        kabupatenBO: "Kota / Kabupaten",
+        kecamatanBO: "Kecamatan",
+        kelurahanBO: "Kelurahan",
+        kodePosBO: "Kode Pos",
+        tempatLahirBO: "Tempat Lahir",
+        tanggalLahirBO: "Tanggal Lahir",
+        jenisKelaminBO: "Jenis Kelamin",
         statusPerkawinanBO: "Status Perkawinan",
-        pekerjaanBO: "Pekerjaan Beneficial Owner",
-        namaPerusahaanBO: "Nama Perusahaan Beneficial Owner",
-        alamatPerusahaanBO: "Alamat Perusahaan Beneficial Owner",
-        jabatanBO: "Jabatan Beneficial Owner",
+        pekerjaanBO: "Pekerjaan",
+        namaPerusahaanBO: "Nama Perusahaan",
+        alamatPerusahaanBO: "Alamat Perusahaan",
+        jabatanBO: "Jabatan",
         lamaBekerjaTahunBO: "Lama Bekerja Tahun",
         lamaBekerjaBulanBO: "Lama Bekerja Bulan",
-        penghasilanBO: "Penghasilan Beneficial Owner",
-        jumlahPenghasilanBO: "Jumlah Penghasilan Beneficial Owner",
+        penghasilanBO: "Penghasilan",
+        jumlahPenghasilanBO: "Jumlah Penghasilan",
+        kodePosPerushaanBO: "Kode Pos Perusahaan",
+        pernyataanChecked: "Pernyataan",
 
         // Data Pekerjaan (Detail Pekerjaan)
         namaPerusahaanDK: "Nama Perusahaan",
@@ -499,50 +793,52 @@ export default {
       return icons[key] || "/src/assets/default.svg";
     },
     async handleSubmit() {
-      if (!this.agreement) {
+      if (!this.agreement1) {
         alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
         return;
       }
+      this.isModalOpen = true;
+    },
+
+    closeModalKonfirmasi() {
+      this.isModalOpen = false;
+    },
+
+    handleKonfirmasi(confirm) {
+      this.isModalOpen = false;
+
+      if (confirm) {
+        this.lanjutkanPengiriman();
+      } else {
+        console.log("Pengiriman data dibatalkan oleh pengguna.");
+      }
+    },
+
+    async lanjutkanPengiriman() {
       const fileStore = useFileStore();
+      this.isSubmitting = true;
+
       try {
         this.requestData = {
           uuid: fileStore.uuid || "",
           s_k_nasabah_bersedia_info_tambahan: true,
-          s_k_data_benar_dipertanggungjawabkan: true
-        };
-        console.log("Data sementara disimpan:", this.requestData);
-        this.isModalOTPOpen = true;
-      } catch (error) {
-        console.error("Error saat membuka modal:", error);
-      }
-    },
-    async handleOTPMethodSelected(method) {
-      console.log('Metode OTP yang dipilih:', method);
-
-      try {
-        if (!this.requestData) {
-          console.error("Error: Data request tidak ditemukan.");
-          this.isSubmitting = false;
-          return;
-        }
-
-        const finalData = {
-          ...this.requestData,
-          otp_wa: method === 'whatsapp', // Set otp_wa berdasarkan metode
+          s_k_data_benar_dipertanggungjawabkan: true,
         };
 
-        console.log("Mengirim data:", finalData);
+        console.log("Mengirim data:", this.requestData);
 
-        const response = await api.post("/buka-rekening-deposito", finalData, {
+        const response = await api.post("/buka-rekening-deposito", this.requestData, {
           headers: { "Content-Type": "application/json" },
         });
 
         if (response.status === 200) {
-          this.$router.push({ path: "/dashboard/emailOTPPenempatanDepositoNTB" });
+          fileStore.setEnvelopeId(response.data.envelope_id);
+          console.log("Envelope ID:", response.data.envelope_id);
+
+          this.$router.push({ path: "/dashboard/tandaTanganDigitalPenempatanDepositoNTB" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
-
       } catch (error) {
         if (error.response) {
           console.error("Error response data:", error.response.data);
@@ -550,13 +846,15 @@ export default {
         console.error("Error saat mengirim data:", error);
       } finally {
         this.isSubmitting = false;
-        this.isModalOTPOpen = false; // Tutup modal setelah request selesai
       }
     },
   },
   mounted() {
-    console.log("Component mounted!");
     this.$emit("update-progress", 90);
+    this.fetchBranches();
+    this.fetchBidangPekerjaan();
+    this.fetchPekerjaan();
+    this.fetchJabatanKonfirmasi();
   },
 };
 </script>

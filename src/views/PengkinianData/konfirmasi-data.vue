@@ -170,7 +170,7 @@ import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
-import { jenisIdentitasBOOptions, jenisKelaminOptions, kewarganegaraanBOOptions, trueFalseOptions } from "@/data/option";
+import { alamatSesuaiEktpOptions, jenisIdentitasBOOptions, jenisKelaminOptions, kewarganegaraanBOOptions, kewarganegaraanOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalOTP from "@/components/ModalOTP.vue";
 import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, masaAktifKTPOptions, hubunganNasabahOptions } from '@/data/option.js';
@@ -207,6 +207,9 @@ export default {
           if (key === "masaAktifKtp") {
             value = this.getLabelFromOptions(value, masaAktifKTPOptions);
           }
+          if (key === "kewarganegaraan") {
+            value = this.getLabelFromOptions(value, kewarganegaraanOptions);
+          }
           processedData[key] = value;
         }
       }
@@ -234,6 +237,9 @@ export default {
           }
           if (key === "hobi") {
             value = this.getLabelFromOptions(value, hobiOptions);
+          }
+          if (key === "alamatSesuaiKtp") {
+            value = this.getLabelFromOptions(value, alamatSesuaiEktpOptions);
           }
           processedData[key] = value;
         }

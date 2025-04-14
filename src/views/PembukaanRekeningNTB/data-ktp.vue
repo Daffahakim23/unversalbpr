@@ -130,7 +130,7 @@ export default {
 
   methods: {
     normalizeKabupaten(kabupaten) {
-      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
     },
     async fetchProvinsi() {
       this.provinsiOptions = [];
@@ -149,21 +149,30 @@ export default {
         console.error("Gagal mengambil data provinsi:", error);
       }
     },
-
     async fetchKabupaten() {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
 
-      if (!this.form.provinsi) return;
+      if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}`
+        );
 
         if (response.data && response.data.kabupaten) {
-          this.kabupatenOptions = response.data.kabupaten.map(k => ({
-            label: this.normalizeKabupaten(k.kabupaten), // Normalisasi data API
-            value: k.kabupaten
-          }));
+          const normalizedKota = this.normalizeKabupaten(this.form.kabupaten);
+          this.kabupatenOptions = response.data.kabupaten
+            .filter((k) =>
+              this.normalizeKabupaten(k.kabupaten).includes(normalizedKota)
+            )
+            .map((k) => ({
+              label: this.normalizeKabupaten(k.kabupaten),
+              value: k.kabupaten,
+            }));
+          if (this.kabupatenOptions.length > 0) {
+            this.form.kabupaten = this.kabupatenOptions[0].value;
+          }
           this.fetchKecamatan();
         }
       } catch (error) {
@@ -235,12 +244,13 @@ export default {
           rt: message.rt || "",
           rw: message.rw || "",
           provinsi: message.provinsi || "",
-          kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          // kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          kabupaten: message.kota || "",
           kecamatan: message.kecamatan || "",
           kelurahan: message.desa_kelurahan || "",
           kodePos: Number(message.kode_pos) || "",
           statusPerkawinan: message.status_pernikahan,
-          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "1" : ""),
+          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "Seumur Hidup" : ""),
           kewarganegaraanLainnya: message.kewarganegaraan_lainya || "",
           // nama_gadis_ibu_kandung: "ini ibu",
         };

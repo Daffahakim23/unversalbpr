@@ -13,7 +13,7 @@
                 </svg>
             </button>
             <input type="text" :value="value" @input="updateValue($event.target.value)"
-                class="bg-white border-1 border-neutral-200 h-10 text-center text-neutral-900 text-sm focus:ring-primary-300 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                class="bg-white border-y border-neutral-200 h-10 text-center text-neutral-900 text-sm focus:ring-primary-300 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
             <button type="button" @click="increment"
                 class=" text-primary bg-primary-50 hover:bg-primary-100 border-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:border-gray-600 border  rounded-e-lg p-3 h-10 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                 <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
@@ -66,7 +66,11 @@ export default {
             if (!isNaN(parsedValue)) {
                 this.value = Math.min(Math.max(parsedValue, this.min), this.max);
             } else {
-                this.value = this.min;
+                if (newValue === '0') {
+                    this.value = 0;
+                } else {
+                    this.value = this.min;
+                }
             }
         },
     },

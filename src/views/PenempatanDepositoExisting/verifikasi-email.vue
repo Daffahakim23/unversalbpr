@@ -89,6 +89,8 @@ export default {
     const focusNext = (index, event) => {
       if (event.target.value && index < otp.value.length - 1) {
         event.target.nextElementSibling?.focus();
+      } else if (!event.target.value && event.inputType === 'deleteContentBackward' && index > 0) {
+        event.target.previousElementSibling?.focus();
       }
     };
 
@@ -113,6 +115,7 @@ export default {
           verified: true,
           kode_otp: kodeOtp,
           uuid: fileStore.uuid,
+          email: fileStore.alamat_email,
         };
 
         console.log("Mengirim data:", requestData);
@@ -151,7 +154,8 @@ export default {
       try {
         const response = await api.post("/request-otp-email", {
           uuid: fileStore.uuid,
-          page: "Penempatan Deposito Existing",
+          page: "penempatan-deposito-existing",
+          email: fileStore.alamat_email,
         });
 
         console.log("Resend OTP sukses:", response.data);

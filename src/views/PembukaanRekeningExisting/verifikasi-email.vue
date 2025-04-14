@@ -89,6 +89,8 @@ export default {
     const focusNext = (index, event) => {
       if (event.target.value && index < otp.value.length - 1) {
         event.target.nextElementSibling?.focus();
+      } else if (!event.target.value && event.inputType === 'deleteContentBackward' && index > 0) {
+        event.target.previousElementSibling?.focus();
       }
     };
 
@@ -113,6 +115,7 @@ export default {
           verified: true,
           kode_otp: kodeOtp,
           uuid: fileStore.uuid,
+          email: fileStore.alamat_email,
         };
 
         console.log("Mengirim data:", requestData);
@@ -156,7 +159,7 @@ export default {
 
         console.log("Resend OTP sukses:", response.data);
         resendCount.value += 1;
-        startCountdown(); // Mulai countdown setelah berhasil kirim ulang OTP
+        startCountdown();
       } catch (error) {
         console.error("Gagal mengirim ulang OTP:", error.response?.data || error.message);
         showErrorModal(error.response?.data?.Message, "Kode OTP yang Anda Kirimkan Salah", "Verifikasi Ulang", "Tutup");

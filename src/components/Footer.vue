@@ -10,19 +10,19 @@
       </div>
 
       <div class="flex space-x-8">
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.instagram.com/universalbpr/" target="_blank" rel="noopener noreferrer">
           <img src="@/assets/Instagram.png" alt="Instagram" class="h-6" />
         </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.tiktok.com/@universalbpr" target="_blank" rel="noopener noreferrer">
           <img src="@/assets/Tiktok.png" alt="TikTok" class="h-6" />
         </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.youtube.com/channel/UCTm3R-5g2erKCvS93MvboQA" target="_blank" rel="noopener noreferrer">
           <img src="@/assets/Youtube.png" alt="YouTube" class="h-6" />
         </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.facebook.com/universalbpr/about/" target="_blank" rel="noopener noreferrer">
           <img src="@/assets/Facebook.png" alt="Facebook" class="h-6" />
         </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.universalbpr.co.id/" target="_blank" rel="noopener noreferrer">
           <img src="@/assets/Website.png" alt="Website" class="h-6" />
         </a>
       </div>

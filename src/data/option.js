@@ -266,13 +266,18 @@ export const rekeningTujuanOptions = [
 ];
 
 export const alamatSesuaiEktpOptions = [
-  { label: "IYA", value: true },
-  { label: "TIDAK", value: false },
+  { label: "Iya", value: true },
+  { label: "Tidak", value: false },
 ];
 
 export const trueFalseOptions = [
-  { label: "IYA", value: true },
-  { label: "TIDAK", value: false },
+  { label: "Iya", value: true },
+  { label: "Tidak", value: false },
+];
+
+export const persetujuanOptions = [
+  { label: "Setuju", value: true },
+  { label: "Tidak Setuju", value: false },
 ];
 
 export const memilikiRekeningOptions = [

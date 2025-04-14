@@ -1,6 +1,7 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div class="bg-white rounded-2xl shadow-lg dark:bg-gray-700 max-w-sm w-full p-8">
+        <div
+            class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="text-left">
                 <h3 class="text-xl font-semibold text-primary dark:text-white items-center">
                     Panduan Upload {{ documentTypeText }}
@@ -19,7 +20,7 @@
 
             <div v-if="requiresCaptcha" class="mt-4">
                 <p class="justify-center text-sm font-medium text-neutral-900">Masukkan kode berikut:</p>
-                <div class="captcha-box bg-neutral-100 flex justify-center items-center p-2 rounded-md mt-2 w-full">
+                <div class="captcha-box bg-neutral-100 flex justify-center items-center p-8 rounded-md mt-2 w-full">
                     <span class="font-bold text-2xl flex">
                         <span v-for="(item, index) in captcha" :key="index" :style="{ color: item.color }">
                             {{ item.char }}
@@ -30,7 +31,7 @@
 
                 <div class="input-group mt-4">
                     <input v-model="userInput" type="text"
-                        class="captcha-input w-full p-4 border border-neutral-300 rounded-md focus:outline-none"
+                        class="captcha-input w-full p-16 border border-neutral-300 rounded-md focus:outline-none"
                         placeholder="Masukkan Captcha" />
                     <div class="flex justify-center">
                         <p v-if="message" :class="{ 'text-red-500': !isValid, 'text-green-500': isValid }">
@@ -40,7 +41,8 @@
                 </div>
             </div>
 
-            <div class="flex justify-center mt-4">
+            <div class="flex justify-between mt-4">
+                <ButtonComponent variant="ghost" @click="closeModal">Batalkan</ButtonComponent>
                 <ButtonComponent @click="handleSubmit" :disabled="isButtonDisabled">Verifikasi</ButtonComponent>
             </div>
         </div>
@@ -63,6 +65,7 @@ import tandaTangan3 from "../assets/PanduanTandaTangan3.svg";
 import ButtonComponent from "@/components/button.vue";
 
 export default {
+    emits: ['close', 'back'],
     components: {
         ButtonComponent,
     },
@@ -121,7 +124,7 @@ export default {
         modalTitle() {
             const titles = {
                 ktp: "Panduan Upload e-KTP",
-                fotoDiri: "Panduan Liveness Check",
+                fotoDiri: "Panduan Foto Diri",
                 npwp: "Panduan Upload NPWP",
                 tandaTangan: "Panduan Upload Tanda Tangan",
             };
@@ -159,7 +162,7 @@ export default {
         handleSubmit() {
             if (this.requiresCaptcha) {
                 const generatedCaptcha = this.captcha.map(item => item.char).join("");
-                if (this.userInput.toLowerCase() === generatedCaptcha.toLowerCase()) {
+                if (this.userInput === generatedCaptcha) {
                     this.isValid = true;
                     this.message = "Captcha benar!";
                     setTimeout(() => {
@@ -172,7 +175,10 @@ export default {
             } else {
                 this.$emit("close");
             }
-        }
+        },
+        closeModal() {
+            this.$emit('back'); // Emit event 'back' ke komponen parent
+        },
     }
 };
 </script>

@@ -134,10 +134,10 @@
       </div>
 
       <div class="flex flex-row gap-4">
-        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunBO" v-model="form.lamaBekerjaTahunBO" :min="1"
+        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunBO" v-model="form.lamaBekerjaTahunBO" :min="0"
           :max="50" :required="true" />
 
-        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanBO" v-model="form.lamaBekerjaBulanBO" :min="1"
+        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanBO" v-model="form.lamaBekerjaBulanBO" :min="0"
           :max="50" :required="true" />
       </div>
 
@@ -223,10 +223,10 @@
       </div>
 
       <div class="flex flex-row gap-4">
-        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunDK" v-model="form.lamaBekerjaTahunDK" :min="1"
+        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunDK" v-model="form.lamaBekerjaTahunDK" :min="0"
           :max="50" :required="true" />
 
-        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanDK" v-model="form.lamaBekerjaBulanDK" :min="1"
+        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanDK" v-model="form.lamaBekerjaBulanDK" :min="0"
           :max="50" :required="true" />
       </div>
 
@@ -278,7 +278,6 @@
 
 <script>
 import api from "@/API/api";
-import axios from "axios";
 import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
@@ -286,6 +285,8 @@ import QuantityCounter from "@/components/QuantityCounter.vue";
 import { FormModelDataPekerjaan } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { penghasilanOptions, jumlahPenghasilanOptions, hubunganNasabahOptions, statusPerkawinanOptions, korespondensiOptions, hubunganPemohonKDOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, npwpOptions } from "@/data/option.js";
+import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
+
 
 export default {
   components: {
@@ -322,6 +323,8 @@ export default {
 
   computed: {
     isButtonDisabled() {
+      const isLamaBekerjaValidDK = this.form.lamaBekerjaTahunDK > 0 || this.form.lamaBekerjaBulanDK > 0;
+      const isLamaBekerjaValidBO = this.form.lamaBekerjaTahunBO > 0 || this.form.lamaBekerjaBulanBO > 0;
       const isLainnyaEmpty = (
         (this.form.pekerjaan === "lainnya" && !this.form.pekerjaanLainnya?.trim()) ||
         (this.form.penghasilan === "lainnya" && !this.form.penghasilanLainnya?.trim()) ||
@@ -376,8 +379,7 @@ export default {
           this.form.kodePosPerusahaanBO &&
           this.form.jabatanBO &&
           (this.form.jabatanBO !== "lainnya" || this.form.jabatanLainnyaBO) &&
-          this.form.lamaBekerjaTahunBO &&
-          this.form.lamaBekerjaBulanBO &&
+          isLamaBekerjaValidBO &&
           this.form.penghasilanBO &&
           (this.form.penghasilanBO !== "lainnya" || this.form.penghasilanLainnyaBO) &&
           this.form.jumlahPenghasilanBO
@@ -391,30 +393,88 @@ export default {
         this.form.jabatanDK &&
         (this.form.jabatanDK !== "lainnya" || this.form.jabatanLainnyaDK) &&
         this.form.alamatDK &&
-        this.form.lamaBekerjaTahunDK &&
-        this.form.lamaBekerjaBulanDK &&
-        this.form.nomorTeleponKantorDK &&
-        this.form.nomorTeleponFaxDK &&
+        isLamaBekerjaValidDK &&
         this.form.korespondensi
       );
     },
   },
 
   watch: {
-    "form.pekerjaan": function (newPekerjaan, oldPekerjaan) {
-      console.log("Pekerjaan dipilih:", newPekerjaan);
-
-      // if (newPekerjaan !== oldPekerjaan) {
-      //   this.resetFormKecualiPekerjaan();
-      // }
-
-      if (!newPekerjaan) {
+    'form.pekerjaan': function (newVal) {
+      if (['0009', '0011'].includes(newVal)) {
+        // Hapus data yang berakhiran DK (Detail Pekerjaan)
+        this.form.namaPerusahaanDK = "";
+        this.form.bidangPekerjaanDK = "";
+        this.form.bidangPekerjaanLainnyaDK = "";
+        this.form.jabatanDK = "";
+        this.form.jabatanLainnyaDK = "";
+        this.form.alamatDK = "";
+        this.form.kotaPerusahaanDK = "";
+        this.form.kodePosPerusahaanDK = "";
+        this.form.lamaBekerjaTahunDK = "";
+        this.form.lamaBekerjaBulanDK = "";
+        this.form.nomorTeleponKantorDK = "";
+        this.form.nomorTeleponFaxDK = "";
+        this.form.korespondensi = "";
+      } else {
+        // Hapus data Beneficial Owner (BO)
+        this.form.hubunganNasabahBO = "";
+        this.form.hubunganNasabahLainnyaBO = "";
+        this.form.jenisIdentitasBO = "";
+        this.form.jenisIdentitasLainnyaBO = "";
+        this.form.kewarganegaraanBO = "";
+        this.form.kewarganegaraanLainnyaBO = "";
+        this.form.namaLengkapBO = "";
+        this.form.nomorDokumenIdentitasBO = "";
+        this.form.alamatBO = "";
+        this.form.rtBO = "";
+        this.form.rwBO = "";
+        this.form.provinsiBO = "";
+        this.form.kabupatenBO = "";
+        this.form.kecamatanBO = "";
+        this.form.kelurahanBO = "";
+        this.form.kodePosBO = "";
+        this.form.tempatLahirBO = "";
+        this.form.tanggalLahirBO = "";
+        this.form.jenisKelaminBO = "";
+        this.form.statusPerkawinanBO = "";
+        this.form.pekerjaanBO = "";
+        this.form.pekerjaanLainnyaBO = "";
+        this.form.namaPerusahaanBO = "";
+        this.form.alamatPerusahaanBO = "";
+        this.form.kotaPerusahaanBO = "";
+        this.form.kodePosPerusahaanBO = "";
+        this.form.jabatanBO = "";
+        this.form.jabatanLainnyaBO = "";
+        this.form.lamaBekerjaTahunBO = "";
+        this.form.lamaBekerjaBulanBO = "";
+        this.form.penghasilanBO = "";
+        this.form.penghasilanLainnyaBO = "";
+        this.form.jumlahPenghasilanBO = "";
+        this.form.pernyataanChecked = false;
+        this.form.npwp = "";
+      }
+      if (!newVal) {
         this.form.jabatanDK = "";
         this.jabatanOptions = [];
       } else {
-        this.fetchJabatan(newPekerjaan);
+        this.fetchJabatan(newVal);
       }
     },
+    // "form.pekerjaan": function (newPekerjaan, oldPekerjaan) {
+    //   console.log("Pekerjaan dipilih:", newPekerjaan);
+
+    //   // if (newPekerjaan !== oldPekerjaan) {
+    //   //   this.resetFormKecualiPekerjaan();
+    //   // }
+
+    //   if (!newPekerjaan) {
+    //     this.form.jabatanDK = "";
+    //     this.jabatanOptions = [];
+    //   } else {
+    //     this.fetchJabatan(newPekerjaan);
+    //   }
+    // },
     "form.pekerjaanBO": function (newPekerjaan) {
       console.log("Pekerjaan dipilih:", newPekerjaan);
       if (!newPekerjaan) {
@@ -461,19 +521,9 @@ export default {
         this.form.penghasilanLainnya = '';
       }
     },
-    'form.hubunganNasabahBO'(newVal) {
-      if (newVal !== 'lainnya') {
-        this.form.hubunganNasabahLainnyaBO = '';
-      }
-    },
     'form.jenisIdentitasBO'(newVal) {
       if (newVal !== 'lainnya') {
         this.form.jenisIdentitasLainnyaBO = '';
-      }
-    },
-    'form.hubunganNasabahBO'(newVal) {
-      if (newVal !== 'lainnya') {
-        this.form.hubunganNasabahLainnyaBO = '';
       }
     },
     'form.kewarganegaraanBO'(newVal) {
@@ -511,39 +561,19 @@ export default {
     },
     async fetchPekerjaan() {
       try {
-        const response = await api.get("/list-pekerjaan");
-        console.log("Data pekerjaan diterima:", response.data);
-
-        if (response.data && response.data.pekerjaan) {
-          this.pekerjaanOptions = response.data.pekerjaan.map(p => ({
-            label: p.label,
-            value: p.code
-          }));
-          console.log("Pekerjaan options:", this.pekerjaanOptions);
-        } else {
-          console.error("Format data tidak sesuai:", response.data);
-        }
+        const pekerjaanOptions = await fetchPekerjaan();
+        this.pekerjaanOptions = pekerjaanOptions;
       } catch (error) {
-        console.error("Gagal mengambil data pekerjaan:", error.response ? error.response.data : error.message);
+        console.error("Gagal mengambil data Jabatan:", error);
       }
     },
 
     async fetchBidangPekerjaan() {
       try {
-        const response = await api.get("/list-bidang-pekerjaan");
-        console.log("Data bidang pekerjaan diterima:", response.data);
-
-        if (response.data && response.data.bidangPekerjaan) {
-          this.bidangPekerjaanOptions = response.data.bidangPekerjaan.map(p => ({
-            label: p.label,
-            value: p.code
-          }));
-          console.log("Pekerjaan options:", this.bidangPekerjaanOptions);
-        } else {
-          console.error("Format data tidak sesuai:", response.data);
-        }
+        const bidangPekerjaanOptions = await fetchBidangPekerjaan();
+        this.bidangPekerjaanOptions = bidangPekerjaanOptions;
       } catch (error) {
-        console.error("Gagal mengambil data pekerjaan:", error.response ? error.response.data : error.message);
+        console.error("Gagal mengambil data Bidang Pekerjaan:", error);
       }
     },
 
@@ -702,7 +732,8 @@ export default {
 
           // DATA PEKERJAAN
           nama_perusahaan: this.form.namaPerusahaanDK,
-          bidang_pekerjaan_usaha: String(this.form.bidangPekerjaanDK),
+          bidang_pekerjaan_usaha:
+            this.bidangPekerjaanOptions.find((b) => b.value === this.form.bidangPekerjaanDK)?.label || "",
           kode_jabatan: this.form.jabatanDK,
           jabatan_pekerjaan: this.jabatanOptions.find(j => j.value === this.form.jabatanDK)?.label || "",
           alamat_pekerjaan: this.form.alamatDK,
@@ -788,7 +819,7 @@ export default {
     this.fetchData();
   },
   created() {
-    this.fetchData();
+    // this.fetchData();
   },
 };
 </script>

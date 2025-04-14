@@ -72,6 +72,7 @@ import { useFileStore } from "@/stores/filestore";
 import { sumberDataNasabahOptions, produkOptions, tujuanOptions, penghasilanOptions } from "@/data/option.js";
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/icon-deposito.svg";
+import { fetchBranches } from '@/services/service.js';
 
 export default {
   emits: ["update-progress"],
@@ -118,7 +119,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
+      const phoneValid = this.form.phone && /^(08|8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
       if (!this.form.produk || !emailValid || !phoneValid || !this.form.sumberDana || !this.form.tujuan) {
         return true;
       }
@@ -130,11 +131,6 @@ export default {
     "form.kantorCabang"(newVal) {
       this.form.alamatKantorCabang = this.kantorCabangAlamat[newVal] || "Alamat tidak ditemukan";
     },
-    // "form.email"(newEmail) {
-    //   if (this.touched.email) {
-    //     this.emailError = newEmail && !this.validateEmail(newEmail);
-    //   }
-    // },
     'form.produk'(newVal) {
       if (Number(newVal) === 2) {
         this.isModalError = true;
@@ -151,7 +147,7 @@ export default {
       this.isModalError = false;
     },
     validatePhone(phone) {
-      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+      return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
     },
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -170,25 +166,11 @@ export default {
     },
     async fetchBranches() {
       try {
-        const response = await api.get("/list-branch");
-
-        if (response.data && response.data.branch) {
-          this.kantorCabangOptions = response.data.branch.map(branch => {
-            const label = branch.branch_name.replace(/\s*\(\d+\)$/, '');
-
-            return {
-              label: label.trim(),
-              value: branch.branch_code
-            };
-          });
-
-          this.kantorCabangAlamat = response.data.branch.reduce((acc, branch) => {
-            acc[branch.branch_code] = branch.branch_address.Valid ? branch.branch_address.String : "Alamat tidak tersedia";
-            return acc;
-          }, {});
-        }
+        const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();
+        this.kantorCabangOptions = kantorCabangOptions;
+        this.kantorCabangAlamat = kantorCabangAlamat;
       } catch (error) {
-        console.error("Gagal mengambil data kantor cabang:", error);
+        console.error('Gagal mengambil data kantor cabang:', error);
       }
     },
     // async fetchData() {
@@ -294,7 +276,7 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
     this.$emit("update-progress", 15);
     this.fetchBranches();
   },

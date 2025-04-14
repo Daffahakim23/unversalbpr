@@ -44,35 +44,6 @@
             }" class="w-full h-10 p-2 rounded-md" :required="required" />
         </div>
       </template>
-
-
-      <!-- <template v-else-if="type === 'phone'">
-        <div class="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-primary-500">
-          <button @click="toggleCountryDropdown" type="button"
-            class="flex gap-2 items-center px-2 border-r border-neutral-200 relative">
-            <span :class="'fi fi-' + selectedCountryCode.toLowerCase()"></span>
-            <span class="text-sm text-neutral-800">{{ getCountryCallingCode(selectedCountryCode) }}</span>
-          </button>
-
-          <div v-if="isCountryDropdownOpen" ref="countryDropdown"
-            class="absolute left-0 top-full mt-1 w-52 bg-white border border-neutral-200 rounded-md shadow-md z-10 max-h-60 overflow-auto">
-            <div v-for="(country, index) in countryList" :key="index" @click="selectCountry(country)"
-              class="flex items-center p-2 hover:bg-blue-100 cursor-pointer border-b border-gray-200">
-              <span :class="'fi fi-' + country.code.toLowerCase()"></span>
-              <span class="ml-2 text-sm">{{ country.name }} ({{ country.callingCode }})</span>
-            </div>
-          </div>
-
-          <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue"
-            @input="$emit('update:modelValue', $event.target.value)" @focus="$emit('focus', $event)"
-            @blur="$emit('blur', $event)" :readonly="readonly" :class="{
-              'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
-              'border-red-500 focus:ring-red-400 focus:border-red-400': error,
-              'border-neutral-200 focus:ring-2': !readonly && !error
-            }" class="w-full h-10 p-2 border rounded-md focus:outline-none" :required="required" />
-        </div>
-      </template> -->
-
       <template v-else>
         <div class="relative">
           <button type="button" @click="toggleDropdown" ref="trigger"

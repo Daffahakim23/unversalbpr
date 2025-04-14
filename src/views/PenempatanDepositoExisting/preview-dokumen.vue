@@ -1,10 +1,16 @@
 <template>
   <div>
     <div>
-      <button @click="openModal" class="flex items-center text-primary mb-4 gap-1">
-        <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
-        <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
-      </button>
+      <div class="flex items-center justify-between mb-4 gap-2">
+        <button @click="openModal" class="flex items-center text-primary gap-1">
+          <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
+          <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
+        </button>
+        <button v-if="fileUrl || photoUrl" @click="changeFile" class="flex items-center text-primary-400 gap-1">
+          <p class="text-base font-semibold">Ubah Metode</p>
+          <img src="@/assets/upload-dokumen.svg" alt="Panduan" class="h-5" />
+        </button>
+      </div>
 
       <div v-if="!fileUrl && documentType !== 'fotoDiri'">
         <div v-if="showInitialUI"
@@ -63,6 +69,9 @@
             </div>
           </div>
         </div>
+        <div class="flex justify-between mt-6">
+          <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
+        </div>
       </div>
 
       <div v-if="documentType === 'fotoDiri'">
@@ -118,7 +127,8 @@
       </div>
 
 
-      <ModalPanduanFoto :isOpen="isModalOpen" :documentType="documentType" @close="handleModalClose" />
+      <ModalPanduanFoto :isOpen="isModalOpen" :documentType="documentType" @close="handleModalClose"
+        @back="handleBack" />
 
       <div class="mt-6 flex justify-between" v-if="documentType !== 'fotoDiri' && fileUrl">
         <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent>
@@ -200,6 +210,9 @@ export default {
     },
     fileUrl() {
       return this.$route.query.fileUrl;
+    },
+    photoUrl() {
+      return this.$route.query.photoUrl;
     },
     isButtonDisabled() {
       if (this.documentType === "npwp") {
@@ -482,8 +495,23 @@ export default {
     };
   },
 
-
   methods: {
+    goBack() {
+      this.$router.push({ name: 'UploadDokumenPenempatanDepositoExisting' });
+    },
+    handleBack() {
+      this.$router.push({ name: 'UploadDokumenPenempatanDepositoExisting' });
+    },
+    changeFile() {
+      this.photoUrl = null;
+      this.fileUrl = null;
+      this.showInitialUI = true;
+      this.$router.push({
+        name: "PreviewScreenPenempatanDepositoExisting",
+        query: { documentType: this.documentType },
+      });
+    },
+
     showError() {
       this.showFlag = true;
       this.flagType = "error";
@@ -627,27 +655,17 @@ export default {
 
         console.log("✅ Upload sukses:", uploadResponse.data);
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          if (this.documentType === "ktp") {
-            fileStore.setKtpImage(base64data);
-            fileStore.setFormDataKTP(uploadResponse.data);
-          } else if (this.documentType === "tandaTangan") {
-            fileStore.setTandaTanganImage(base64data);
-            fileStore.setFormDataTandaTangan(uploadResponse.data);
-            fileStore.isTandaTanganUploaded = true;
-            fileStore.uploadedFiles["tandaTangan"] = "Foto Tanda Tangan";
-          } else if (this.documentType === "npwp") {
-            fileStore.setNpwpImage(base64data);
-            fileStore.setFormDataNPWP(uploadResponse.data);
-            fileStore.isNpwpUploaded = true;
-            fileStore.uploadedFiles["npwp"] = "Foto NPWP";
-          } else if (this.documentType === "fotoDiri") {
-            fileStore.setFotoDiriImage(base64data);
-          }
-        };
-        reader.readAsDataURL(file);
+        if (this.documentType === "ktp") {
+          fileStore.setFormDataKTP(uploadResponse.data);
+        } else if (this.documentType === "tandaTangan") {
+          fileStore.setFormDataTandaTangan(uploadResponse.data);
+          fileStore.isTandaTanganUploaded = true;
+          fileStore.uploadedFiles["tandaTangan"] = "Foto Tanda Tangan";
+        } else if (this.documentType === "npwp") {
+          fileStore.setFormDataNPWP(uploadResponse.data);
+          fileStore.isNpwpUploaded = true;
+          fileStore.uploadedFiles["npwp"] = "Foto NPWP";
+        }
 
         if (this.documentType === "ktp") {
           this.$router.push({
@@ -693,7 +711,6 @@ export default {
   },
   mounted() {
     this.$emit("update-progress", 45);
-    this.fetchData();
   },
 };
 </script>

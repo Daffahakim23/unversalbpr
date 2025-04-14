@@ -8,7 +8,7 @@
       </div>
 
       <div class="flex flex-row gap-4">
-        <button class="flex items-center text-primary">
+        <button class="flex items-center text-primary" @click="goToHome">
           <img src="@/assets/info-button.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
         </button>
         <button class="flex items-center text-primary">
@@ -63,6 +63,9 @@ import Footer from "@/components/Footer.vue";
 
 export default {
   methods: {
+    goToHome() {
+      this.$router.push("/");
+    },
     navigateTo(route, type) {
       this.$router.push({ path: route, query: { userType: type } }); // Navigasi ke rute tertentu
     },

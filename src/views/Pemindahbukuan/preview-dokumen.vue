@@ -1,10 +1,16 @@
 <template>
   <div>
     <div>
-      <button @click="openModal" class="flex items-center text-primary mb-4 gap-1">
-        <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
-        <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
-      </button>
+      <div class="flex items-center justify-between mb-4 gap-2">
+        <button @click="openModal" class="flex items-center text-primary gap-1">
+          <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
+          <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
+        </button>
+        <button v-if="fileUrl || photoUrl" @click="changeFile" class="flex items-center text-primary-400 gap-1">
+          <p class="text-base font-semibold">Ubah Metode</p>
+          <img src="@/assets/upload-dokumen.svg" alt="Panduan" class="h-5" />
+        </button>
+      </div>
 
       <div v-if="!fileUrl && documentType !== 'fotoDiri'">
         <div v-if="showInitialUI"
@@ -63,6 +69,9 @@
             </div>
           </div>
         </div>
+        <div class="flex justify-between mt-6">
+          <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
+        </div>
       </div>
 
       <div v-if="documentType === 'fotoDiri'">
@@ -118,7 +127,8 @@
       </div>
 
 
-      <ModalPanduanFoto :isOpen="isModalOpen" :documentType="documentType" @close="handleModalClose" />
+      <ModalPanduanFoto :isOpen="isModalOpen" :documentType="documentType" @close="handleModalClose"
+        @back="handleBack" />
 
       <div class="mt-6 flex justify-between" v-if="documentType !== 'fotoDiri' && fileUrl">
         <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent>
@@ -194,12 +204,15 @@ export default {
         ktp: "e-KTP",
         npwp: "NPWP",
         tandaTangan: "Tanda Tangan",
-        fotoDiri: "Foto Diri",
+        fotoDiri: "Liveness",
       };
       return textMap[this.documentType] || "Dokumen";
     },
     fileUrl() {
       return this.$route.query.fileUrl;
+    },
+    photoUrl() {
+      return this.$route.query.photoUrl;
     },
     isButtonDisabled() {
       if (this.documentType === "npwp") {
@@ -374,7 +387,7 @@ export default {
         const apiEndpoint =
           documentType.value === "ktp" ? "/ocr-ktp-pindah-buku" :
             documentType.value === "tandaTangan" ? "/tt-basah-pindah-buku" :
-              documentType.value === "npwp" ? "/npwp-pindah-buku" : "/foto-diri-pindah-buku";
+              documentType.value === "npwp" ? "/npwp" : "/foto-diri-pindah-buku";
 
         const file = new File([blob], fileName, { type: "image/png" });
         const formData = new FormData();
@@ -420,14 +433,14 @@ export default {
             query: { fileUrl: photoUrl, documentType: "ktp" },
           });
         } else {
-          router.push({ path: "/dashboard/uploadDokumenPemindahbukuan" });
+          router.push({ name: "UploadDokumenPemindahbukuan" });
         }
       } catch (error) {
         // showErrorModal(error.response?.data?.Message, error.response?.data?.Subtext, "Verifikasi Ulang", "Tutup");
         showFlag.value = true;
         flagType.value = 'warning';
         if (documentType.value === "fotoDiri") {
-          flagMessage.value = error.response?.data?.Subtext || "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
+          flagMessage.value = error.response?.data?.message || "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
         } else if (documentType.value === "ktp") {
           flagMessage.value = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (documentType.value === "npwp") {
@@ -483,6 +496,22 @@ export default {
   },
 
   methods: {
+    goBack() {
+      this.$router.push({ name: 'UploadDokumenPemindahbukuan' });
+    },
+    handleBack() {
+      this.$router.push({ name: 'UploadDokumenPemindahbukuan' });
+    },
+    changeFile() {
+      this.photoUrl = null;
+      this.fileUrl = null;
+      this.showInitialUI = true;
+      this.$router.push({
+        name: "PreviewScreenPemindahbukuan",
+        query: { documentType: this.documentType },
+      });
+    },
+
     showError() {
       this.showFlag = true;
       this.flagType = "error";
@@ -552,8 +581,6 @@ export default {
 
     handleModalClose() {
       this.isModalOpen = false;
-      // if (this.documentType === "ktp" || this.documentType === "liveness" || this.documentType === "npwp" || this.documentType === "tandaTangan") {
-      // this.openFilePicker();
     },
 
 

@@ -33,35 +33,12 @@
         secara digital. File ini dilindungi dengan ZIP yang menggunakan tanggal
         lahir Anda sebagai password (format: DDMMYYYY).
       </p>
-      <button class="flex items-center text-neutral-900">
+      <button class="flex items-center text-neutral-900" @click="downloadPdf">
         <img src="@/assets/downloadDocument.png" alt="Logo" class="h-12 mt-4" />
       </button>
     </div>
-
-    <!-- Instruksi Transfer
-    <div class="section">
-      <h3 class="section-title">Instruksi Transfer</h3>
-      <p>Silahkan melakukan transfer ke rekening Virtual Account berikut:</p>
-      <div class="transfer-info">
-        <p><strong>Nomor Virtual Account:</strong> 1234567890</p>
-        <p><strong>Nama:</strong> Mira Setiawan</p>
-      </div>
-      <h4 class="sub-title">Cara Transfer</h4>
-      <ul class="list-disc pl-5">
-        <li>
-          <strong>Melalui M-Banking:</strong> Pilih menu transfer, masukkan nomor VA dan konfirmasi
-        </li>
-        <li>
-          <strong>Melalui ATM:</strong> Pilih menu transfer antar bank, masukkan nomor VA dan konfirmasi
-        </li>
-        <li>
-          <strong>Melalui Internet Banking:</strong> Login, Pilih transfer, masukkan nomor VA dan konfirmasi
-        </li>
-      </ul>
-    </div> -->
-
     <div class="text-center mt-6">
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">
+      <ButtonComponent type="submit">
         Kembali
       </ButtonComponent>
     </div>
@@ -69,6 +46,7 @@
 </template>
 
 <script>
+import api from "@/API/api";
 import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
 
@@ -77,9 +55,6 @@ export default {
     ButtonComponent,
   },
   computed: {
-    isButtonDisabled() {
-      // return !this.form.OtpInput.trim(); // Memastikan input tidak hanya berupa spasi
-    },
     email() {
       const fileStore = useFileStore();
       return fileStore.alamat_email || "user@example.com";
@@ -92,6 +67,32 @@ export default {
       fileStore.$reset();
       console.log("Data form:", this.form);
       this.$router.push({ path: "/" });
+    },
+    async downloadPdf() {
+      const fileStore = useFileStore();
+      const uuid = fileStore.uuid;
+      const envelopeId = fileStore.envelope_id;
+
+      try {
+        const response = await api.get(
+          `/download-signed-pdf?uuid=${uuid}&form=DExisting`,
+          {
+            envelope_id: envelopeId,
+          },
+          {
+            responseType: "blob",
+          }
+        );
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "signed_pdf.zip");
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Gagal mengunduh PDF:", error);
+      }
     },
   },
   mounted() {

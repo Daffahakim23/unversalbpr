@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 export const useFileStore = defineStore("fileStore", {
   state: () => ({
+    envelope_id: null,
     uuid: null,
     alamat_email: null,
     no_hp: null,
@@ -10,10 +11,10 @@ export const useFileStore = defineStore("fileStore", {
       fotoDiri: null,
       tandaTangan: null,
     },
-    ktpImage: null, // Properti untuk menyimpan gambar KTP
-    tandaTanganImage: null, // Properti untuk menyimpan gambar tanda tangan
-    npwpImage: null, // Properti untuk menyimpan gambar NPWP
-    fotoDiriImage: null, //Properti untuk menyimpan gambar foto diri
+    ktpImage: null,
+    tandaTanganImage: null,
+    npwpImage: null,
+    fotoDiriImage: null,
     isKtpUploaded: false,
     isNpwpUploaded: false,
     isFotoDiriUploaded: false,
@@ -49,6 +50,9 @@ export const useFileStore = defineStore("fileStore", {
     },
     setEmail(value) {
       this.alamat_email = value;
+    },
+    setEnvelopeId(value) {
+      this.envelope_id = value;
     },
     setNoHP(value) {
       this.no_hp = value;

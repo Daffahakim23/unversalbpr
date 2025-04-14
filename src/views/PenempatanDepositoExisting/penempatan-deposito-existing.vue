@@ -4,7 +4,7 @@
       Deposito sebagai Nasabah Universal BPR, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
       dipergunakan sebagai tempat penyetoran nominal Deposito Anda.</label>
 
-    <RadioButtonChoose label="Apakah Anda sudah memiliki Tabungan Universal?" id="memilikiTabungan" :isDropdown="true"
+    <RadioButtonChoose label="Apakah Anda sudah memiliki Tabungan Universal?" id="memilikiTabungan"
       :options="memilikiTabunganOptions" v-model="form.memilikiTabungan" name="memilikiTabungan" required />
 
     <div class="flex items-center mb-6" v-if="form.memilikiTabungan == 1">
@@ -62,6 +62,7 @@
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
       :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
       :error="phoneError" @blur="handlePhoneBlur" />
+
     <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
 
     <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
@@ -89,7 +90,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import api from "@/API/api"
 import FormField from "@/components/FormField.vue";
 import FlagBox from "@/components/flagbox.vue";
@@ -101,6 +101,7 @@ import { useFileStore } from "@/stores/filestore";
 import { produkDepositoOptions, memilikiRekeningOptions, memilikiTabunganOptions, produkOptions, tujuanOptions, penghasilanOptions } from "@/data/option.js";
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/icon-deposito.svg";
+import { fetchBranches } from '@/services/service.js';
 
 export default {
   emits: ["update-progress"],
@@ -150,8 +151,8 @@ export default {
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
-      if (!this.form.produkDeposito || !this.form.nomorRekening || !this.form.tujuan || !this.form.sumberDana || !emailValid || !phoneValid || !this.form.memilikiTabungan) {
+      const phoneValid = this.form.phone && /^(08|8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,11}$/.test(this.form.phone);
+      if (!this.form.produkDeposito || !this.form.nomorRekening || !this.form.tujuan || !this.form.sumberDana || !this.form.memilikiTabungan || !emailValid || !phoneValid) {
         return true;
       }
       return false;
@@ -170,7 +171,7 @@ export default {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
     validatePhone(phone) {
-      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+      return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
     },
     handleEmailBlur() {
       this.touched.email = true;
@@ -192,57 +193,15 @@ export default {
         this.form.kantorCabang = "";
       }
     },
-
-    // handleCheckboxChange() {
-    //   if (this.form.belumPunyaRekening) {
-    //     // Jika dicentang, reset Nomor Rekening & Kantor Cabang
-    //     this.form.nomorRekening = "";
-    //     this.form.kantorCabang = "";
-    //     this.form.alamatKantorCabang = ""; // Reset alamat kantor cabang juga
-    //   } else {
-    //     // Jika di-uncheck, reset Kantor Cabang & Alamatnya
-    //     this.form.kantorCabang = "";
-    //     this.form.alamatKantorCabang = "";
-    //   }
-    // },
-
     async fetchBranches() {
       try {
-        const response = await api.get("/list-branch");
-
-        if (response.data && response.data.branch) {
-          this.kantorCabangOptions = response.data.branch.map(branch => {
-            const label = branch.branch_name.replace(/\s*\(\d+\)$/, '');
-
-            return {
-              label: label.trim(),
-              value: branch.branch_code
-            };
-          });
-
-          this.kantorCabangAlamat = response.data.branch.reduce((acc, branch) => {
-            acc[branch.branch_code] = branch.branch_address.Valid ? branch.branch_address.String : "Alamat tidak tersedia";
-            return acc;
-          }, {});
-        }
+        const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();
+        this.kantorCabangOptions = kantorCabangOptions;
+        this.kantorCabangAlamat = kantorCabangAlamat;
       } catch (error) {
-        console.error("Gagal mengambil data kantor cabang:", error);
+        console.error('Gagal mengambil data kantor cabang:', error);
       }
     },
-
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
-
     async handleSubmit() {
       try {
         let kodeKantorCabang = this.form.kantorCabang;
@@ -327,20 +286,6 @@ export default {
   },
 
   watch: {
-    // 'form.memilikiRekening': function (newValue, oldValue) {
-    //   if (newValue === 'YA') {
-    //     this.form.kantorCabang = '';
-    //   } else if (newValue === 'TIDAK') {
-    //     this.form.nomorRekening = '';
-    //   }
-    // },
-    // 'form.belumPunyaRekening': function (newValue, oldValue) {
-    //   if (newValue === 'YA') {
-    //     this.form.kantorCabang = '';
-    //   } else if (newValue === 'TIDAK') {
-    //     this.form.nomorRekening = '';
-    //   }
-    // },
     "form.kantorCabang"(newVal) {
       if (!newVal) {
         this.form.alamatKantorCabang = "";
@@ -348,14 +293,6 @@ export default {
         this.form.alamatKantorCabang = this.kantorCabangAlamat[newVal] || "Alamat tidak ditemukan";
       }
     },
-    // 'form.memilikiTabungan'(newVal) {
-    //   if (newVal == 1) {
-    //     this.isModalError = true;
-    //     this.$nextTick(() => {
-    //       this.form.memilikiTabungan = '';
-    //     });
-    //   }
-    // }
     'form.belumPunyaRekening'(newVal) {
       if (newVal == 1) {
         this.isModalError = true;

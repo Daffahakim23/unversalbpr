@@ -60,14 +60,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import api from "@/API/api";
 import FormField from "@/components/FormField.vue";
 import ButtonComponent from "@/components/button.vue";
 import { FormModelDataKTP } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { agamaOptions, jenisKelaminOptions, kewarganegaraanOptions, statusPerkawinanOptions, getMasaAktifKTPOptions } from "@/data/option.js";
-import stringSimilarity from 'string-similarity';
 
 export default {
   components: {
@@ -90,46 +88,28 @@ export default {
     };
   },
   watch: {
-    "form.provinsi": async function (provinsiTerpilih) {
-      if (!provinsiTerpilih) {
+    "form.provinsi": function (newProvinsi) {
+      if (!newProvinsi) {
         this.kabupatenOptions = [];
         this.kecamatanOptions = [];
         this.kelurahanOptions = [];
       } else {
-        try {
-          await this.fetchKabupaten();
-        } catch (error) {
-          console.error("Gagal mengambil data kabupaten:", error);
-          // Tampilkan pesan kesalahan kepada pengguna
-          alert("Gagal mengambil data kabupaten. Silakan coba lagi.");
-        }
+        this.fetchKabupaten();
       }
     },
-    "form.kabupaten": async function (kabupatenTerpilih) {
-      if (!kabupatenTerpilih) {
+    "form.kabupaten": function (newKabupaten) {
+      if (!newKabupaten) {
         this.kecamatanOptions = [];
         this.kelurahanOptions = [];
       } else {
-        try {
-          await this.fetchKecamatan();
-        } catch (error) {
-          console.error("Gagal mengambil data kecamatan:", error);
-          // Tampilkan pesan kesalahan kepada pengguna
-          alert("Gagal mengambil data kecamatan. Silakan coba lagi.");
-        }
+        this.fetchKecamatan();
       }
     },
-    "form.kecamatan": async function (kecamatanTerpilih) {
-      if (!kecamatanTerpilih) {
+    "form.kecamatan": function (newKecamatan) {
+      if (!newKecamatan) {
         this.kelurahanOptions = [];
       } else {
-        try {
-          await this.fetchKelurahan();
-        } catch (error) {
-          console.error("Gagal mengambil data kelurahan:", error);
-          // Tampilkan pesan kesalahan kepada pengguna
-          alert("Gagal mengambil data kelurahan. Silakan coba lagi.");
-        }
+        this.fetchKelurahan();
       }
     },
   },
@@ -149,9 +129,7 @@ export default {
 
   methods: {
     normalizeKabupaten(kabupaten) {
-      return kabupaten
-        .replace(/^KOTA\s*|^KAB\.\s*|^KOTA\s* ADM\.\s*|^KAB\. ADM\.\s*|^ADM\.\s*/i, "")
-        .trim();
+      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
     },
     async fetchProvinsi() {
       this.provinsiOptions = [];
@@ -175,16 +153,26 @@ export default {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
 
-      if (!this.form.provinsi) return;
+      if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}`
+        );
 
         if (response.data && response.data.kabupaten) {
-          this.kabupatenOptions = response.data.kabupaten.map(k => ({
-            label: this.normalizeKabupaten(k.kabupaten), // Normalisasi data API
-            value: k.kabupaten
-          }));
+          const normalizedKota = this.normalizeKabupaten(this.form.kabupaten);
+          this.kabupatenOptions = response.data.kabupaten
+            .filter((k) =>
+              this.normalizeKabupaten(k.kabupaten).includes(normalizedKota)
+            )
+            .map((k) => ({
+              label: this.normalizeKabupaten(k.kabupaten),
+              value: k.kabupaten,
+            }));
+          if (this.kabupatenOptions.length > 0) {
+            this.form.kabupaten = this.kabupatenOptions[0].value;
+          }
           this.fetchKecamatan();
         }
       } catch (error) {
@@ -260,7 +248,7 @@ export default {
           kelurahan: message.desa_kelurahan || "",
           kodePos: Number(message.kode_pos) || "",
           statusPerkawinan: message.status_pernikahan,
-          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "1" : ""),
+          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "Seumur Hidup" : ""),
           kewarganegaraanLainnya: message.kewarganegaraan_lainya || "",
           // nama_gadis_ibu_kandung: "ini ibu",
         };
