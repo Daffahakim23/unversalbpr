@@ -222,8 +222,8 @@ export const jumlahPenghasilanOptions = [
 ];
 
 export const statusPerkawinanOptions = [
-  { label: "Menikah", value: 1 },
-  { label: "Belum Menikah", value: 2 },
+  { label: "Kawin", value: 1 },
+  { label: "Belum Kawin", value: 2 },
   { label: "Cerai Hidup", value: 3 },
   { label: "Cerai Mati", value: 4 },
 ];

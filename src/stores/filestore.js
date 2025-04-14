@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useFileStore = defineStore("fileStore", {
   state: () => ({
     envelope_id: null,
+    sign_url: null,
     uuid: null,
     alamat_email: null,
     no_hp: null,
@@ -53,6 +54,9 @@ export const useFileStore = defineStore("fileStore", {
     },
     setEnvelopeId(value) {
       this.envelope_id = value;
+    },
+    setSignUrl(value) {
+      this.sign_url = value;
     },
     setNoHP(value) {
       this.no_hp = value;

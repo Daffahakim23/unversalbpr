@@ -251,8 +251,12 @@
     <FormField label="Nama Lengkap Kontak Darurat*" id="namaLengkapKD" :isDropdown="false" v-model="form.namaLengkapKD"
       placeholder="Masukkan Nama Lengkap Kontak Darurat" />
 
-    <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD" :options="hubunganPemohonKDOptions"
+    <!-- <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD" :options="hubunganPemohonKDOptions"
       :isDropdown="true" placeholder="Pilih Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
+      name="hubunganPemohonKD" /> -->
+
+    <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD"
+      placeholder="Masukkan Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
       name="hubunganPemohonKD" />
 
     <div v-if="form.hubunganPemohonKD === 'lainnya'" class="">
@@ -742,6 +746,8 @@ export default {
           nomor_telp_kantor: this.form.nomorTeleponKantorDK,
           nomor_fax_kantor: this.form.nomorTeleponFaxDK,
           alamat_korespondensi_surat: Number(this.form.korespondensi),
+          kota_pekerjaan: this.form.kotaPerusahaanDK,
+          kode_pos_pekerjaan: Number(this.form.kodePosPerusahaanDK),
 
           // DATA BENEFICIAL OWNER
           hubungan_dengan_nasabah_bo: Number(this.form.hubunganNasabahBO),
@@ -777,7 +783,7 @@ export default {
 
           // KONTAK DARURAT
           nama_lengkap_kontak_darurat: this.form.namaLengkapKD,
-          hubungan_dengan_pemohon_kontak_darurat: Number(this.form.hubunganPemohonKD),
+          hubungan_dengan_pemohon_kontak_darurat: this.form.hubunganPemohonKD,
           alamat_terkini_kontak_darurat: this.form.alamatKD,
           nomor_telpon_kontak_darurat: this.form.nomorTeleponKD,
         };
