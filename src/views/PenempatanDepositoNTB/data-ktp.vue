@@ -161,18 +161,28 @@ export default {
         );
 
         if (response.data && response.data.kabupaten) {
-          const normalizedKota = this.normalizeKabupaten(this.form.kabupaten);
-          this.kabupatenOptions = response.data.kabupaten
-            .filter((k) =>
-              this.normalizeKabupaten(k.kabupaten).includes(normalizedKota)
-            )
-            .map((k) => ({
-              label: this.normalizeKabupaten(k.kabupaten),
+          const normalizedKotaFromForm = this.normalizeKabupaten(this.form.kabupaten);
+          let initiallySelectedValue = null;
+
+          this.kabupatenOptions = response.data.kabupaten.map((k) => {
+            const normalizedKabupatenFromApi = this.normalizeKabupaten(k.kabupaten);
+            const isMatching = normalizedKabupatenFromApi.includes(normalizedKotaFromForm);
+
+            if (isMatching && initiallySelectedValue === null) {
+              initiallySelectedValue = k.kabupaten;
+            }
+
+            return {
+              label: normalizedKabupatenFromApi,
               value: k.kabupaten,
-            }));
-          if (this.kabupatenOptions.length > 0) {
+            };
+          });
+          if (initiallySelectedValue) {
+            this.form.kabupaten = initiallySelectedValue;
+          } else if (this.kabupatenOptions.length > 0) {
             this.form.kabupaten = this.kabupatenOptions[0].value;
           }
+
           this.fetchKecamatan();
         }
       } catch (error) {

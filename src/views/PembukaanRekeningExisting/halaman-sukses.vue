@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleBack">
     <div class="flex justify-center items-center">
       <img src="@/assets/emailVerif.svg" alt="Arrow Icon" class="h-24 sm:h-24 md:h-32 lg:h-36 mb-3 md:mb-8 lg:mb-8" />
     </div>
@@ -38,7 +38,7 @@
       </button>
     </div>
     <div class="text-center mt-6">
-      <ButtonComponent type="submit">
+      <ButtonComponent type="button" @click="handleBack">
         Kembali
       </ButtonComponent>
     </div>
@@ -61,7 +61,7 @@ export default {
     },
   },
   methods: {
-    handleSubmit() {
+    handleBack() {
       const fileStore = useFileStore();
       // location.reload();
       fileStore.$reset();
@@ -74,22 +74,24 @@ export default {
       const envelopeId = fileStore.envelope_id;
 
       try {
-        const response = await api.get(
-          `/download-signed-pdf?uuid=${uuid}&form=Existing`,
-          {
-            envelope_id: envelopeId,
-          },
-          {
-            responseType: "blob",
-          }
-        );
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const response = await api.get(`/download-signed-pdf?uuid=${uuid}&form=Existing`, {
+          envelope_id: envelopeId,
+          responseType: "blob",
+        });
+
+        console.log("Respons API:", response);
+        console.log("Data Blob:", new Blob([response.data]));
+
+        const blob = new Blob([response.data]);
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", "signed_pdf.zip");
         document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+
       } catch (error) {
         console.error("Gagal mengunduh PDF:", error);
       }

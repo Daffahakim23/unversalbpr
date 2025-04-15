@@ -54,7 +54,10 @@
 
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
+      <!-- <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent> -->
+      <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+      </ButtonComponent>
     </div>
   </form>
 </template>
@@ -80,6 +83,7 @@ export default {
       jenisKelaminOptions,
       agamaOptions,
       kewarganegaraanOptions,
+      isSubmitting: false,
       masaAktifKTPOptions: getMasaAktifKTPOptions(),
       fileStore: useFileStore(),
       provinsiOptions: [],
@@ -123,6 +127,9 @@ export default {
         if (key === "kewarganegaraanLainnya" && this.form.kewarganegaraan) {
           return false;
         }
+        if (key === "ibuKandung" && this.form.namaIbuKandung) {
+          return false;
+        }
         return !value;
       });
     },
@@ -149,6 +156,7 @@ export default {
         console.error("Gagal mengambil data provinsi:", error);
       }
     },
+
     async fetchKabupaten() {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
@@ -161,18 +169,33 @@ export default {
         );
 
         if (response.data && response.data.kabupaten) {
-          const normalizedKota = this.normalizeKabupaten(this.form.kabupaten);
-          this.kabupatenOptions = response.data.kabupaten
-            .filter((k) =>
-              this.normalizeKabupaten(k.kabupaten).includes(normalizedKota)
-            )
-            .map((k) => ({
-              label: this.normalizeKabupaten(k.kabupaten),
+          const normalizedKotaFromForm = this.normalizeKabupaten(this.form.kabupaten);
+          let initiallySelectedValue = null;
+
+          this.kabupatenOptions = response.data.kabupaten.map((k) => {
+            const normalizedKabupatenFromApi = this.normalizeKabupaten(k.kabupaten);
+            const isMatching = normalizedKabupatenFromApi.includes(normalizedKotaFromForm);
+
+            if (isMatching && initiallySelectedValue === null) {
+              initiallySelectedValue = k.kabupaten;
+            }
+
+            return {
+              label: normalizedKabupatenFromApi,
               value: k.kabupaten,
-            }));
-          if (this.kabupatenOptions.length > 0) {
+              // Anda bisa menambahkan properti 'selected' jika komponen dropdown memerlukannya
+              // selected: isMatching,
+            };
+          });
+
+          // Set nilai form.kabupaten setelah semua opsi terbentuk
+          if (initiallySelectedValue) {
+            this.form.kabupaten = initiallySelectedValue;
+          } else if (this.kabupatenOptions.length > 0) {
+            // Atur ke nilai pertama jika tidak ada yang cocok (opsional)
             this.form.kabupaten = this.kabupatenOptions[0].value;
           }
+
           this.fetchKecamatan();
         }
       } catch (error) {
@@ -268,6 +291,10 @@ export default {
       });
     },
     async handleSubmit() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         let formattedDate = this.form.tanggalLahir;
         if (/^\d{2}-\d{2}-\d{4}$/.test(formattedDate)) {
@@ -331,6 +358,8 @@ export default {
         }
       } catch (error) {
         console.error("Error submitting data:", error);
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },

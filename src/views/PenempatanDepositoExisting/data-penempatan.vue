@@ -451,19 +451,56 @@ export default {
         const nomorRekening = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.nomorRekening : "";
         const namaPemilik = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.namaLengkap : "";
 
+        let selectedOption = null;
+        let currentOptions = [];
+
+        switch (Number(this.form.produkDeposito)) {
+          case 1:
+            currentOptions = jangkaWaktuDepositoUniversalOptions;
+            break;
+          case 2:
+            currentOptions = jangkaWaktuDepositoPeduliOptions;
+            break;
+          case 3:
+            currentOptions = jangkaWaktuDepositoDEBUTSanmereOptions;
+            break;
+          case 4:
+            currentOptions = jangkaWaktuDepositoDEBUTMatiusOptions;
+            break;
+          case 5:
+            currentOptions = jangkaWaktuDepositoGreenOptions;
+            break;
+          default:
+            console.error("Produk deposito tidak valid");
+            return;
+        }
+
+        selectedOption = currentOptions.find(option => option.value === this.form.jangkaWaktu);
+
+        let jangkaWaktuToSend = null;
+        let sukuBungaToSend = null;
+
+        if (selectedOption) {
+          jangkaWaktuToSend = Number(selectedOption.jangkaWaktu);
+          sukuBungaToSend = parseFloat(selectedOption.sukuBunga);
+        } else {
+          console.warn("Opsi jangka waktu tidak ditemukan");
+          return;
+        }
+
         const requestData = {
           uuid: this.fileStore.uuid || "",
           nominal_deposito: Number(this.form.nominal),
-          jangka_waktu: Number(this.form.jangkaWaktu),
+          jangka_waktu: jangkaWaktuToSend,
+          suku_bunga: sukuBungaToSend,
           saat_jatuh_tempo_nominal: Number(this.form.metodePencairan),
           pembayaran_bunga: Number(this.form.pembayaranBunga),
           nama_bank: namaBank,
           nomor_rekening: nomorRekening,
           nama_pemilik: namaPemilik,
-          s_k_penempatan_deposito: this.isChecked,
+          s_k_penempatan_deposito: true,
           produk_yang_diinginkan: Number(this.form.produkDeposito),
-          suku_bunga: Number(this.form.sukuBunga),
-          penyetoran_deposito: Number(this.form.penyetoranDeposito),
+          penyetoran_deposito: Number(this.form.metodePenyetoran),
           nomor_rekening_penyetoran: this.form.nomorRekeningPenyetoran,
           nama_rekening_penyetoran: this.form.namaRekeningPenyetoran,
         };

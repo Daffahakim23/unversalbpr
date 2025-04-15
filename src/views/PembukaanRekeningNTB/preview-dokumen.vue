@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="flex items-center justify-between mb-4 gap-2">
-        <button @click="openModal" class="flex items-center text-primary gap-1">
+        <button @click="openModal2" class="flex items-center text-primary gap-1">
           <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
           <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
         </button>
@@ -64,7 +64,8 @@
             </div>
             <div v-else class="controls flex justify-between mt-4 w-full">
               <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isButtonDisabled || isUploading">Simpan Foto
+              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">
+                {{ isSubmitting ? "Mengirim..." : "Simpan Foto" }}
               </ButtonComponent>
             </div>
           </div>
@@ -101,7 +102,8 @@
           </div>
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isButtonDisabled || isUploading">Simpan Foto
+            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">{{
+              isSubmitting ? "Mengirim..." : "Simpan" }}
             </ButtonComponent>
           </div>
         </div>
@@ -129,14 +131,15 @@
 
       <ModalPanduanFoto :isOpen="isModalOpen" :documentType="documentType" @close="handleModalClose"
         @back="handleBack" />
+      <ModalPanduanFoto2 :isOpen="isModalOpen2" :documentType="documentType" @close="handleModalClose"
+        @back="handleBack" />
 
       <div class="mt-6 flex justify-between" v-if="documentType !== 'fotoDiri' && fileUrl">
         <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent>
-        <ButtonComponent @click="saveFile" :disabled="isButtonDisabled || isUploading">
-          Simpan
+        <ButtonComponent @click="saveFile" :disabled="isSubmitting || isButtonDisabled || isUploading">
+          {{ isSubmitting ? "Mengirim..." : "Simpan" }}
         </ButtonComponent>
       </div>
-
     </div>
     <input type="file" ref="fileInput" class="hidden" @change="handleFileUpload" accept="image/*" />
     <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg"
@@ -152,6 +155,7 @@ import api from "@/API/api.js"
 import { useFileStore } from "@/stores/filestore";
 import { useRouter, useRoute } from "vue-router";
 import ModalPanduanFoto from "@/components/ModalPanduan.vue";
+import ModalPanduanFoto2 from "@/components/ModalPanduan2.vue";
 import ButtonComponent from "@/components/button.vue"
 import FormField from "@/components/FormField.vue";
 import ModalError from "@/components/ModalError.vue";
@@ -168,6 +172,7 @@ export default {
   components: {
     FormField,
     ModalPanduanFoto,
+    ModalPanduanFoto2,
     ButtonComponent,
     ModalError,
     Toaster,
@@ -183,10 +188,12 @@ export default {
       toasterType: 'success',
       toasterMessage: '',
       isModalOpen: true,
+      isModalOpen2: false,
       isUploading: false,
       isModalError: false,
       isAgreementChecked: false,
       nomorNpwp: "",
+      isSubmitting: false,
       modalContent: [
         {
           label: "Verifikasi Gagal",
@@ -581,6 +588,7 @@ export default {
 
     handleModalClose() {
       this.isModalOpen = false;
+      this.isModalOpen2 = false;
       // if (this.documentType === "ktp" || this.documentType === "liveness" || this.documentType === "npwp" || this.documentType === "tandaTangan") {
       // this.openFilePicker();
     },
@@ -595,7 +603,16 @@ export default {
       this.isModalOpen = true;
     },
 
+    openModal2() {
+      console.log("Modal dibuka!");
+      this.isModalOpen2 = true;
+    },
+
     async saveFile() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         if (!this.documentType || !this.fileStore.uuid) {
           this.showFlag = true;
@@ -693,6 +710,7 @@ export default {
         // this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
       } finally {
         this.isUploading = false;
+        this.isSubmitting = false;
       }
     },
 

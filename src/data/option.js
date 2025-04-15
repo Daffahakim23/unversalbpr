@@ -24,36 +24,36 @@ export const metodePenyetoranExisitingOptions = [
 ];
 
 export const jangkaWaktuDepositoUniversalOptions = [
-  { label: "1 Bulan (5.5% per tahun)", value: "1" },
-  { label: "3 Bulan (6,25% per tahun)", value: "2" },
-  { label: "6 Bulan (6,75% per tahun)", value: "3" },
-  { label: "9 Bulan (6,75% per tahun)", value: "4" },
-  { label: "12 Bulan (6,75% per tahun)", value: "5" },
-  { label: "24 Bulan (6,75% per tahun)", value: "5" },
+  { label: "1 Bulan (5.5% per tahun)", value: "1", jangkaWaktu: "1", sukuBunga: "5.5" },
+  { label: "3 Bulan (6,25% per tahun)", value: "2", jangkaWaktu: "3", sukuBunga: "6.25" },
+  { label: "6 Bulan (6,75% per tahun)", value: "3", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun)", value: "4", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6,75% per tahun)", value: "5", jangkaWaktu: "12", sukuBunga: "6.75" },
+  { label: "24 Bulan (6,75% per tahun)", value: "5", jangkaWaktu: "24", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoGreenOptions = [
-  { label: "3 Bulan (6,25% per tahun + investasi bibit pohon)", value: "1" },
-  { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2" },
-  { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3" },
+  { label: "3 Bulan (6,25% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.25" },
+  { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoDEBUTSanmereOptions = [
-  { label: "12 Bulan (5,75% per tahun + donasi 2% per tahun)", value: "1" },
-  { label: "24 Bulan (6,25% per tahun + donasi 1,5% per tahun)", value: "2" },
-  { label: "36 Bulan (6,75% per tahun + donasi 1% per tahun)", value: "3" },
+  { label: "12 Bulan (5,75% per tahun + donasi 2% per tahun)", value: "1", jangkaWaktu: "12", sukuBunga: "5.75" },
+  { label: "24 Bulan (6,25% per tahun + donasi 1,5% per tahun)", value: "2", jangkaWaktu: "24", sukuBunga: "6.25" },
+  { label: "36 Bulan (6,75% per tahun + donasi 1% per tahun)", value: "3", jangkaWaktu: "36", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoDEBUTMatiusOptions = [
-  { label: "12 Bulan (5,75% per tahun + donasi 2% per tahun)", value: "1" },
-  { label: "24 Bulan (6,25% per tahun + donasi 1,5% per tahun)", value: "2" },
-  { label: "36 Bulan (6,75% per tahun + donasi 1% per tahun)", value: "3" },
+  { label: "12 Bulan (5,75% per tahun + donasi 2% per tahun)", value: "1", jangkaWaktu: "12", sukuBunga: "5.75" },
+  { label: "24 Bulan (6,25% per tahun + donasi 1,5% per tahun)", value: "2", jangkaWaktu: "24", sukuBunga: "6.25" },
+  { label: "36 Bulan (6,75% per tahun + donasi 1% per tahun)", value: "3", jangkaWaktu: "36", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoPeduliOptions = [
-  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1" },
-  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2" },
-  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3" },
+  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoOptions = [
@@ -157,7 +157,7 @@ export const sumberDanaOptions = [
 ];
 
 export const getMasaAktifKTPOptions = (tanggalBerlakuSampai) => {
-  const options = [{ label: "Seumur Hidup", value: "1" }];
+  const options = [{ label: "Seumur Hidup", value: "Seumur Hidup" }];
   if (tanggalBerlakuSampai) {
     options.push({ label: tanggalBerlakuSampai, value: tanggalBerlakuSampai });
   }
