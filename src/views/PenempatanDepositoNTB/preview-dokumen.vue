@@ -394,7 +394,7 @@ export default {
         const apiEndpoint =
           documentType.value === "ktp" ? "/ocr-ktp-deposito" :
             documentType.value === "tandaTangan" ? "/tt-basah-deposito" :
-              documentType.value === "npwp" ? "/npwp" : "/foto-diri-deposito";
+              documentType.value === "npwp" ? "/npwp-deposito" : "/foto-diri-deposito";
 
         const file = new File([blob], fileName, { type: "image/png" });
         const formData = new FormData();

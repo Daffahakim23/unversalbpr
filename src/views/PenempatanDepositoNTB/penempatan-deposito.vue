@@ -38,6 +38,8 @@
   </form>
   <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
     @close="isModalOpen = false" @confirm="handleModalConfirm" />
+  <ModalError :isOpen="isModalErrorEmail" :features="modalContentEmail" icon="otp-error-illus.svg"
+    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" />
 </template>
 
 <script>
@@ -50,6 +52,7 @@ import ReusableModal from "@/components/ModalT&C.vue";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { sumberDataNasabahOptions, produkDepositoOptions, produkOptions } from "@/data/option.js";
+import ModalError from "@/components/ModalError.vue";
 
 export default {
   emits: ["update-progress"],
@@ -59,6 +62,7 @@ export default {
     RadioButtonChoose,
     ReusableModal,
     FlagBox,
+    ModalError,
   },
   data() {
     return {
@@ -77,6 +81,17 @@ export default {
       isSubmitting: false,
       emailError: false,
       phoneError: false,
+      isModalErrorEmail: false,
+      temporaryBanMessage: "",
+      modalContentEmail: [
+        {
+          label: "",
+          icon: "",
+          description: "",
+          buttonString1: "",
+          buttonString2: "",
+        },
+      ],
     };
   },
 
@@ -92,6 +107,22 @@ export default {
   },
 
   methods: {
+    showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
+      this.modalContentEmail = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      this.isModalOpen = false;
+      this.isModalErrorEmail = true;
+    },
+    handleCloseModal() {
+      this.isModalErrorEmail = false;
+    },
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
@@ -175,10 +206,22 @@ export default {
         }
 
       } catch (error) {
-        if (error.response) {
-          console.error("Error response data:", error.response.data);
+        let subtitle = "";
+        let modalTitle = "Verifikasi OTP Gagal";
+        let modalIcon = "otp-error-illus.svg";
+        let button1 = "Tutup";
+        let button2 = "Hubungi Customer Care";
+
+        if (error.response && error.response.data && error.response.data.message) {
+          this.temporaryBanMessage = error.response.data.message;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai ${this.temporaryBanMessage}. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
+          modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
+        } else {
+          subtitle = "Terjadi kesalahan saat memverifikasi OTP.";
         }
-        console.error("Error saat mengirim data:", error);
+        this.isModalError = false;
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
       } finally {
         this.isSubmitting = false;
       }

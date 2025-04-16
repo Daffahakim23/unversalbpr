@@ -9,11 +9,11 @@
                     </div>
                     <h2 class="text-xl font-semibold mb-4">Rekening Ditemukan!</h2>
                     <div class="initials-circle">
-                        {{ getInitials(rekeningData.namaLengkap) }}
+                        {{ getInitials(rekeningData.account_name) }}
                     </div>
                     <div class="text-center mt-4 mb-8">
-                        <p class="text-lg font-semibold">{{ rekeningData.namaLengkap }}</p>
-                        <p class="text-sm">{{ form.namaBank }}-{{ form.nomorRekening }}</p>
+                        <p class="text-lg font-semibold">{{ rekeningData.account_name }}</p>
+                        <p class="text-sm">{{ rekeningData.account_bank }}-{{ rekeningData.account_number }}</p>
                     </div>
                     <div class="mt-6">
                         <ButtonComponent type="button" @click="emitTransfer" class="w-full">
@@ -39,9 +39,9 @@
                         placeholder="Masukan Nomor Rekening" required />
 
                     <div class="text-right mt-4 w-full">
-                        <ButtonComponent type="button" @click="handleSubmit" class="w-full"
-                            :disabled="!form.namaBank || !form.nomorRekening">
-                            Lanjutkan
+                        <ButtonComponent type="button" @click="handlePreval" class="w-full"
+                            :disabled="!form.namaBank || !form.nomorRekening || isPrevalLoading">
+                            {{ isPrevalLoading ? 'Mencari...' : 'Lanjutkan' }}
                         </ButtonComponent>
                     </div>
                 </div>
@@ -71,6 +71,10 @@ export default {
         iconPath() {
             return new URL(`/src/assets/account-found.svg`, import.meta.url).href;
         },
+        selectedBankCode() {
+            const selectedBank = this.bankOptions.find(bank => bank.value === this.form.namaBank);
+            return selectedBank ? selectedBank.code : null;
+        },
     },
     data() {
         return {
@@ -79,10 +83,12 @@ export default {
             fileStore: useFileStore(),
             rekeningDitemukan: false,
             rekeningData: {
-                namaLengkap: "Mira Setiawan",
-                bank: "",
-                nomorRekening: "",
+                account_bank: "",
+                account_name: "",
+                account_number: "",
+                message: "",
             },
+            isPrevalLoading: false,
         };
     },
     watch: {
@@ -100,10 +106,12 @@ export default {
             this.form = new FormModelPenempatanDeposito();
             this.rekeningDitemukan = false;
             this.rekeningData = {
-                namaLengkap: "Mira Setiawan",
-                bank: "",
-                nomorRekening: "",
+                account_bank: "",
+                account_name: "",
+                account_number: "",
+                message: "",
             };
+            this.isPrevalLoading = false;
         },
         async fetchBankOptions() {
             try {
@@ -111,14 +119,43 @@ export default {
                 this.bankOptions = response.data.bank.map((bank) => ({
                     label: bank.bank_name,
                     value: bank.bank_name,
+                    code: bank.bank_code,
                 }));
             } catch (error) {
                 console.error("Error fetching bank options:", error);
             }
         },
-        async handleSubmit() {
-            this.rekeningDitemukan = true;
-            this.form.namaLengkap = this.rekeningData.namaLengkap;
+        async handlePreval() {
+            if (!this.form.namaBank || !this.form.nomorRekening || !this.selectedBankCode) {
+                alert("Nama Bank dan Nomor Rekening harus diisi.");
+                return;
+            }
+
+            this.isPrevalLoading = true;
+            this.rekeningDitemukan = false;
+
+            try {
+                const payload = {
+                    nomor_rekening: this.form.nomorRekening,
+                    kode_bank: this.selectedBankCode,
+                };
+                const response = await api.post("/preval", payload);
+                console.log("Preval Response:", response.data);
+
+                if (response.status === 200) {
+                    this.rekeningData = { ...response.data };
+                    this.rekeningDitemukan = true;
+                } else {
+                    alert(response.data.message || "Rekening tidak ditemukan.");
+                    this.rekeningDitemukan = false;
+                }
+            } catch (error) {
+                console.error("Error during preval:", error);
+                alert("Terjadi kesalahan saat memvalidasi rekening.");
+                this.rekeningDitemukan = false;
+            } finally {
+                this.isPrevalLoading = false;
+            }
         },
         getInitials(name) {
             if (!name) return "";
@@ -134,9 +171,9 @@ export default {
         emitTransfer() {
             if (this.handleTransfer) {
                 this.handleTransfer({
-                    namaLengkap: this.rekeningData.namaLengkap,
-                    namaBank: this.form.namaBank,
-                    nomorRekening: this.form.nomorRekening,
+                    namaLengkap: this.rekeningData.account_name,
+                    namaBank: this.rekeningData.account_bank,
+                    nomorRekening: this.rekeningData.account_number,
                 });
             }
             this.$emit("close");
@@ -146,38 +183,28 @@ export default {
 </script>
 
 <style scoped>
-.bg-primary {
-    background-color: #004aad;
+.initials-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #616161;
+    text-transform: uppercase;
+    margin: 0 auto;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s ease;
 }
 
-.fade-enter,
+.fade-enter-from,
 .fade-leave-to {
     opacity: 0;
-    transform: translateY(20px);
-}
-
-.fade-to,
-.fade-leave {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.initials-circle {
-    margin-top: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: #d9e2ea;
-    font-size: 24px;
-    font-weight: bold;
-    color: #003b70;
 }
 </style>

@@ -33,6 +33,8 @@
     @confirm="handleModalConfirm" />
   <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
     @buttonClick1="handleModalClose" @buttonClick2="handleToDeposito" />
+  <ModalError :isOpen="isModalErrorEmail" :features="modalContentEmail" icon="otp-error-illus.svg"
+    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" />
 </template>
 
 <script>
@@ -73,6 +75,8 @@ export default {
       emailError: false,
       phoneError: false,
       isModalError: false,
+      isModalErrorEmail: false,
+      temporaryBanMessage: "",
       modalContent: [
         {
           label: "Konfirmasi Penempatan Deposito",
@@ -81,6 +85,15 @@ export default {
             "Apakah Anda yakin ingin melanjutkan penempatan deposito?",
           buttonString1: "Tetap Dihalaman Ini",
           buttonString2: "Penempatan Deposito",
+        },
+      ],
+      modalContentEmail: [
+        {
+          label: "",
+          icon: "",
+          description: "",
+          buttonString1: "",
+          buttonString2: "",
         },
       ],
     };
@@ -112,11 +125,27 @@ export default {
   },
 
   methods: {
+    showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "otp-error-illus.svg") {
+      this.modalContentEmail = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      this.isModalOpen = false;
+      this.isModalErrorEmail = true;
+    },
     handleToDeposito() {
       this.$router.push({ path: "/dashboard/penempatanDepositoNTB" });
     },
     handleModalClose() {
       this.isModalError = false;
+    },
+    handleCloseModal() {
+      this.isModalErrorEmail = false;
     },
     validatePhone(phone) {
       return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
@@ -223,10 +252,22 @@ export default {
         }
 
       } catch (error) {
-        if (error.response) {
-          console.error("Error response data:", error.response.data);
+        let subtitle = "";
+        let modalTitle = "Verifikasi OTP Gagal";
+        let modalIcon = "otp-error-illus.svg";
+        let button1 = "Tutup";
+        let button2 = "Hubungi Customer Care";
+
+        if (error.response && error.response.data && error.response.data.message) {
+          this.temporaryBanMessage = error.response.data.message;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai ${this.temporaryBanMessage}. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
+          modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
+        } else {
+          subtitle = "Terjadi kesalahan saat memverifikasi OTP.";
         }
-        console.error("Error saat mengirim data:", error);
+        this.isModalError = false;
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
       } finally {
         this.isSubmitting = false;
       }

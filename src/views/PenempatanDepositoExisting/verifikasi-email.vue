@@ -27,7 +27,7 @@
       <ButtonComponent type="submit" class="mt-6" :disabled="isButtonDisabled">
         Lanjutkan
       </ButtonComponent>
-      <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg"
+      <ModalError :isOpen="isModalError" :features="modalContent" icon="otp-error-illus.svg"
         @close="isModalError = false" @buttonClick1="handleCloseModal" />
     </div>
   </form>
@@ -72,8 +72,10 @@ export default {
 
     const email = computed(() => fileStore.alamat_email || "user@example.com");
     const isButtonDisabled = computed(() => otp.value.some(digit => digit === ""));
+    const otpErrorCount = ref(0);
+    const temporaryBanMessage = ref("");
 
-    const showErrorModal = (title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") => {
+    const showErrorModal = (title, message, btnString1 = "OK", btnString2 = "Batal", icon = "otp-error-illus.svg") => {
       modalContent.value = [
         {
           label: title,
@@ -132,7 +134,29 @@ export default {
           showErrorModal("Kode OTP Salah", "Kode OTP yang Anda Kirimkan Salah", "Verifikasi Ulang", "Hubungi Customer Care"); // Tambahkan description
         }
       } catch (error) {
-        showErrorModal("Kode OTP Salah", "Kode OTP yang Anda Kirimkan Salah", "Coba Lagi", "Hubungi Customer Care");
+        otpErrorCount.value++;
+        let title = "Kode OTP Salah";
+        let subtitle = "Kode OTP yang Anda Kirimkan Salah";
+        let buttons = ["Coba Lagi", "Hubungi Customer Care"];
+
+        if (otpErrorCount.value === 3) {
+          subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Untuk alasan keamanan, alamat email Anda akan dibatasi untuk pengiriman kode OTP selama 30 menit kedepan jika salah sebanyak 5 kali, Periksa kembali kode OTP Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+        } else if (otpErrorCount.value === 4) {
+          subtitle = "Anda telah salah memasukkan kode OTP sebanyak 4 kali. Untuk alasan keamanan, alamat email Anda akan dibatasi untuk pengiriman kode OTP selama 30 menit kedepan jika salah sebanyak 5 kali, Periksa kembali kode OTP Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+        } else if (otpErrorCount.value >= 5) {
+          title = "Alamat Email Dibatasi Sementara";
+          if (error.response?.data?.message) {
+            temporaryBanMessage.value = error.response.data.message;
+            subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai <strong>${temporaryBanMessage.value}</strong>. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          } else {
+            subtitle = "Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP. Hubungi Universal Care untuk bantuan lebih lanjut.";
+          }
+          buttons = ["Hubungi Customer Care"];
+        } else if (error.response && error.response.data && error.response.data.message) {
+          subtitle = error.response.data.message;
+        }
+
+        showErrorModal(title, subtitle, buttons[0], buttons[1]);
       }
     };
 
@@ -188,6 +212,8 @@ export default {
       showErrorModal,
       modalContent,
       handleCloseModal,
+      otpErrorCount,
+      temporaryBanMessage,
     };
   },
 };
