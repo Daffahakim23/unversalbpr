@@ -19,7 +19,8 @@
                 </div>
             </div>
             <div class="flex justify-center pt-8">
-                <ButtonComponent :disabled="!allChecked" @click="$emit('confirm')">Setuju</ButtonComponent>
+                <ButtonComponent :disabled="!allChecked" @click="$emit('confirm')">Saya Setuju dan Mengerti
+                </ButtonComponent>
             </div>
         </div>
     </div>

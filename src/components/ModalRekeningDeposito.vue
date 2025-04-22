@@ -33,7 +33,7 @@
                         </button>
                     </div>
                     <FormField label="Nama Bank*" id="namaBank" :isDropdown="true" v-model="form.namaBank"
-                        placeholder="Pilih Nama Bank" :options="bankOptions" required />
+                        placeholder="Pilih Nama Bank" :hasSearch="true" :options="bankOptions" required />
 
                     <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
                         placeholder="Masukan Nomor Rekening" required />

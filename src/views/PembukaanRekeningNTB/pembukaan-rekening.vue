@@ -7,7 +7,7 @@
       :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       :error="emailError" @blur="handleEmailBlur" />
 
-    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
+    <FormField label="Nomor Handphone *" id="phone" type="phone" v-model="form.phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
       :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
       :error="phoneError" @blur="handlePhoneBlur" />
@@ -16,7 +16,7 @@
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
 
-    <RadioButtonChoose label="Dari mana Anda mengetahui tentang kami" :options="sumberDataNasabahOptions"
+    <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui Universal BPR?" :options="sumberDataNasabahOptions"
       v-model="form.sumber" name="sumber" />
     <div v-if="form.sumber === 'lainnya'">
       <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder=" "
@@ -241,9 +241,6 @@ export default {
           fileStore.setUuid(response.data.uuid);
           fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setNoHP(this.requestData.no_hp);
-          console.log("UUID :", response.data.uuid);
-          console.log("Email :", this.requestData.alamat_email);
-          console.log("Nomor Handphone :", this.requestData.no_hp);
 
           this.$router.push({ path: "/dashboard/verifikasiEmailPembukaanRekeningNTB" });
 

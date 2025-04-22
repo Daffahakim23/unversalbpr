@@ -48,10 +48,6 @@
     <FormField label="Masa Aktif KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
       :options="masaAktifKTPOptions" required />
 
-    <!-- <FormField label="Nama Gadis Ibu Kandung*" id="ibuKandung" v-model="form.namaIbuKandung" :required="true"
-      placeholder="Masukan Nama Gadis Ibu Kandung" /> -->
-
-
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
       <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
@@ -130,7 +126,7 @@ export default {
 
   methods: {
     normalizeKabupaten(kabupaten) {
-      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
     },
     async fetchProvinsi() {
       this.provinsiOptions = [];
@@ -154,16 +150,41 @@ export default {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
 
-      if (!this.form.provinsi) return;
+      if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}`
+        );
 
         if (response.data && response.data.kabupaten) {
-          this.kabupatenOptions = response.data.kabupaten.map(k => ({
-            label: this.normalizeKabupaten(k.kabupaten), // Normalisasi data API
-            value: k.kabupaten
-          }));
+          const normalizedKotaFromForm = this.normalizeKabupaten(this.form.kabupaten);
+          let initiallySelectedValue = null;
+
+          this.kabupatenOptions = response.data.kabupaten.map((k) => {
+            const normalizedKabupatenFromApi = this.normalizeKabupaten(k.kabupaten);
+            const isMatching = normalizedKabupatenFromApi.includes(normalizedKotaFromForm);
+
+            if (isMatching && initiallySelectedValue === null) {
+              initiallySelectedValue = k.kabupaten;
+            }
+
+            return {
+              label: normalizedKabupatenFromApi,
+              value: k.kabupaten,
+              // Anda bisa menambahkan properti 'selected' jika komponen dropdown memerlukannya
+              // selected: isMatching,
+            };
+          });
+
+          // Set nilai form.kabupaten setelah semua opsi terbentuk
+          if (initiallySelectedValue) {
+            this.form.kabupaten = initiallySelectedValue;
+          } else if (this.kabupatenOptions.length > 0) {
+            // Atur ke nilai pertama jika tidak ada yang cocok (opsional)
+            this.form.kabupaten = this.kabupatenOptions[0].value;
+          }
+
           this.fetchKecamatan();
         }
       } catch (error) {
@@ -240,7 +261,7 @@ export default {
           kelurahan: message.desa_kelurahan || "",
           kodePos: Number(message.kode_pos) || "",
           statusPerkawinan: message.status_pernikahan,
-          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "1" : ""),
+          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "Seumur Hidup" : ""),
           kewarganegaraanLainnya: message.kewarganegaraan_lainya || "",
           // nama_gadis_ibu_kandung: "ini ibu",
         };

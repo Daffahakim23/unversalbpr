@@ -1,4 +1,4 @@
-<template>
+<template #center-title>
   <form @submit.prevent="handleSubmit">
     <div class="flex flex-col items-center">
       <img src="@/assets/emailVerif.svg" alt="Email Verification" class="h-24 md:h-32 lg:h-36 mb-4" />

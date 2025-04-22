@@ -1,9 +1,9 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div
-            class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
+            class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="text-left">
-                <h3 class="text-xl font-semibold text-primary dark:text-white items-center">
+                <h3 class="text-2xl font-semibold text-primary dark:text-white items-center">
                     Panduan Upload {{ documentTypeText }}
                 </h3>
                 <p class="text-neutral-800 dark:text-gray-300 mt-2">
@@ -21,24 +21,22 @@
 
             <div v-if="requiresCaptcha && !captchaVerified" class="mt-4">
                 <p class="justify-center text-sm font-medium text-neutral-900">Masukkan kode berikut:</p>
-                <div class="captcha-box bg-neutral-100 flex justify-center items-center p-8 rounded-md mt-2 w-full">
-                    <span class="font-bold text-2xl flex">
-                        <span v-for="(item, index) in captcha" :key="index" :style="{ color: item.color }">
+                <div
+                    class="captcha-box bg-neutral-50 border-dashed border-1 flex justify-center items-center p-12 rounded-md mt-2 w-full">
+                    <span class="font-bold text-3xl flex">
+                        <span v-for="(item, index) in captcha" :key="index">
                             {{ item.char }}
                         </span>
                     </span>
-                    <button @click="refreshCaptcha" class="text-blue-500 ml-2">🔄</button>
+                    <button @click="refreshCaptcha" class="ml-2">
+                        <img :src="reloadIcon" alt="Refresh Captcha" class="h-4 w-4 align-text-bottom">
+                    </button>
                 </div>
 
-                <div class="input-group mt-4">
-                    <input v-model="userInput" type="text"
-                        class="captcha-input w-full p-16 border border-neutral-300 rounded-md focus:outline-none"
-                        placeholder="Masukkan Captcha" />
-                    <div class="flex justify-center">
-                        <p v-if="message" :class="{ 'text-red-500': !isValid, 'text-green-500': isValid }">
-                            {{ message }}
-                        </p>
-                    </div>
+                <div>
+                    <FormField v-model="userInput" placeholder="Masukkan Captcha" label="" id=""
+                        :hint="isValid ? 'Captcha tidak valid, silahkan periksa kembali' : ''" :error="isValid"
+                        class="mb--4" />
                 </div>
             </div>
 
@@ -66,11 +64,14 @@ import tandaTangan1 from "../assets/PanduanTandaTangan1.svg";
 import tandaTangan2 from "../assets/PanduanTandaTangan2.svg";
 import tandaTangan3 from "../assets/PanduanTandaTangan3.svg";
 import ButtonComponent from "@/components/button.vue";
+import reloadIcon from '@/assets/reload-icon.svg';
+import FormField from "@/components/FormField.vue";
 
 export default {
     emits: ["close", "back"],
     components: {
         ButtonComponent,
+        FormField,
     },
     props: {
         isOpen: Boolean,
@@ -78,6 +79,7 @@ export default {
     },
     data() {
         return {
+            reloadIcon,
             userInput: "",
             message: "",
             isValid: false,
@@ -136,17 +138,35 @@ export default {
     },
     methods: {
         generateCaptcha() {
-            const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#FFD700", "#8A2BE2", "#00CED1"];
+            const spacing = '20px'
             return Math.random()
                 .toString(36)
                 .substring(2, 8)
                 .split("")
                 .map((char) => {
                     return {
-                        char: Math.random() > 0.5 ? char.toUpperCase() : char.toLowerCase(),
-                        color: colors[Math.floor(Math.random() * colors.length)],
+                        char: char.toUpperCase(),
+                        style: { letterSpacing: spacing }
                     };
                 });
+        },
+        handleCaptchaBlur() {
+            if (this.userInput) {
+                const generatedCaptcha = this.captcha.map((item) => item.char).join("");
+                if (this.userInput === generatedCaptcha) {
+                    this.isValid = false; // Hilangkan status error jika benar
+                    this.message = "Captcha benar!";
+                    this.captchaVerified = true; // Set status verifikasi
+                } else {
+                    this.isValid = true; // Set status error jika salah
+                    this.message = "Captcha salah, coba lagi.";
+                    this.captchaVerified = false; // Reset status verifikasi jika salah
+                }
+            } else {
+                this.isValid = true; // Tampilkan error jika input kosong saat blur
+                this.message = "Captcha harus diisi.";
+                this.captchaVerified = false;
+            }
         },
         refreshCaptcha() {
             this.captcha = this.generateCaptcha();
@@ -159,20 +179,19 @@ export default {
             if (this.requiresCaptcha && !this.captchaVerified) {
                 const generatedCaptcha = this.captcha.map((item) => item.char).join("");
                 if (this.userInput === generatedCaptcha) {
-                    this.isValid = true;
-                    this.message = "Captcha benar!";
-                    this.captchaVerified = true; // Set status captcha menjadi terverifikasi
-                    // Tidak perlu setTimeout untuk close modal di sini, biarkan tombol "Oke" aktif
-                } else {
                     this.isValid = false;
+                    this.message = "Captcha benar!";
+                    this.captchaVerified = true;
+                } else {
+                    this.isValid = true;
                     this.message = "Captcha salah, coba lagi.";
                 }
             } else {
-                this.$emit("close"); // Close modal jika captcha tidak diperlukan atau sudah diverifikasi
+                this.$emit("close");
             }
         },
         closeModal() {
-            this.$emit("back"); // Emit event 'back' ke komponen parent
+            this.$emit("back");
         },
     },
 };
@@ -182,7 +201,7 @@ export default {
 .captcha-box {
     display: flex;
     align-items: center;
-    padding: 8px;
+    padding: 16px;
     border-radius: 5px;
     margin: 16px auto;
 }
@@ -190,7 +209,7 @@ export default {
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    /* gap: 10px; */
 }
 
 .captcha-input {

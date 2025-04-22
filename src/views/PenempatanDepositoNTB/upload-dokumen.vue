@@ -9,7 +9,7 @@
       <div class="flex items-center">
         <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
         <div>
-          <span class="text-sm font-medium text-neutral-900">KTP</span>
+          <span class="text-sm font-medium text-neutral-900">E-KTP</span>
           <p class="text-xs text-neutral-500">Foto KTP Anda</p>
         </div>
       </div>
@@ -27,7 +27,7 @@
       <div class="flex items-center">
         <img src="/src/assets/npwp.svg" alt="NPWP" class="h-12 mr-4" />
         <div>
-          <span class="text-sm font-medium text-neutral-900">NPWP</span>
+          <span class="text-sm font-medium text-neutral-900">NPWP (jika ada)</span>
           <p class="text-xs text-neutral-500">Foto NPWP Anda</p>
         </div>
       </div>

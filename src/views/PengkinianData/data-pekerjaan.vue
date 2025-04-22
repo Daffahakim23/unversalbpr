@@ -58,10 +58,10 @@
       </div>
 
       <div class="flex flex-row gap-4">
-        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunDK" v-model="form.lamaBekerjaTahunDK" :min="1"
+        <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunDK" v-model="form.lamaBekerjaTahunDK" :min="0"
           :max="50" :required="true" />
 
-        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanDK" v-model="form.lamaBekerjaBulanDK" :min="1"
+        <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanDK" v-model="form.lamaBekerjaBulanDK" :min="0"
           :max="50" :required="true" />
       </div>
 

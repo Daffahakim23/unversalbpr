@@ -133,7 +133,8 @@ const routes = [
         component: verifikasiEmailPembukaanRekeningNTB,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Verifikasi Email"
+          title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -181,18 +182,48 @@ const routes = [
         }),
       },
       {
-        path: "previewScreenPembukaanRekeningNTB",
+        path: "previewScreenPembukaanRekeningNTB", // Path tanpa parameter
         name: "PreviewScreenPembukaanRekeningNTB",
         component: PreviewScreenPembukaanRekeningNTB,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            // console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'npwp':
+                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP kamu bisa digunakan.';
+              case 'tandaTangan':
+                return 'Pastikan foto tanda tanganAnda terlihat jelas. Jika sudah, foto tanda tangan kamu bisa digunakan.';
+              case 'fotoDiri':
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
+        // Props bisa Anda sesuaikan jika Anda ingin menerima query sebagai props
+        // props: (route) => ({
+        //   documentType: route.query.documentType,
+        // }),
       },
       {
         path: "dataKTPPembukaanRekeningNTB",
@@ -273,7 +304,8 @@ const routes = [
         component: verifikasiEmailPembukaanRekeningExisting,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Verifikasi Email"
+          title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -292,9 +324,30 @@ const routes = [
         component: PreviewScreenPembukaanRekeningExisting,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Hasil Foto Existing",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            // console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -391,7 +444,8 @@ const routes = [
         component: VerifikasiEmailPenempatanDepositoNTB,
         meta: {
           feature: "Penempatan Deposito",
-          title: "Verifikasi Email"
+          title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -432,9 +486,38 @@ const routes = [
         component: PreviewScreenPenempatanDepositoNTB,
         meta: {
           feature: "Penempatan Deposito",
-          title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            // console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'npwp':
+                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP kamu bisa digunakan.';
+              case 'tandaTangan':
+                return 'Pastikan foto tanda tanganAnda terlihat jelas. Jika sudah, foto tanda tangan kamu bisa digunakan.';
+              case 'fotoDiri':
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType, // Ambil documentType dari params
@@ -539,6 +622,7 @@ const routes = [
         meta: {
           feature: "Penempatan Deposito",
           title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -568,9 +652,34 @@ const routes = [
         component: PreviewScreenPenempatanDepositoExisting,
         meta: {
           feature: "Penempatan Deposito",
-          title: "Hasil Foto Existing",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            // console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -661,22 +770,48 @@ const routes = [
       },
       {
         path: "uploadDokumenPengkinianData",
-        name: "uploadDokumenPengkinianData",
+        name: "UploadDokumenPengkinianData",
         component: UploadDokumenPengkinianData,
         meta: {
           feature: "Pengkinian Data",
           title: "Upload Dokumen",
           subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
         },
-      }, {
+      },
+      {
         path: "previewPengkinianData",
         name: "PreviewScreenPengkinianData",
         component: PreviewScreenPengkinianData,
         meta: {
           feature: "Pengkinian Data",
-          title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            // console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,

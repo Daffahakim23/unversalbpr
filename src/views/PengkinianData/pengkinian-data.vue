@@ -3,16 +3,23 @@
     <FormField label="Nama Lengkap*" id="namaLengkap" type="text" v-model="form.namaLengkap"
       placeholder="Masukkan Nama Lengkap Anda" />
 
-    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
-      required :error="emailError" @blur="handleEmailBlur" />
-
     <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening"
       placeholder="Masukkan Nomor Rekening Anda" required
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
+
+    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      required :error="emailError" @blur="handleEmailBlur" />
+
+    <FormField label="Nomor Handphone *" id="phone" type="phone" v-model="form.phone"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
+      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
+      :error="phoneError" @blur="handlePhoneBlur" />
+
     <FormField label="Pilih Tanda Pengenal*" id="tandaPengenal" :isDropdown="true" v-model="form.tandaPengenal"
       placeholder="Pilih Tanda Pengenal Anda" :options="tandaPengenalOptions" required />
+
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
         Lanjutkan
@@ -22,7 +29,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import api from "@/API/api"
 import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
@@ -43,19 +49,22 @@ export default {
       form: new FormModelRequestEmailVerification(),
       touched: {
         email: false,
+        phone: false,
       },
       tandaPengenalOptions,
       isSubmitting: false,
       emailError: false,
+      phoneError: false,
+      selectedCountryCode: "ID",
     };
   },
 
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      return !(this.form.namaLengkap && emailValid && this.form.tandaPengenal && this.form.nomorRekening);
+      const phoneValid = this.form.phone && /^(08|8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
+      return !(this.form.namaLengkap && emailValid && phoneValid && this.form.tandaPengenal && this.form.nomorRekening);
     },
-
   },
 
   methods: {
@@ -69,10 +78,19 @@ export default {
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
+    validatePhone(phone) {
+      return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
+    },
     handleEmailBlur() {
       this.touched.email = true;
       if (this.form.email) {
         this.emailError = !this.validateEmail(this.form.email);
+      }
+    },
+    handlePhoneBlur() {
+      this.touched.phone = true;
+      if (this.form.phone) {
+        this.phoneError = !this.validatePhone(this.form.phone);
       }
     },
 
@@ -110,11 +128,9 @@ export default {
           const fileStore = useFileStore();
           console.log("Data berhasil dikirim:", response.data);
           fileStore.setFormPengkinianData(this.form);
+          fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setUuid(response.data.uuid);
-          // fileStore.setEmail(this.requestData.email);
-          // fileStore.setNoHP(this.requestData.no_hp);
-          console.log("UUID :", response.data.uuid);
-          // console.log("Email :", this.requestData.email);
+          fileStore.setNoHP(this.requestData.no_hp);
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
         } else {

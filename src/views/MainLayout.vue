@@ -30,8 +30,12 @@
         <div class="container mx-auto py-9">
           <div class="rounded-xl max-w-2xl mx-auto bg-neutral-white py-9 px-10 shadow-md">
             <div class="flex flex-col mb-6 gap-2">
-              <div class="flex justify-between items-center">
-                <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-left">
+              <div class="flex items-center"
+                :class="{ 'justify-center': isCenterTitle, 'justify-between': !isCenterTitle }">
+                <div v-if="isCenterTitle" class="flex justify-center w-full">
+                  <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-center">{{ pageTitle }}</h2>
+                </div>
+                <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-left" v-if="!isCenterTitle">
                   {{ pageTitle }}
                 </h2>
               </div>
@@ -81,6 +85,11 @@ export default {
       ],
     };
   },
+  computed: {
+    isCenterTitle() {
+      return this.$route.meta.centerTitle === true;
+    }
+  },
   watch: {
     $route(to) {
       this.updatePageTitle(to);
@@ -98,8 +107,8 @@ export default {
     },
     updatePageTitle(route) {
       this.featureTitle = route.meta.feature || "";
-      this.pageTitle = route.meta.title || "";
-      this.pageSubtitle = route.meta.subtitle || "";
+      this.pageTitle = typeof route.meta.title === 'function' ? route.meta.title(route) : route.meta.title || "";
+      this.pageSubtitle = typeof route.meta.subtitle === 'function' ? route.meta.subtitle(route) : route.meta.subtitle || "";
     },
     updateProgress(value) {
       this.progress = value;

@@ -1,7 +1,7 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div
-            class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
+            class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="text-left">
                 <h3 class="text-xl font-semibold text-primary dark:text-white items-center">
                     Panduan Upload {{ documentTypeText }}
