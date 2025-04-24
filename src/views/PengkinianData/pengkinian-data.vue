@@ -17,8 +17,8 @@
       :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
       :error="phoneError" @blur="handlePhoneBlur" />
 
-    <FormField label="Pilih Tanda Pengenal*" id="tandaPengenal" :isDropdown="true" v-model="form.tandaPengenal"
-      placeholder="Pilih Tanda Pengenal Anda" :options="tandaPengenalOptions" required />
+    <RadioButtonChoose label="Pilih Tanda Pengenal*" name="tandaPengenal" id="tandaPengenal" :isDropdown="true"
+      v-model="form.tandaPengenal" placeholder="Pilih Tanda Pengenal Anda" :options="tandaPengenalOptions" required />
 
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
@@ -36,6 +36,7 @@ import ButtonComponent from "@/components/button.vue";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { tandaPengenalOptions } from "@/data/option.js";
+import RadioButton from "@/components/RadioButton.vue";
 
 export default {
   emits: ["update-progress"],
@@ -113,6 +114,8 @@ export default {
           nama_lengkap: this.form.namaLengkap,
           nomor_rekening: this.form.nomorRekening,
           jenis_identitas: Number(this.form.tandaPengenal),
+          no_hp: this.form.phone,
+          alamat_email: this.form.email,
         };
 
         console.log("Request data:", requestData);
@@ -127,12 +130,13 @@ export default {
         if (response.status === 201 || response.status === 200) {
           const fileStore = useFileStore();
           console.log("Data berhasil dikirim:", response.data);
+          this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
           fileStore.setFormPengkinianData(this.form);
           fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setUuid(response.data.uuid);
           fileStore.setNoHP(this.requestData.no_hp);
           window.scrollTo(0, 0);
-          this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
+
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
