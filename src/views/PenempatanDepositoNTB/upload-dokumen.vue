@@ -88,6 +88,7 @@
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
 import NpwpModal from "@/components/ModalNPWP.vue";
+import api from "@/API/api";
 
 export default {
   props: {

@@ -48,6 +48,7 @@
 <script>
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
+import api from "@/API/api";
 
 export default {
   props: {

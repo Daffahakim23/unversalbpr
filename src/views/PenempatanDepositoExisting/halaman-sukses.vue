@@ -36,7 +36,7 @@
           <img src="@/assets/zip-icon.svg" alt="PDF Icon" width="32">
         </div>
         <div class="">
-          <p class="text-sm text-left font-semibold text-primary">Formulir Pengajuan Pembukaan Rekening Tabungan - {{
+          <p class="text-sm text-left font-semibold text-primary">Formulir Pengajuan Pembukaan Deposito - {{
             namaLengkap }}.zip</p>
         </div>
         <div class="">
