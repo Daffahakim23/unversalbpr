@@ -12,7 +12,7 @@
       :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
       :error="phoneError" @blur="handlePhoneBlur" />
 
-    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text"
+    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
 

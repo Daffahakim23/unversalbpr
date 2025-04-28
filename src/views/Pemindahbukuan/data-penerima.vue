@@ -186,8 +186,6 @@ export default {
     confirmMethod(methodId) {
       console.log("Metode yang dipilih:", methodId);
       this.isModalTransferOpen = false;
-
-      // Temukan metode transfer yang dipilih
       const selectedMethod = this.transferMethods.find(
         (method) => method.id === methodId
       );

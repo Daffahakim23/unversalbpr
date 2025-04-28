@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import api from "@/API/api"
 import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
@@ -95,18 +96,18 @@ export default {
       }
     },
 
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
+    async fetchData() {
+      try {
+        const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
+        console.log("Response data:", response.data);
+        const data = Array.isArray(response.data) ? response.data[0] : response.data;
+        if (data) {
+          Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
 
     async handleSubmit() {
       try {
@@ -127,15 +128,15 @@ export default {
         console.log("Response code:", response.status);
         console.log("Response data:", response.data);
 
-        if (response.status === 201 || response.status === 200) {
+        if (response.status === 200) {
           const fileStore = useFileStore();
-          console.log("Data berhasil dikirim:", response.data);
-          this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
           fileStore.setFormPengkinianData(this.form);
           fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setUuid(response.data.uuid);
           fileStore.setNoHP(this.requestData.no_hp);
           window.scrollTo(0, 0);
+          console.log("Data berhasil dikirim:", response.data);
+          this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
 
         } else {
           console.error("Gagal mengirim data, status:", response.status);
@@ -155,7 +156,7 @@ export default {
   },
 
   created() {
-    // this.fetchData();
+    this.fetchData();
   },
 };
 </script>

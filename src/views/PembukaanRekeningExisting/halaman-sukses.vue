@@ -5,7 +5,7 @@
     </div>
 
     <h2 class="text-xl sm:text-xl md:text-2xl font-semibold text-center mb-2">
-      Terima Kasih, Mira Setiawan!
+      Terima Kasih, {{ namaLengkap }}!
     </h2>
     <p class="text-sm sm:text-md md:text-base text-neutral-900 text-center mb-4">
       Aplikasi Pembukaan Rekening Tabungan Anda Telah Berhasil Dikirimkan
@@ -36,7 +36,8 @@
           <img src="@/assets/zip-icon.svg" alt="PDF Icon" width="32">
         </div>
         <div class="">
-          <p class="text-sm text-left font-semibold text-primary">{{ downloadFileName }}</p>
+          <p class="text-sm text-left font-semibold text-primary">Formulir Pengajuan Pembukaan Rekening Tabungan - {{
+            namaLengkap }}.zip</p>
         </div>
         <div class="">
           <img src="@/assets/download-icon.svg" alt="PDF Icon">
@@ -95,16 +96,26 @@
 import api from "@/API/api";
 import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
+import { computed } from "vue";
 
 export default {
   data() {
     return {
       // ...
-      downloadFileName: 'Formulir Pengajuan Pembukaan Rekening Tabungan - MIRA SETIAWAN.pdf', // Nama default
+      downloadFileName: 'Formulir Pengajuan Pembukaan Rekening Tabungan - MIRA SETIAWAN.pdf',
     };
   },
   components: {
     ButtonComponent,
+  },
+  setup() {
+    const fileStore = useFileStore();
+    const namaLengkap = computed(() => fileStore.nama_lengkap || "Nama Account");
+
+    return {
+      namaLengkap
+    };
+
   },
   computed: {
     email() {
@@ -124,6 +135,7 @@ export default {
       const fileStore = useFileStore();
       const uuid = fileStore.uuid;
       const envelopeId = fileStore.envelope_id;
+      const namaLengkap = fileStore.nama_lengkap;
 
       try {
         const response = await api.get(`/download-signed-pdf?uuid=${uuid}&form=Existing`, {
@@ -134,13 +146,13 @@ export default {
         console.log("Respons API:", response);
         console.log("Data Blob:", new Blob([response.data]));
 
-        const blob = new Blob([response.data]);
+        const blob = new Blob([response.data], { type: 'application/zip' });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
 
         const contentDisposition = response.headers['content-disposition'];
-        let filename = 'Formulir Pengajuan Pembukaan Rekening Tabungan - MIRA SETIAWAN.pdf';
+        let filename = `Formulir Pengajuan Pembukaan Rekening Tabungan - ${namaLengkap}.zip`;
 
         if (contentDisposition) {
           const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -148,14 +160,10 @@ export default {
           if (matches != null && matches[1]) {
             filename = matches[1].replace(/['"]/g, '');
             this.downloadButtonText = filename;
-          } else {
-            this.downloadButtonText = filename;
           }
-        } else {
-          this.downloadButtonText = filename;
         }
-
         link.setAttribute("download", filename);
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

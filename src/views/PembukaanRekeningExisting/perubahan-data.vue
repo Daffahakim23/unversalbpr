@@ -263,7 +263,7 @@ export default {
           rt: this.form.rt,
           rw: this.form.rw,
           provinsi: this.form.provinsi,
-          kota_kabupaten: this.form.kota,
+          kota_kabupaten: this.form.kabupaten,
           kecamatan: this.form.kecamatan,
           desa_kelurahan: this.form.kelurahan,
           kode_pos: Number(this.form.kodePos),

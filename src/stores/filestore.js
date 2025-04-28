@@ -5,6 +5,7 @@ export const useFileStore = defineStore("fileStore", {
     sign_url: null,
     uuid: null,
     alamat_email: null,
+    nama_lengkap: null,
     no_hp: null,
     uploadedFiles: {
       ktp: null,
@@ -51,6 +52,9 @@ export const useFileStore = defineStore("fileStore", {
     },
     setEmail(value) {
       this.alamat_email = value;
+    },
+    setNamaLengkap(value) {
+      this.nama_lengkap = value;
     },
     setEnvelopeId(value) {
       this.envelope_id = value;

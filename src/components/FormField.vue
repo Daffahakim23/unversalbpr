@@ -4,10 +4,19 @@
       {{ label }}
     </label>
     <div class="relative mt-2">
-      <template v-if="!isDropdown && type !== 'phone'">
+      <!-- <template v-if="!isDropdown && type !== 'phone'">
         <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue"
           @input="$emit('update:modelValue', $event.target.value)" @focus="$emit('focus', $event)"
           @blur="$emit('blur', $event)" :readonly="readonly" :class="{
+            'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
+            'border-red-500 focus:ring-red-400 focus:border-red-400': error,
+            'border-neutral-200 focus:ring-1': !readonly && !error
+          }" class="w-full h-10 p-2 border rounded-md focus:outline-none" :required="required" />
+      </template> -->
+
+      <template v-if="!isDropdown && type !== 'phone'">
+        <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue" @input="handleTextInput"
+          @focus="$emit('focus', $event)" @blur="$emit('blur', $event)" :readonly="readonly" :class="{
             'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
             'border-red-500 focus:ring-red-400 focus:border-red-400': error,
             'border-neutral-200 focus:ring-1': !readonly && !error
@@ -128,7 +137,12 @@ export default {
     hasSearch: { type: Boolean, default: false },
     options: { type: Array, default: () => [] },
     error: { type: Boolean, default: false },
-    selectedCountryCode: String, // Kode negara default
+    variant: {
+      type: String,
+      default: null, // Bisa 'alpha' atau 'numeric'
+      validator: (value) => value === null || value === 'alpha' || value === 'numeric',
+    },
+    selectedCountryCode: String,
   },
   emits: ["update:modelValue", "update:selectedCountryCode", "focus", "blur"],
   data() {
@@ -191,6 +205,15 @@ export default {
   },
 
   methods: {
+    handleTextInput(event) {
+      let value = event.target.value;
+      if (this.variant === 'alpha') {
+        value = value.replace(/[^a-zA-Z\s]/g, ''); // Hanya huruf dan spasi
+      } else if (this.variant === 'numeric') {
+        value = value.replace(/\D/g, ''); // Hanya angka
+      }
+      this.$emit('update:modelValue', value);
+    },
     toggleDropdown() {
       this.isOpen = !this.isOpen;
       this.searchQuery = "";

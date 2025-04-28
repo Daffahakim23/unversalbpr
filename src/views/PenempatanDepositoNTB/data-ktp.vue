@@ -54,12 +54,16 @@
 
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
+      <!-- <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent> -->
+      <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+      </ButtonComponent>
     </div>
   </form>
 </template>
 
 <script>
+import axios from "axios";
 import api from "@/API/api";
 import FormField from "@/components/FormField.vue";
 import ButtonComponent from "@/components/button.vue";
@@ -79,6 +83,7 @@ export default {
       jenisKelaminOptions,
       agamaOptions,
       kewarganegaraanOptions,
+      isSubmitting: false,
       masaAktifKTPOptions: getMasaAktifKTPOptions(),
       fileStore: useFileStore(),
       provinsiOptions: [],
@@ -120,6 +125,9 @@ export default {
           return false;
         }
         if (key === "kewarganegaraanLainnya" && this.form.kewarganegaraan) {
+          return false;
+        }
+        if (key === "ibuKandung" && this.form.namaIbuKandung) {
           return false;
         }
         return !value;
@@ -171,12 +179,12 @@ export default {
             if (isMatching && initiallySelectedValue === null) {
               initiallySelectedValue = k.kabupaten;
             }
-
             return {
               label: normalizedKabupatenFromApi,
               value: k.kabupaten,
             };
           });
+
           if (initiallySelectedValue) {
             this.form.kabupaten = initiallySelectedValue;
           } else if (this.kabupatenOptions.length > 0) {
@@ -238,6 +246,7 @@ export default {
         const message = this.fileStore.formKTP.message;
         const [day, month, year] = (message.tanggal_lahir || "").split("-");
         const formattedTanggalLahir = year && month && day ? `${year}-${month}-${day}` : "";
+
         const tanggalBerlakuSampai = message.berlaku_sampai;
         this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
 
@@ -253,7 +262,8 @@ export default {
           rt: message.rt || "",
           rw: message.rw || "",
           provinsi: message.provinsi || "",
-          kabupaten: this.normalizeKabupaten(message.kota || ""),
+          // kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          kabupaten: message.kota || "",
           kecamatan: message.kecamatan || "",
           kelurahan: message.desa_kelurahan || "",
           kodePos: Number(message.kode_pos) || "",
@@ -265,6 +275,7 @@ export default {
         console.log("Form filled:", this.form);
       }
     },
+
     goBack() {
       this.$router.push({
         name: "PreviewScreenPenempatanDepositoNTB",
@@ -275,6 +286,10 @@ export default {
       });
     },
     async handleSubmit() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         let formattedDate = this.form.tanggalLahir;
         if (/^\d{2}-\d{2}-\d{4}$/.test(formattedDate)) {
@@ -318,10 +333,6 @@ export default {
           is_ekstrak_ktp_ocr: true,
           nama_gadis_ibu_kandung: this.form.namaIbuKandung
         };
-
-        console.log("Request data:", requestData);
-
-        console.log("Formatted Request Data:", JSON.stringify(requestData, null, 2));
         const response = await api.post("/save-ktp-deposito", requestData, {
           headers: { "Content-Type": "application/json" },
         });
@@ -329,6 +340,7 @@ export default {
         if (response.status === 200 || response.status === 201) {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormDataKTP(this.form);
+          this.fileStore.setNamaLengkap(requestData.nama_lengkap);
           this.fileStore.isKtpUploaded = true;
           this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
           window.scrollTo(0, 0);
@@ -338,16 +350,18 @@ export default {
         }
       } catch (error) {
         console.error("Error submitting data:", error);
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },
   mounted() {
     this.$emit("update-progress", 60);
+    this.fetchData();
     this.fetchProvinsi();
     this.fetchKabupaten();
     this.fetchKecamatan();
     this.fetchKelurahan();
-    this.fetchData();
   },
 };
 </script>

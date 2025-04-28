@@ -179,20 +179,15 @@ export default {
             if (isMatching && initiallySelectedValue === null) {
               initiallySelectedValue = k.kabupaten;
             }
-
             return {
               label: normalizedKabupatenFromApi,
               value: k.kabupaten,
-              // Anda bisa menambahkan properti 'selected' jika komponen dropdown memerlukannya
-              // selected: isMatching,
             };
           });
 
-          // Set nilai form.kabupaten setelah semua opsi terbentuk
           if (initiallySelectedValue) {
             this.form.kabupaten = initiallySelectedValue;
           } else if (this.kabupatenOptions.length > 0) {
-            // Atur ke nilai pertama jika tidak ada yang cocok (opsional)
             this.form.kabupaten = this.kabupatenOptions[0].value;
           }
 
@@ -338,10 +333,6 @@ export default {
           is_ekstrak_ktp_ocr: true,
           nama_gadis_ibu_kandung: this.form.namaIbuKandung
         };
-
-        console.log("Request data:", requestData);
-
-        console.log("Formatted Request Data:", JSON.stringify(requestData, null, 2));
         const response = await api.post("/save-ktp", requestData, {
           headers: { "Content-Type": "application/json" },
         });
@@ -349,6 +340,7 @@ export default {
         if (response.status === 200 || response.status === 201) {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormDataKTP(this.form);
+          this.fileStore.setNamaLengkap(requestData.nama_lengkap);
           this.fileStore.isKtpUploaded = true;
           this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
           window.scrollTo(0, 0);

@@ -233,14 +233,25 @@ export default {
       const data = fileStore.formKTP || {};
       const processedData = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key]) {
+        if (data.hasOwnProperty(key)) {
           let value = data[key];
-
-          if (key === "agama") {
-            value = this.getLabelFromOptions(value, agamaOptions);
+          if (key === "jenisKelamin") {
+            value = this.getLabelFromOptions(value, [
+              { value: true, label: "Laki-laki" },
+              { value: false, label: "Perempuan" },
+            ]);
+          }
+          if (value === null || value === undefined || value === "") {
+            continue; // Lewati iterasi ini jika value tidak ada
           }
           if (key === "kewarganegaraan") {
             value = this.getLabelFromOptions(value, kewarganegaraanOptions);
+          }
+          if (key === "masaAktifKtp") {
+            value = this.getLabelFromOptions(value, masaAktifKTPOptions);
+          }
+          if (key === "agama") {
+            value = this.getLabelFromOptions(value, agamaOptions);
           }
           if (key === "statusPerkawinan") {
             value = this.getLabelFromOptions(value, statusPerkawinanOptions);
@@ -658,8 +669,10 @@ export default {
       }).format(amount);
     },
     getLabelFromOptions(value, options) {
-      const option = options.find((opt) => opt.value === value);
-      return option ? option.label : value;
+      if (!options || options.length === 0) return value;
+
+      const found = options.find((option) => option.value === value);
+      return found ? found.label : value;
     },
     goBack() {
       this.$router.push({ path: "/dashboard/dataPekerjaanPenempatanDepositoNTB" });

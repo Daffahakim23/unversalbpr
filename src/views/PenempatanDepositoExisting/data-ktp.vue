@@ -54,7 +54,9 @@
 
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
+      <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+      </ButtonComponent>
     </div>
   </form>
 </template>
@@ -80,6 +82,7 @@ export default {
       jenisKelaminOptions,
       agamaOptions,
       kewarganegaraanOptions,
+      isSubmitting: false,
       masaAktifKTPOptions: getMasaAktifKTPOptions(),
       fileStore: useFileStore(),
       provinsiOptions: [],
@@ -278,6 +281,10 @@ export default {
       });
     },
     async handleSubmit() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         let formattedDate = this.form.tanggalLahir;
         if (/^\d{2}-\d{2}-\d{4}$/.test(formattedDate)) {
@@ -331,6 +338,7 @@ export default {
         if (response.status === 200 || response.status === 201) {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormDataKTP(this.form);
+          this.fileStore.setNamaLengkap(requestData.nama_lengkap);
           this.fileStore.isKtpUploaded = true;
           this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
           window.scrollTo(0, 0);
@@ -340,6 +348,8 @@ export default {
         }
       } catch (error) {
         console.error("Error submitting data:", error);
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },

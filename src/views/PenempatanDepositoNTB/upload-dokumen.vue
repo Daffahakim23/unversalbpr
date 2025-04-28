@@ -77,8 +77,8 @@
 
   <div class="flex justify-between mt-6">
     <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-    <ButtonComponent type="submit" :disabled="isButtonDisabled" @click="handleSubmit" @close="isModalOpen = false">
-      Lanjutkan
+    <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+      {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
     </ButtonComponent>
   </div>
   <NpwpModal :isOpen="showNpwpModal" @onYes="handleNpwpYes" @onNo="handleNpwpNo" @close="showNpwpModal = false" />
@@ -97,6 +97,7 @@ export default {
     return {
       pendingUpload: null,
       showNpwpModal: false,
+      isSubmitting: false,
     };
   },
   emits: ["update-progress"],
@@ -165,17 +166,39 @@ export default {
       });
     },
 
-    handleSubmit() {
-      if (
-        this.fileStore.isKtpUploaded &&
-        this.fileStore.isNpwpUploaded &&
-        this.fileStore.isFotoDiriUploaded &&
-        this.fileStore.isTandaTanganUploaded
-      ) {
-        console.log("Semua file telah diunggah!");
-        this.$router.push({ path: "/dashboard/dataPribadiPenempatanDepositoNTB" });
-      } else {
+    async handleSubmit() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
+      const fileStore = useFileStore();
+      const uuid = fileStore.uuid;
+
+      if (!fileStore.isKtpUploaded || !fileStore.isFotoDiriUploaded || !fileStore.isNpwpUploaded || !fileStore.isTandaTanganUploaded) {
         alert("Harap unggah semua dokumen terlebih dahulu!");
+        return;
+      }
+
+      if (!uuid) {
+        alert("UUID tidak tersedia.");
+        return
+      }
+
+      try {
+        const response = await api.get(`/ekyc-fraud-deposito?uuid=${uuid}`);
+
+        if (response.status === 200) {
+          this.$router.push({ path: "/dashboard/dataPribadiPembukaanRekeningNTB" });
+        } else if (response.status === 400) {
+          alert("Isi tanda tangan digital dahulu.");
+        } else {
+          alert(`Terjadi kesalahan: ${response.status} - ${response.statusText}. Silakan coba lagi.`);
+        }
+      } catch (error) {
+        console.error("Error checking envelope:", error);
+        alert("Terjadi kesalahan saat menghubungi server. Silakan coba lagi.");
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },
