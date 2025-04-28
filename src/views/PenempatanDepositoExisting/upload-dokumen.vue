@@ -39,8 +39,8 @@
   </div>
   <div class="flex justify-between mt-6">
     <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-    <ButtonComponent type="submit" :disabled="isButtonDisabled" @click="handleSubmit" @close="isModalOpen = false">
-      Lanjutkan
+    <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+      {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
     </ButtonComponent>
   </div>
 </template>
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       pendingUpload: null,
+      isSubmitting: false,
     };
   },
   emits: ["update-progress"],

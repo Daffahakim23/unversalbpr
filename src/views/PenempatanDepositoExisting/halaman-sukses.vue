@@ -5,7 +5,7 @@
     </div>
 
     <h2 class="text-xl sm:text-xl md:text-2xl font-semibold text-center mb-2">
-      Terima Kasih, Mira Setiawan!
+      Terima Kasih, {{ namaLengkap }}!
     </h2>
     <p class="text-sm sm:text-md md:text-base text-neutral-900 text-center mb-4">
       Aplikasi Pembukaan Deposito Anda Telah Berhasil Dikirimkan
@@ -96,6 +96,7 @@
 import api from "@/API/api";
 import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
+import { computed } from "vue";
 
 export default {
   data() {
@@ -106,6 +107,15 @@ export default {
   },
   components: {
     ButtonComponent,
+  },
+  setup() {
+    const fileStore = useFileStore();
+    const namaLengkap = computed(() => fileStore.nama_lengkap || "Nama Account");
+
+    return {
+      namaLengkap
+    };
+
   },
   computed: {
     email() {

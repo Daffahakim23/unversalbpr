@@ -172,16 +172,11 @@ export default {
             return {
               label: normalizedKabupatenFromApi,
               value: k.kabupaten,
-              // Anda bisa menambahkan properti 'selected' jika komponen dropdown memerlukannya
-              // selected: isMatching,
             };
           });
-
-          // Set nilai form.kabupaten setelah semua opsi terbentuk
           if (initiallySelectedValue) {
             this.form.kabupaten = initiallySelectedValue;
           } else if (this.kabupatenOptions.length > 0) {
-            // Atur ke nilai pertama jika tidak ada yang cocok (opsional)
             this.form.kabupaten = this.kabupatenOptions[0].value;
           }
 
@@ -256,7 +251,8 @@ export default {
           rt: message.rt || "",
           rw: message.rw || "",
           provinsi: message.provinsi || "",
-          kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          // kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          kabupaten: message.kota || "",
           kecamatan: message.kecamatan || "",
           kelurahan: message.desa_kelurahan || "",
           kodePos: Number(message.kode_pos) || "",
@@ -332,6 +328,7 @@ export default {
         if (response.status === 200 || response.status === 201) {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormDataKTP(this.form);
+          this.fileStore.setNamaLengkap(requestData.nama_lengkap);
           this.fileStore.isKtpUploaded = true;
           this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
           window.scrollTo(0, 0);

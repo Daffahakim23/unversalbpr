@@ -988,14 +988,14 @@ export default {
     <FormField label="Nama Lengkap Kontak Darurat*" id="namaLengkapKD" :isDropdown="false" v-model="form.namaLengkapKD"
       placeholder="Masukkan Nama Lengkap Kontak Darurat" />
 
-    <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD" :options="hubunganPemohonKDOptions"
-      :isDropdown="true" placeholder="Pilih Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
+    <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD"
+      placeholder="Masukkan Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
       name="hubunganPemohonKD" />
 
-    <div v-if="form.hubunganPemohonKD === 'lainnya'" class="">
+    <!-- <div v-if="form.hubunganPemohonKD === 'lainnya'" class="">
       <FormField label="Hubungan dengan Pemohon Lainnya *" id="hubunganPemohonKDLainnya" type="text"
         v-model="form.hubunganPemohonKDLainnya" placeholder="Masukkan Hubungan Pemohon Lainnya" />
-    </div>
+    </div> -->
 
     <FormField label="Alamat Terkini Kontak Darurat*" id="alamatKD" :isDropdown="false" v-model="form.alamatKD"
       placeholder="Masukkan Alamat Kontak Darurat" />

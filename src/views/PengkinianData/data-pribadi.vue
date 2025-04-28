@@ -50,7 +50,9 @@
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
+      <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+      </ButtonComponent>
     </div>
   </form>
 </template>
@@ -74,6 +76,7 @@ export default {
       hobiOptions,
       alamatSesuaiEktpOptions,
       trueFalseOptions,
+      isSubmitting: false,
       fileStore: useFileStore(),
       kantorCabangOptions: [],
       kantorCabangAlamat: {},
@@ -140,7 +143,7 @@ export default {
   methods: {
     async fetchProvinsi() {
       try {
-        const response = await axios.get("http://10.14.52.233:8001/provinsi");
+        const response = await api.get("/provinsi");
         console.log("Data provinsi diterima:", response.data); // Debugging
 
         if (response.data && response.data.provinsi) {
@@ -164,7 +167,7 @@ export default {
       if (!this.form.provinsi) return;
 
       try {
-        const response = await axios.get(`http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}`);
+        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
         console.log("Data kabupaten diterima:", response.data); // Debugging
 
         if (response.data && response.data.kabupaten) {
@@ -186,8 +189,8 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
         console.log("Data kecamatan diterima:", response.data); // Debugging
 
@@ -210,8 +213,8 @@ export default {
       if (!this.form.provinsi || !this.form.kabupaten || !this.form.kecamatan) return;
 
       try {
-        const response = await axios.get(
-          `http://10.14.52.233:8001/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
         );
         console.log("Data kelurahan diterima:", response.data); // Debugging
 
@@ -262,6 +265,10 @@ export default {
       this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
     },
     async handleSubmit() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         const uuid = this.fileStore.uuid || "";
 
@@ -311,6 +318,8 @@ export default {
           console.error("Error response data:", error.response.data);
         }
         console.error("Error saat mengirim data:", error);
+      } finally {
+        this.isSubmitting = false;
       }
     }
   },

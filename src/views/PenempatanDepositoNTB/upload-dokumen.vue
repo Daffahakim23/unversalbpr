@@ -189,7 +189,7 @@ export default {
         const response = await api.get(`/ekyc-fraud-deposito?uuid=${uuid}`);
 
         if (response.status === 200) {
-          this.$router.push({ path: "/dashboard/dataPribadiPembukaanRekeningNTB" });
+          this.$router.push({ path: "/dashboard/dataPribadiPenempatanDepositoNTB" });
         } else if (response.status === 400) {
           alert("Isi tanda tangan digital dahulu.");
         } else {

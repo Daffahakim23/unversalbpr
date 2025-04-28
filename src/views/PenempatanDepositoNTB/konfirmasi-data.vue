@@ -208,7 +208,7 @@ import { alamatSesuaiEktpOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
 // import ModalOTP from "@/components/ModalOTP.vue";
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
-import { kewarganegaraanOptions, metodePencairanOptions, pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, hubunganNasabahOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, persetujuanOptions, produkOptions, sumberDataNasabahOptions } from '@/data/option.js';
+import { kewarganegaraanOptions, metodePencairanOptions, pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, hubunganNasabahOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, persetujuanOptions, produkOptions, sumberDataNasabahOptions, masaAktifKTPOptions } from '@/data/option.js';
 import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
 
 
@@ -538,6 +538,7 @@ export default {
       form: new FormModelKonfirmasiData(),
       trueFalseOptions,
       RadioButtonChoose,
+      masaAktifKTPOptions,
       agreement1: false,
       agreement2: false,
       isSubmitting: false,

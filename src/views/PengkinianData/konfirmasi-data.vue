@@ -113,22 +113,26 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
-      <div class="space-y-3 text-gray-700 text-sm">
+      <div class="space-y-3 text-neutral-900 text-sm">
         <p>
-          Dengan ini, saya/kami menyatakan bahwa: Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening pada
-          <span class="font-semibold">PT. BPR Universal</span> (selanjutnya disebut "Bank") ini adalah data yang
-          sebenar-benarnya.
+          Dengan ini, saya/kami menyatakan bahwa:
         </p>
-        <ul class="list-decimal list-inside text-neutral-700 space-y-2">
+        <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
+          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT. BPR Universal (selanjutnya
+            disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
           <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
             ini.</li>
           <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik Produk Bank yang akan saya/kami
-            manfaatkan.</li>
+            manfaatkan dan saya telah mengerti serta memahami segala konsekuensi pemanfaatan Produk Bank, termasuk
+            manfaat, risiko, dan biaya-biaya yang melekat pada produk Bank tersebut.</li>
           <li>Saya/kami telah menerima, membaca, mengerti, dan menyetujui isi Ketentuan Umum dan Persyaratan Pembukaan
-            Rekening.</li>
-          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening.
-            <ul class="list-disc list-inside ml-2 mt-2 space-y-1">
-              <li>Saya/kami tidak mematuhi ketentuan <span class="italic">Prinsip Mengenal Nasabah (Knowing Your
+            Rekening baru. Untuk itu dengan ini saya/kami menyatakan tunduk dan terikat dengan ketentuan-ketentuan
+            tersebut, serta ketentuan lain terkait produk/fasilitas yang saya/kami pilih yang berlaku di Bank beserta
+            segala bentuk perubahannya yang akan diberitahukan dengan sarana yang ditetapkan Bank.</li>
+          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening,
+            apabila menurut pertimbangan Bank :
+            <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
+              <li>Saya/kami tidak mematuhi ketentuan Prinsip Mengenal Nasabah <span class="italic">(Knowing Your
                   Customer)</span>.</li>
               <li>Data yang saya/kami berikan kepada Bank tidak benar atau diragukan kebenarannya.</li>
               <li>Saya/kami menyalahgunakan rekening.</li>
@@ -140,14 +144,14 @@
 
     <!-- Checkbox Persetujuan -->
     <div class="flex items-center">
-      <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />
+      <input type="checkbox" id="agreement" v-model="agreement1" class="mr-2 cursor-pointer" />
       <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
         Saya setuju dengan pernyataan dan persetujuan di atas
       </label>
     </div>
 
     <div class="flex items-center mt-4">
-      <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer items-baseline" />
+      <input type="checkbox" id="agreement" v-model="agreement2" class="mr-2 cursor-pointer items-baseline" />
       <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
         Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
       </label>
@@ -160,9 +164,10 @@
       </ButtonComponent>
     </div>
   </div>
-  <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
-    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" />
-</template>s
+  <!-- <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
+    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" /> -->
+  <ModalKonfirmasi :isOpen="isModalOpen" @close="closeModalKonfirmasi" @yes="handleKonfirmasi" />
+</template>
 
 <script>
 import { computed } from 'vue';
@@ -174,19 +179,21 @@ import { alamatSesuaiEktpOptions, jenisIdentitasBOOptions, jenisKelaminOptions, 
 import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalOTP from "@/components/ModalOTP.vue";
 import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, masaAktifKTPOptions, hubunganNasabahOptions } from '@/data/option.js';
-
+import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
+import { fetchBranches } from '@/services/service.js';
 
 export default {
   emits: ['updateProgress'],
   components: {
     ButtonComponent,
     RadioButtonChoose,
-    ModalOTP,
+    // ModalOTP,
+    ModalKonfirmasi,
   },
   name: "DataPribadi",
   computed: {
     isButtonDisabled() {
-      return !this.agreement; // Tombol dinonaktifkan jika agreement belum dicentang
+      return !this.agreement1 || !this.agreement2;
     },
     hasBeneficialOwner() {
       return this.formBeneficialOwner && Object.keys(this.formBeneficialOwner).length > 0;
@@ -196,19 +203,28 @@ export default {
       const data = fileStore.formKTP || {};
       const processedData = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key]) {
+        if (data.hasOwnProperty(key)) {
           let value = data[key];
+          if (key === "jenisKelamin") {
+            value = this.getLabelFromOptions(value, [
+              { value: true, label: "Laki-laki" },
+              { value: false, label: "Perempuan" },
+            ]);
+          }
+          if (value === null || value === undefined || value === "") {
+            continue;
+          }
+          if (key === "kewarganegaraan") {
+            value = this.getLabelFromOptions(value, kewarganegaraanOptions);
+          }
+          if (key === "masaAktifKtp") {
+            value = this.getLabelFromOptions(value, masaAktifKTPOptions);
+          }
           if (key === "agama") {
             value = this.getLabelFromOptions(value, agamaOptions);
           }
           if (key === "statusPerkawinan") {
             value = this.getLabelFromOptions(value, statusPerkawinanOptions);
-          }
-          if (key === "masaAktifKtp") {
-            value = this.getLabelFromOptions(value, masaAktifKTPOptions);
-          }
-          if (key === "kewarganegaraan") {
-            value = this.getLabelFromOptions(value, kewarganegaraanOptions);
           }
           processedData[key] = value;
         }
@@ -347,9 +363,13 @@ export default {
       form: new FormModelKonfirmasiData(),
       trueFalseOptions,
       RadioButtonChoose,
-      agreement: false,
+      agreement1: false,
+      agreement2: false,
       isSubmitting: false,
-      isModalOTPOpen: false,
+      // isModalOTPOpen: false,
+      isModalOpen: false,
+      kantorCabangOptions: [],
+      kantorCabangAlamat: {},
       features: [
         {
           label: 'Pilih Metode Konfirmasi OTP',
@@ -366,9 +386,20 @@ export default {
   },
 
   methods: {
+    async fetchBranches() {
+      try {
+        const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();
+        this.kantorCabangOptions = kantorCabangOptions;
+        this.kantorCabangAlamat = kantorCabangAlamat;
+      } catch (error) {
+        console.error("Gagal mengambil data kantor cabang:", error);
+      }
+    },
     getLabelFromOptions(value, options) {
-      const option = options.find((opt) => opt.value === value);
-      return option ? option.label : value;
+      if (!options || options.length === 0) return value;
+
+      const found = options.find((option) => option.value === value);
+      return found ? found.label : value;
     },
     goBack() {
       this.$router.push({ path: "/dashboard/dataPekerjaanPengkinianData" });
@@ -480,51 +511,57 @@ export default {
       };
       return icons[key] || "/src/assets/default.svg";
     },
-    async handleSubmit() {
-      if (!this.agreement) {
+    handleSubmit(event) {
+      event.preventDefault();
+      if (!this.agreement1) {
         alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
         return;
       }
+      this.isModalOpen = true;
+    },
+    closeModalKonfirmasi() {
+      this.isModalOpen = false;
+    },
+    handleKonfirmasi(confirm) {
+      this.isModalOpen = false;
+
+      if (confirm) {
+        this.lanjutkanPengiriman();
+      } else {
+        console.log("Pengiriman data dibatalkan oleh pengguna.");
+      }
+    },
+
+    async lanjutkanPengiriman() {
+      if (this.isSubmitting) {
+        return;
+      }
       const fileStore = useFileStore();
+      this.isSubmitting = true;
+
       try {
         this.requestData = {
           uuid: fileStore.uuid || "",
           s_k_nasabah_bersedia_info_tambahan: true,
-          s_k_data_benar_dipertanggungjawabkan: true
-        };
-        console.log("Data sementara disimpan:", this.requestData);
-        this.isModalOTPOpen = true;
-      } catch (error) {
-        console.error("Error saat membuka modal:", error);
-      }
-    },
-    async handleOTPMethodSelected(method) {
-      console.log('Metode OTP yang dipilih:', method);
-
-      try {
-        if (!this.requestData) {
-          console.error("Error: Data request tidak ditemukan.");
-          this.isSubmitting = false;
-          return;
-        }
-
-        const finalData = {
-          ...this.requestData,
-          otp_wa: method === 'whatsapp', // Set otp_wa berdasarkan metode
+          s_k_data_benar_dipertanggungjawabkan: true,
         };
 
-        console.log("Mengirim data:", finalData);
+        console.log("Mengirim data:", this.requestData);
 
-        const response = await api.post("/buka-pengkinian-data", finalData, {
+        const response = await api.post("/buka-pengkinian-data", this.requestData, {
           headers: { "Content-Type": "application/json" },
         });
 
+        console.log("Respons dari API:", response);
+
         if (response.status === 200) {
-          this.$router.push({ path: "/dashboard/emailOTPPengkinianData" });
+          fileStore.setEnvelopeId(response.data.envelope_id);
+          fileStore.setSignUrl(response.data.sign_url);
+
+          this.$router.push({ path: "/dashboard/tandaTanganDigitalPengkinianData" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
-
       } catch (error) {
         if (error.response) {
           console.error("Error response data:", error.response.data);
@@ -532,13 +569,14 @@ export default {
         console.error("Error saat mengirim data:", error);
       } finally {
         this.isSubmitting = false;
-        this.isModalOTPOpen = false; // Tutup modal setelah request selesai
       }
     },
+
   },
   mounted() {
     console.log("Component mounted!");
     this.$emit("update-progress", 90);
+    this.fetchBranches();
   },
 };
 </script>

@@ -37,7 +37,6 @@ import ButtonComponent from "@/components/button.vue";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { tandaPengenalOptions } from "@/data/option.js";
-import RadioButton from "@/components/RadioButton.vue";
 
 export default {
   emits: ["update-progress"],
@@ -127,13 +126,14 @@ export default {
 
         console.log("Response code:", response.status);
         console.log("Response data:", response.data);
+        console.log(requestData);
 
         if (response.status === 200) {
           const fileStore = useFileStore();
           fileStore.setFormPengkinianData(this.form);
-          fileStore.setEmail(this.requestData.alamat_email);
+          fileStore.setEmail(requestData.alamat_email);
           fileStore.setUuid(response.data.uuid);
-          fileStore.setNoHP(this.requestData.no_hp);
+          fileStore.setNoHP(requestData.no_hp);
           window.scrollTo(0, 0);
           console.log("Data berhasil dikirim:", response.data);
           this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });

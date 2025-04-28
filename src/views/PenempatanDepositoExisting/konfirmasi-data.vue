@@ -196,7 +196,7 @@ import { trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
 // import ModalOTP from "@/components/ModalOTP.vue";
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
-import { metodePencairanOptions, tujuanOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, kewarganegaraanOptions } from '@/data/option.js';
+import { metodePencairanOptions, tujuanOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, kewarganegaraanOptions, masaAktifKTPOptions } from '@/data/option.js';
 import { fetchBranches } from '@/services/service.js';
 
 
@@ -359,6 +359,8 @@ export default {
       isSubmitting: false,
       // isModalOTPOpen: false,
       isModalOpen: false,
+      kantorCabangOptions: [],
+      kantorCabangAlamat: {},
       features: [
         {
           label: 'Pilih Metode Konfirmasi OTP',

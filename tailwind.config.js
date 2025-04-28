@@ -3,6 +3,13 @@ export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      borderWidth: {
+        '1': '1px', // Tambahkan ini
+        '2': '2px',
+        '3': '3px',
+        '4': '4px',
+        '8': '8px',
+      },
       colors: {
         // neutral
         "neutral-white": "#FFFFFF",
