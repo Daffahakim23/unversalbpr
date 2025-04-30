@@ -5,7 +5,7 @@
         <div>
           <button @click="isModalError = true" class="flex items-center text-neutral-900 pl-2">
             <img src="@/assets/home-icon.svg" alt="Logo" class="h-10 mr-2" />
-            <p class="text-base font-semibold text-left">{{ featureTitle }}</p>
+            <p class="text-sm sm:text-md md:text-md font-semibold text-left">{{ featureTitle }}</p>
           </button>
         </div>
 
@@ -35,7 +35,7 @@
                 <div v-if="isCenterTitle" class="flex justify-center w-full">
                   <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-center">{{ pageTitle }}</h2>
                 </div>
-                <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-left" v-if="!isCenterTitle">
+                <h2 class="text-lg sm:text-xl md:text-xl font-semibold text-primary text-left" v-if="!isCenterTitle">
                   {{ pageTitle }}
                 </h2>
               </div>

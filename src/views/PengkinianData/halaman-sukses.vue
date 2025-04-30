@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       // ...
-      downloadFileName: 'Formulir Pengajuan Pembukaan Rekening Tabungan - MIRA SETIAWAN.pdf',
+      downloadFileName: 'Formulir Pengajuan Pengkinian Data - MIRA SETIAWAN.pdf',
     };
   },
   components: {

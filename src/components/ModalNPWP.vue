@@ -2,23 +2,19 @@
     <transition name="fade">
         <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div
-                class="flex flex-col bg-white rounded-2xl shadow-lg dark:bg-gray-700 w-1/3 sm:w-1/3 max-w-lg p-8 relative animate-fadeIn">
+                class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
                 <div class="relative text-center items-baseline">
-                    <h3 class="text-xl font-semibold text-primary dark:text-white px-6">
+                    <h3 class="text-xl font-semibold text-primary dark:text-white items-center">
                         Apakah Anda sudah memiliki NPWP (Nomor Wajib Pajak)?
                     </h3>
-                    <!-- <button @click="$emit('close')" class="absolute right-0 top-1 text-2xl text-gray-700 dark:text-white 
-                        hover:text-red-500 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                        &times;
-                    </button> -->
-                    <button @click="$emit('close')" class="absolute right-0 top-0 p-1 rounded-lg hover:bg-gray-200">
+                    <button @click="$emit('close')" class="absolute -right-4 -top-4 rounded-lg hover:bg-gray-200">
                         <img src="@/assets/close-icon.svg" alt="Close" class="h-6 w-6">
                     </button>
                 </div>
-                <p class="text-neutral-800 dark:text-gray-300 text-center mt-2">
+                <p class="text-neutral-800 dark:text-gray-300 text-center mt-4">
                     Pilih salah satu status NPWP anda terkini.
                 </p>
-                <div class="flex flex-col justify-between mt-4 gap-2">
+                <div class="flex flex-col justify-between mt-2 gap-1">
                     <ButtonComponent @click="handleNpwpYes" class="flex-1 w-full">
                         Saya memiliki NPWP
                     </ButtonComponent>

@@ -140,6 +140,8 @@
   </form>
   <ReusableModal :isOpen="isModalOpen" rekeningData="rekeningData" @close="isModalOpen = false"
     :handleTransfer="handleTransferFromModal" />
+  <ReusableModal2 :isOpen="isModalOpen2" rekeningData="rekeningData" @close="isModalOpen2 = false"
+    :handleTransfer="handleTransferFromModal2" />
   <!-- <ModalTransfer :isOpen="isModalTransferOpen" :methods="filteredTransferMethods" :selectedMethod="selectedMethod"
     @update:selectedMethod="selectedMethod = $event" @confirm="handleSubmit" @close="isModalTransferOpen = false" /> -->
 </template>
@@ -153,7 +155,8 @@ import { useFileStore } from "@/stores/filestore";
 import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoGreenOptions, metodePencairanOptions, pembayaranBungaOptions, produkDepositoOptions, metodePenyetoranNTBOptions } from "@/data/option.js";
 import { FormModelPenempatanDeposito } from "@/models/formModel";
 import { hitungBungaUniversal, hitungBungaPeduli, hitungBungaDEBUTSanmere, hitungBungaDEBUTMatius, hitungBungaGreen, } from "@/data/bunga-deposito.js";
-import ReusableModal from "@/components/ModalRekeningDeposito.vue";
+import ReusableModal from "@/components/ModalRekeningOnUs.vue";
+import ReusableModal2 from "@/components/ModalRekeningOfUs.vue";
 import { toTerbilang } from "@/utils/toTerbilang.js";
 
 export default {
@@ -162,6 +165,7 @@ export default {
     RadioButtonChoose,
     ButtonComponent,
     ReusableModal,
+    ReusableModal2,
   },
   emits: ['updateProgress'],
   setup() {
@@ -187,6 +191,7 @@ export default {
       // isModalTransferOpen: false,
       selectedMethod: null,
       isModalOpen: false,
+      isModalOpen2: false,
       // transferMethods: [
       //   {
       //     id: "llg",
@@ -304,6 +309,15 @@ export default {
         };
       }
     },
+    isModalOpen2(newValue) {
+      if (!newValue) {
+        this.modalData = {
+          namaLengkap: "",
+          nomorRekening: "",
+          namaBank: "",
+        };
+      }
+    },
     "fileStore.formPenempatanDeposito": {
       handler() {
         this.fetchData();
@@ -333,6 +347,16 @@ export default {
         pembayaranBunga: "4",
         namaLengkap: data.namaLengkap,
         namaBank: data.namaBank,
+        nomorRekening: data.nomorRekening,
+      });
+      this.isModalOpen = false;
+    },
+    handleTransferFromModal2(data) {
+      this.fileStore.setFormPenempatanDeposito({
+        ...this.fileStore.formPenempatanDeposito,
+        pembayaranBunga: "2",
+        namaLengkap: data.namaLengkap,
+        namaBank: "BPR UNIVERSAL",
         nomorRekening: data.nomorRekening,
       });
       this.isModalOpen = false;
@@ -388,6 +412,9 @@ export default {
     },
     openModalUbah() {
       this.clearRecipientData();
+    },
+    openModal2() {
+      this.isModalOpen2 = true;
     },
     async fetchData() {
       try {

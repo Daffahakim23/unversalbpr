@@ -51,11 +51,46 @@
 
     <!-- Jika opsi value = 2 -->
     <div v-if="form.pembayaranBunga == 2" class="mt-4">
-      <FormField label="Nomor Rekening Tabungan Universal*" type="number" id="nomorRekening"
+      <!-- <FormField label="Nomor Rekening Tabungan Universal*" type="number" id="nomorRekening"
         v-model="form.nomorRekening" placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
 
       <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaLengkap" v-model="form.namaLengkap"
-        placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required />
+        placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required /> -->
+
+      <div class="mb-4">
+        <div v-if="form.namaLengkap && form.nomorRekening && form.namaBank">
+          <div class="flex flex-row items-center justify-between mb-2 w-full">
+            <h2 class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900">Detail Penerima</h2>
+            <button @click="openModalUbah"
+              class="flex items-center gap-2 text-primary-500 hover:text-primary-600 focus:outline-none">
+              <h2 class="text-xs sm:text-sm md:text-sm font-medium text-primary">Ubah</h2>
+              <img src="@/assets/icon-edit.svg" alt="Icon" class="w-5 h-5" />
+            </button>
+          </div>
+          <div class="border border-gray-300 rounded-md px-4 py-4">
+            <div class="flex justify-between items-center w-full">
+              <div class="flex flex-col gap-2">
+                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nama Lengkap</p>
+                <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.namaLengkap }}</p>
+              </div>
+              <div class="flex flex-col gap-2">
+                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nomor rekening</p>
+                <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.nomorRekening }}</p>
+              </div>
+              <div class="flex flex-col gap-2">
+                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nama Bank</p>
+                <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.namaBank }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="border border-dashed border-gray-300 rounded-md px-4 py-3 flex items-center justify-between">
+          <span class="text-gray-500">Belum Ada Penerima</span>
+          <ButtonComponent variant="outline" @click="openModal2" class="mb-1">
+            Masukkan
+          </ButtonComponent>
+        </div>
+      </div>
     </div>
 
     <!-- Jika opsi value = 3 -->
@@ -94,7 +129,7 @@
                 <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.nomorRekening }}</p>
               </div>
               <div class="flex flex-col gap-2">
-                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nomor rekening</p>
+                <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nama Bank</p>
                 <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.namaBank }}</p>
               </div>
             </div>
@@ -142,6 +177,8 @@
   </form>
   <ReusableModal :isOpen="isModalOpen" rekeningData="rekeningData" @close="isModalOpen = false"
     :handleTransfer="handleTransferFromModal" />
+  <ReusableModal2 :isOpen="isModalOpen2" rekeningData="rekeningData" @close="isModalOpen2 = false"
+    :handleTransfer="handleTransferFromModal2" />
   <!-- <ModalTransfer :isOpen="isModalTransferOpen" :methods="filteredTransferMethods" :selectedMethod="selectedMethod"
     @update:selectedMethod="selectedMethod = $event" @confirm="handleSubmit" @close="isModalTransferOpen = false" /> -->
 </template>
@@ -156,7 +193,8 @@ import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOpt
 import { FormModelPenempatanDeposito } from "@/models/formModel";
 import { hitungBungaUniversal, hitungBungaPeduli, hitungBungaDEBUTSanmere, hitungBungaDEBUTMatius, hitungBungaGreen, } from "@/data/bunga-deposito.js";
 // import ModalTransfer from "@/components/ModalTransfer.vue";
-import ReusableModal from "@/components/ModalRekeningDeposito.vue";
+import ReusableModal from "@/components/ModalRekeningOnUs.vue";
+import ReusableModal2 from "@/components/ModalRekeningOfUs.vue";
 import { toTerbilang } from "@/utils/toTerbilang.js";
 
 export default {
@@ -166,6 +204,7 @@ export default {
     ButtonComponent,
     // ModalTransfer,
     ReusableModal,
+    ReusableModal2,
   },
   emits: ['updateProgress'],
   setup() {
@@ -190,6 +229,7 @@ export default {
       // isModalTransferOpen: false,
       selectedMethod: null,
       isModalOpen: false,
+      isModalOpen2: false,
       // transferMethods: [
       //   {
       //     id: "llg",
@@ -325,6 +365,15 @@ export default {
         };
       }
     },
+    isModalOpen2(newValue) {
+      if (!newValue) {
+        this.modalData = {
+          namaLengkap: "",
+          nomorRekening: "",
+          namaBank: "",
+        };
+      }
+    },
     "fileStore.formPenempatanDeposito": {
       handler() {
         this.fetchData();
@@ -354,6 +403,16 @@ export default {
         pembayaranBunga: "4",
         namaLengkap: data.namaLengkap,
         namaBank: data.namaBank,
+        nomorRekening: data.nomorRekening,
+      });
+      this.isModalOpen = false;
+    },
+    handleTransferFromModal2(data) {
+      this.fileStore.setFormPenempatanDeposito({
+        ...this.fileStore.formPenempatanDeposito,
+        pembayaranBunga: "2",
+        namaLengkap: data.namaLengkap,
+        namaBank: "BPR UNIVERSAL",
         nomorRekening: data.nomorRekening,
       });
       this.isModalOpen = false;
@@ -405,6 +464,9 @@ export default {
     },
     openModal() {
       this.isModalOpen = true;
+    },
+    openModal2() {
+      this.isModalOpen2 = true;
     },
     openModalUbah() {
       this.clearRecipientData();

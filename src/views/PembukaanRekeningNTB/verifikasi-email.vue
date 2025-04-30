@@ -25,7 +25,7 @@
       </p>
 
       <ButtonComponent type="submit" class="mt-6" :disabled="isButtonDisabled">
-        Lanjutkan
+        Verifikasi
       </ButtonComponent>
       <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg"
         @close="isModalError = false" @buttonClick1="handleCloseModal" />

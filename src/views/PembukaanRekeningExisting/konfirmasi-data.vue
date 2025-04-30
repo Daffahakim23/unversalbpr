@@ -521,7 +521,6 @@ h2 {
   /* background-color: #f9f9f9; */
 }
 
-/* Gaya untuk label dan value */
 .form-label {
   font-weight: 400;
   font-size: 14px;
@@ -532,5 +531,17 @@ h2 {
   font-weight: 500;
   font-size: 16px;
   color: #1C1C17;
+}
+
+@media screen and (max-width: 768px) {
+  .form-value {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .form-value {
+    font-size: 14px;
+  }
 }
 </style>

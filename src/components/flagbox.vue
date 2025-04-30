@@ -36,7 +36,7 @@ export default {
         },
         closeIcon: {
             type: String,
-            default: closeIcon, // Default ikon close
+            default: closeIcon,
         },
     },
     data() {
@@ -76,7 +76,6 @@ export default {
     gap: 8px;
     font-weight: 300;
     position: relative;
-    /* Untuk memastikan tombol close tetap dalam box */
 }
 
 /* Ukuran ikon */
@@ -85,7 +84,6 @@ export default {
     height: 20px;
 }
 
-/* Tombol close di pojok kanan atas */
 .close-btn {
     background: none;
     border: none;

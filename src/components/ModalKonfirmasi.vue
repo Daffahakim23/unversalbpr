@@ -2,7 +2,7 @@
     <transition name="fade">
         <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div
-                class="w-full max-w-md flex flex-col bg-white rounded-3xl pt-8 pb-8 px-8 border border-neutral-200 relative">
+                class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
                 <button @click="$emit('close')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                     <img src="@/assets/close-icon.svg" alt="Close" class="h-6 w-6" />
                 </button>

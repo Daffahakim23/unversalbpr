@@ -42,12 +42,15 @@
       {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
     </ButtonComponent>
   </div>
+  <ModalError :isOpen="isModalError" :features="modalContent" icon="otp-error-illus.svg" @close="isModalError = false"
+    @buttonClick1="handleCloseModal" />
 </template>
 
 <script>
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
 import api from "@/API/api";
+import ModalError from "@/components/ModalError.vue";
 
 export default {
   props: {
@@ -57,11 +60,14 @@ export default {
     return {
       pendingUpload: null,
       isSubmitting: false,
+      isModalError: false,
+      modalContent: [],
     };
   },
   emits: ["update-progress"],
   components: {
     ButtonComponent,
+    ModalError,
   },
   setup() {
     const fileStore = useFileStore();
@@ -76,6 +82,18 @@ export default {
     },
   },
   methods: {
+    showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "otp-error-illus.svg") {
+      this.modalContent = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      this.isModalError = true;
+    },
     createFileInput(documentType) {
       const input = document.createElement("input");
       input.type = "file";
@@ -131,6 +149,7 @@ export default {
         }
       } catch (error) {
         console.error("Error checking envelope:", error);
+        this.showErrorModal("Terjadi Kesalahan", "Data KTP dan Foto Diri Anda tidak sesuai.", "Upload Ulang", "Hubungi Customer Care");
         alert("Terjadi kesalahan saat menghubungi server. Silakan coba lagi.");
       } finally {
         this.isSubmitting = false;

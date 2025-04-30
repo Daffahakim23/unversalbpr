@@ -492,7 +492,7 @@ h2 {
 
 /* Gaya untuk label dan value */
 .form-label {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   color: #7D7D78;
 }
@@ -501,5 +501,17 @@ h2 {
   font-weight: 500;
   font-size: 16px;
   color: #1C1C17;
+}
+
+@media screen and (max-width: 768px) {
+  .form-value {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .form-value {
+    font-size: 14px;
+  }
 }
 </style>
