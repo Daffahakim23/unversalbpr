@@ -95,6 +95,10 @@ export default {
       this.isModalError = true;
     },
 
+    handleCloseModal() {
+      this.isModalError = false;
+    },
+
     createFileInput(documentType) {
       const input = document.createElement("input");
       input.type = "file";

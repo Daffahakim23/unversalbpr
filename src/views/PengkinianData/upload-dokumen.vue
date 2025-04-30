@@ -119,6 +119,9 @@ export default {
         query: { documentType: documentType || "defaultType" },
       });
     },
+    handleCloseModal() {
+      this.isModalError = false;
+    },
     async handleSubmit() {
       if (this.isSubmitting) {
         return;

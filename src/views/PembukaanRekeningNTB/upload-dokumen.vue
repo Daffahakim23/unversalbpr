@@ -171,6 +171,10 @@ export default {
       this.$router.push({ path: "/dashboard/npwpNTB" });
     },
 
+    handleCloseModal() {
+      this.isModalError = false;
+    },
+
     handleFileUpload(event, documentType) {
       console.log(`Dokumen yang akan diunggah: ${documentType}`);
       this.$router.push({
