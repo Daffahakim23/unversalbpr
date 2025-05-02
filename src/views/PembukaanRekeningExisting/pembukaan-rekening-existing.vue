@@ -44,7 +44,7 @@
     </div>
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text"
-      v-model="form.namaFundingOfficer" placeholder="Masukkan nama funding officer"
+      v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
 
     <div class="text-right">
@@ -134,7 +134,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(08|8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
+      const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
       if (!this.form.produk || !emailValid || !phoneValid || !this.form.sumberDana || !this.form.tujuan) {
         return true;
       }
@@ -184,7 +184,7 @@ export default {
       this.isModalError = false;
     },
     validatePhone(phone) {
-      return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
+      return /^(8)\d{6,12}$/.test(phone);
     },
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

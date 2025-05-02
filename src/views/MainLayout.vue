@@ -15,9 +15,45 @@
           </button>
         </div>
 
-        <div>
+        <div class="flex gap-4">
+          <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="focus:outline-none" type="button">
+            <img src="@/assets/info-product-icon.svg" alt="Info Produk" class="h-8 sm:h-10 md:h-10" />
+          </button>
+
+          <!-- Dropdown menu -->
+          <div id="dropdown"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+              <li>
+                <a @click="downloadProductDetails" download="info-produk.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
+                  Produk</a>
+              </li>
+              <li>
+                <a @click="downloadSK" download="syarat-ketentuan.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
+                  &
+                  Ketentuan</a>
+              </li>
+              <li>
+                <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
+                  Privasi</a>
+              </li>
+              <li>
+                <a @click="downloadFAQ" download="FAQ.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
+                </a>
+              </li>
+              <li>
+                <a @click="downloadTentang" download="Tentang.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
+                </a>
+              </li>
+            </ul>
+          </div>
           <button class="flex items-center text-primary">
-            <img src="@/assets/cs-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+            <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
           </button>
         </div>
       </div>
@@ -54,10 +90,14 @@
 </template>
 
 <script>
-// import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/account-icon.svg";
+import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
+import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
+import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
+import faqPdf from '@/assets/FAQ.pdf';
+import tentangKamiPdf from '@/assets/Tentang.pdf';
 
 export default {
   name: "MainLayout",
@@ -68,6 +108,8 @@ export default {
   },
   data() {
     return {
+      isInfoProductDropdownOpen: false,
+      isInfoDropdownOpen: false,
       pageTitle: "",
       pageSubtitle: "",
       featureTitle: "",
@@ -96,6 +138,17 @@ export default {
     },
   },
   methods: {
+    toggleInfoProductDropdown() {
+      console.log('Tombol Info Produk diklik!');
+      this.isInfoProductDropdownOpen = !this.isInfoProductDropdownOpen;
+      console.log('Status dropdown:', this.isInfoProductDropdownOpen);
+    },
+    // Anda bisa menambahkan metode untuk menutup dropdown jika klik di luar area dropdown
+    handleClickOutside(event) {
+      if (this.isInfoProductDropdownOpen && !this.$el.contains(event.target)) {
+        this.isInfoProductDropdownOpen = false;
+      }
+    },
     handleModalClose() {
       this.isModalError = false;
     },
@@ -114,10 +167,46 @@ export default {
       this.progress = value;
     },
     downloadProductDetails() {
-      const fileUrl = "/detail-product.pdf";
+      const fileUrl = infoProdukPdf;
       const link = document.createElement("a");
       link.href = fileUrl;
-      link.setAttribute("download", "Detail_Produk.pdf");
+      link.setAttribute("download", "INFO-PRODUK.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadSK() {
+      const fileUrl = syaratKetentuanPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Syarat & ketentuan.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadKP() {
+      const fileUrl = kebijakanPrivasiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Kebijakan Privasi.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadFAQ() {
+      const fileUrl = faqPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "FAQ.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadTentang() {
+      const fileUrl = tentangKamiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Tentang.pdf");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -125,6 +214,10 @@ export default {
   },
   mounted() {
     this.updatePageTitle(this.$route);
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
   },
 };
 </script>

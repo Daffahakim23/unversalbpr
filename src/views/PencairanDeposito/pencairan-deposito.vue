@@ -84,8 +84,11 @@ export default {
         this.emailError = !this.validateEmail(this.form.email);
       }
     },
+    // validatePhone(phone) {
+    //   return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+    // },
     validatePhone(phone) {
-      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+      return /^(08|8)\d{6,12}$/.test(phone);
     },
     handlePhoneBlur() {
       this.touched.phone = true;

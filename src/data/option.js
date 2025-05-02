@@ -169,6 +169,10 @@ export const produkOptions = [
   { label: "Deposito Berjangka", value: "2" },
 ];
 
+export const produkTabunganOptions = [
+  { label: "Tabungan Universal", value: "1" },
+];
+
 export const produkDepositoOptions = [
   { label: "Deposito Universal", value: "1", subtitle: "Minimal penempatan deposito: Rp 5.000.000" },
   { label: "Deposito Peduli", value: "2", subtitle: "Minimal penempatan deposito: Rp 100.000.000" },

@@ -6,7 +6,8 @@
           <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
           <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
         </button>
-        <button v-if="fileUrl || photoUrl" @click="changeFile" class="flex items-center text-primary-400 gap-1">
+        <button v-if="(fileUrl || photoUrl) && documentType !== 'fotoDiri'" @click="changeFile"
+          class="flex items-center text-primary-400 gap-1">
           <p class="text-base font-semibold">Ubah Metode</p>
           <img src="@/assets/upload-dokumen.svg" alt="Panduan" class="h-5" />
         </button>

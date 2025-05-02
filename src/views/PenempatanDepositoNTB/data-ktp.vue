@@ -2,7 +2,10 @@
   <form @submit.prevent="handleSubmit">
     <FormField label="NIK" id="nik" v-model="form.nik" required />
 
-    <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required />
+    <!-- <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required /> -->
+    <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
+      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
+      @blur="handleNamaLengkapBlur" required />
 
     <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required />
 
@@ -78,6 +81,9 @@ export default {
   },
   data() {
     return {
+      touched: {
+        namaLengkap: false,
+      },
       form: new FormModelDataKTP(),
       statusPerkawinanOptions,
       jenisKelaminOptions,
@@ -90,6 +96,7 @@ export default {
       kabupatenOptions: [],
       kecamatanOptions: [],
       kelurahanOptions: [],
+      namaLengkapError: false,
     };
   },
   watch: {
@@ -136,6 +143,15 @@ export default {
   },
 
   methods: {
+    validateNamaLengkap(namaLengkap) {
+      return /^[^\d]+$/.test(namaLengkap);
+    },
+    handleNamaLengkapBlur() {
+      this.touched.namaLengkap = true;
+      if (this.form.namaLengkap) {
+        this.namaLengkapError = !this.validateNamaLengkap(this.form.namaLengkap);
+      }
+    },
     normalizeKabupaten(kabupaten) {
       return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
     },

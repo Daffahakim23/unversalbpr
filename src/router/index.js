@@ -8,12 +8,10 @@ import verifikasiEmailPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/v
 import UploadFilePembukaanRekeningNTB from "../views/PembukaanRekeningNTB/upload-dokumen.vue";
 import NpwpNTB from "../views/PembukaanRekeningNTB/npwp-s&k.vue";
 import PreviewScreenPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/preview-dokumen.vue";
-import FotoDiriPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/foto-diri.vue";
 import DataPribadiPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-pribadi.vue";
 import DataKTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-ktp.vue";
 import DataPekerjaanPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-pekerjaan.vue";
 import KonfirmasiDataPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/konfirmasi-data.vue";
-import EmailOTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/otp-no-hp.vue";
 import TandaTanganDigitalPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/tanda-tangan-digital.vue";
 import HalamanSuksesPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/halaman-sukses.vue";
 
@@ -25,9 +23,7 @@ import PreviewScreenPembukaanRekeningExisting from "../views/PembukaanRekeningEx
 import PerubahanDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/perubahan-data.vue";
 import DataKTPPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/data-ktp.vue";
 import KonfirmasiDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/konfirmasi-data.vue";
-import EmailOTPPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/otp-no-hp.vue";
 import HalamanSuksesPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/halaman-sukses.vue";
-import FotoDiriPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/foto-diri.vue";
 import TandaTanganDigitalPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/tanda-tangan-digital.vue";
 
 // Penempatan Deposito NTB
@@ -41,10 +37,8 @@ import DataPribadiPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/dat
 import DataKTPPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-ktp.vue";
 import DataPekerjaanPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-pekerjaan.vue";
 import KonfirmasiDataPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/konfirmasi-data.vue";
-import EmailOTPPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/otp-no-hp.vue";
 import HalamanSuksesPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/halaman-sukses.vue";
 import HomePage from "../views/HomePage.vue";
-import FotoDiriPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/foto-diri.vue";
 import TandaTanganDigitalPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/tanda-tangan-digital.vue";
 
 // Pembukaan Rekening Existing
@@ -56,12 +50,10 @@ import PreviewScreenPenempatanDepositoExisting from "../views/PenempatanDeposito
 import PerubahanDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/perubahan-data.vue";
 import DataKTPPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/data-ktp.vue";
 import KonfirmasiDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/konfirmasi-data.vue";
-import EmailOTPPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/email-otp.vue";
 import HalamanSuksesPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/halaman-sukses.vue";
-import FotoDiriPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/foto-diri.vue";
 import TandaTanganDigitalPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/tanda-tangan-digital.vue";
 
-// Pembukaan Rekening Existing
+// Pengkinian Data
 import PengkinianData from "../views/PengkinianData/pengkinian-data.vue";
 import UploadDokumenPengkinianData from "../views/PengkinianData/upload-dokumen.vue";
 import PreviewScreenPengkinianData from "../views/PengkinianData/preview-dokumen.vue";
@@ -69,7 +61,6 @@ import DataPribadiPengkinianData from "../views/PengkinianData/data-pribadi.vue"
 import DataKTPPengkinianData from "../views/PengkinianData/data-ktp.vue";
 import DataPekerjaanPengkinianData from "../views/PengkinianData/data-pekerjaan.vue";
 import KonfirmasiDataPengkinianData from "../views/PengkinianData/konfirmasi-data.vue";
-import EmailOTPPengkinianData from "../views/PengkinianData/otp-no-hp.vue";
 import HalamanSuksesPengkinianData from "../views/PengkinianData/halaman-sukses.vue";
 import TandaTanganDigitalPengkinianData from "../views/PengkinianData/tanda-tangan-digital.vue";
 
@@ -168,20 +159,6 @@ const routes = [
         },
       },
       {
-        path: "fotoDiriPembukaanRekeningNTB",
-        name: "FotoDiriPembukaanRekeningNTB",
-        component: FotoDiriPembukaanRekeningNTB,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
-      },
-      {
         path: "previewScreenPembukaanRekeningNTB", // Path tanpa parameter
         name: "PreviewScreenPembukaanRekeningNTB",
         component: PreviewScreenPembukaanRekeningNTB,
@@ -258,15 +235,6 @@ const routes = [
           title: "Data Pekerjaan & Finansial",
           subtitle:
             "Untuk melanjutkan proses, kami memerlukan informasi tambahan mengenai pekerjaan Anda.",
-        },
-      },
-      {
-        path: "emailOTPPembukaanRekeningNTB",
-        name: "emailOTPPembukaanRekeningNTB",
-        component: EmailOTPPembukaanRekeningNTB,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Konfirmasi OTP"
         },
       },
       {
@@ -354,20 +322,6 @@ const routes = [
         }),
       },
       {
-        path: "fotoDiriPembukaanRekeningExisting",
-        name: "FotoDiriPembukaanRekeningExisting",
-        component: FotoDiriPembukaanRekeningExisting,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
-      },
-      {
         path: "dataKTPPembukaanRekeningExisting",
         name: "DataKTPPembukaanRekeningExisting",
         component: DataKTPPembukaanRekeningExisting,
@@ -399,15 +353,6 @@ const routes = [
         meta: {
           feature: "Pembukaan Rekening Baru",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi"
-        },
-      },
-      {
-        path: "emailOTPPembukaanRekeningExisting",
-        name: "emailOTPPembukaanRekeningExisting",
-        component: EmailOTPPembukaanRekeningExisting,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Konfirmasi OTP"
         },
       },
       {
@@ -524,20 +469,6 @@ const routes = [
         }),
       },
       {
-        path: "fotoDiriPenempatanDepositoNTB",
-        name: "FotoDiriPenempatanDepositoNTB",
-        component: FotoDiriPenempatanDepositoNTB,
-        meta: {
-          feature: "Penempatan Deposito",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
-      },
-      {
         path: "dataKTPPenempatanDepositoNTB",
         name: "DataKTPPenempatanDepositoNTB",
         component: DataKTPPenempatanDepositoNTB,
@@ -575,15 +506,6 @@ const routes = [
         meta: {
           feature: "Penempatan Deposito",
           title: "Data Pekerjaan & Finansial"
-        },
-      },
-      {
-        path: "emailOTPPenempatanDepositoNTB",
-        name: "emailOTPPenempatanDepositoNTB",
-        component: EmailOTPPenempatanDepositoNTB,
-        meta: {
-          feature: "Penempatan Deposito",
-          title: "Konfirmasi OTP"
         },
       },
       {
@@ -686,20 +608,6 @@ const routes = [
         }),
       },
       {
-        path: "fotoDiriPenempatanDepositoExisting",
-        name: "FotoDiriPenempatanDepositoExisting",
-        component: FotoDiriPenempatanDepositoExisting,
-        meta: {
-          feature: "Penempatan Deposito",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
-      },
-      {
         path: "dataKTPPenempatanDepositoExisting",
         name: "DataKTPPenempatanDepositoExisting",
         component: DataKTPPenempatanDepositoExisting,
@@ -728,15 +636,6 @@ const routes = [
         meta: {
           feature: "Penempatan Deposito",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
-        },
-      },
-      {
-        path: "emailOTPPenempatanDepositoExisting",
-        name: "emailOTPPenempatanDepositoExisting",
-        component: EmailOTPPenempatanDepositoExisting,
-        meta: {
-          feature: "Penempatan Deposito",
-          title: "Konfirmasi OTP Existing"
         },
       },
       {
@@ -855,15 +754,6 @@ const routes = [
         meta: {
           feature: "Pengkinian Data",
           title: "Data Pekerjaan & Finansial"
-        },
-      },
-      {
-        path: "emailOTPPengkinianData",
-        name: "emailOTPPengkinianData",
-        component: EmailOTPPengkinianData,
-        meta: {
-          feature: "Pengkinian Data",
-          title: "Konfirmasi OTP"
         },
       },
       {

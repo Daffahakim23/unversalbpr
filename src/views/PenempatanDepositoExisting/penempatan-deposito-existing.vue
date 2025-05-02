@@ -164,7 +164,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(08|8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,11}$/.test(this.form.phone);
+      const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,11}$/.test(this.form.phone);
       if (!this.form.produkDeposito || !this.form.nomorRekening || !this.form.tujuan || !this.form.sumberDana || !this.form.memilikiTabungan || !emailValid || !phoneValid) {
         return true;
       }
@@ -199,8 +199,11 @@ export default {
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
+    // validatePhone(phone) {
+    //   return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
+    // },
     validatePhone(phone) {
-      return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
+      return /^(8)\d{6,12}$/.test(phone);
     },
     handleEmailBlur() {
       this.touched.email = true;
@@ -314,12 +317,12 @@ export default {
           this.temporaryBanMessage = error.response.data.message;
           subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai ${this.temporaryBanMessage}. Hubungi Universal Care untuk bantuan lebih lanjut.`;
           modalTitle = "Alamat Email Dibatasi Sementara";
-          modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
+          modalIcon = "data-failed-illus.svg";
         } else {
           subtitle = "Terjadi kesalahan saat memverifikasi OTP.";
         }
         this.isModalError = false;
-        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }

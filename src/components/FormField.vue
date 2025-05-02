@@ -252,7 +252,7 @@ export default {
       }
     },
     handlePhoneNumberInput(event) {
-      let phoneNumber = event.target.value.replace(/\D/g, "").slice(0, 15);
+      let phoneNumber = event.target.value.replace(/\D/g, "").slice(0, 13);
       this.phoneNumber = phoneNumber;
       // this.$emit("update:modelValue", this.getCountryCallingCode(this.selectedCountryCode) + phoneNumber);
     },

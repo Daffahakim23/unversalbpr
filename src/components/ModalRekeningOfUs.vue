@@ -13,10 +13,7 @@
                     </div>
                     <div class="text-center mt-4 mb-8">
                         <p class="text-lg font-semibold">{{ rekeningData.account_name }}</p>
-                        <p class="text-sm">
-                            BPR UNIVERSAL -
-                            {{ rekeningData.account_number }}
-                        </p>
+                        <p class="text-sm">{{ rekeningData.account_bank }}-{{ rekeningData.account_number }}</p>
                     </div>
                     <div class="mt-6">
                         <ButtonComponent type="button" @click="emitTransfer" class="w-full">
@@ -35,17 +32,18 @@
                             </svg>
                         </button>
                     </div>
-                    <FormField label="Nama Bank*" id="namaBank" v-model="form.namaBank" placeholder="Masukkan Nama Bank"
-                        :readonly="true" required />
+                    <FormField label="Nama Bank*" id="namaBank" :isDropdown="true" v-model="form.namaBank"
+                        placeholder="Pilih Nama Bank" :hasSearch="true" :options="bankOptions" required />
 
-                    <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
-                        placeholder="Masukkan Nomor Rekening" hint="*Nomor rekening harus terdiri dari 10 digit angka"
-                        required />
+                    <FormField label="Nomor Rekening" id="nomorRekening" v-model="form.nomorRekening"
+                        placeholder="Masukkan Nomor Rekening"
+                        :hint="nomorRekeningError ? '*Nomor rekening harus terdiri dari 10 digit angka' : '*Nomor rekening harus terdiri dari 10 digit angka'"
+                        :error="nomorRekeningError" @blur="handleNomorRekeningBlur" required />
 
                     <div class="text-right mt-4 w-full">
                         <ButtonComponent type="button" @click="handlePreval" class="w-full"
-                            :disabled="!form.namaBank || !form.nomorRekening || isPrevalLoading">
-                            {{ isPrevalLoading ? 'Mencari...' : 'Lanjutkan' }}
+                            :disabled="!form.namaBank || !form.nomorRekening || isPrevalLoading || isButtonDisabled">
+                            {{ isPrevalLoading ? 'Mencari...' : 'Cari Nomor Rekening' }}
                         </ButtonComponent>
                     </div>
                 </div>
@@ -75,10 +73,22 @@ export default {
         iconPath() {
             return new URL(`/src/assets/account-found.svg`, import.meta.url).href;
         },
+        selectedBankCode() {
+            const selectedBank = this.bankOptions.find(bank => bank.value === this.form.namaBank);
+            return selectedBank ? selectedBank.code : null;
+        },
+        isButtonDisabled() {
+            const nomorRekeningValid = this.form.nomorRekening && /^\d+$/.test(this.form.nomorRekening) && this.form.nomorRekening.length >= 10;
+            if (!nomorRekeningValid) {
+                return true;
+            }
+            return false;
+        }
     },
     data() {
         return {
-            form: new FormModelPenempatanDeposito("Universal BPR"),
+            form: new FormModelPenempatanDeposito(),
+            bankOptions: [],
             fileStore: useFileStore(),
             rekeningDitemukan: false,
             rekeningData: {
@@ -88,6 +98,10 @@ export default {
                 message: "",
             },
             isPrevalLoading: false,
+            nomorRekeningError: false,
+            touched: {
+                nomorRekening: false,
+            },
         };
     },
     watch: {
@@ -96,14 +110,37 @@ export default {
                 this.resetForm();
             }
         },
+        'form.nomorRekening'(newVal) {
+            // console.log('Nilai nomor rekening berubah menjadi:', newVal);
+            this.touched.nomorRekening = true;
+            // console.log('Status touched nomor rekening:', this.touched.nomorRekening);
+            if (newVal) {
+                const isValid = this.validateNomorRekening(newVal);
+                this.nomorRekeningError = !isValid;
+                // console.log('Hasil validasi nomor rekening:', isValid);
+                // console.log('Status error nomor rekening:', this.nomorRekeningError);
+            } else {
+                this.nomorRekeningError = false;
+                // console.log('Nomor rekening kosong, error direset menjadi:', this.nomorRekeningError);
+            }
+        },
     },
     created() {
-        //  this.fetchBankOptions();
+        this.fetchBankOptions();
     },
     methods: {
+        validateNomorRekening(nomorRekening) {
+            return /^\d+$/.test(nomorRekening) && nomorRekening.length >= 10; // Memastikan hanya angka dan minimal 10 digit
+        },
+        handleNomorRekeningBlur() {
+            this.touched.nomorRekening = true;
+            if (this.form.nomorRekening) {
+                this.nomorRekeningError = !this.validateNomorRekening(this.form.nomorRekening);
+            }
+        },
         resetForm() {
-            this.form = new FormModelPenempatanDeposito("BPR Universal",),
-                this.rekeningDitemukan = false;
+            this.form = new FormModelPenempatanDeposito();
+            this.rekeningDitemukan = false;
             this.rekeningData = {
                 account_bank: "",
                 account_name: "",
@@ -111,9 +148,23 @@ export default {
                 message: "",
             };
             this.isPrevalLoading = false;
+            this.nomorRekeningError = false;
+            this.touched.nomorRekening = false;
+        },
+        async fetchBankOptions() {
+            try {
+                const response = await api.get("/list-bank");
+                this.bankOptions = response.data.bank.map((bank) => ({
+                    label: bank.bank_name,
+                    value: bank.bank_name,
+                    code: bank.bank_code,
+                }));
+            } catch (error) {
+                console.error("Error fetching bank options:", error);
+            }
         },
         async handlePreval() {
-            if (!this.form.namaBank || !this.form.nomorRekening) {
+            if (!this.form.namaBank || !this.form.nomorRekening || !this.selectedBankCode) {
                 alert("Nama Bank dan Nomor Rekening harus diisi.");
                 return;
             }
@@ -124,8 +175,7 @@ export default {
             try {
                 const payload = {
                     nomor_rekening: this.form.nomorRekening,
-                    kode_bank: "bprUniversal",
-                    no_hp: this.fileStore.no_hp,
+                    kode_bank: this.selectedBankCode,
                 };
                 const response = await api.post("/preval", payload);
                 console.log("Preval Response:", response.data);

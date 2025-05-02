@@ -193,8 +193,8 @@ import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOpt
 import { FormModelPenempatanDeposito } from "@/models/formModel";
 import { hitungBungaUniversal, hitungBungaPeduli, hitungBungaDEBUTSanmere, hitungBungaDEBUTMatius, hitungBungaGreen, } from "@/data/bunga-deposito.js";
 // import ModalTransfer from "@/components/ModalTransfer.vue";
-import ReusableModal from "@/components/ModalRekeningOnUs.vue";
-import ReusableModal2 from "@/components/ModalRekeningOfUs.vue";
+import ReusableModal from "@/components/ModalRekeningOfUs.vue";
+import ReusableModal2 from "@/components/ModalRekeningOnUs.vue";
 import { toTerbilang } from "@/utils/toTerbilang.js";
 
 export default {

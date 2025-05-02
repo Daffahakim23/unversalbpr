@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <FormField label="Pilih Produk yang Diinginkan" id="produk" :isDropdown="true" v-model="form.produk"
-      placeholder="Pilih Produk yang Anda Inginkan" :options="produkOptions" required />
+      placeholder="Pilih Produk yang Anda Inginkan" :options="produkTabunganOptions" required />
 
     <FormField label="Pilih Produk Deposito" id="produkDeposito" :isDropdown="true" v-model="form.produkDeposito"
       placeholder="Pilih Produk Deposito yang Anda Inginkan" :options="produkDepositoOptions" required />
@@ -51,7 +51,7 @@ import ButtonComponent from "@/components/button.vue";
 import ReusableModal from "@/components/ModalT&C.vue";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { sumberDataNasabahOptions, produkDepositoOptions, produkOptions } from "@/data/option.js";
+import { sumberDataNasabahOptions, produkDepositoOptions, produkTabunganOptions } from "@/data/option.js";
 import ModalError from "@/components/ModalError.vue";
 
 export default {
@@ -74,7 +74,7 @@ export default {
       },
       sumberDataNasabahOptions,
       produkDepositoOptions,
-      produkOptions,
+      produkTabunganOptions,
       selectedProduk: "",
       selectedCountryCode: "ID",
       isModalOpen: false,
@@ -98,7 +98,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(08|8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
+      const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
       if (this.form.sumber === "lainnya") {
         return !this.form.sumberLainnya.trim();
       }
@@ -132,8 +132,11 @@ export default {
         this.emailError = !this.validateEmail(this.form.email);
       }
     },
+    // validatePhone(phone) {
+    //   return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
+    // },
     validatePhone(phone) {
-      return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
+      return /^(8)\d{6,12}$/.test(phone);
     },
     handlePhoneBlur() {
       this.touched.phone = true;
