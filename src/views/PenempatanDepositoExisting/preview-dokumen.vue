@@ -6,11 +6,11 @@
           <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
           <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
         </button>
-        <button v-if="(fileUrl || photoUrl) && documentType !== 'fotoDiri'" @click="changeFile"
+        <!-- <button v-if="(fileUrl || photoUrl) && documentType !== 'fotoDiri'" @click="changeFile"
           class="flex items-center text-primary-400 gap-1">
           <p class="text-base font-semibold">Ubah Metode</p>
           <img src="@/assets/upload-dokumen.svg" alt="Panduan" class="h-5" />
-        </button>
+        </button> -->
       </div>
 
       <div v-if="!fileUrl && documentType !== 'fotoDiri'">
@@ -19,7 +19,7 @@
           <img src="@/assets/upload-dokumen.svg" alt="Tambah Dokumen" class="h-32 w-32 mt-12">
           <div class="flex mt-12 justify-between w-full px-16">
             <ButtonComponent variant="ghost" @click="startWebcamDokumen">
-              Ambil Gambar
+              Ambil Foto
             </ButtonComponent>
             <ButtonComponent variant="ghost" @click="openFilePicker">
               Upload Gambar
@@ -66,14 +66,14 @@
             <div v-else class="controls flex justify-between mt-4 w-full">
               <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
               <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">
-                {{ isSubmitting ? "Mengirim..." : "Simpan Foto" }}
+                {{ isSubmitting ? "Mengirim..." : "Simpan" }}
               </ButtonComponent>
             </div>
           </div>
         </div>
-        <div class="flex justify-between mt-6">
+        <!-- <div class="flex justify-between mt-6">
           <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-        </div>
+        </div> -->
       </div>
 
       <div v-if="documentType === 'fotoDiri'">
@@ -104,7 +104,7 @@
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
             <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">{{
-              isSubmitting ? "Mengirim..." : "Simpan" }}
+              isSubmitting ? "Mengirim..." : "Simpan Foto" }}
             </ButtonComponent>
           </div>
         </div>
@@ -129,13 +129,15 @@
         </div>
       </div>
 
+
       <ModalPanduanFoto :isOpen="isModalOpen" :documentType="documentType" @close="handleModalClose"
         @back="handleBack" />
       <ModalPanduanFoto2 :isOpen="isModalOpen2" :documentType="documentType" @close="handleModalClose"
         @back="handleBack" />
 
       <div class="mt-6 flex justify-between" v-if="documentType !== 'fotoDiri' && fileUrl">
-        <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent>
+        <!-- <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent> -->
+        <ButtonComponent variant="outline" @click="changeFile">Ulangi</ButtonComponent>
         <ButtonComponent @click="saveFile" :disabled="isSubmitting || isButtonDisabled || isUploading">
           {{ isSubmitting ? "Mengirim..." : "Simpan" }}
         </ButtonComponent>
@@ -514,6 +516,9 @@ export default {
       this.photoUrl = null;
       this.fileUrl = null;
       this.showInitialUI = true;
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.value = null;
+      }
       this.$router.push({
         name: "PreviewScreenPenempatanDepositoExisting",
         query: { documentType: this.documentType },
@@ -730,6 +735,13 @@ export default {
   },
   mounted() {
     this.$emit("update-progress", 45);
+    this.$emit("set-navbar-config", {
+      showBackButton: true,
+      showInfoButton: true,
+      showLogoBPR: true,
+      centerTitle: true,
+    });
+    this.$emit("set-cancel-route", { name: 'UploadDokumenPenempatanDepositoExisting' });
   },
 };
 </script>

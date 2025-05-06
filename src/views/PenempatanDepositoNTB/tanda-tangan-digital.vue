@@ -56,7 +56,7 @@ export default {
                     return;
                 }
 
-                const response = await api.get(`/check-envelope?envelope_id=${envelopeId}&uuid=${uuid}`);
+                const response = await api.get(`/check-envelope?envelope_id=${envelopeId}&uuid=${uuid}&params=DNTB`);
 
                 if (response.status === 200) {
                     this.$router.push({ path: "/dashboard/halamanSuksesPenempatanDepositoNTB" });

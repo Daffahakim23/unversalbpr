@@ -4,8 +4,9 @@
       placeholder="Pilih produk yang Anda inginkan" :options="produkDepositoOptions" required />
 
     <FormField label="Nominal Deposito*" id="nominal" :isDropdown="false" v-model="formattedNominal"
-      placeholder="Masukkan Nominal Penempatan Deposito" :disabled="!form.produkDeposito" :required="true"
-      :hint="nominalError || ''" :error="!!nominalError" @input="updateNominal($event.target.value)" />
+      placeholder="Masukkan Nominal Penempatan Deposito"
+      :disabled="!form.produkDeposito || formattedNominal.length >= 12" :required="true" :hint="nominalError || ''"
+      :error="!!nominalError" @input="updateNominal($event.target.value)" />
 
     <FormField label="Terbilang" id="terbilang" :isDropdown="false" v-model="form.terbilang" :required="true"
       placeholder="Masukkan Nominal Penempatan Deposito" :readonly="true" />

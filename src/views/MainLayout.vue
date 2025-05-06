@@ -3,16 +3,26 @@
     <div class="bg-neutral-white p-6">
       <div class="flex items-center justify-between">
         <div>
-          <button @click="isModalError = true" class="flex items-center text-neutral-900 pl-2">
+          <button @click="goBack2" v-if="navbarConfig.showBackButton" class="flex items-center text-neutral-900 pl-2">
+            <img src="@/assets/batal-icon.svg" alt="Kembali" class="h-8 mr-2" />
+            <p class="text-sm sm:text-md md:text-md font-semibold text-left">Batalkan</p>
+          </button>
+          <button v-else @click="isModalError = true" class="flex items-center text-neutral-900 pl-2">
             <img src="@/assets/home-icon.svg" alt="Logo" class="h-10 mr-2" />
             <p class="text-sm sm:text-md md:text-md font-semibold text-left">{{ featureTitle }}</p>
           </button>
         </div>
 
-        <div class="flex text-center">
+        <div class="flex text-center" v-if="navbarConfig.showLogoBPR">
           <button @click="isModalError = true" class="hidden sm:block">
             <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 mr-2" />
           </button>
+        </div>
+        <div v-else class="flex-grow">
+          <h2 v-if="navbarConfig.title && navbarConfig.centerTitle"
+            class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-center">
+            {{ navbarConfig.title }}
+          </h2>
         </div>
 
         <div class="flex gap-4">
@@ -20,7 +30,6 @@
             <img src="@/assets/info-product-icon.svg" alt="Info Produk" class="h-8 sm:h-10 md:h-10" />
           </button>
 
-          <!-- Dropdown menu -->
           <div id="dropdown"
             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
@@ -67,11 +76,13 @@
           <div class="rounded-xl max-w-2xl mx-auto bg-neutral-white py-9 px-10 shadow-md">
             <div class="flex flex-col mb-6 gap-2">
               <div class="flex items-center"
-                :class="{ 'justify-center': isCenterTitle, 'justify-between': !isCenterTitle }">
-                <div v-if="isCenterTitle" class="flex justify-center w-full">
-                  <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-center">{{ pageTitle }}</h2>
+                :class="{ 'justify-center': isCenterTitle && !navbarConfig.title, 'justify-between': !isCenterTitle || navbarConfig.title }">
+                <div v-if="isCenterTitle && !navbarConfig.title" class="flex justify-center w-full">
+                  <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-center">
+                    {{ pageTitle }}</h2>
                 </div>
-                <h2 class="text-lg sm:text-xl md:text-xl font-semibold text-primary text-left" v-if="!isCenterTitle">
+                <h2 class="text-lg sm:text-xl md:text-xl font-semibold text-primary text-left"
+                  v-if="!isCenterTitle || navbarConfig.title">
                   {{ pageTitle }}
                 </h2>
               </div>
@@ -79,7 +90,8 @@
                 {{ pageSubtitle }}
               </p>
             </div>
-            <router-view @update-progress="updateProgress" />
+            <router-view @update-progress="updateProgress" @set-navbar-config="setNavbarConfig"
+              @set-cancel-route="setCancelRoute" />
           </div>
         </div>
       </div>
@@ -87,6 +99,7 @@
   </div>
   <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
     @buttonClick1="handleModalClose" @buttonClick2="goBack" />
+  <!-- <ModalCS :isOpen="isModalCSOpen" @close="isModalCSOpen = false" /> -->
 </template>
 
 <script>
@@ -125,6 +138,14 @@ export default {
           buttonString2: "Keluar",
         }
       ],
+      cancelRoute: null,
+      navbarConfig: { // State untuk mengontrol konfigurasi navbar
+        showBackButton: false,
+        showInfoButton: true,
+        showLogoBPR: true,
+        centerTitle: false,
+        title: null,
+      },
     };
   },
   computed: {
@@ -135,13 +156,27 @@ export default {
   watch: {
     $route(to) {
       this.updatePageTitle(to);
+      this.resetNavbarConfig(to);
+      this.cancelRoute = null;
     },
   },
   methods: {
+    setNavbarConfig(config) {
+      this.navbarConfig = { ...this.navbarConfig, ...config };
+    },
+    resetNavbarConfig(route) { // 👈 принимаем объект route
+      if (!route.meta.persistNavbar) {
+        this.navbarConfig = {
+          showBackButton: false,
+          showInfoButton: true,
+          showLogoBPR: true,
+          centerTitle: false,
+          title: null,
+        };
+      }
+    },
     toggleInfoProductDropdown() {
-      console.log('Tombol Info Produk diklik!');
       this.isInfoProductDropdownOpen = !this.isInfoProductDropdownOpen;
-      console.log('Status dropdown:', this.isInfoProductDropdownOpen);
     },
     // Anda bisa menambahkan metode untuk menutup dropdown jika klik di luar area dropdown
     handleClickOutside(event) {
@@ -154,6 +189,16 @@ export default {
     },
     goBack() {
       window.location.href = "/";
+    },
+    setCancelRoute(route) {
+      this.cancelRoute = route;
+    },
+    goBack2() {
+      if (this.cancelRoute) {
+        this.$router.push(this.cancelRoute);
+      } else {
+        this.$router.back();
+      }
     },
     goToHome() {
       this.$router.push("/");
@@ -215,9 +260,12 @@ export default {
   mounted() {
     this.updatePageTitle(this.$route);
     document.addEventListener('click', this.handleClickOutside);
+    import('flowbite').then(() => {
+    });
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
+    // this.resetNavbarConfig();
   },
 };
 </script>

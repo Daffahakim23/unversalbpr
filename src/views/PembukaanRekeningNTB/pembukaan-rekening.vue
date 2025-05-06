@@ -7,10 +7,13 @@
       :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       :error="emailError" @blur="handleEmailBlur" />
 
-    <FormField label="Nomor Handphone *" id="phone" type="phone" v-model="form.phone"
-      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
-      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
-      :error="phoneError" @blur="handlePhoneBlur" />
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+        ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+        : form.phone?.startsWith('0')
+          ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
+          : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'" :error="phoneError"
+      @blur="handlePhoneBlur" />
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
@@ -148,7 +151,7 @@ export default {
       this.isModalErrorEmail = false;
     },
     validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone);
+      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
     },
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -250,7 +253,7 @@ export default {
 
       } catch (error) {
         let subtitle = "";
-        let modalTitle = "Verifikasi OTP Gagal";
+        let modalTitle = "Terjadi Kesalahan";
         let modalIcon = "otp-error-illus.svg";
         let button1 = "Tutup";
         let button2 = "Hubungi Customer Care";

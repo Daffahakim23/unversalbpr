@@ -4,7 +4,7 @@
     disabled
       ? 'bg-neutral-200 cursor-not-allowed text-neutral-300'
       : variant === 'outline'
-        ? 'bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-[0.875rem] py-[0.875rem]'
+        ? 'bg-white border-2 border-primary text-primary hover:bg-primary-100 px-[0.875rem] py-[0.875rem]'
         : variant === 'ghost'
           ? 'bg-transparent text-primary hover:text-primay hover:bg-primary-50'
           : 'bg-gradient-to-b from-primary-700 to-primary hover:bg-primary-900 text-white',

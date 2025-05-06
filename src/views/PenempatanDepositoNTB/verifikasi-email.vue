@@ -6,8 +6,10 @@
       <div class="flex justify-center gap-2 m-4">
         <input v-for="(digit, index) in otp" :key="index" v-model="otp[index]"
           class="w-12 h-14 text-center border rounded-md text-lg font-medium focus:ring-1 focus:ring-primary"
-          type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" @input="focusNext(index, $event)" />
+          type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" @input="focusNext(index, $event)"
+          @keydown.backspace="handleBackspace(index, $event)" />
       </div>
+
 
       <p v-if="errorMessage" class="text-red-500 text-center m-2">{{ errorMessage }}</p>
       <p class="text-base text-neutral-700 text-center">
@@ -97,6 +99,14 @@ export default {
       if (event.target.value && index < otp.value.length - 1) {
         event.target.nextElementSibling?.focus();
       } else if (!event.target.value && event.inputType === 'deleteContentBackward' && index > 0) {
+        event.target.previousElementSibling?.focus();
+      }
+    };
+
+    const handleBackspace = (index, event) => {
+      if (otp.value[index] === "" && index > 0) {
+        otp.value[index - 1] = "";
+        // Fokus ke input sebelumnya
         event.target.previousElementSibling?.focus();
       }
     };
@@ -202,6 +212,7 @@ export default {
     });
 
     return {
+      handleBackspace,
       isModalError,
       otp,
       errorMessage,

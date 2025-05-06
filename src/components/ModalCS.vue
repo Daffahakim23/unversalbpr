@@ -25,20 +25,38 @@
                     </div>
                 </div>
 
-                <!-- List of Contacts -->
-                <div class="flex flex-col divide-y divide-gray-200 border border-gray-300 rounded-xl overflow-hidden">
-                    <div v-for="(contact, index) in contacts" :key="index"
-                        class="flex items-center justify-between p-4 hover:bg-gray-100 cursor-pointer">
+                <div @click="openWhatsApp" :style="{ cursor: 'pointer' }"
+                    class="mb-4 border border-gray-300 rounded-xl overflow-hidden">
+                    <div class="flex items-center justify-between p-4 hover:bg-gray-100">
                         <div class="flex items-center gap-3">
-                            <img :src="contactIcons[index].icon" class="h-6 w-6" />
+                            <img src="@/assets/whatsapp-icon.svg" class="h-6 w-6" alt="WhatsApp" />
                             <div>
-                                <p class="text-gray-900 font-semibold text-base">{{ contact.label }}</p>
-                                <p class="text-gray-600 text-sm">{{ contact.number }}</p>
+                                <p class="text-gray-900 font-semibold text-base">WhatsApp</p>
+                                <p class="text-gray-600 text-sm">{{ whatsappContact.number }}</p>
                             </div>
                         </div>
-                        <img src="@/assets/right-arrow-circle-orange.svg" class="h-5 w-5" />
+                        <div class="flex justify-end">
+                            <img src="@/assets/right-arrow-circle-orange.svg" class="h-5 w-5" />
+                        </div>
                     </div>
                 </div>
+
+                <div @click="copyCallNumber" :style="{ cursor: 'pointer' }"
+                    class="border border-gray-300 rounded-xl overflow-hidden">
+                    <div class="flex items-center justify-between p-4 hover:bg-gray-100">
+                        <div class="flex items-center gap-3">
+                            <img src="@/assets/call-icon.svg" class="h-6 w-6" alt="Call" />
+                            <div>
+                                <p class="text-gray-900 font-semibold text-base">Call Center Universal Care</p>
+                                <p class="text-gray-600 text-sm">{{ callContact.number }}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <img src="@/assets/right-arrow-circle-orange.svg" class="h-5 w-5" />
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </transition>
@@ -58,13 +76,6 @@ export default {
         iconPath() {
             return new URL(`/src/assets/${this.icon}`, import.meta.url).href;
         },
-        contactIcons() {
-            return this.contacts.map(contact => ({
-                ...contact,
-                icon: new URL(`/src/assets/${contact.icon}`, import.meta.url).href
-            }));
-        }
-
     },
     methods: {
         handleBtnClick() {
@@ -73,21 +84,57 @@ export default {
             }
             this.$emit("cardClick");
         },
+        getWhatsAppLink(number) {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                return `https://wa.me/${number}`;
+            } else {
+                return `https://web.whatsapp.com/send?phone=${number}`;
+            }
+        },
+        openWhatsApp() {
+            if (this.whatsappContact.whatsapp) {
+                window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+            }
+        },
+        copyCallNumber() {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(this.callContact.number)
+                    .then(() => {
+                        alert(`Nomor telepon ${this.callContact.number} berhasil disalin!`);
+                        this.$emit('close'); // Optional: Tutup modal setelah menyalin
+                    })
+                    .catch(err => {
+                        console.error('Gagal menyalin ke clipboard: ', err);
+                        alert('Gagal menyalin nomor telepon.');
+                    });
+            } else {
+                // Fallback untuk browser yang tidak mendukung Clipboard API
+                const tempInput = document.createElement("input");
+                tempInput.value = this.callContact.number;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                alert(`Nomor telepon ${this.callContact.number} berhasil disalin!`);
+                this.$emit('close'); // Optional: Tutup modal setelah menyalin
+            }
+        }
     },
     data() {
         return {
-            contacts: [
-                {
-                    label: "WhatsApp",
-                    number: "(+62) 21 2221 3993",
-                    icon: "whatsapp-icon.svg",
-                },
-                {
-                    label: "Call Center Universal Care",
-                    number: "(021) 2221 3993",
-                    icon: "call-icon.svg",
-                },
-            ],
+            whatsappContact: {
+                label: "WhatsApp",
+                number: "(+62) 21 2221 3993",
+                icon: "whatsapp-icon.svg",
+                whatsapp: "+622122213993",
+            },
+            callContact: {
+                label: "Call Center Universal Care",
+                number: "(021) 2221 3993",
+                icon: "call-icon.svg",
+                call: "02122213993",
+            },
         };
     },
 };

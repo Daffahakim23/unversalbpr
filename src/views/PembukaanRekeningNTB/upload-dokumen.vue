@@ -10,30 +10,19 @@
         <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
         <div>
           <span class="text-sm font-medium text-neutral-900">E-KTP</span>
-          <p class="text-xs text-neutral-500">Foto KTP Anda</p>
+          <!-- <p class="text-xs text-neutral-500">Foto KTP Anda</p> -->
+          <div v-if="fileStore.isKtpUploaded" class="flex flex-row items-center gap-1">
+            <img src="/src/assets/success.svg" class="h-4" />
+            <p class="text-xs text-neutral-500">{{ nik }}</p>
+          </div>
+          <div v-else>
+            <p class="text-xs text-neutral-500">Foto KTP Anda</p>
+          </div>
         </div>
       </div>
       <div>
-        <img :src="fileStore.isKtpUploaded ? '/src/assets/success.svg' : '/src/assets/download.svg'" alt="Download"
-          class="h-6" />
-      </div>
-    </div>
-
-    <!-- NPWP -->
-    <div :class="[
-      'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md cursor-pointer relative',
-      fileStore.isNpwpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
-    ]" @click.stop="openNpwpModal">
-      <div class="flex items-center">
-        <img src="/src/assets/npwp.svg" alt="NPWP" class="h-12 mr-4" />
-        <div>
-          <span class="text-sm font-medium text-neutral-900">NPWP (jika ada)</span>
-          <p class="text-xs text-neutral-500">Foto NPWP Anda</p>
-        </div>
-      </div>
-      <div>
-        <img :src="fileStore.isNpwpUploaded ? '/src/assets/success.svg' : '/src/assets/download.svg'" alt="Download"
-          class="h-6" />
+        <img v-if="fileStore.isKtpUploaded" src="/src/assets/edit-icon.svg" alt="Download" class="h-6" />
+        <img v-else src="/src/assets/download.svg" alt="Download" class="h-6" />
       </div>
     </div>
 
@@ -46,12 +35,44 @@
         <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
         <div>
           <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
-          <p class="text-xs text-neutral-500">Foto Diri Anda</p>
+          <!-- <p class="text-xs text-neutral-500">Foto Diri Anda</p> -->
+          <div v-if="fileStore.isFotoDiriUploaded" class="flex flex-row items-center gap-1">
+            <img src="/src/assets/success.svg" class="h-4" />
+            <p class="text-xs text-neutral-500">Telah Dilengkapi</p>
+          </div>
+          <div v-else>
+            <p class="text-xs text-neutral-500">Foto Diri Anda</p>
+          </div>
         </div>
       </div>
       <div>
-        <img :src="fileStore.isFotoDiriUploaded ? '/src/assets/success.svg' : '/src/assets/download.svg'" alt="Download"
-          class="h-6" />
+        <img v-if="fileStore.isFotoDiriUploaded" src="/src/assets/edit-icon.svg" alt="Download" class="h-6" />
+        <img v-else src="/src/assets/download.svg" alt="Download" class="h-6" />
+      </div>
+    </div>
+
+    <!-- NPWP -->
+    <div :class="[
+      'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md cursor-pointer relative',
+      fileStore.isNpwpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+    ]" @click.stop="openNpwpModal">
+      <div class="flex items-center">
+        <img src="/src/assets/npwp.svg" alt="NPWP" class="h-12 mr-4" />
+        <div>
+          <span class="text-sm font-medium text-neutral-900">NPWP (jika ada)</span>
+          <!-- <p class="text-xs text-neutral-500">Foto NPWP Anda</p> -->
+          <div v-if="fileStore.isNpwpUploaded" class="flex flex-row items-center gap-1">
+            <img src="/src/assets/success.svg" class="h-4" />
+            <p class="text-xs text-neutral-500">{{ npwp }}</p>
+          </div>
+          <div v-else>
+            <p class="text-xs text-neutral-500">Foto NPWP Anda</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img v-if="fileStore.isNpwpUploaded" src="/src/assets/edit-icon.svg" alt="Download" class="h-6" />
+        <img v-else src="/src/assets/download.svg" alt="Download" class="h-6" />
       </div>
     </div>
 
@@ -64,12 +85,19 @@
         <img src="/src/assets/tanda-tangan.svg" alt="Tanda Tangan" class="h-12 mr-4" />
         <div>
           <span class="text-sm font-medium text-neutral-900">Tanda Tangan</span>
-          <p class="text-xs text-neutral-500">Foto Tanda Tangan Anda</p>
+          <!-- <p class="text-xs text-neutral-500">Foto Tanda Tangan Anda</p> -->
+          <div v-if="fileStore.isTandaTanganUploaded" class="flex flex-row items-center gap-1">
+            <img src="/src/assets/success.svg" class="h-4" />
+            <p class="text-xs text-neutral-500">Telah Dilengkapi</p>
+          </div>
+          <div v-else>
+            <p class="text-xs text-neutral-500">Foto Tanda Tangan Anda</p>
+          </div>
         </div>
       </div>
       <div>
-        <img :src="fileStore.isTandaTanganUploaded ? '/src/assets/success.svg' : '/src/assets/download.svg'"
-          alt="Download" class="h-6" />
+        <img v-if="fileStore.isTandaTanganUploaded" src="/src/assets/edit-icon.svg" alt="Download" class="h-6" />
+        <img v-else src="/src/assets/download.svg" alt="Download" class="h-6" />
       </div>
     </div>
   </div>
@@ -90,6 +118,7 @@ import ButtonComponent from "@/components/button.vue";
 import NpwpModal from "@/components/ModalNPWP.vue";
 import api from "@/API/api";
 import ModalError from "@/components/ModalError.vue";
+import { computed } from "vue";
 
 export default {
   props: {
@@ -112,7 +141,9 @@ export default {
   },
   setup() {
     const fileStore = useFileStore();
-    return { fileStore };
+    const nik = computed(() => fileStore.nik || "123123123");
+    const npwp = computed(() => fileStore.no_npwp || "Telah Dilengkapi");
+    return { fileStore, nik, npwp };
   },
   computed: {
     isButtonDisabled() {

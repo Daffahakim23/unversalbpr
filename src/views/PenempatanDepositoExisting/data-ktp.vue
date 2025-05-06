@@ -355,6 +355,7 @@ export default {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormDataKTP(this.form);
           this.fileStore.setNamaLengkap(requestData.nama_lengkap);
+          this.fileStore.setNik(requestData.nik);
           this.fileStore.isKtpUploaded = true;
           this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
           window.scrollTo(0, 0);
@@ -376,6 +377,13 @@ export default {
     this.fetchKabupaten();
     this.fetchKecamatan();
     this.fetchKelurahan();
+    this.$emit("set-navbar-config", {
+      showBackButton: true,
+      showInfoButton: true,
+      showLogoBPR: true,
+      centerTitle: true,
+    });
+    this.$emit("set-cancel-route", { name: 'UploadDokumenPenempatanDepositoExisting' });
   },
 };
 </script>

@@ -59,9 +59,12 @@
       required :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
-      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
-      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
-      :error="phoneError" @blur="handlePhoneBlur" />
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+        ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+        : form.phone?.startsWith('0')
+          ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
+          : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'" :error="phoneError"
+      @blur="handlePhoneBlur" />
 
     <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
 
@@ -201,9 +204,9 @@ export default {
     },
     // validatePhone(phone) {
     //   return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
-    // },
+    // },    
     validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone);
+      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
     },
     handleEmailBlur() {
       this.touched.email = true;

@@ -163,6 +163,7 @@ const routes = [
         name: "PreviewScreenPembukaanRekeningNTB",
         component: PreviewScreenPembukaanRekeningNTB,
         meta: {
+          persistNavbar: true,
           feature: "Pembukaan Rekening Baru",
           title: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
@@ -291,6 +292,7 @@ const routes = [
         name: "PreviewScreenPembukaanRekeningExisting",
         component: PreviewScreenPembukaanRekeningExisting,
         meta: {
+          persistNavbar: true,
           feature: "Pembukaan Rekening Baru",
           title: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
@@ -430,6 +432,7 @@ const routes = [
         name: "PreviewScreenPenempatanDepositoNTB",
         component: PreviewScreenPenempatanDepositoNTB,
         meta: {
+          persistNavbar: true,
           feature: "Penempatan Deposito",
           title: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
@@ -573,6 +576,7 @@ const routes = [
         name: "PreviewScreenPenempatanDepositoExisting",
         component: PreviewScreenPenempatanDepositoExisting,
         meta: {
+          persistNavbar: true,
           feature: "Penempatan Deposito",
           title: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
@@ -682,6 +686,7 @@ const routes = [
         name: "PreviewScreenPengkinianData",
         component: PreviewScreenPengkinianData,
         meta: {
+          persistNavbar: true,
           feature: "Pengkinian Data",
           title: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
@@ -809,6 +814,7 @@ const routes = [
         name: "PreviewScreenPencairanDeposito",
         component: PreviewScreenPencairanDeposito,
         meta: {
+
           feature: "Pencairan Deposito",
           title: "Hasil Foto",
           subtitle:
