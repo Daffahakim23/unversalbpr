@@ -10,12 +10,12 @@
           @keydown.backspace="handleBackspace(index, $event)" />
       </div>
 
-      <p v-if="errorMessage" class="text-red-500 text-center m-2">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-semantic/error-400 text-center m-2">{{ errorMessage }}</p>
       <p class="text-base text-neutral-700 text-center">
         Masukan kode OTP yang sudah kami kirimkan melalui email <strong>{{ email }}</strong>.
       </p>
 
-      <p v-if="resendCount >= 3" class="text-red-500 mt-4">
+      <p v-if="resendCount >= 3" class="text-semantic/error-400">
         Hubungi Customer Care untuk bantuan.
       </p>
       <p v-else class="text-primary mt-4 cursor-pointer" @click="resendOTP"

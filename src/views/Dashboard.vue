@@ -18,7 +18,7 @@
     </div>
 
     <!-- Main content section -->
-    <div class="flex-grow flex flex-col items-center p-10 bg-gray-100">
+    <div class="flex-grow flex flex-col items-center p-10 bg-neutral-50">
       <div class="flex flex-col justify-center w-full">
         <div class="flex flex-col mb-10">
           <Header headerText="Selamat Datang Di E-Form Universal BPR"
@@ -34,7 +34,7 @@
                   label: 'Pembukaan Rekening Tabungan',
                   description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
@@ -47,7 +47,7 @@
                   label: 'Penempatan Deposito',
                   description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
@@ -63,7 +63,7 @@
                   label: 'Pencairan Deposito',
                   description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
@@ -76,10 +76,10 @@
 
               <Card type="1" :features="[
                 {
-                  label: 'Pemindahbukuan',
+                  label: 'Transfer',
                   description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
@@ -89,14 +89,14 @@
                 label: 'Pemindah Bukuan',
                 description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
                 dokumen: 'Foto/Scan KTP Elektronik',
-              })" @cardClick="handleCardClick" buttonString="Ajukan Pemindahbukuan" />
+              })" @cardClick="handleCardClick" buttonString="Ajukan Transfer" />
 
               <Card type="1" :features="[
                 {
                   label: 'Pengkinian Data',
                   description: 'Perbarui data Anda untuk meningkatkan keamanan dan kenyamanan dalam bertransaksi',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
@@ -116,7 +116,7 @@
                   label: 'Pembukaan Rekening Tabungan',
                   description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'npwp.svg', text: 'NPWP' },
                     { icon: 'tanda-tangan.svg', text: 'Tanda Tangan Basah' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
@@ -131,7 +131,7 @@
                   label: 'Penempatan Deposito',
                   description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'npwp.svg', text: 'NPWP' },
                     { icon: 'tanda-tangan.svg', text: 'Tanda Tangan Basah' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },

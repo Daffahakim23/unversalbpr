@@ -3,7 +3,7 @@
     <FormField label="Pekerjaan*" id="pekerjaan" :isDropdown="true" v-model="form.pekerjaan" :options="pekerjaanOptions"
       placeholder="Pilih Pekerjaan Anda" />
 
-    <div v-if="form.pekerjaan === 'lainnya'" class="">
+    <div v-if="form.pekerjaan === '9999'" class="">
       <FormField label="Pekerjaan Lainnya *" id="pekerjaanLainnya" type="text" v-model="form.pekerjaanLainnya"
         placeholder="Masukkan Pekerjaan Lainnya" />
     </div>
@@ -19,6 +19,11 @@
     <FormField label="Penghasilan Perbulan*" id="jumlahPenghasilan" :isDropdown="true" v-model="form.jumlahPenghasilan"
       :options="jumlahPenghasilanOptions" placeholder="Pilih Penghasilan Perbulan Anda" />
 
+    <div
+      v-if="['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013'].includes(form.pekerjaan)">
+      <RadioButtonChoose label="Apakah Sumber Dana yang Anda Tempatkan Milik Anda Pribadi?*" id="sumberDanaMilikPribadi"
+        v-model="form.jumlahPenghasilan" :options="memilikiRekeningOptions" name="sumberDana" />
+    </div>
 
     <!-- Form Benefial Owner -->
     <div v-if="['0009', '0011'].includes(form.pekerjaan)">
@@ -191,7 +196,7 @@
 
     <!-- Form Detail Pekerjaan -->
     <div
-      v-if="['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013', 'lainnya'].includes(form.pekerjaan)">
+      v-if="['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013', '9999'].includes(form.pekerjaan)">
       <FormField label="Nama Perusahaan*" id="namaPerusahaanDK" :isDropdown="false" v-model="form.namaPerusahaanDK"
         placeholder="Masukkan Nama Perusahaan Anda" />
 
@@ -201,16 +206,19 @@
       <div v-if="form.bidangPekerjaanDK === 'lainnya'" class="">
         <FormField label="Bidang Pekerjaan Lainnya" id="bidangPekerjaanLainnyaDK" type="text"
           v-model="form.bidangPekerjaanLainnyaDK" placeholder="Masukkan Bidang Pekerjaan Lainnya" />
-
       </div>
-      <FormField label="Jabatan*" id="jabatanDK" :isDropdown="true" v-model="form.jabatanDK" :options="jabatanOptions"
-        placeholder="Pilih Jabatan Anda" />
 
-      <div v-if="form.jabatanDK === 'lainnya'" class="">
-        <FormField label="Jabatan Lainnya *" id="jabatanLainnyaDK" type="text" v-model="form.jabatanLainnyaDK"
-          placeholder="Masukkan Jabatan Lainnya" />
-
+      <div
+        v-if="['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013'].includes(form.pekerjaan)">
+        <FormField label="Jabatan*" id="jabatanDK" :isDropdown="true" v-model="form.jabatanDK" :options="jabatanOptions"
+          placeholder="Pilih Jabatan Anda" />
       </div>
+
+      <div v-if="form.pekerjaan === '9999'" class="">
+        <FormField label="Jabatan*" id="jabatanLainnyaDK" type="text" v-model="form.jabatanLainnyaDK"
+          placeholder="Masukkan Jabatan" />
+      </div>
+
       <FormField label="Alamat Perusahaan*" id="alamatDK" :isDropdown="false" v-model="form.alamatDK"
         placeholder="Masukkan Alamat Anda" />
 
@@ -288,7 +296,7 @@ import ButtonComponent from "@/components/button.vue";
 import QuantityCounter from "@/components/QuantityCounter.vue";
 import { FormModelDataPekerjaan } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { penghasilanOptions, jumlahPenghasilanOptions, hubunganNasabahOptions, statusPerkawinanOptions, korespondensiOptions, hubunganPemohonKDOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, npwpOptions } from "@/data/option.js";
+import { penghasilanOptions, jumlahPenghasilanOptions, hubunganNasabahOptions, statusPerkawinanOptions, korespondensiOptions, hubunganPemohonKDOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, npwpOptions, memilikiRekeningOptions } from "@/data/option.js";
 import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
 
 
@@ -312,6 +320,7 @@ export default {
       hubunganPemohonKDOptions,
       jenisIdentitasBOOptions,
       kewarganegaraanBOOptions,
+      memilikiRekeningOptions,
       jenisKelaminOptions,
       npwpOptions,
       quantity: 5,
@@ -349,13 +358,29 @@ export default {
         this.form.hubunganPemohonKD &&
         (this.form.hubunganPemohonKD !== "lainnya" || this.form.hubunganPemohonKDLainnya) &&
         this.form.alamatKD &&
-        this.form.nomorTeleponKD
+        this.form.nomorTeleponKD &&
+        isLamaBekerjaValidDK &&
+        this.form.korespondensi
       );
 
       if (!isRequiredFieldsFilled) return true;
 
-      if (["0009", "0011"].includes(this.form.pekerjaan)) {
+      const isPekerjaanDKFieldsFilled =
+        this.form.namaPerusahaanDK &&
+        this.form.bidangPekerjaanDK &&
+        (this.form.bidangPekerjaanDK !== "lainnya" || this.form.bidangPekerjaanLainnyaDK) &&
+        (
+          (this.form.pekerjaan === '9999' && this.form.jabatanLainnyaDK) ||
+          (['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013'].includes(this.form.pekerjaan) && this.form.jabatanDK) ||
+          (!['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013', '9999'].includes(this.form.pekerjaan)) // Jika pekerjaan di luar list, field jabatan tidak wajib
+        ) &&
+        this.form.alamatDK;
+
+      if (!['0009', '0011'].includes(this.form.pekerjaan)) {
+        return !isPekerjaanDKFieldsFilled;
+      } else {
         return !(
+          isPekerjaanDKFieldsFilled &&
           this.form.hubunganNasabahBO &&
           (this.form.hubunganNasabahBO !== "lainnya" || this.form.hubunganNasabahLainnyaBO) &&
           this.form.jenisIdentitasBO &&
@@ -389,17 +414,6 @@ export default {
           this.form.jumlahPenghasilanBO
         );
       }
-
-      return !(
-        this.form.namaPerusahaanDK &&
-        this.form.bidangPekerjaanDK &&
-        (this.form.bidangPekerjaanDK !== "lainnya" || this.form.bidangPekerjaanLainnyaDK) &&
-        this.form.jabatanDK &&
-        (this.form.jabatanDK !== "lainnya" || this.form.jabatanLainnyaDK) &&
-        this.form.alamatDK &&
-        isLamaBekerjaValidDK &&
-        this.form.korespondensi
-      );
     },
   },
 
@@ -728,8 +742,8 @@ export default {
         const requestData = {
           uuid: uuid,
           kode_pekerjaan: this.form.pekerjaan,
-          pekerjaan: this.pekerjaanOptions.find(p => p.value === this.form.pekerjaan)?.label || "",
-          pekerjaan_lainnya: this.form.pekerjaanLainnya,
+          pekerjaan: this.form.pekerjaan === '9999' ? this.form.pekerjaanLainnya : this.pekerjaanOptions.find(p => p.value === this.form.pekerjaan)?.label || "",
+          // pekerjaan_lainnya: this.form.pekerjaanLainnya,
           sumber_penghasilan: Number(this.form.penghasilan),
           sumber_penghasilan_lainnya: String(this.form.penghasilanLainnya),
           penghasilan_perbulan: Number(this.form.jumlahPenghasilan),
@@ -739,7 +753,8 @@ export default {
           bidang_pekerjaan_usaha:
             this.bidangPekerjaanOptions.find((b) => b.value === this.form.bidangPekerjaanDK)?.label || "",
           kode_jabatan: this.form.jabatanDK,
-          jabatan_pekerjaan: this.jabatanOptions.find(j => j.value === this.form.jabatanDK)?.label || "",
+          // jabatan_pekerjaan: this.jabatanOptions.find(j => j.value === this.form.jabatanDK)?.label || "",
+          jabatan_pekerjaan: this.form.pekerjaan === '9999' ? this.form.jabatanLainnyaDK : this.jabatanOptions.find(p => p.value === this.form.jabatanDK)?.label || "",
           alamat_pekerjaan: this.form.alamatDK,
           lama_bekerja_tahun: String(this.form.lamaBekerjaTahunDK),
           lama_bekerja_bulan: String(this.form.lamaBekerjaBulanDK),

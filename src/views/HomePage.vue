@@ -24,7 +24,7 @@
           <h1 class="text-3xl sm:text-4xl md:text-5xl mb-8 font-medium items-center">
             Selamat Datang di Layanan Digital Universal BPR
           </h1>
-          <p class="text-sm sm:text-base md:text-xl text-gray-500 ">
+          <p class="text-sm sm:text-base md:text-xl text-neutral-600 ">
             Silahkan pilih tipe nasabah untuk melanjutkan.
           </p>
         </div>

@@ -2,10 +2,10 @@
   <form @submit.prevent="handleSubmit">
     <FormField label="NIK" id="nik" v-model="form.nik" required />
 
-    <!-- <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required /> -->
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" required />
+    <!-- <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required /> -->
 
     <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required />
 
@@ -53,7 +53,9 @@
 
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
+      <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+      </ButtonComponent>
     </div>
   </form>
 </template>
@@ -82,6 +84,7 @@ export default {
       jenisKelaminOptions,
       agamaOptions,
       kewarganegaraanOptions,
+      isSubmitting: false,
       masaAktifKTPOptions: getMasaAktifKTPOptions(),
       fileStore: useFileStore(),
       provinsiOptions: [],
@@ -184,12 +187,12 @@ export default {
             if (isMatching && initiallySelectedValue === null) {
               initiallySelectedValue = k.kabupaten;
             }
-
             return {
               label: normalizedKabupatenFromApi,
               value: k.kabupaten,
             };
           });
+
           if (initiallySelectedValue) {
             this.form.kabupaten = initiallySelectedValue;
           } else if (this.kabupatenOptions.length > 0) {
@@ -291,6 +294,10 @@ export default {
       });
     },
     async handleSubmit() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         let formattedDate = this.form.tanggalLahir;
         if (/^\d{2}-\d{2}-\d{4}$/.test(formattedDate)) {
@@ -333,10 +340,6 @@ export default {
           kewarganegaraanLainnya: this.form.kewarganegaraanLainnya,
           is_ekstrak_ktp_ocr: true,
         };
-
-        console.log("Request data:", requestData);
-
-        console.log("Formatted Request Data:", JSON.stringify(requestData, null, 2));
         const response = await api.post("/save-ktp-pengkinian-data", requestData, {
           headers: { "Content-Type": "application/json" },
         });
@@ -345,6 +348,7 @@ export default {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormDataKTP(this.form);
           this.fileStore.setNamaLengkap(requestData.nama_lengkap);
+          this.fileStore.setNik(requestData.nik);
           this.fileStore.isKtpUploaded = true;
           this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
           window.scrollTo(0, 0);
@@ -354,6 +358,8 @@ export default {
         }
       } catch (error) {
         console.error("Error submitting data:", error);
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },
@@ -364,6 +370,13 @@ export default {
     this.fetchKabupaten();
     this.fetchKecamatan();
     this.fetchKelurahan();
+    this.$emit("set-navbar-config", {
+      showBackButton: true,
+      showInfoButton: true,
+      showLogoBPR: true,
+      centerTitle: true,
+    });
+    this.$emit("set-cancel-route", { name: 'UploadDokumenPengkinianData' });
   },
 };
 </script>

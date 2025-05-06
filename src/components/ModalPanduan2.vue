@@ -14,7 +14,7 @@
             <div class="mt-4 space-y-4">
                 <div v-for="(guide, index) in guideList" :key="index"
                     class="flex items-center bg-gray-100 p-3 rounded-lg dark:bg-gray-800">
-                    <img :src="guide.icon" :alt="guide.text" class="w-8 h-8 mr-3" />
+                    <img :src="guide.icon" :alt="guide.text" class="w-6 h-6 mr-3" />
                     <p class="text-gray-800 dark:text-gray-300 text-sm">{{ guide.text }}</p>
                 </div>
             </div>
@@ -88,7 +88,7 @@ export default {
                 ktp: "e-KTP",
                 npwp: "NPWP",
                 tandaTangan: "Tanda Tangan",
-                fotoDiri: "Liveness",
+                fotoDiri: "Foto Diri",
             };
             return textMap[this.documentType] || "Dokumen";
         },

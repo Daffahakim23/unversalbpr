@@ -12,20 +12,20 @@
       <div v-for="(feature, index) in features" :key="index"
         class="flex justify-between items-center p-2 rounded-lg gap-x-8">
         <div class="flex-1">
-          <p class="text-lg sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-800">
+          <p class="text-lg sm:text-lg md:text-xl lg:text-2xl font-semibold text-neutral-900">
             {{ feature.label }}
           </p>
-          <p v-if="feature.description" class="text-base sm:text-base md:text-base lg:text-base text-neutral-700 mt-3">
+          <p v-if="feature.description" class="text-base sm:text-base md:text-base lg:text-base text-neutral-600 mt-3">
             {{ feature.description }}
           </p>
           <!-- List of Features -->
           <ul class="mt-4 space-y-2 text-neutral-700">
             <li v-for="(item, index) in items" :key="index" class="flex items-start gap-2">
-              <span class="text-neutral-900 font-bold">✓</span> {{ item }}
+              <span class="text-primary font-bold">✓</span> {{ item }}
             </li>
           </ul>
           <div class="mt-4">
-            <p v-if="feature.bottom" class="text-base sm:text-base md:text-base lg:text-base text-neutral-700 mt-3">
+            <p v-if="feature.bottom" class="text-base sm:text-base md:text-base lg:text-base text-neutral-600 mt-3">
               {{ feature.bottom }}
             </p>
           </div>
@@ -38,7 +38,7 @@
               <div v-for="(doc, index) in feature.dokumen" :key="index"
                 class="flex flex-row gap-2 border-2 border-neutral-100 items-center mt-2 rounded-xl px-2 py-2 w-fit">
                 <img :src="getDokumenIconPath(doc.icon)" class="h-4 sm:h-4 md:h-4" />
-                <p class=" item-center font-semibold text-xs sm:text-xs md:text-xs lg:text-xs text-neutral-700">
+                <p class=" item-center font-semibold text-xs sm:text-xs md:text-xs lg:text-xs text-neutral-600">
                   {{ doc.text }}
                 </p>
               </div>

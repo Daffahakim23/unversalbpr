@@ -70,7 +70,7 @@
 
     <div class="py-4">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Pembaruan Data
+        Pembaharuan Data
       </h1>
       <div v-if="formPembaruanData" class="form-container">
         <div class="form-item" v-for="(value, key) in formPembaruanData" :key="key">

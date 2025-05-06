@@ -1,7 +1,8 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Nama Lengkap*" id="namaLengkap" type="text" v-model="form.namaLengkap"
-      placeholder="Masukkan Nama Lengkap Anda" />
+    <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" placeholder="Masukkan Nama Lengkap Anda"
+      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
+      @blur="handleNamaLengkapBlur" required />
 
     <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening"
       placeholder="Masukkan Nomor Rekening Anda" required
@@ -54,12 +55,14 @@ export default {
       touched: {
         email: false,
         phone: false,
+        namaLengkap: false,
       },
       tandaPengenalOptions,
       isSubmitting: false,
       emailError: false,
       phoneError: false,
       selectedCountryCode: "ID",
+      namaLengkapError: false,
     };
   },
 
@@ -67,7 +70,8 @@ export default {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
       const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
-      return !(this.form.namaLengkap && emailValid && phoneValid && this.form.tandaPengenal && this.form.nomorRekening);
+      const namaLengkapValid = this.form.namaLengkap && /^[^\d]+$/.test(this.form.namaLengkap);
+      return !(namaLengkapValid && emailValid && phoneValid && this.form.tandaPengenal && this.form.nomorRekening);
     },
   },
 
@@ -79,6 +83,15 @@ export default {
     //     console.error("Navigation error:", error);
     //   }
     // },
+    validateNamaLengkap(namaLengkap) {
+      return /^[^\d]+$/.test(namaLengkap);
+    },
+    handleNamaLengkapBlur() {
+      this.touched.namaLengkap = true;
+      if (this.form.namaLengkap) {
+        this.namaLengkapError = !this.validateNamaLengkap(this.form.namaLengkap);
+      }
+    },
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
@@ -101,18 +114,18 @@ export default {
       }
     },
 
-    async fetchData() {
-      try {
-        const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-        console.log("Response data:", response.data);
-        const data = Array.isArray(response.data) ? response.data[0] : response.data;
-        if (data) {
-          Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    },
+    // async fetchData() {
+    //   try {
+    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
+    //     console.log("Response data:", response.data);
+    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
+    //     if (data) {
+    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // },
 
     async handleSubmit() {
       try {
@@ -122,6 +135,7 @@ export default {
           jenis_identitas: Number(this.form.tandaPengenal),
           no_hp: this.form.phone,
           alamat_email: this.form.email,
+          tanggal: new Date().toISOString().split("T")[0],
         };
 
         console.log("Request data:", requestData);
@@ -162,7 +176,7 @@ export default {
   },
 
   created() {
-    this.fetchData();
+    // this.fetchData();
   },
 };
 </script>

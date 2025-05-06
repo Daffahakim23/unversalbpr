@@ -578,6 +578,7 @@ export default {
 
         // Data Pekerjaan (Beneficial Owner)
         pekerjaan: "Pekerjaan",
+        pekerjaanLainnya: "Pekerjaan Lainnya",
         penghasilan: "Sumber Dana",
         jumlahPenghasilan: "Jumlah Penghasilan",
         hubunganNasabah: "Hubungan Nasabah",
@@ -614,6 +615,7 @@ export default {
         namaPerusahaanDK: "Nama Perusahaan",
         bidangPekerjaanDK: "Bidang Pekerjaan",
         jabatanDK: "Jabatan",
+        jabatanLainnyaDK: "Jabatan Lainnya",
         kotaPerusahaanDK: "Kota Perusahaan",
         kodePosPerusahaanDK: "Kode Pos Perusahaan",
         hubunganPemohonKD: "Hubungan Pemohon",

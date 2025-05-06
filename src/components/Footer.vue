@@ -7,6 +7,17 @@
         <a href="#" class="hover:underline">FAQ</a>
         <img src="@/assets/divider-vertical.png" alt="divider-vertical" class="h-6" />
         <a href="#" class="hover:underline">Tentang</a>
+        <img src="@/assets/divider-vertical.png" alt="divider-vertical" class="h-6" />
+        <a href="#" class="hover:underline">Syarat & Ketentuan</a>
+        <img src="@/assets/divider-vertical.png" alt="divider-vertical" class="h-6" />
+        <a href="#" class="hover:underline">Kebijakan Privasi</a>
+      </div>
+
+      <div class="text-center text-neutral-600 text-xs sm:text-sm">
+        <p>
+          Bank Universal BPR berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan Bank Indonesia (BI) serta
+          merupakan peserta penjaminan Lembaga Penjamin Simpanan (LPS)
+        </p>
       </div>
 
       <div class="flex space-x-8">
@@ -25,13 +36,6 @@
         <a href="https://www.universalbpr.co.id/" target="_blank" rel="noopener noreferrer">
           <img src="@/assets/Website.png" alt="Website" class="h-6" />
         </a>
-      </div>
-
-      <div class="text-center text-neutral-700 text-xs sm:text-sm">
-        <p>
-          Bank Universal BPR berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan Bank Indonesia (BI) serta
-          merupakan peserta penjaminan Lembaga Penjamin Simpanan (LPS)
-        </p>
       </div>
 
       <div class="text-center text-neutral-800 text-xs sm:text-sm">

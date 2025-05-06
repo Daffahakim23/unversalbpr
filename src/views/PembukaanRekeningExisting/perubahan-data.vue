@@ -5,12 +5,12 @@
 
     <div v-if="form.perubahanData === true" class="mt-4">
       <FormField label="Alamat Tempat Tinggal" id="alamat" :isDropdown="false" v-model="form.alamat"
-        placeholder="Masukan Alamat Tempat Tinggal Anda" :required="false" />
+        placeholder="Masukkan Alamat Tempat Tinggal Anda" :required="false" />
 
-      <FormField label="RT" id="rt" :isDropdown="false" v-model="form.rt" placeholder="Masukan RT Anda"
+      <FormField label="RT" id="rt" :isDropdown="false" v-model="form.rt" placeholder="Masukkan RT Anda"
         :required="false" />
 
-      <FormField label="RW" id="rw" :isDropdown="false" v-model="form.rw" placeholder="Masukan RW Anda"
+      <FormField label="RW" id="rw" :isDropdown="false" v-model="form.rw" placeholder="Masukkan RW Anda"
         :required="false" />
 
       <FormField label="Provinsi" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
@@ -26,11 +26,11 @@
       <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan"
         :options="kelurahanOptions" placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-      <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" placeholder="Masukan Kode Pos Anda"
+      <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" placeholder="Masukkan Kode Pos Anda"
         :required="false" />
 
       <FormField label="Alamat Kantor (Opsional)" id="alamat_kantor" :isDropdown="false" v-model="form.alamat_kantor"
-        placeholder="Masukan Alamat Kantor Anda" :required="false" />
+        placeholder="Masukkan Alamat Kantor Anda" :required="false" />
 
       <FormField label="Nomor Telepon (Opsional)" id="nomor_telp" type="number" v-model="form.nomor_telp"
         placeholder="Masukkan Nomor Telepon" :required="false" />

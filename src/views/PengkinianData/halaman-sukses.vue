@@ -30,7 +30,7 @@
     <div class="py-4">
       <h3 class="text-md sm:text-md md:text-base font-semibold mb-4">Dokumen Terkirim</h3>
       <button type="button"
-        class="flex items-center justify-between flex-row gap-4 border border-primary-200 py-4 px-4 rounded-xl w-full"
+        class="flex items-center justify-between flex-row gap-4 border border-primary-100 py-4 px-4 rounded-xl w-full"
         @click="downloadPdf">
         <div>
           <img src="@/assets/zip-icon.svg" alt="PDF Icon" width="32">

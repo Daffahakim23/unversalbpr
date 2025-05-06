@@ -16,8 +16,8 @@
       </label>
     </div> -->
 
-    <FormField label="Pilih Kantor Cabang Pembukaan Rekening*" id="kantorCabang" :isDropdown="true"
-      v-model="form.kantorCabang" placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
+    <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
+      placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
 
     <div v-if="form.kantorCabang" class="mt-4">
       <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
@@ -29,7 +29,7 @@
       :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
-      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+      placeholder="Masukkan Nomor Handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
         ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
@@ -137,7 +137,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
+      const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
       if (!this.form.produk || !emailValid || !phoneValid || !this.form.sumberDana || !this.form.tujuan) {
         return true;
       }

@@ -343,9 +343,9 @@ const routes = [
         component: PerubahanDataPembukaanRekeningExisting,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Perubahan Data Existing",
+          title: "Pembaharuan Data",
           subtitle:
-            "Untuk melanjutkan proses, kami memerlukan informasi tambahan yang tidak tercakup dalam KTP Anda.",
+            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah',
         },
       },
       {
@@ -628,9 +628,9 @@ const routes = [
         component: PerubahanDataPenempatanDepositoExisting,
         meta: {
           feature: "Penempatan Deposito",
-          title: "Perubahan Data Existing",
+          title: "Pembaharuan Data",
           subtitle:
-            "Untuk melanjutkan proses, kami memerlukan informasi tambahan yang tidak tercakup dalam KTP Anda.",
+            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah',
         },
       },
       {

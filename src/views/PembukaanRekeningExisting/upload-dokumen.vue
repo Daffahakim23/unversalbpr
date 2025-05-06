@@ -10,19 +10,19 @@
         <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
         <div>
           <span class="text-sm font-medium text-neutral-900">E-KTP</span>
-          <!-- <p class="text-xs text-neutral-500">Foto KTP Anda</p> -->
+          <!-- <p class="text-xs text-neutral-600">Foto KTP Anda</p> -->
           <div v-if="fileStore.isKtpUploaded" class="flex flex-row items-center gap-1">
             <img src="/src/assets/success.svg" class="h-4" />
-            <p class="text-xs text-neutral-500">{{ nik }}</p>
+            <p class="text-xs text-neutral-600">{{ nik }}</p>
           </div>
           <div v-else>
-            <p class="text-xs text-neutral-500">Foto KTP Anda</p>
+            <p class="text-xs text-neutral-600">Foto E-KTP Anda</p>
           </div>
         </div>
       </div>
       <div>
         <img v-if="fileStore.isKtpUploaded" src="/src/assets/edit-icon.svg" alt="Download" class="h-6" />
-        <img v-else src="/src/assets/download.svg" alt="Download" class="h-6" />
+        <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
       </div>
     </div>
 
@@ -35,19 +35,19 @@
         <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
         <div>
           <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
-          <!-- <p class="text-xs text-neutral-500">Foto Diri Anda</p> -->
+          <!-- <p class="text-xs text-neutral-600">Foto Diri Anda</p> -->
           <div v-if="fileStore.isFotoDiriUploaded" class="flex flex-row items-center gap-1">
             <img src="/src/assets/success.svg" class="h-4" />
-            <p class="text-xs text-neutral-500">Telah Dilengkapi</p>
+            <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
           </div>
           <div v-else>
-            <p class="text-xs text-neutral-500">Foto Diri Anda</p>
+            <p class="text-xs text-neutral-600">Foto Diri Anda</p>
           </div>
         </div>
       </div>
       <div>
         <img v-if="fileStore.isFotoDiriUploaded" src="/src/assets/edit-icon.svg" alt="Download" class="h-6" />
-        <img v-else src="/src/assets/download.svg" alt="Download" class="h-6" />
+        <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
       </div>
     </div>
   </div>
@@ -171,7 +171,6 @@ export default {
       } catch (error) {
         console.error("Error checking envelope:", error);
         this.showErrorModal("Terjadi Kesalahan", "Data KTP dan Foto Diri Anda tidak sesuai.", "Upload Ulang", "Hubungi Customer Care");
-        alert("Terjadi kesalahan saat menghubungi server. Silakan coba lagi.");
       } finally {
         this.isSubmitting = false;
       }

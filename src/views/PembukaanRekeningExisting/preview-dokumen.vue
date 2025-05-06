@@ -104,7 +104,7 @@
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
             <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">{{
-              isSubmitting ? "Mengirim..." : "Simpan Foto" }}
+              isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
             </ButtonComponent>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default {
   data() {
     return {
       showFlag: false,
-      flagType: "info",
+      flagType: "warning",
       flagMessage: "",
       showToaster: false,
       toasterType: 'success',
@@ -270,7 +270,7 @@ export default {
 
     const showWarning = () => {
       showFlag.value = true;
-      flagType.value = 'warning';
+      flagType.value = 'error';
       flagMessage.value = 'Data yang Anda masukkan tidak valid.';
     };
     const showErrorModal = (title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") => {
@@ -669,12 +669,16 @@ export default {
         if (this.documentType === "fotoDiri") {
           this.flagMessage = error.response?.data?.Message;
         } else if (this.documentType === "ktp") {
+          this.showError();
           this.flagMessage = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (this.documentType === "npwp") {
+          this.showError();
           this.flagMessage = "Verifikasi NPWP gagal. Pastikan gambar NPWP jelas dan terbaca.";
         } else if (this.documentType === "tandaTangan") {
+          this.showError();
           this.flagMessage = "Verifikasi tanda tangan gagal. Pastikan gambar tanda tangan jelas dan terbaca.";
         } else {
+          this.showError();
           this.flagMessage = "Gagal mengunggah foto. Silakan coba lagi.";
         }
         // this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
@@ -706,18 +710,6 @@ export default {
       centerTitle: true,
     });
     this.$emit("set-cancel-route", { name: 'UploadDokumenPembukaanRekeningExisting' });
-  },
-
-  beforeUnmount() {
-    // this.$emit("set-navbar-config", {
-    //   showBackButton: true,
-    //   showInfoButton: true,
-    //   showLogoBPR: true,
-    //   centerTitle: false,
-    // });
-    // if (stream.value) {
-    //   stream.value.getTracks().forEach((track) => track.stop());
-    // }
   },
 };
 </script>

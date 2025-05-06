@@ -55,11 +55,11 @@
                 placeholder="Masukkan Alamat Anda" />
 
             <div class="flex flex-row gap-4">
-                <FormField label="Kota Perusahaan*" id="kotaDK" v-model="form.kotaPerusahaanDK" :required="true"
+                <FormField label="Kota Perusahaan*" id="kotaDK" v-model="form.kotaPerusahaanDK"
                     placeholder="Masukkan Kota Perusahaan" class="flex-1" />
 
-                <FormField label="Kode Pos Perusahaan*" id="kodePosDK" v-model="form.kodePosPerusahaanDK"
-                    :required="true" type="Number" placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
+                <FormField label="Kode Pos Perusahaan*" id="kodePosDK" v-model="form.kodePosPerusahaanDK" type="Number"
+                    placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
             </div>
 
             <div class="flex flex-row gap-4">
@@ -91,8 +91,8 @@
             </p>
 
             <FormField label="Hubungan Nasabah*" id="hubunganNasabahBO" :isDropdown="true"
-                :options="hubunganNasabahOptions" v-model="form.hubunganNasabahBO" placeholder="Pilih Hubungan Nasabah"
-                :required="true" />
+                :options="hubunganNasabahOptions" v-model="form.hubunganNasabahBO"
+                placeholder="Pilih Hubungan Nasabah" />
 
             <div v-if="form.hubunganNasabahBO === 'lainnya'" class="">
                 <FormField label="Hubungan Nasabah Lainnya *" id="hubunganNasabahLainnyaBO" type="text"
@@ -101,7 +101,7 @@
             </div>
             <FormField label="Jenis Identitas*" id="jenisIdentitasBO" :isDropdown="true"
                 :options="jenisIdentitasBOOptions" v-model="form.jenisIdentitasBO"
-                placeholder="Pilih Jenis Identitas Beneficial Owner Anda" :required="true" />
+                placeholder="Pilih Jenis Identitas Beneficial Owner Anda" />
 
             <div v-if="form.jenisIdentitasBO === 'lainnya'" class="">
                 <FormField label="Jenis Identitas Lainnya *" id="jenisIdentitasLainnyaBO" type="text"
@@ -118,21 +118,21 @@
 
             </div>
             <FormField label="Nama Lengkap*" id="namaLengkapBO" :isDropdown="false" v-model="form.namaLengkapBO"
-                placeholder="Masukkan Nama Lengkap Beneficial Owner Anda" :required="true" />
+                placeholder="Masukkan Nama Lengkap Beneficial Owner Anda" />
 
             <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false" type="Number"
                 v-model="form.nomorDokumenIdentitasBO"
-                placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda" :required="true" />
+                placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda" />
 
             <FormField label="Detail Alamat Tempat Tinggal Terkini*" id="alamatBO" v-model="form.alamatBO"
-                :required="true" placeholder="Masukkan Alamat Beneficial Owner Anda" />
+                placeholder="Masukkan Alamat Beneficial Owner Anda" />
 
             <div class="flex flex-row gap-4">
-                <FormField label="RT*" id="rtBO" v-model="form.rtBO" :required="true"
-                    placeholder="Masukkan RT Beneficial Owner Anda" class="flex-1" />
+                <FormField label="RT*" id="rtBO" v-model="form.rtBO" placeholder="Masukkan RT Beneficial Owner Anda"
+                    class="flex-1" />
 
-                <FormField label="RW*" id="rwBO" v-model="form.rwBO" :required="true"
-                    placeholder="Masukkan RW Beneficial Owner Anda" class="flex-1" />
+                <FormField label="RW*" id="rwBO" v-model="form.rwBO" placeholder="Masukkan RW Beneficial Owner Anda"
+                    class="flex-1" />
             </div>
 
             <FormField label="Provinsi*" id="provinsiBO" :isDropdown="true" v-model="form.provinsiBO"
@@ -151,11 +151,11 @@
                 :options="kelurahanOptions" placeholder="Pilih Kelurahan Beneficial Owner Anda"
                 :disabled="!form.kecamatanBO" />
 
-            <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO" :required="true"
+            <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO"
                 placeholder="Masukkan Kode Pos Beneficial Owner Anda" />
 
             <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
-                placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
+                placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" />
 
             <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"
                 placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
@@ -165,7 +165,7 @@
 
             <FormField label="Status Perkawinan*" id="statusPerkawinanBO" :isDropdown="true"
                 v-model="form.statusPerkawinanBO" :options="statusPerkawinanOptions"
-                placeholder="Pilih Status Perkawinan Beneficial Owner Anda" :required="true" />
+                placeholder="Pilih Status Perkawinan Beneficial Owner Anda" />
 
             <FormField label="Pekerjaan*" id="pekerjaanBO" :isDropdown="true" v-model="form.pekerjaanBO"
                 placeholder="Pilih Pekerjaan Beneficial Owner Anda" :options="pekerjaanOptions" />
@@ -176,17 +176,17 @@
             </div>
 
             <FormField label="Nama Perusahaan*" id="namaPerusahaanBO" v-model="form.namaPerusahaanBO"
-                placeholder="Masukkan Nama Perusahaan Beneficial Owner Anda" :required="true" />
+                placeholder="Masukkan Nama Perusahaan Beneficial Owner Anda" />
 
             <FormField label="Alamat Perusahaan*" id="alamatPerusahaanBO" v-model="form.alamatPerusahaanBO"
-                placeholder="Masukkan Alamat Perusahaan Beneficial Owner Anda" :required="true" />
+                placeholder="Masukkan Alamat Perusahaan Beneficial Owner Anda" />
 
             <div class="flex flex-row gap-4">
-                <FormField label="Kota*" id="kotaBO" v-model="form.kotaPerusahaanBO" :required="true"
+                <FormField label="Kota*" id="kotaBO" v-model="form.kotaPerusahaanBO"
                     placeholder="Masukkan Kota Perusahaan" class="flex-1" />
 
-                <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosPerusahaanBO" :required="true"
-                    type="Number" placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
+                <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosPerusahaanBO" type="Number"
+                    placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
 
             </div>
             <FormField label="Jabatan*" id="jabatanBO" :isDropdown="true" v-model="form.jabatanBO"
@@ -199,10 +199,10 @@
 
             <div class="flex flex-row gap-4">
                 <QuantityCounter label="Lama Bekerja (Tahun)" id="lamaBekerjaTahunBO" v-model="form.lamaBekerjaTahunBO"
-                    :min="0" :max="50" :required="true" />
+                    :min="0" :max="50" />
 
                 <QuantityCounter label="Lama Bekerja (Bulan)" id="lamaBekerjaBulanBO" v-model="form.lamaBekerjaBulanBO"
-                    :min="0" :max="50" :required="true" />
+                    :min="0" :max="50" />
             </div>
 
             <FormField label="Sumber Dana*" id="penghasilanBO" :isDropdown="true" v-model="form.penghasilanBO"

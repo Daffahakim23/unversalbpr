@@ -6,7 +6,7 @@
         <h1 class="text-3xl sm:text-4xl md:text-5xl mb-8 font-medium">
           {{ headerText }}
         </h1>
-        <p class="text-sm sm:text-base md:text-xl text-gray-500 mb-5">
+        <p class="text-sm sm:text-base md:text-xl text-neutral-600 mb-5">
           {{ bodyText }}
         </p>
       </div>
@@ -19,19 +19,12 @@
       </div>
 
       <!-- Multiple Slides -->
-      <div
-        v-if="slides.length > 1"
-        class="relative w-full h-full overflow-hidden carousel-container"
-      >
+      <div v-if="slides.length > 1" class="relative w-full h-full overflow-hidden carousel-container">
         <!-- Carousel Slides -->
         <transition :name="transitionName" mode="out-in">
           <div class="w-full h-full" :key="currentSlide">
-            <div
-              v-for="(slide, index) in slides"
-              :key="index"
-              v-show="currentSlide === index"
-              class="absolute inset-0 flex items-center justify-center"
-            >
+            <div v-for="(slide, index) in slides" :key="index" v-show="currentSlide === index"
+              class="absolute inset-0 flex items-center justify-center">
               <img :src="slide" alt="Slide" class="w-full h-full rounded-lg" />
             </div>
           </div>
@@ -40,30 +33,21 @@
         <!-- Navigation Buttons -->
         <button
           class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white text-blue-800 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition duration-300 hover:bg-gray-100 hover:shadow-lg hover:scale-105 shadow-md"
-          @click="prevSlide"
-        >
+          @click="prevSlide">
           &#10094;
         </button>
         <button
           class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white text-blue-800 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition duration-300 hover:bg-gray-100 hover:shadow-lg hover:scale-105 shadow-md"
-          @click="nextSlide"
-        >
+          @click="nextSlide">
           &#10095;
         </button>
 
         <!-- Page Indicators -->
-        <div
-          class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2"
-        >
-          <span
-            v-for="(slide, index) in slides"
-            :key="index"
-            :class="[
-              'w-3 h-3 rounded-full cursor-pointer transition-all duration-300',
-              currentSlide === index ? 'bg-blue-800 w-8' : 'bg-gray-500',
-            ]"
-            @click="goToSlide(index)"
-          ></span>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2">
+          <span v-for="(slide, index) in slides" :key="index" :class="[
+            'w-3 h-3 rounded-full cursor-pointer transition-all duration-300',
+            currentSlide === index ? 'bg-blue-800 w-8' : 'bg-gray-500',
+          ]" @click="goToSlide(index)"></span>
         </div>
       </div>
     </div>
@@ -245,6 +229,7 @@ export default {
   .text-sm {
     font-size: 0.75rem;
   }
+
   .h-3 {
     height: 0.75rem;
   }

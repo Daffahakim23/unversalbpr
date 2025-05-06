@@ -5,7 +5,6 @@
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" required />
-
     <!-- <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required /> -->
 
     <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required />
@@ -51,10 +50,6 @@
 
     <FormField label="Masa Aktif KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
       :options="masaAktifKTPOptions" required />
-
-    <!-- <FormField label="Nama Gadis Ibu Kandung*" id="ibuKandung" v-model="form.namaIbuKandung" :required="true"
-      placeholder="Masukan Nama Gadis Ibu Kandung" /> -->
-
 
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
