@@ -56,7 +56,7 @@
 import api from "@/API/api";
 import FormField from "@/components/FormField.vue";
 import { useFileStore } from "@/stores/filestore";
-import { FormModelPenempatanDeposito } from "@/models/formModel";
+import { FormModelPenerimaPemindahbukuan } from "@/models/formModel";
 import ButtonComponent from "@/components/button.vue";
 
 export default {
@@ -87,7 +87,7 @@ export default {
     },
     data() {
         return {
-            form: new FormModelPenempatanDeposito(),
+            form: new FormModelPenerimaPemindahbukuan(),
             bankOptions: [],
             fileStore: useFileStore(),
             rekeningDitemukan: false,
@@ -139,7 +139,7 @@ export default {
             }
         },
         resetForm() {
-            this.form = new FormModelPenempatanDeposito();
+            this.form = new FormModelPenerimaPemindahbukuan();
             this.rekeningDitemukan = false;
             this.rekeningData = {
                 account_bank: "",

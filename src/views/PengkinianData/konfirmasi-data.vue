@@ -33,8 +33,8 @@
           </div>
 
           <div>
-            <img :src="file ? '/src/assets/success.svg' : '/src/assets/download.svg'
-              " alt="Status Upload" class="h-6" />
+            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
+            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
           </div>
         </div>
       </div>
@@ -42,24 +42,12 @@
 
     <div class="border-t border-neutral-200 my-4"></div>
 
-    <!-- <div class="py-4">
-      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Data Pribadi
-      </h1>
-      <div v-if="formPribadi" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPribadi" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
-        </div>
-      </div>
-    </div> -->
-
     <div class="py-4">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Data Pribadi
       </h1>
-      <div v-if="formPribadi" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPribadi" :key="key">
+      <div v-if="formGabungan" class="form-container">
+        <div class="form-item" v-for="(value, key) in formGabungan" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
@@ -83,7 +71,7 @@
     <div class="py-4" v-if="hasBeneficialOwner">
       <div class="border-t border-neutral-200 my-4"></div>
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
-        Beneficial Owner
+        Pemilik Manfaat
       </h1>
       <div v-if="formBeneficialOwner" class="form-container">
         <div class="form-item" v-for="(value, key) in formBeneficialOwner" :key="key">
@@ -118,7 +106,7 @@
           Dengan ini, saya/kami menyatakan bahwa:
         </p>
         <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
-          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT. BPR Universal (selanjutnya
+          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT BPR Universal (selanjutnya
             disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
           <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
             ini.</li>
@@ -143,7 +131,7 @@
     </div>
 
     <!-- Checkbox Persetujuan -->
-    <div class="flex items-center">
+    <!-- <div class="flex items-center">
       <input type="checkbox" id="agreement" v-model="agreement1" class="mr-2 cursor-pointer" />
       <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
         Saya setuju dengan pernyataan dan persetujuan di atas
@@ -155,6 +143,14 @@
       <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
         Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
       </label>
+    </div> -->
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+    </div>
+
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement2"
+        labelText="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*" />
     </div>
 
     <div class="flex justify-between mt-6">
@@ -180,11 +176,13 @@ import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalOTP from "@/components/ModalOTP.vue";
 import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, masaAktifKTPOptions, hubunganNasabahOptions } from '@/data/option.js';
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
-import { fetchBranches } from '@/services/service.js';
+import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
 export default {
   emits: ['updateProgress'],
   components: {
+    CustomCheckbox,
     ButtonComponent,
     RadioButtonChoose,
     // ModalOTP,
@@ -237,6 +235,31 @@ export default {
     //     Object.entries(fileStore.formPribadi || {}).filter(([_, value]) => value)
     //   );
     // },
+    // formPribadi() {
+    //   const fileStore = useFileStore();
+    //   const data = fileStore.formPribadi || {};
+    //   const processedData = {};
+    //   for (const key in data) {
+    //     if (data.hasOwnProperty(key) && data[key]) {
+    //       let value = data[key];
+
+    //       if (key === "pendidikanTerakhir") {
+    //         value = this.getLabelFromOptions(value, pendidikanOptions);
+    //       }
+    //       if (key === "tujuan") {
+    //         value = this.getLabelFromOptions(value, tujuanOptions);
+    //       }
+    //       if (key === "hobi") {
+    //         value = this.getLabelFromOptions(value, hobiOptions);
+    //       }
+    //       if (key === "alamatSesuaiKtp") {
+    //         value = this.getLabelFromOptions(value, alamatSesuaiEktpOptions);
+    //       }
+    //       processedData[key] = value;
+    //     }
+    //   }
+    //   return processedData;
+    // },
     formPribadi() {
       const fileStore = useFileStore();
       const data = fileStore.formPribadi || {};
@@ -244,6 +267,32 @@ export default {
       for (const key in data) {
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
+          if (key === "produk") {
+            value = this.getLabelFromOptions(value, produkOptions);
+          }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
+          }
+          processedData[key] = value;
+        }
+      }
+      return processedData;
+    },
+
+    formGabungan() {
+      const fileStore = useFileStore();
+      const pribadiData = fileStore.formPribadi || {};
+      const emailData = fileStore.formEmailRequestPembukaanRekening || {};
+      const gabunganData = { ...pribadiData, ...emailData };
+      const processedData = {};
+      for (const key in gabunganData) {
+        if (gabunganData.hasOwnProperty(key) && gabunganData[key]) {
+          let value = gabunganData[key];
 
           if (key === "pendidikanTerakhir") {
             value = this.getLabelFromOptions(value, pendidikanOptions);
@@ -254,8 +303,22 @@ export default {
           if (key === "hobi") {
             value = this.getLabelFromOptions(value, hobiOptions);
           }
-          if (key === "alamatSesuaiKtp") {
-            value = this.getLabelFromOptions(value, alamatSesuaiEktpOptions);
+          if (key === "produk") {
+            value = this.getLabelFromOptions(value, produkOptions);
+          }
+          if (key === "sumber") {
+            value = this.getLabelFromOptions(value, sumberDataNasabahOptions);
+          }
+          if (key === "alamatSesuaiEktp") {
+            value = this.getLabelFromOptions(value, trueFalseOptions);
+          }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
           }
           processedData[key] = value;
         }
@@ -267,22 +330,64 @@ export default {
       const data = fileStore.formPekerjaan || {};
       const processedData = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key] && !key.endsWith('BO') && !key.endsWith('KD')) {
+        if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
-          if (key === "penghasilan") {
-            value = this.getLabelFromOptions(value, penghasilanOptions);
+          if (!key.endsWith("KD") && !key.endsWith("BO")) {
+            if (key === "pernyataanChecked") {
+              value = this.getLabelFromOptions(value, persetujuanOptions);
+            }
+            if (key === "penghasilan") {
+              value = this.getLabelFromOptions(value, penghasilanOptions);
+            }
+            if (key === "jumlahPenghasilan") {
+              value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
+            }
+            if (key === "ubahPekerjaan") {
+              value = this.getLabelFromOptions(value, trueFalseOptions);
+            }
+            if (key === "bidangPekerjaanDK") {
+              value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
+            }
+            if (key === "korespondensi") {
+              value = this.getLabelFromOptions(value, korespondensiOptions);
+            }
+            if (key === "sumberDanaMilikPribadi") {
+              value = this.getLabelFromOptions(value, trueFalseOptions);
+            }
+            if (key === "pekerjaan") {
+              if (this.pekerjaanOptions && this.pekerjaanOptions.length > 0) {
+                const selectedPekerjaan = this.pekerjaanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedPekerjaan ? selectedPekerjaan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+            if (key === "jabatanDK") {
+              if (this.jabatanOptions && this.jabatanOptions.length > 0) {
+                const selectedJabatan = this.jabatanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedJabatan ? selectedJabatan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+
+            if (key === "bidangPekerjaanDK") {
+              if (this.bidangPekerjaanOptions && this.bidangPekerjaanOptions.length > 0) {
+                const selectedBidangPekerjaan = this.bidangPekerjaanOptions.find(
+                  (option) => option.value === value
+                );
+                value = selectedBidangPekerjaan ? selectedBidangPekerjaan.label : value;
+              } else {
+                console.warn("");
+              }
+            }
+            processedData[key] = value;
           }
-          if (key === "jumlahPenghasilan") {
-            value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
-          }
-          if (key === "bidangPekerjaanDK") {
-            value = this.getLabelFromOptions(value, bidangPekerjaanDKOptions);
-          }
-          if (key === "korespondensi") {
-            value = this.getLabelFromOptions(value, korespondensiOptions);
-          }
-          processedData[key] = value;
         }
       }
       return processedData;
@@ -325,7 +430,37 @@ export default {
           if (key === "jumlahPenghasilanBO") {
             value = this.getLabelFromOptions(value, jumlahPenghasilanOptions);
           }
+          if (key === "pekerjaanBO") {
+            if (this.pekerjaanOptions && this.pekerjaanOptions.length > 0) {
+              const selectedPekerjaan = this.pekerjaanOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedPekerjaan ? selectedPekerjaan.label : value;
+            } else {
+              console.warn("");
+            }
+          }
+          if (key === "jabatanBO") {
+            if (this.jabatanOptions && this.jabatanOptions.length > 0) {
+              const selectedJabatan = this.jabatanOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedJabatan ? selectedJabatan.label : value;
+            } else {
+              console.warn("");
+            }
+          }
 
+          if (key === "bidangPekerjaanBO") {
+            if (this.bidangPekerjaanOptions && this.bidangPekerjaanOptions.length > 0) {
+              const selectedBidangPekerjaan = this.bidangPekerjaanOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBidangPekerjaan ? selectedBidangPekerjaan.label : value;
+            } else {
+              console.warn("");
+            }
+          }
           processedData[key] = value;
         }
       }
@@ -395,6 +530,31 @@ export default {
         console.error("Gagal mengambil data kantor cabang:", error);
       }
     },
+    async fetchPekerjaan() {
+      try {
+        const pekerjaanOptions = await fetchPekerjaan();
+        this.pekerjaanOptions = pekerjaanOptions;
+      } catch (error) {
+        console.error("Gagal mengambil data Jabatan:", error);
+      }
+    },
+    async fetchJabatanKonfirmasi(kodePekerjaan) {
+      try {
+        const jabatanOptions = await fetchJabatanKonfirmasi(kodePekerjaan);
+        this.jabatanOptions = jabatanOptions;
+      } catch (error) {
+        console.error("Gagal mengambil data Jabatan:", error);
+      }
+    },
+
+    async fetchBidangPekerjaan() {
+      try {
+        const bidangPekerjaanOptions = await fetchBidangPekerjaan();
+        this.bidangPekerjaanOptions = bidangPekerjaanOptions;
+      } catch (error) {
+        console.error("Gagal mengambil data Bidang Pekerjaan:", error);
+      }
+    },
     getLabelFromOptions(value, options) {
       if (!options || options.length === 0) return value;
 
@@ -436,45 +596,60 @@ export default {
         kantorCabang: "Kantor Cabang",
         alamatKantorCabang: "Alamat Kantor Cabang",
         alamatSesuaiEktp: "Alamat Sesuai EKTP",
+        email: "Email",
+        produk: "Produk yang di Inginkan",
+        phone: "Nomor Handphone",
+        namaFundingOfficer: "Nama Funding Officer",
+        sumber: "Sumber Informasi Nasabah",
 
         // Data Pekerjaan (Beneficial Owner)
+        penghasilanLainnya: "Penghasilan Lainnya",
+        sumberDanaMilikPribadi: "Sumber Dana Milik Pribadi",
+        hubunganNasabahLainnyaBO: "Hubungan Nasabah Lainnya",
+        jenisIdentitasLainnyaBO: "Jenis Identitas Lainnya",
+        pekerjaanLainnyaBO: "Pekerjaan Lainnya",
+        jabatanLainnyaBO: "Jabatan Lainnya",
+        penghasilanLainnyaBO: "Penghasilan Lainnya",
         pekerjaan: "Pekerjaan",
-        penghasilan: "Penghasilan",
+        pekerjaanLainnya: "Pekerjaan Lainnya",
+        penghasilan: "Sumber Dana",
         jumlahPenghasilan: "Jumlah Penghasilan",
         hubunganNasabah: "Hubungan Nasabah",
-        jenisIdentitasBO: "Jenis Identitas Beneficial Owner",
+        jenisIdentitasBO: "Jenis Identitas",
         hubunganNasabahBO: "Hubungan dengan Nasabah",
         kotaPerusahaanBO: "Kota Perusahaan",
-        kodePosPerushaanBO: "Kode Pos Perusahaan",
-        kewarganegaraanBO: "Kewarganegaraan Beneficial Owner",
-        namaLengkapBO: "Nama Beneficial Owner",
+        kodePosPerusahaanBO: "Kode Pos Perusahaan",
+        kewarganegaraanBO: "Kewarganegaraan",
+        namaLengkapBO: "Nama",
         nomorDokumenIdentitasBO: "Nomor Dokumentasi Identitas",
-        alamatBO: "Alamat Beneficial Owner",
-        rtBO: "RT Beneficial Owner",
-        rwBO: "RW Beneficial Owner",
-        provinsiBO: "Provinsi Beneficial Owner",
-        kabupatenBO: "Kota / Kabupaten Beneficial Owner",
-        kecamatanBO: "Kecamatan Beneficial Owner",
-        kelurahanBO: "Kelurahan Beneficial Owner",
-        kodePosPerusahaanBO: "Kode Pos Perusahaan Beneficial Owner",
-        tempatLahirBO: "Tempat Lahir Beneficial Owner",
-        tanggalLahirBO: "Tanggal Lahir Beneficial Owner",
-        jenisKelaminBO: "Jenis Kelamin Beneficial Owner",
+        alamatBO: "Alamat",
+        rtBO: "RT",
+        rwBO: "RW",
+        provinsiBO: "Provinsi",
+        kabupatenBO: "Kota / Kabupaten",
+        kecamatanBO: "Kecamatan",
+        kelurahanBO: "Kelurahan",
+        kodePosPerusahaanBO: "Kode Pos Perusahaan",
+        tempatLahirBO: "Tempat Lahir",
+        tanggalLahirBO: "Tanggal Lahir",
+        jenisKelaminBO: "Jenis Kelamin",
         statusPerkawinanBO: "Status Perkawinan",
-        kodePosBO: "Kode Pos Beneficial Owner",
-        pekerjaanBO: "Pekerjaan Beneficial Owner",
-        namaPerusahaanBO: "Nama Perusahaan Beneficial Owner",
-        alamatPerusahaanBO: "Alamat Perusahaan Beneficial Owner",
-        jabatanBO: "Jabatan Beneficial Owner",
+        kodePosBO: "Kode Pos",
+        pekerjaanBO: "Pekerjaan",
+        namaPerusahaanBO: "Nama Perusahaan",
+        alamatPerusahaanBO: "Alamat Perusahaan",
+        jabatanBO: "Jabatan",
         lamaBekerjaTahunBO: "Lama Bekerja Tahun",
         lamaBekerjaBulanBO: "Lama Bekerja Bulan",
-        penghasilanBO: "Penghasilan Beneficial Owner",
-        jumlahPenghasilanBO: "Jumlah Penghasilan Beneficial Owner",
+        penghasilanBO: "Penghasilan",
+        jumlahPenghasilanBO: "Jumlah Penghasilan",
 
         // Data Pekerjaan (Detail Pekerjaan)
+        ubahPekerjaan: "Pembaharuan Pekerjaan",
         namaPerusahaanDK: "Nama Perusahaan",
         bidangPekerjaanDK: "Bidang Pekerjaan",
         jabatanDK: "Jabatan",
+        jabatanLainnyaDK: "Jabatan Lainnya",
         kotaPerusahaanDK: "Kota Perusahaan",
         kodePosPerusahaanDK: "Kode Pos Perusahaan",
         hubunganPemohonKD: "Hubungan Pemohon",
@@ -484,6 +659,7 @@ export default {
         nomorTeleponFaxDK: "Nomor Telepon Fax",
         alamatDK: "Alamat Kantor",
         korespondensi: "Korespondensi",
+        pernyataanChecked: "Pernyataan & Persetujuan Nasabah",
 
         // kontak Darurat
         namaLengkapKD: "Nama Lengkap Kontak Darurat",
@@ -577,6 +753,9 @@ export default {
     console.log("Component mounted!");
     this.$emit("update-progress", 90);
     this.fetchBranches();
+    this.fetchBidangPekerjaan();
+    this.fetchPekerjaan();
+    this.fetchJabatanKonfirmasi();
   },
 };
 </script>

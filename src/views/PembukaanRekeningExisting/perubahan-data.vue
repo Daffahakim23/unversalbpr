@@ -1,17 +1,17 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <RadioButtonChoose label="Apakah Anda ingin melakukan pembaharuan data" :options="sumberOptions"
-      v-model="form.perubahanData" name="perubahaDataD" />
+      v-model="form.perubahanData" name="perubahaData" />
 
     <div v-if="form.perubahanData === true" class="mt-4">
       <FormField label="Alamat Tempat Tinggal" id="alamat" :isDropdown="false" v-model="form.alamat"
         placeholder="Masukkan Alamat Tempat Tinggal Anda" :required="false" />
 
       <FormField label="RT" id="rt" :isDropdown="false" v-model="form.rt" placeholder="Masukkan RT Anda"
-        :required="false" />
+        :required="false" variant="numeric" :maxlength="3" />
 
       <FormField label="RW" id="rw" :isDropdown="false" v-model="form.rw" placeholder="Masukkan RW Anda"
-        :required="false" />
+        :required="false" variant="numeric" :maxlength="3" />
 
       <FormField label="Provinsi" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
         placeholder="Pilih Provinsi" @change="fetchKabupaten" :required="false" />
@@ -26,17 +26,17 @@
       <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan"
         :options="kelurahanOptions" placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-      <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" placeholder="Masukkan Kode Pos Anda"
-        :required="false" />
+      <FormField label="Kode Pos" id="kodePos" v-model="form.kodePos" placeholder="Masukkan Kode Pos Anda"
+        :maxlength="5" :required="false" variant="numeric" />
 
       <FormField label="Alamat Kantor (Opsional)" id="alamat_kantor" :isDropdown="false" v-model="form.alamat_kantor"
         placeholder="Masukkan Alamat Kantor Anda" :required="false" />
 
       <FormField label="Nomor Telepon (Opsional)" id="nomor_telp" type="number" v-model="form.nomor_telp"
-        placeholder="Masukkan Nomor Telepon" :required="false" />
+        placeholder="Masukkan Nomor Telepon" variant="numeric" :required="false" />
 
       <FormField label="Nomor Fax (Opsional)" id="nomor_fax" type="number" v-model="form.nomor_fax"
-        placeholder="Masukkan Nomor Fax" :required="false" />
+        placeholder="Masukkan Nomor Fax" :required="false" variant="numeric" />
 
       <FormField label="Alamat Email (Opsional)" id="email" type="email" v-model="form.email"
         placeholder="Masukkan email Anda" :required="false" />
@@ -44,7 +44,7 @@
     </div>
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit">
+      <ButtonComponent type="submit" :disabled="isButtonDisabled">
         Lanjutkan
       </ButtonComponent>
     </div>
@@ -105,27 +105,38 @@ export default {
         this.fetchKelurahan();
       }
     },
+    "form.perubahanData": function (newValue) {
+      if (newValue === false) {
+        this.form.alamat = "";
+        this.form.rt = "";
+        this.form.rw = "";
+        this.form.provinsi = "";
+        this.form.kabupaten = "";
+        this.form.kecamatan = "";
+        this.form.kelurahan = "";
+        this.form.kodePos = "";
+      }
+    },
   },
   computed: {
-    // isButtonDisabled() {
-    //   if (this.form.perubahanData === false) {
-    //     return false;
-    //   }
-    //   if (this.form.perubahanData === true) {
-    //     return !(
-    //       this.form.alamat &&
-    //       this.form.rt &&
-    //       this.form.rw &&
-    //       this.form.provinsi &&
-    //       this.form.kota &&
-    //       this.form.kecamatan &&
-    //       this.form.kelurahan &&
-    //       this.form.kodePos &&
-    //       this.form.email
-    //     );
-    //   }
-    //   return true;
-    // },
+    isButtonDisabled() {
+      if (this.form.perubahanData === false) {
+        return false;
+      }
+      if (this.form.perubahanData === true) {
+        return !(
+          this.form.alamat &&
+          this.form.rt &&
+          this.form.rw &&
+          this.form.provinsi &&
+          this.form.kabupaten &&
+          this.form.kecamatan &&
+          this.form.kelurahan &&
+          this.form.kodePos
+        );
+      }
+      return true;
+    },
   },
   methods: {
     // async fetchData() {

@@ -33,8 +33,8 @@
           </div>
 
           <div>
-            <img :src="file ? '/src/assets/success.svg' : '/src/assets/download.svg'
-              " alt="Status Upload" class="h-6" />
+            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
+            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@
           Dengan ini, saya/kami menyatakan bahwa:
         </p>
         <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
-          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT. BPR Universal (selanjutnya
+          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT BPR Universal (selanjutnya
             disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
           <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
             ini.</li>
@@ -143,7 +143,7 @@
       </div>
     </div>
 
-    <!-- Checkbox Persetujuan -->
+    <!-- Checkbox Persetujuan
     <div class="flex items-center">
       <input type="checkbox" id="agreement1" v-model="agreement1" class="mr-2 cursor-pointer" />
       <label for="agreement1" class="text-sm text-neutral-900 cursor-pointer">
@@ -156,6 +156,15 @@
       <label for="agreement2" class="text-sm text-neutral-900 cursor-pointer">
         Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
       </label>
+    </div> -->
+
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+    </div>
+
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement2"
+        labelText="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*" />
     </div>
 
     <div class="flex justify-between mt-6">
@@ -184,6 +193,7 @@ import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
 import { jenisKelaminOptions, tujuanOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, produkOptions, masaAktifKTPOptions } from '@/data/option.js';
 import { fetchBranches } from '@/services/service.js';
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
 
 export default {
@@ -193,6 +203,7 @@ export default {
     RadioButtonChoose,
     // ModalOTP,
     ModalKonfirmasi,
+    CustomCheckbox,
   },
   name: "DataPribadi",
   computed: {

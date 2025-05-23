@@ -7,12 +7,44 @@
         </button>
       </div>
 
-      <div class="flex flex-row gap-4">
-        <button class="flex items-center text-primary">
-          <img src="@/assets/info-button.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+      <div class="flex gap-4">
+        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="focus:outline-none" type="button">
+          <img src="@/assets/info-product-icon.svg" alt="Info Produk" class="h-8 sm:h-10 md:h-10" />
         </button>
+
+        <div id="dropdown"
+          class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
+          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+            <li>
+              <a @click="downloadProductDetails" download="info-produk.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
+                Produk</a>
+            </li>
+            <li>
+              <a @click="downloadSK" download="syarat-ketentuan.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
+                &
+                Ketentuan</a>
+            </li>
+            <li>
+              <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
+                Privasi</a>
+            </li>
+            <li>
+              <a @click="downloadFAQ" download="FAQ.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
+              </a>
+            </li>
+            <li>
+              <a @click="downloadTentang" download="Tentang.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
+              </a>
+            </li>
+          </ul>
+        </div>
         <button class="flex items-center text-primary">
-          <img src="@/assets/cs-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+          <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
         </button>
       </div>
     </div>
@@ -21,8 +53,8 @@
     <div class="flex-grow flex flex-col items-center p-10 bg-neutral-50">
       <div class="flex flex-col justify-center w-full">
         <div class="flex flex-col mb-10">
-          <Header headerText="Selamat Datang Di E-Form Universal BPR"
-            bodyText="Akses berbagai layanan Universal BPR kapan saja, di mana saja!" />
+          <Header headerText="Selamat Datang Di E-Form BPR Universal"
+            bodyText="Akses berbagai layanan BPR Universal kapan saja, di mana saja!" />
         </div>
       </div>
       <div class="flex flex-col gap-8 w-full">
@@ -44,7 +76,7 @@
                 @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
               <Card type="1" :features="[
                 {
-                  label: 'Penempatan Deposito',
+                  label: 'Pembukaan Deposito',
                   description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
                   dokumen: [
                     { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
@@ -54,7 +86,7 @@
                   ]
                 }
               ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoExisting')"
-                @cardClick="handleCardClick" buttonString="Ajukan Penempatan Deposito" />
+                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Deposito" />
             </div>
 
             <div class="flex flex-col md:flex-row gap-4">
@@ -77,7 +109,7 @@
               <Card type="1" :features="[
                 {
                   label: 'Transfer',
-                  description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
+                  description: 'Layanan transfer ke bank lain atau transfer ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
                   dokumen: [
                     { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
@@ -86,8 +118,8 @@
                   ]
                 }
               ]" icon="icon-deposito.svg" :onBtnClick="() => openCSModal({
-                label: 'Pemindah Bukuan',
-                description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
+                label: 'Transfer',
+                description: 'Layanan transfer ke bank lain atau transfer ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
                 dokumen: 'Foto/Scan KTP Elektronik',
               })" @cardClick="handleCardClick" buttonString="Ajukan Transfer" />
 
@@ -128,7 +160,7 @@
                 @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
               <Card type="1" :features="[
                 {
-                  label: 'Penempatan Deposito',
+                  label: 'Pembukaan Deposito',
                   description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
                   dokumen: [
                     { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
@@ -140,7 +172,7 @@
                   ]
                 }
               ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoNTB')"
-                @cardClick="handleCardClick" buttonString="Ajukan Penempatan Deposito" />
+                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Deposito" />
             </div>
           </div>
         </Section>
@@ -153,7 +185,7 @@
   <CSModal :isOpen="showModalCS" @close="closeCSModal" :features="[selectedFeature]"
     :icon="selectedFeature ? 'icon-deposito.svg' : ''"
     :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoNTB')" @cardClick="handleCardClick"
-    buttonString="Ajukan Penempatan Deposito" />
+    buttonString="Ajukan Pembukaan Deposito" />
 
 </template>
 
@@ -164,6 +196,11 @@ import Section from "@/components/Section.vue";
 import Card from "@/components/Card.vue";
 import Footer from "@/components/Footer.vue";
 import CSModal from "@/components/ModalCS.vue";
+import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
+import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
+import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
+import faqPdf from '@/assets/FAQ.pdf';
+import tentangKamiPdf from '@/assets/Tentang.pdf';
 
 var userType = '';
 
@@ -173,14 +210,66 @@ export default {
   mounted() {
     console.log('User Type:', this.$route.query.userType);
     userType = this.$route.query.userType;
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+    // this.resetNavbarConfig();
   },
   data() {
     return {
       showModalCS: false,
       selectedFeature: null,
+      isInfoProductDropdownOpen: false,
+      isInfoDropdownOpen: false,
     };
   },
   methods: {
+    downloadProductDetails() {
+      const fileUrl = infoProdukPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "INFO-PRODUK.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadSK() {
+      const fileUrl = syaratKetentuanPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Syarat & ketentuan.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadKP() {
+      const fileUrl = kebijakanPrivasiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Kebijakan Privasi.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadFAQ() {
+      const fileUrl = faqPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "FAQ.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadTentang() {
+      const fileUrl = tentangKamiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Tentang.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
     goToHome() {
       this.$router.push("/");
     },

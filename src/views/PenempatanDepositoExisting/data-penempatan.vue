@@ -3,15 +3,21 @@
     <FormField label="Pilih Produk Deposito*" id="produkDeposito" :isDropdown="true" v-model="form.produkDeposito"
       placeholder="Pilih produk yang Anda inginkan" :options="produkDepositoOptions" required />
 
-    <FormField label="Nominal Deposito*" id="nominal" :isDropdown="false" v-model="formattedNominal"
-      placeholder="Masukkan Nominal Penempatan Deposito"
+    <FormField label="Nominal Deposito*" id="nominal" :isDropdown="false" v-model="formattedNominal" variant="numeric"
+      :maxlength="20" placeholder="Masukkan Nominal Pembukaan Deposito"
       :disabled="!form.produkDeposito || formattedNominal.length >= 12" :required="true" :hint="nominalError || ''"
-      :error="!!nominalError" @input="updateNominal($event.target.value)" />
+      :error="!!nominalError" />
 
     <FormField label="Terbilang" id="terbilang" :isDropdown="false" v-model="form.terbilang" :required="true"
-      placeholder="Masukkan Nominal Penempatan Deposito" :readonly="true" />
+      placeholder="Masukkan Nominal Pembukaan Deposito" :readonly="true" />
 
-    <div v-if="form.produkDeposito == 1" class="mt-4">
+    <div v-if="form.produkDeposito" class="mt-4">
+      <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
+        v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga" :options="currentJangkaWaktuOptions"
+        required />
+    </div>
+
+    <!-- <div v-if="form.produkDeposito == 1" class="mt-4">
       <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
         v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
         :options="jangkaWaktuDepositoUniversalOptions" required />
@@ -35,7 +41,7 @@
       <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
         v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
         :options="jangkaWaktuDepositoGreenOptions" required />
-    </div>
+    </div> -->
 
     <div class="mb-6">
       <label class="text-neutral-800">Perkiraan Bunga yang didapatkan (-20% Pajak)</label>
@@ -43,6 +49,11 @@
         {{ formattedBunga }}
       </p>
     </div>
+
+    <FlagBox type="warning" closable class="mb-4">
+      <p class="font-normal text-xs md:text-sm">Perkiraan bunga Deposito hanya bersifat estimasi. Bunga deposito yang
+        akan diterima tergantung jumlah hari pada bulan pembukaan deposito.</p>
+    </FlagBox>
 
     <FormField label="Saat Jatuh Tempo Nominal*" id="metodePencairan" :isDropdown="true" v-model="form.metodePencairan"
       placeholder="Pilih Perlakuan Nominal Deposito Saat Jatuh Tempo" :options="metodePencairanOptions" required />
@@ -97,13 +108,18 @@
     <!-- Jika opsi value = 3 -->
     <div v-if="form.pembayaranBunga == 3" class="mt-2">
       <div class=" flex items-baseline mb-6">
-        <input id="modal-checkbox" type="checkbox" v-model="isChecked"
+        <div class="mr-2 mb-6">
+          <CustomCheckbox v-model="isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
+          sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi
+          PT BPR Universal: notifikasi@universalbpr.co.id" />
+        </div>
+        <!-- <input id="modal-checkbox" type="checkbox" v-model="isChecked"
           class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600 self-start" />
         <p for="modal-checkbox" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">
           Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
           sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi
           Universal BPR: <strong>notifikasi@universalbpr.co.id</strong>
-        </p>
+        </p> -->
       </div>
     </div>
 
@@ -145,11 +161,15 @@
       </div>
 
       <label class="flex items-baseline space-x-2 mt-4">
-        <input type="checkbox" v-model="setujuBiayaTransfer" required />
+        <div class="mr-2 mb-6">
+          <CustomCheckbox v-model="setujuBiayaTransfer" labelText="Saya menyetujui pemotongan biaya administrasi transfer pembayaran bunga deposito ke Rekening Bank Lain,
+          sesuai dengan ketentuan BPR Universal." />
+        </div>
+        <!-- <input type="checkbox" v-model="setujuBiayaTransfer" required />
         <p class="ms-2 text-sm text-gray-900 dark:text-gray-300 mb-4">
           Saya menyetujui pemotongan biaya administrasi transfer pembayaran bunga deposito ke Rekening Bank Lain,
           sesuai dengan ketentuan BPR Universal.
-        </p>
+        </p> -->
       </label>
     </div>
 
@@ -159,11 +179,11 @@
     <FormField label="Metode Penyetoran*" id="pembayaranBunga" :isDropdown="true" v-model="form.metodePenyetoran"
       placeholder="PIlih Metode Metode Penyetoran" :options="metodePenyetoranNTBOptions" required />
 
-    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekeningPenyetoran"
-      v-model="form.nomorRekeningPenyetoran" placeholder="Masukan Nomor Rekening Tabungan Universal" required />
+    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekeningPenyetoran" variant="numeric" :maxlength="13"
+      v-model="form.nomorRekeningPenyetoran" placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
 
-    <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaRekeningPenyetoran"
-      v-model="form.namaRekeningPenyetoran" placeholder="Masukan Nama Rekening Tabungan Universal" required />
+    <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaRekeningPenyetoran" variant="alpha"
+      v-model="form.namaRekeningPenyetoran" placeholder="Masukkan Nama Rekening Tabungan Universal" required />
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -190,13 +210,37 @@ import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
-import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoGreenOptions, metodePencairanOptions, pembayaranBungaOptions, produkDepositoOptions, metodePenyetoranNTBOptions } from "@/data/option.js";
+import {
+  jangkaWaktuDepositoUniversalOptionsTier1,
+  jangkaWaktuDepositoUniversalOptionsTier2,
+  jangkaWaktuDepositoUniversalOptionsTier3,
+  jangkaWaktuDepositoPeduliOptionsTier1,
+  jangkaWaktuDepositoPeduliOptionsTier2,
+  jangkaWaktuDepositoDEBUTSanmereOptions,
+  jangkaWaktuDepositoDEBUTMatiusOptions,
+  jangkaWaktuDepositoPeduliOptions,
+  jangkaWaktuDepositoGreenOptionsTier1,
+  jangkaWaktuDepositoGreenOptionsTier2,
+  metodePencairanOptions,
+  pembayaranBungaOptions,
+  produkDepositoOptions,
+  metodePenyetoranNTBOptions
+} from "@/data/option.js";
 import { FormModelPenempatanDeposito } from "@/models/formModel";
-import { hitungBungaUniversal, hitungBungaPeduli, hitungBungaDEBUTSanmere, hitungBungaDEBUTMatius, hitungBungaGreen, } from "@/data/bunga-deposito.js";
+import {
+  hitungBungaUniversal,
+  hitungBungaPeduli,
+  hitungBungaDEBUTSanmere,
+  hitungBungaDEBUTMatius,
+  hitungBungaGreen,
+
+} from "@/data/bunga-deposito.js";
 // import ModalTransfer from "@/components/ModalTransfer.vue";
 import ReusableModal from "@/components/ModalRekeningOfUs.vue";
 import ReusableModal2 from "@/components/ModalRekeningOnUs.vue";
 import { toTerbilang } from "@/utils/toTerbilang.js";
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
+import FlagBox from "@/components/flagbox.vue";
 
 export default {
   components: {
@@ -206,8 +250,11 @@ export default {
     // ModalTransfer,
     ReusableModal,
     ReusableModal2,
+    CustomCheckbox,
+    FlagBox,
   },
-  emits: ['updateProgress'],
+  emits: ['updateProgress', 'setNavbarConfig', 'setCancelRoute'], // Declare the custom events
+
   setup() {
     const fileStore = useFileStore();
     return { fileStore };
@@ -219,11 +266,11 @@ export default {
       setujuBiayaTransfer: false,
       metodePencairanOptions,
       produkDepositoOptions,
-      jangkaWaktuDepositoUniversalOptions,
-      jangkaWaktuDepositoDEBUTMatiusOptions,
-      jangkaWaktuDepositoDEBUTSanmereOptions,
-      jangkaWaktuDepositoPeduliOptions,
-      jangkaWaktuDepositoGreenOptions,
+      // jangkaWaktuDepositoUniversalOptions,
+      // jangkaWaktuDepositoDEBUTMatiusOptions,
+      // jangkaWaktuDepositoDEBUTSanmereOptions,
+      // jangkaWaktuDepositoPeduliOptions,
+      // jangkaWaktuDepositoGreenOptions,
       pembayaranBungaOptions,
       metodePenyetoranNTBOptions,
       nominalError: false,
@@ -263,6 +310,89 @@ export default {
     };
   },
   computed: {
+    currentJangkaWaktuOptions() {
+      console.log("Nominal:", this.form.nominal);
+      const nominal = parseFloat(this.form.nominal) || 0;
+      let optionsByProduct = [];
+
+      switch (this.form.produkDeposito) {
+        case "1": // Deposito Universal
+          if (nominal < 100000000) {
+            optionsByProduct = jangkaWaktuDepositoUniversalOptionsTier1;
+            console.log("1");
+          } else if (nominal >= 100000000 && nominal < 1000000000) {
+            optionsByProduct = jangkaWaktuDepositoUniversalOptionsTier2;
+            console.log("2");
+          } else if (nominal >= 1000000000) {
+            optionsByProduct = jangkaWaktuDepositoUniversalOptionsTier3;
+            console.log("3");
+          }
+          break;
+        case "2": // Deposito Peduli
+          if (nominal >= 100000000 && nominal < 1000000000) {
+            optionsByProduct = jangkaWaktuDepositoPeduliOptionsTier1;
+          } else if (nominal >= 1000000000) {
+            optionsByProduct = jangkaWaktuDepositoPeduliOptionsTier2;
+          }
+          break;
+        case "3": // DEBUT Sanmere
+          optionsByProduct = jangkaWaktuDepositoDEBUTSanmereOptions;
+          break;
+        case "4": // DEBUT Matius
+          optionsByProduct = jangkaWaktuDepositoDEBUTMatiusOptions;
+          break;
+        case "5": // Deposito Green
+          if (nominal >= 100000000 && nominal < 1000000000) {
+            optionsByProduct = jangkaWaktuDepositoGreenOptionsTier1;
+          } else if (nominal >= 1000000000 && nominal <= 2000000000) {
+            optionsByProduct = jangkaWaktuDepositoGreenOptionsTier2;
+          } else if (nominal >= 2000000001) {
+            this.nominalError = "Nominal melebihi batas Deposito Green. Nominal maksimum adalah Rp 2.000.000.000";
+          } else {
+            optionsByProduct = [];
+          }
+          break;
+        default:
+          optionsByProduct = [];
+      }
+      return optionsByProduct;
+    },
+
+    formattedBunga() {
+      const nominal = parseFloat(this.form.nominal) || 0;
+      const jangkaWaktuValue = this.form.jangkaWaktu;
+
+      if (nominal <= 0 || !jangkaWaktuValue) return "Rp 0";
+
+      const selectedOption = this.currentJangkaWaktuOptions.find(
+        (option) => option.value === jangkaWaktuValue
+      );
+
+      if (!selectedOption) {
+        console.warn("Selected option not found for Jangka Waktu:", jangkaWaktuValue);
+        return "Rp 0";
+      }
+
+      const sukuBungaForCalculation = parseFloat(selectedOption.sukuBunga) / 100;
+      const jangkaWaktuBulanDariOpsi = selectedOption.jangkaWaktu;
+      const donasiForCalculation = selectedOption.donasi;
+
+      switch (this.form.produkDeposito) {
+        case "1":
+          return hitungBungaUniversal(nominal, jangkaWaktuBulanDariOpsi, sukuBungaForCalculation);
+        case "2":
+          return hitungBungaPeduli(nominal, jangkaWaktuBulanDariOpsi, sukuBungaForCalculation);
+        case "3":
+          return hitungBungaDEBUTSanmere(nominal, jangkaWaktuBulanDariOpsi, sukuBungaForCalculation, donasiForCalculation);
+        case "4":
+          return hitungBungaDEBUTMatius(nominal, jangkaWaktuBulanDariOpsi, sukuBungaForCalculation);
+        case "5":
+          return hitungBungaGreen(nominal, jangkaWaktuBulanDariOpsi, sukuBungaForCalculation);
+        default:
+          return "Rp 0";
+      }
+    },
+
     formattedNominal: {
       get() {
         return this.form.nominal !== null && this.form.nominal !== undefined
@@ -299,26 +429,26 @@ export default {
         !!this.nominalError
       );
     },
-    formattedBunga() {
-      const nominal = parseFloat(this.form.nominal) || 0;
-      const jangkaWaktu = this.form.jangkaWaktu;
+    // formattedBunga() {
+    //   const nominal = parseFloat(this.form.nominal) || 0;
+    //   const jangkaWaktu = this.form.jangkaWaktu;
 
-      if (nominal <= 0 || !jangkaWaktu) return "Rp 0";
-      switch (this.form.produkDeposito) {
-        case "1":
-          return hitungBungaUniversal(nominal, jangkaWaktu);
-        case "2":
-          return hitungBungaPeduli(nominal, jangkaWaktu);
-        case "3":
-          return hitungBungaDEBUTSanmere(nominal, jangkaWaktu);
-        case "4":
-          return hitungBungaDEBUTMatius(nominal, jangkaWaktu);
-        case "5":
-          return hitungBungaGreen(nominal, jangkaWaktu);
-        default:
-          return "Rp 0";
-      }
-    },
+    //   if (nominal <= 0 || !jangkaWaktu) return "Rp 0";
+    //   switch (this.form.produkDeposito) {
+    //     case "1":
+    //       return hitungBungaUniversal(nominal, jangkaWaktu);
+    //     case "2":
+    //       return hitungBungaPeduli(nominal, jangkaWaktu);
+    //     case "3":
+    //       return hitungBungaDEBUTSanmere(nominal, jangkaWaktu);
+    //     case "4":
+    //       return hitungBungaDEBUTMatius(nominal, jangkaWaktu);
+    //     case "5":
+    //       return hitungBungaGreen(nominal, jangkaWaktu);
+    //     default:
+    //       return "Rp 0";
+    //   }
+    // },
   },
 
   watch: {
@@ -375,15 +505,11 @@ export default {
         };
       }
     },
-    "fileStore.formPenempatanDeposito": {
-      handler() {
-        this.fetchData();
-      },
-      deep: true,
-    },
-    "form.nominal"(newVal) {
+    "form.nominal"(newVal, oldVal) {
       this.form.terbilang = this.toTerbilang(parseInt(newVal) || 0);
+      console.log(this.form.nominal);
       if (newVal === 0) {
+        console.log("Nominal tidak boleh 0.");
         this.nominalError = "Nominal tidak boleh 0.";
       } else {
         this.nominalError = null;
@@ -392,12 +518,49 @@ export default {
       if (newVal && newVal.toString().length > 12) {
         this.nominalError = "Nominal tidak boleh lebih dari 12 digit.";
       }
+
+      // Reset jangka waktu jika nominal berubah, karena opsi mungkin tidak valid lagi
+      // Hanya reset jika tier berubah, atau jika tidak ada opsi yang dipilih di tier baru
+      const oldJangkaWaktuOptions = this.getJangkaWaktuOptionsForNominal(oldVal, this.form.produkDeposito);
+      const newJangkaWaktuOptions = this.currentJangkaWaktuOptions;
+
+      if (!newJangkaWaktuOptions.some(option => option.value === this.form.jangkaWaktu)) {
+        this.form.jangkaWaktu = null; // Setel ke null atau default value jika opsi saat ini tidak ada di tier baru
+      }
     },
     "form.produkDeposito"(newVal) {
       this.validateNominal();
     },
   },
   methods: {
+    getJangkaWaktuOptionsForNominal(nominal, produkDeposito) {
+      console.log(nominal);
+      const numNominal = parseFloat(nominal) || 0;
+      let options = [];
+      switch (produkDeposito) {
+        case "1": // Deposito Universal
+          if (numNominal < 100000000) {
+            options = jangkaWaktuDepositoUniversalOptionsTier1;
+          } else if (numNominal >= 100000000 && numNominal < 1000000000) {
+            options = jangkaWaktuDepositoUniversalOptionsTier2;
+          } else if (numNominal >= 1000000000) {
+            options = jangkaWaktuDepositoUniversalOptionsTier3;
+          }
+          break;
+        case "2": // Deposito Universal
+          if (numNominal >= 100000000 && numNominal < 1000000000) {
+            options = jangkaWaktuDepositoUniversalOptionsTier1;
+          } else if (numNominal >= 1000000000) {
+            options = jangkaWaktuDepositoUniversalOptionsTier2;
+          }
+          break;
+        // ... tambahkan case untuk produk lainnya
+        default:
+          options = [];
+      }
+      return options;
+    },
+
     handleTransferFromModal(data) {
       this.fileStore.setFormPenempatanDeposito({
         ...this.fileStore.formPenempatanDeposito,
@@ -495,7 +658,9 @@ export default {
               this.form[key] = depositoData[key];
             }
           });
+          console.log("Form setelah fetchData Data Penerima:", this.form); // Tambahkan ini
         }
+
 
       } catch (error) {
         console.error("Error fetching data:", error);

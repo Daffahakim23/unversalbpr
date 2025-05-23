@@ -16,12 +16,12 @@
       <div v-if="!fileUrl && documentType !== 'fotoDiri'">
         <div v-if="showInitialUI"
           class="flex flex-col items-center justify-end py-8 rounded-lg cursor-pointer bg-white border-dashed border-2 border-neutral-200 h-90">
-          <img src="@/assets/upload-dokumen.svg" alt="Tambah Dokumen" class="h-32 w-32 mt-12">
-          <div class="flex mt-12 justify-between w-full px-16">
-            <ButtonComponent variant="ghost" @click="startWebcamDokumen">
+          <img src="@/assets/upload-dokumen.svg" alt="Tambah Dokumen" class="h-16 sm:h-24 md:h-32 lg:h-48 mt-12">
+          <div class="flex flex-col md:flex-row mt-12 justify-between w-full px-4 md:px-16 gap-y-4 md:gap-x-8">
+            <ButtonComponent variant="ghost" @click="startWebcamDokumen" class="w-full md:w-auto">
               Ambil Foto
             </ButtonComponent>
-            <ButtonComponent variant="ghost" @click="openFilePicker">
+            <ButtonComponent variant="ghost" @click="openFilePicker" class="w-full md:w-auto">
               Upload Gambar
             </ButtonComponent>
           </div>
@@ -41,16 +41,14 @@
           <div v-if="photoUrl" class="mt-4 ">
             <div v-if="documentType === 'npwp'" class="mt-4">
               <FormField label="Nomor NPWP" id="nomornpwp" v-model="nomorNpwp" placeholder="Masukkan Nomor NPWP"
-                required />
+                required maxlength="20" />
             </div>
             <img :src="photoUrl" alt="Foto yang Diambil" class="w-full h-90 rounded-lg shadow-md object-cover" />
             <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
-              <input id="persetujuan-ttd" type="checkbox" v-model="isAgreementChecked"
-                class="w-4 h-4 text-primary border-neutral-300 rounded-sm focus:ring-primary focus:ring-2" />
-              <label for="persetujuan-ttd" class="ml-2 text-sm font-regular text-gray-900">
-                Saya menyetujui bahwa tanda tangan yang saya unggah adalah sah dan digunakan untuk keperluan pembukaan
-                rekening.
-              </label>
+              <div class="mt-2">
+                <CustomCheckbox v-model="isAgreementChecked"
+                  labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir pembukaan deposito ini merupakan spesimen tanda tangan saya." />
+              </div>
             </div>
             <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
               {{ flagMessage }}
@@ -104,7 +102,7 @@
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
             <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">{{
-              isSubmitting ? "Mengirim..." : "Simpan Foto" }}
+              isSubmitting ? "Mengirim..." : "Simpan" }}
             </ButtonComponent>
           </div>
         </div>
@@ -112,7 +110,8 @@
 
       <div v-if="fileUrl">
         <div v-if="documentType === 'npwp'" class="mt-4">
-          <FormField label="Nomor NPWP" id="nomornpwp" v-model="nomorNpwp" placeholder="Masukkan Nomor NPWP" required />
+          <FormField label="Nomor NPWP" id="nomornpwp" v-model="nomorNpwp" placeholder="Masukkan Nomor NPWP" required
+            maxlength="20" />
         </div>
         <img :src="fileUrl" alt="Preview Dokumen" class="w-full rounded-lg" @error="handleFileNotFound" />
         <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
@@ -120,12 +119,10 @@
           petunjuk verifikasi
         </Flagbox>
         <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
-          <input id="persetujuan-ttd" type="checkbox" v-model="isAgreementChecked"
-            class="w-4 h-4 text-primary border-neutral-300 rounded-sm focus:ring-primary focus:ring-2" />
-          <label for="persetujuan-ttd" class="ml-2 text-sm font-regular text-gray-900">
-            Saya menyetujui bahwa tanda tangan yang saya unggah adalah sah dan digunakan untuk keperluan pembukaan
-            rekening.
-          </label>
+          <div class="mt-2">
+            <CustomCheckbox v-model="isAgreementChecked"
+              labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir pembukaan deposito ini merupakan spesimen tanda tangan saya." />
+          </div>
         </div>
       </div>
 
@@ -164,6 +161,7 @@ import FormField from "@/components/FormField.vue";
 import ModalError from "@/components/ModalError.vue";
 import Toaster from "@/components/toaster.vue";
 import Flagbox from "@/components/flagbox.vue";
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
 export default {
   props: {
@@ -179,7 +177,8 @@ export default {
     ButtonComponent,
     ModalError,
     Toaster,
-    Flagbox
+    Flagbox,
+    CustomCheckbox
   },
 
   data() {
@@ -202,7 +201,7 @@ export default {
           label: "Verifikasi Gagal",
           description: "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.",
           buttonString1: "Ulangi Verifikasi",
-          buttonString2: "Hubungi Customer Care",
+          buttonString2: "Hubungi Universal Care",
         },
       ],
     };
@@ -450,7 +449,9 @@ export default {
         showFlag.value = true;
         flagType.value = 'warning';
         if (documentType.value === "fotoDiri") {
-          flagMessage.value = error.response?.data?.message || "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
+          let message = error.response?.data?.Message || "Terjadi kesalahan saat verifikasi wajah.";
+          let subtext = error.response?.data?.Subtext || "Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
+          flagMessage.value = `${message}, ${subtext}`;
         } else if (documentType.value === "ktp") {
           flagMessage.value = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (documentType.value === "npwp") {
@@ -461,7 +462,7 @@ export default {
           flagMessage.value = "Gagal mengunggah foto. Silakan coba lagi.";
         }
         console.error("❌ Gagal upload:", error.response?.data || error.message);
-        // showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
+        // showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Universal Care", "data-failed-illus.svg");
       } finally {
         isUploading.value = false;
       }
@@ -713,7 +714,7 @@ export default {
         } else {
           this.flagMessage = "Gagal mengunggah foto. Silakan coba lagi.";
         }
-        // this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
+        // this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Universal Care", "data-failed-illus.svg");
       } finally {
         this.isUploading = false;
         this.isSubmitting = false;

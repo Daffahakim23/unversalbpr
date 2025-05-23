@@ -26,7 +26,7 @@ import KonfirmasiDataPembukaanRekeningExisting from "../views/PembukaanRekeningE
 import HalamanSuksesPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/halaman-sukses.vue";
 import TandaTanganDigitalPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/tanda-tangan-digital.vue";
 
-// Penempatan Deposito NTB
+// Pembukaan Deposito NTB
 import PenempatanDepositoNTB from "../views/PenempatanDepositoNTB/penempatan-deposito.vue";
 import VerifikasiEmailPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/verifikasi-email.vue";
 import DataPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-penempatan.vue";
@@ -65,8 +65,9 @@ import HalamanSuksesPengkinianData from "../views/PengkinianData/halaman-sukses.
 import TandaTanganDigitalPengkinianData from "../views/PengkinianData/tanda-tangan-digital.vue";
 
 
-// Pencairan Deposito
-import PencairanDeposito from "../views/PencairanDeposito/pencairan-deposito.vue";
+// Penutupan Deposito
+import PencairanDeposito from "../views/PencairanDeposito/onBoarding.vue";
+import FormPencairanDeposito from "../views/PencairanDeposito/pencairan-deposito.vue";
 import verifikasiEmailPencairanDeposito from "../views/PencairanDeposito/verifikasi-email.vue";
 import UploadDokumenPencairanDeposito from "../views/PencairanDeposito/upload-dokumen.vue";
 import PreviewScreenPencairanDeposito from "../views/PencairanDeposito/preview-dokumen.vue";
@@ -80,7 +81,8 @@ import HalamanSuksesPencairanDeposito from "../views/PencairanDeposito/halaman-s
 import TandaTanganDigitalPencairanDeposito from "../views/PencairanDeposito/tanda-tangan-digital.vue";
 
 // Pemindahbukuan
-import Pemindahbukuan from "../views/Pemindahbukuan/pemindahbukuan.vue";
+import PemindahBukuan from "../views/Pemindahbukuan/onBoarding.vue";
+import FormPemindahbukuan from "../views/Pemindahbukuan/pemindahbukuan.vue";
 import verifikasiEmailPemindahbukuan from "../views/Pemindahbukuan/verifikasi-email.vue";
 import UploadDokumenPemindahbukuan from "../views/Pemindahbukuan/upload-dokumen.vue";
 import PreviewScreenPemindahbukuan from "../views/Pemindahbukuan/preview-dokumen.vue";
@@ -101,6 +103,14 @@ const routes = [
   {
     path: "/dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/dashboard/pencairanDeposito",
+    component: PencairanDeposito,
+  },
+  {
+    path: "/dashboard/pemindahbukuan",
+    component: PemindahBukuan,
   },
   {
     path: "/dashboard",
@@ -188,11 +198,11 @@ const routes = [
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'npwp':
-                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP kamu bisa digunakan.';
+                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP Anda bisa digunakan.';
               case 'tandaTangan':
-                return 'Pastikan foto tanda tanganAnda terlihat jelas. Jika sudah, foto tanda tangan kamu bisa digunakan.';
+                return 'Pastikan foto tanda tangan Anda terlihat jelas. Jika sudah, foto tanda tangan Anda bisa digunakan.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
               default:
                 return 'Hasil Foto';
             }
@@ -313,7 +323,7 @@ const routes = [
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
               default:
                 return 'Hasil Foto';
             }
@@ -380,9 +390,9 @@ const routes = [
         name: "PenempatanDepositoNTB",
         component: PenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Halo, Senang Bertemu Dengan Anda Kembali",
-          subtitle: "Sebagai Calon Nasabah Universal BPR yang hendak membuka deposito, Anda diwajibkan memiliki rekening Tabungan Universal, dan mengisi data diri Anda terlebih dahulu. Silakan pilih produk Tabungan Universal dibawah ini."
+          feature: "Pembukaan Deposito",
+          title: "Halo, Senang Bertemu Dengan Anda",
+          subtitle: "Sebagai calon Nasabah BPR Universal yang hendak membuka deposito, Anda diwajibkan terlebih dahulu membuka rekening Tabungan Universal sebagai rekening penyetoran dana deposito. Silakan pilih produk Tabungan Universal di bawah ini, lalu lanjutkan dengan memilih produk deposito, dan mengisi data diri Anda."
         },
       },
       {
@@ -390,7 +400,7 @@ const routes = [
         name: "verifikasiEmailPenempatanDepositoNTB",
         component: VerifikasiEmailPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Verifikasi Email",
           centerTitle: true
         },
@@ -400,8 +410,8 @@ const routes = [
         name: "dataPenempatanDepositoNTB",
         component: DataPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Atur Penempatan Deposito",
+          feature: "Pembukaan Deposito",
+          title: "Atur Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },
@@ -411,7 +421,7 @@ const routes = [
         name: "NpwpDepositoNTB",
         component: NpwpDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Pernyatan berkaitan NPWP",
           subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,"
         },
@@ -421,7 +431,7 @@ const routes = [
         name: "UploadDokumenPenempatanDepositoNTB",
         component: UploadFilePenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Upload Dokumen",
           subtitle:
             "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening",
@@ -433,7 +443,7 @@ const routes = [
         component: PreviewScreenPenempatanDepositoNTB,
         meta: {
           persistNavbar: true,
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
             console.log('Nilai documentType di meta.title:', documentTypes);
@@ -457,11 +467,11 @@ const routes = [
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'npwp':
-                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP kamu bisa digunakan.';
+                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP Anda bisa digunakan.';
               case 'tandaTangan':
-                return 'Pastikan foto tanda tanganAnda terlihat jelas. Jika sudah, foto tanda tangan kamu bisa digunakan.';
+                return 'Pastikan foto tanda tangan Anda terlihat jelas. Jika sudah, foto tanda tangan Anda bisa digunakan.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
               default:
                 return 'Hasil Foto';
             }
@@ -476,7 +486,7 @@ const routes = [
         name: "DataKTPPenempatanDepositoNTB",
         component: DataKTPPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
@@ -487,7 +497,7 @@ const routes = [
         name: "DataPribadiPenempatanDepositoNTB",
         component: DataPribadiPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data Pribadi",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
@@ -498,7 +508,7 @@ const routes = [
         name: "konfirmasiDataPenempatanDepositoNTB",
         component: KonfirmasiDataPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi",
         },
       },
@@ -507,7 +517,7 @@ const routes = [
         name: "DataPekerjaanPenempatanDepositoNTB",
         component: DataPekerjaanPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data Pekerjaan & Finansial"
         },
       },
@@ -516,7 +526,7 @@ const routes = [
         name: "tandaTanganDigitalPenempatanDepositoNTB",
         component: TandaTanganDigitalPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Tanda Tangan Digital"
         },
       },
@@ -525,17 +535,17 @@ const routes = [
         name: "halamanSuksesPenempatanDepositoNTB",
         component: HalamanSuksesPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
         },
       },
 
-      // Penempatan Deposito Existing
+      // Pembukaan Deposito Existing
       {
         path: "penempatanDepositoExisting",
         name: "penempatanDepositoExisting",
         component: PenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Halo, Senang Bertemu Dengan Anda Kembali",
           subtitle: "Yuk, pilih produk yang diinginkan dan isi data dirimu terlebih dahulu!"
         },
@@ -545,7 +555,7 @@ const routes = [
         name: "VerifikasiEmailPenempatanDepositoExisting",
         component: verifikasiEmailPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Verifikasi Email",
           centerTitle: true
         },
@@ -555,8 +565,8 @@ const routes = [
         name: "dataPenempatanDepositoExisting",
         component: DataPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Atur Penempatan Deposito",
+          feature: "Pembukaan Deposito",
+          title: "Atur Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },
@@ -566,7 +576,7 @@ const routes = [
         name: "UploadDokumenPenempatanDepositoExisting",
         component: UploadFilePenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Upload Dokumen",
           subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
         },
@@ -577,7 +587,7 @@ const routes = [
         component: PreviewScreenPenempatanDepositoExisting,
         meta: {
           persistNavbar: true,
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
             console.log('Nilai documentType di meta.title:', documentTypes);
@@ -601,7 +611,7 @@ const routes = [
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
               default:
                 return 'Hasil Foto';
             }
@@ -616,7 +626,7 @@ const routes = [
         name: "DataKTPPenempatanDepositoExisting",
         component: DataKTPPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
@@ -627,7 +637,7 @@ const routes = [
         name: "PerubahanDataPenempatanDepositoExisting",
         component: PerubahanDataPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Pembaharuan Data",
           subtitle:
             'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah',
@@ -638,7 +648,7 @@ const routes = [
         name: "konfirmasiDataPenempatanDepositoExisting",
         component: KonfirmasiDataPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
         },
       },
@@ -647,7 +657,7 @@ const routes = [
         name: "tandaTanganDigitalPenempatanDepositoExisting",
         component: TandaTanganDigitalPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Tanda Tangan Digital"
         },
       },
@@ -656,7 +666,7 @@ const routes = [
         name: "halamanSuksesPenempatanDepositoExisting",
         component: HalamanSuksesPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
         },
       },
 
@@ -711,7 +721,7 @@ const routes = [
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.';
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
               default:
                 return 'Hasil Foto';
             }
@@ -740,7 +750,7 @@ const routes = [
           feature: "Pengkinian Data",
           title: "Data Pribadi",
           subtitle:
-            "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
+            "Untuk mendukung proses pengkinian data, silakan lengkapi informasi tambahan yang diperlukan di bawah ini.",
         },
       },
       {
@@ -781,13 +791,13 @@ const routes = [
 
       // Pencairan Deposito
       {
-        path: "pencairanDeposito",
-        name: "pencairanDeposito",
-        component: PencairanDeposito,
+        path: "formPencairanDeposito",
+        name: "formPencairanDeposito",
+        component: FormPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Formulir Permohonan Pencairan Deposito",
-          subtitle: "Silakan isi formulir berikut untuk mengajukan pencairan deposito Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
+          feature: "Penutupan Deposito",
+          title: "Formulir Permohonan Penutupan Deposito",
+          subtitle: "Silakan isi formulir berikut untuk mengajukan penutupan deposito Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
         },
       },
       {
@@ -795,8 +805,9 @@ const routes = [
         name: "VerifikasiEmailPencairanDeposito",
         component: verifikasiEmailPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Email Verifikasi"
+          feature: "Penutupan Deposito",
+          title: "Email Verifikasi",
+          centerTitle: true
         },
       },
       {
@@ -804,7 +815,7 @@ const routes = [
         name: "uploadDokumenPencairanDeposito",
         component: UploadDokumenPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Upload Dokumen",
           subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
         },
@@ -815,10 +826,37 @@ const routes = [
         component: PreviewScreenPencairanDeposito,
         meta: {
 
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          persistNavbar: true,
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            // console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -829,7 +867,7 @@ const routes = [
         name: "DataKTPPencairanDeposito",
         component: DataKTPPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
@@ -840,10 +878,10 @@ const routes = [
         name: "dataInstruksiPencairanDeposito",
         component: DataInstruksiPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Instruksi Pencairan Deposito",
+          feature: "Penutupan Deposito",
+          title: "Instruksi Penutupan Deposito",
           subtitle:
-            "Untuk dapat memproses pencairan deposito Anda, kami memerlukan beberapa informasi tambahan. Mohon lengkapi informasi yang diperlukan agar proses dapat berjalan dengan lancar",
+            "Untuk dapat memproses penutupan deposito Anda, kami memerlukan beberapa informasi tambahan. Mohon lengkapi informasi yang diperlukan agar proses dapat berjalan dengan lancar",
         },
       },
       {
@@ -851,8 +889,8 @@ const routes = [
         name: "dataPencairanDepositoOnUs",
         component: DataPencairanDepositoOnUs,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Pencairan Deposito ke Sesama Bank Universal BPR",
+          feature: "Penutupan Deposito",
+          title: "Penutupan Deposito ke Sesama Bank BPR Universal",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
         },
@@ -862,8 +900,8 @@ const routes = [
         name: "dataPencairanDepositoOfUs",
         component: DataPencairanDepositoOfUs,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Pencairan Deposito ke Bank Lain",
+          feature: "Penutupan Deposito",
+          title: "Penutupan Deposito ke Bank Lain",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
         },
@@ -873,7 +911,7 @@ const routes = [
         name: "konfirmasiDataPencairanDeposito",
         component: KonfirmasiDataPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Konfirmasi Semua Data Anda",
           subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
         },
@@ -883,7 +921,7 @@ const routes = [
         name: "emailOTPPencairanDeposito",
         component: EmailOTPPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Konfirmasi OTP"
         },
       },
@@ -892,7 +930,7 @@ const routes = [
         name: "tandaTanganDigitalPencairanDeposito",
         component: TandaTanganDigitalPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Tanda Tangan Digital"
         },
       },
@@ -901,29 +939,30 @@ const routes = [
         name: "halamanSuksesPencairanDeposito",
         component: HalamanSuksesPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
         },
       },
 
 
       //Pemindahbukuan
       {
-        path: "pemindahbukuan",
-        name: "pemindahbukuan",
-        component: Pemindahbukuan,
+        path: "formPemindahbukuan",
+        name: "formPemindahbukuan",
+        component: FormPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
-          title: "Formulir Pengajuan Pemindahbukuan",
-          subtitle: "Silahkan isi formulir berikut untuk mengajukan transaksi pemindahbukuan Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
+          feature: "Transfer",
+          title: "Formulir Elektronik Transfer",
+          subtitle: "Silahkan isi formulir berikut untuk mengajukan transaksi  Transfer Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
         },
       },
       {
         path: "verifikasiEmailPemindahbukuan",
-        name: "VerifikasiEmailPemindahbukuan",
+        name: "verifikasiEmailPemindahbukuan",
         component: verifikasiEmailPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
-          title: "Verifikasi Email"
+          feature: "Transfer",
+          title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -931,19 +970,46 @@ const routes = [
         name: "uploadDokumenPemindahbukuan",
         component: UploadDokumenPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Upload Dokumen",
           subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
         },
       }, {
         path: "previewPemindahbukuan",
-        name: "PreviewScreenPemindahbukuan",
+        name: "previewScreenPemindahbukuan",
         component: PreviewScreenPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          persistNavbar: true,
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            // console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -951,10 +1017,10 @@ const routes = [
       },
       {
         path: "dataKTPPemindahbukuan",
-        name: "DataKTPPemindahbukuan",
+        name: "dataKTPPemindahbukuan",
         component: DataKTPPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
@@ -965,27 +1031,27 @@ const routes = [
         name: "konfirmasiDataPemindahbukuan",
         component: KonfirmasiDataPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi"
         },
       },
       {
         path: "dataPengirimPemindahbukuan",
-        name: "DataPengirimPemindahbukuan",
+        name: "dataPengirimPemindahbukuan",
         component: DataPengirimPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Lengkapi Data Pengirim dan Penerima",
-          subtitle: "Untuk melanjutkan proses, kami memerlukan informasi tambahan terkait data penerima sumber dana."
+          subtitle: "Silakan lengkapi informasi data diri Pengirim dan Penerima secara lengkap dan sesuai dengan identitas asli masing-masing pihak agar proses transfer dapat diproses dengan aman dan akurat."
 
         },
       },
       {
         path: "dataPenerimaPemindahbukuan",
-        name: "DataPenerimaPemindahbukuan",
+        name: "dataPenerimaPemindahbukuan",
         component: DataPenerimaPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Lengkapi Data Penerima",
           subtitle: "Untuk melanjutkan proses, kami memerlukan informasi tambahan terkait data penerima sumber dana."
 
@@ -996,7 +1062,7 @@ const routes = [
         name: "emailOTPPemindahbukuan",
         component: EmailOTPPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Konfirmasi OTP"
         },
       },
@@ -1005,7 +1071,7 @@ const routes = [
         name: "tandaTanganDigitalPemindahbukuan",
         component: TandaTanganDigitalPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
           title: "Tanda Tangan Digital"
         },
       },
@@ -1014,7 +1080,7 @@ const routes = [
         name: "halamanSuksesPemindahbukuan",
         component: HalamanSuksesPemindahbukuan,
         meta: {
-          feature: "Pemindahbukuan",
+          feature: "Transfer",
         },
       },
     ],

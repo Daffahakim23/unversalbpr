@@ -17,7 +17,6 @@
       <div>
         <button class="flex items-center text-primary">
           <span>Batal</span>
-          <!-- <img src="@/assets/CallCenter.png" alt="Customer Care" class="h-6 m-2"> -->
         </button>
       </div>
     </div>
@@ -29,11 +28,10 @@ export default {
   name: "Navbar",
   methods: {
     goBack() {
-      // Kembali ke halaman sebelumnya
-      this.$router.go(-1); // Atau gunakan this.$router.back()
+      this.$router.go(-1);
     },
     goToHome() {
-      this.$router.push("/"); // Navigasi ke halaman Home
+      this.$router.push("/");
     },
   },
 };

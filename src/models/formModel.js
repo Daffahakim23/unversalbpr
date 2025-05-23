@@ -26,11 +26,13 @@ export class FormModelDataPribadi {
   constructor() {
     this.namaPanggilan = "";
     this.tujuan = "";
+    this.tujuanLainnya = "";
     this.kantorCabang = "";
     this.alamatKantorCabang = "";
     this.pendidikanTerakhir = "";
     this.email = "";
     this.hobi = "";
+    this.hobiLainnya = "";
     this.nomorTelepon = "";
     this.nomorFax = "";
     this.alamatSesuaiEktp = "";
@@ -46,12 +48,16 @@ export class FormModelDataPribadi {
   }
 }
 
+
 export class FormModelPengirimPemindahbukuan {
   constructor() {
-    this.namaLengkap = "";
+    this.namaPemilikRekening = "";
+    this.namaLengkapPengirim = "";
     this.tanggalPengajuan = "";
-    this.nomorRekening = "";
+    this.nomorRekeningPengirim = "";
     this.sumberDana = "";
+    this.phonePengirim = "";
+    this.email = "";
   }
 }
 
@@ -97,6 +103,8 @@ export class FormModelPenempatanDeposito {
     this.namaBank = namaBank;
     this.nomorRekening = "";
     this.namaLengkap = "";
+    this.kantorCabang = "";
+    this.alamatKantorCabang = "";
     this.produkDeposito = "";
     this.pembayaranBunga = "";
     this.metodePenyetoran = "";
@@ -149,6 +157,7 @@ export class FormModelDataPekerjaan {
     this.penghasilan = "";
     this.penghasilanLainnya = "";
     this.jumlahPenghasilan = "";
+    this.sumberDanaMilikPribadi = "";
     this.hubunganNasabahBO = "";
     this.hubunganNasabahLainnyaBO = "";
     this.jenisIdentitasBO = "";

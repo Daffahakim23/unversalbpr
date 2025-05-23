@@ -42,7 +42,7 @@
                         placeholder="Masukkan Nomor Rekening" hint="*Nomor rekening harus terdiri dari 10 digit angka"
                         required /> -->
 
-                    <FormField label="Nomor Rekening" id="nomorRekening" v-model="form.nomorRekening"
+                    <FormField label="Nomor Rekening" id="nomorRekening" v-model="form.nomorRekening" variant="numeric"
                         placeholder="Masukkan Nomor Rekening"
                         :hint="nomorRekeningError ? '*Nomor rekening harus terdiri dari 10 digit angka' : '*Nomor rekening harus terdiri dari 10 digit angka'"
                         :error="nomorRekeningError" @blur="handleNomorRekeningBlur" required />

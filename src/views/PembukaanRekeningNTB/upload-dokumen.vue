@@ -244,7 +244,7 @@ export default {
         }
       } catch (error) {
         console.error("Error checking envelope:", error);
-        this.showErrorModal("Terjadi Kesalahan", "Data KTP dan Foto Diri Anda tidak sesuai.", "Upload Ulang", "Hubungi Customer Care");
+        this.showErrorModal("Terjadi Kesalahan", "Data KTP dan Foto Diri Anda tidak sesuai.", "Upload Ulang", "Hubungi Universal Care");
         alert("Terjadi kesalahan saat menghubungi server. Silakan coba lagi.");
       } finally {
         this.isSubmitting = false;

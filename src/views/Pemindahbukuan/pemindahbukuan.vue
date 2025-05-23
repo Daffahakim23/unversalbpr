@@ -1,16 +1,19 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Tanggal Pengajuan Pemindahbukuan*" id="tanggalPengajuan" type="date"
-      v-model="form.tanggalPengajuan" placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
+    <FormField label="Tanggal Pengajuan Transafer*" id="tanggalPengajuan" type="date" v-model="form.tanggalPengajuan"
+      placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
 
-    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+    <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
       :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
-      required :error="emailError" @blur="handleEmailBlur" />
+      :error="emailError" @blur="handleEmailBlur" />
 
-    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
-      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
-      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
-      :error="phoneError" @blur="handlePhoneBlur" />
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phonePengirim" variant="phone"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+        ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+        : form.phonePengirim?.startsWith('0')
+          ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
+          : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'" :error="phoneError"
+      @blur="handlePhoneBlur" />
 
     <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
       :options="sumberDanaOptions" placeholder="Pilih Sumber Dana Anda" />
@@ -20,15 +23,12 @@
         placeholder="Masukkan Sumber Penghasilan Lainnya" />
     </div>
 
-    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening"
-      placeholder="Masukkan Nomor Rekening Anda" required
-      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
+    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" variant="numeric"
+      v-model="form.nomorRekeningPengirim" placeholder="Masukkan Nomor Rekening Anda" required
+      @input="form.nomorRekeningPengirim = form.nomorRekeningPengirim.replace(/\D/g, '')" />
 
-    <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" type="text" v-model="form.namaLengkap"
+    <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" variant="alpha" v-model="form.namaLengkapPengirim"
       placeholder="Masukkan Nama Pemilik Sumber Dana" />
-
-    <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
-      @close="isModalOpen = false" @confirm="handleModalConfirm" />
 
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
@@ -36,6 +36,12 @@
       </ButtonComponent>
     </div>
   </form>
+
+  <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
+    @close="isModalOpen = false" @confirm="handleModalConfirm" />
+
+  <ModalError :isOpen="isModalErrorEmail" :features="modalContentEmail" icon="otp-error-illus.svg"
+    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
 </template>
 
 <script>
@@ -45,9 +51,10 @@ import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import ReusableModal from "@/components/ModalT&C.vue";
-import { FormModelRequestEmailVerification } from "@/models/formModel";
+import { FormModelPengirimPemindahbukuan } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { sumberDanaOptions } from "@/data/option.js";
+import ModalError from "@/components/ModalError.vue";
 
 export default {
   emits: ["update-progress"],
@@ -56,11 +63,12 @@ export default {
     ButtonComponent,
     RadioButtonChoose,
     ReusableModal,
+    ModalError,
   },
   data() {
     return {
       apiUrl: "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_OPEN_SAVING",
-      form: new FormModelRequestEmailVerification(),
+      form: new FormModelPengirimPemindahbukuan(),
       touched: {
         email: false,
         phone: false,
@@ -71,17 +79,33 @@ export default {
       phoneError: false,
       selectedCountryCode: "ID",
       isModalOpen: false,
+      isModalErrorEmail: false,
+      modalContentEmail: [
+        {
+          label: "",
+          icon: "",
+          description: "",
+          buttonString1: "",
+          buttonString2: "",
+        },
+      ],
+      whatsappContact: {
+        label: "WhatsApp",
+        number: "(+62) 21 2221 3993",
+        icon: "whatsapp-icon.svg",
+        whatsapp: "+622122213993",
+      },
     };
   },
 
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
+      const phoneValid = this.form.phonePengirim && /^(8)\d{6,12}$/.test(this.form.phonePengirim);
       const sumberDanaValid = this.form.sumberDana;
       const sumberDanaLainnyaValid = this.form.sumberDana === 'lainnya' ? !!this.form.sumberDanaLainnya : true;
-      const nomorRekeningValid = !!this.form.nomorRekening;
-      const namaPemilikSumberDanaValid = !!this.form.namaLengkap;
+      const nomorRekeningValid = !!this.form.nomorRekeningPengirim;
+      const namaPemilikSumberDanaValid = !!this.form.namaLengkapPengirim;
       const tanggalPengajuanValid = !!this.form.tanggalPengajuan;
 
       return !(
@@ -97,9 +121,35 @@ export default {
   },
 
   methods: {
-    // validatePhone(phone) {
-    //   return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
-    // },
+    getWhatsAppLink(number) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    openWhatsApp() {
+      if (this.whatsappContact.whatsapp) {
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+      }
+    },
+    showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "otp-error-illus.svg") {
+      this.modalContentEmail = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      this.isModalOpen = false;
+      this.isModalErrorEmail = true;
+    },
+    handleCloseModal() {
+      this.isModalErrorEmail = false;
+    },
     validatePhone(phone) {
       return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
     },
@@ -114,8 +164,8 @@ export default {
     },
     handlePhoneBlur() {
       this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
+      if (this.form.phonePengirim) {
+        this.phoneError = !this.validatePhone(this.form.phonePengirim);
       }
     },
 
@@ -132,10 +182,10 @@ export default {
       try {
         this.requestData = {
           alamat_email: this.form.email,
-          no_hp: this.form.phone,
+          no_hp: this.form.phonePengirim,
           sumber_dana: Number(this.form.sumberDana),
-          nomor_rekening: this.form.nomorRekening,
-          nama_lengkap: this.form.namaLengkap,
+          nomor_rekening: this.form.nomorRekeningPengirim,
+          nama_lengkap: this.form.namaLengkapPengirim,
           tanggal: this.form.tanggalPengajuan
         };
         console.log("Data sementara disimpan:", this.requestData);
@@ -159,22 +209,10 @@ export default {
         const finalData = {
           ...this.requestData,
           syarat_ketentuan: true,
-          dek_cutoff: true,
+          syarat_cutoff: true,
         };
 
         console.log("Mengirim data:", finalData);
-
-        // const fileStore = useFileStore();
-        // fileStore.setFormDataPemindahbukuan(this.form);
-        // // fileStore.setUuid(response.data.uuid);
-        // fileStore.setEmail(this.requestData.email);
-        // fileStore.setNoHP(this.requestData.no_hp);
-        // // console.log("UUID :", response.data.uuid);
-        // console.log("Email :", this.requestData.email);
-        // console.log("Phone :", this.requestData.phone);
-        // window.scrollTo(0, 0);
-        // // this.$router.push({ path: "/dashboard/verifikasiEmailPemindahbukuan" });
-        // this.$router.push({ path: "/dashboard/dataPengirimPemindahbukuan" });
 
         const response = await api.post("/pemindah-bukuan", finalData, {
           headers: { "Content-Type": "application/json" },
@@ -185,13 +223,10 @@ export default {
 
         if (response.status === 200) {
           const fileStore = useFileStore();
-          fileStore.setFormDataPemindahbukuan(this.form);
-          fileStore.setUuid(response.data.uuid);
-          fileStore.setEmail(this.requestData.email);
-          fileStore.setNoHP(this.requestData.phone);
-          console.log("UUID :", response.data.uuid);
-          console.log("Email :", this.requestData.email);
-          console.log("Phone :", this.requestData.phone);
+          fileStore.setFormDataPengirimPemindahbukuan(this.form);
+          // fileStore.setUuid(response.data.uuid);
+          fileStore.setEmail(this.requestData.alamat_email);
+          fileStore.setNoHP(this.requestData.no_hp);
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/verifikasiEmailPemindahbukuan" });
         } else {
@@ -199,19 +234,25 @@ export default {
         }
 
       } catch (error) {
-        if (error.response) {
-          console.error("Error response data:", error.response.data);
+        let subtitle = "";
+        let modalTitle = "Terjadi Kesalahan";
+        let modalIcon = "otp-error-illus.svg";
+        let button1 = "Tutup";
+        let button2 = "Hubungi Universal Care";
+
+        if (error.response && error.response.data && error.response.data.message) {
+          this.temporaryBanMessage = error.response.data.message;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
+          modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
+        } else {
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Mohon untuk menghubungi Universal Care untuk bantuan lebih lanjut.";
         }
-        console.error("Error saat mengirim data:", error);
+        this.isModalError = false;
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
       } finally {
         this.isSubmitting = false;
       }
-
-      // } catch (error) {
-      //   console.error("Error saat menyimpan data:", error);
-      // } finally {
-      //   this.isSubmitting = false;
-      // }
     }
   },
 

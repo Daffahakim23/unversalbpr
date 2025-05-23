@@ -128,9 +128,9 @@ export default {
         },
         submitButtonText() {
             if (this.captchaVerified) {
-                return "Oke";
+                return "Mengerti";
             }
-            return ["tandaTangan", "npwp"].includes(this.documentType) ? "Oke" : "Verifikasi";
+            return ["tandaTangan", "npwp"].includes(this.documentType) ? "Mengerti" : "Mengerti";
         },
         isButtonDisabled() {
             return this.requiresCaptcha && !this.captchaVerified && (this.userInput.length !== 6);

@@ -99,27 +99,27 @@ export default {
 .flag-info {
     border: 1px solid #B2D5FF;
     background-color: #E5F1FF;
-    color: #003B70;
+    color: #001B3D;
 }
 
 /* Error */
 .flag-error {
-    border: 1px solid #FFB5B2;
-    background-color: #FFE1E0;
-    color: #BA0803;
+    border: 1px solid #FFE1E0;
+    background-color: #FFB5B2;
+    color: #540401;
 }
 
 /* Warning */
 .flag-warning {
-    border: 1px solid #FFE1E0;
-    background-color: #FFF5F5;
-    color: #540401;
+    border: 1px solid #FFFDBD;
+    background-color: #FFFEE0;
+    color: #424000;
 }
 
 /* Success */
 .flag-success {
     border: 1px solid #C6F0D1;
     background-color: #E7F9EB;
-    color: #22863B;
+    color: #0C3115;
 }
 </style>

@@ -15,8 +15,9 @@
       </template> -->
 
       <template v-if="!isDropdown && type !== 'phone'">
-        <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue" @input="handleTextInput"
-          @focus="$emit('focus', $event)" @blur="$emit('blur', $event)" :readonly="readonly" :class="{
+        <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue" @focus="$emit('focus', $event)"
+          @keypress="handleKeyPress" @input="handleInput" @blur="$emit('blur', $event)" :maxlength="maxlength"
+          :readonly="readonly" :class="{
             'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
             'border-red-500 focus:ring-red-400 focus:border-red-400': error,
             'border-neutral-200 focus:ring-1': !readonly && !error
@@ -44,13 +45,13 @@
             </div>
           </div>
 
-          <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue"
+          <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue" @keypress="handleKeyPress"
             @input="$emit('update:modelValue', $event.target.value)" @focus="$emit('focus', $event)"
             @blur="$emit('blur', $event)" :readonly="readonly" :class="{
               'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
               'border-red-500': error,
               'border-neutral-200 focus:ring-1': !readonly && !error
-            }" class="w-full h-10 p-2 rounded-md" :required="required" />
+            }" class="w-full h-10 p-2 rounded-md" :required="required" :maxlength="35" />
         </div>
       </template>
       <template v-else>
@@ -137,11 +138,9 @@ export default {
     hasSearch: { type: Boolean, default: false },
     options: { type: Array, default: () => [] },
     error: { type: Boolean, default: false },
-    variant: {
-      type: String,
-      default: null, // Bisa 'alpha' atau 'numeric'
-      validator: (value) => value === null || value === 'alpha' || value === 'numeric',
-    },
+    variant: { type: String, default: "" },
+    maxlength: { type: Number, default: null },
+
     selectedCountryCode: String,
   },
   emits: ["update:modelValue", "update:selectedCountryCode", "focus", "blur"],
@@ -194,32 +193,93 @@ export default {
 
   mounted() {
     document.addEventListener("click", this.handleClickOutside);
+    // Add event listener for country dropdown as well
+    document.addEventListener("click", this.handleClickOutsideCountryDropdown); // Added this line
     if (this.type === "handphone") {
       this.phoneNumber = this.modelValue
-        .replace(this.getCountryCallingCode(this.selectedCountryCode), "")
-        .trim();
+        ? this.modelValue.replace(this.getCountryCallingCode(this.selectedCountryCode), "").trim()
+        : ""; // Added null check for modelValue
     }
   },
   beforeUnmount() {
     document.removeEventListener("click", this.handleClickOutside);
+    document.removeEventListener("click", this.handleClickOutsideCountryDropdown); // Added this line
   },
 
   methods: {
-    handleTextInput(event) {
-      let value = event.target.value;
-      if (this.variant === 'alpha') {
-        value = value.replace(/[^a-zA-Z\s]/g, ''); // Hanya huruf dan spasi
-      } else if (this.variant === 'numeric') {
-        value = value.replace(/\D/g, ''); // Hanya angka
+    handleKeyPress(event) {
+      const key = event.key;
+
+      if (this.variant === "alpha" && !/^[a-zA-Z\s]$/.test(key)) {
+        event.preventDefault();
       }
-      this.$emit('update:modelValue', value);
+      if (this.variant === "numeric" && !/^\d$/.test(key)) {
+        event.preventDefault();
+      }
+      if (this.variant === "alphanumeric" && !/^[a-zA-Z0-9]$/.test(key)) {
+    event.preventDefault();
+  }
+      if (this.type === "phone") {
+        const isDigit = /^\d$/.test(key);
+        if (!isDigit) {
+          event.preventDefault();
+        } else if (this.modelValue.length >= 35) {
+          event.preventDefault();
+        } else if (this.modelValue.length === 0 && key === "0") {
+          event.preventDefault();
+        }
+      }
     },
+
+    handleInput(event) {
+      let value = event.target.value;
+
+      if (this.variant === "alpha") {
+        value = value.replace(/[^a-zA-Z\s]/g, ""); // hanya huruf dan spasi
+        // value = value.trimStart();
+      } else if (this.variant === "numeric") {
+        value = value.replace(/[^0-9]/g, ""); // hanya angka
+      }
+      value = value.trimStart();
+      value = value.replace(/\s\s+/g, ' '); // Mengganti multiple spasi menjadi single spasi
+      this.$emit("update:modelValue", value);
+      // this.$nextTick(() => {
+      //   if (event.target.value !== value) {
+      //     event.target.value = value;
+      //   }
+      // });
+    },
+
+    // handleInput(event) {
+    //   let value = event.target.value;
+
+    //   if (this.variant === "alpha") {
+    //     value = value.replace(/[^a-zA-Z\s]/g, ""); // hanya huruf dan spasi
+    //   } else if (this.variant === "numeric") {
+    //     value = value.replace(/[^0-9]/g, ""); // hanya angka
+    //   }
+
+    //   // Hapus spasi di awal dan akhir
+    //   value = value.trimStart(); // Menghapus spasi di awal
+    //   value = value.replace(/\s\s+/g, ' '); // Mengganti multiple spasi menjadi single spasi
+    //   this.$emit("update:modelValue", value);
+
+    //   // Ini untuk memastikan kursor tidak melompat ketika spasi di awal dihapus
+    //   this.$nextTick(() => {
+    //     if (event.target.value !== value) {
+    //       event.target.value = value;
+    //     }
+    //   });
+    // },
+
     toggleDropdown() {
       this.isOpen = !this.isOpen;
       this.searchQuery = "";
     },
     selectOption(option) {
       this.$emit("update:modelValue", option.value);
+      // Tambahkan emit change event agar parent bisa merespon langsung
+      this.$emit("change", option.value); // Added this line
       this.isOpen = false;
     },
 
@@ -228,6 +288,7 @@ export default {
         this.isOpen &&
         this.$refs.dropdown &&
         !this.$refs.dropdown.contains(event.target) &&
+        this.$refs.trigger && // Add null check for trigger
         !this.$refs.trigger.contains(event.target)
       ) {
         this.isOpen = false;
@@ -246,7 +307,9 @@ export default {
       if (
         this.isCountryDropdownOpen &&
         this.$refs.countryDropdown &&
-        !this.$refs.countryDropdown.contains(event.target)
+        !this.$refs.countryDropdown.contains(event.target) &&
+        this.$refs.countryDropdownTrigger && // Add a ref to the button to prevent closing when clicking it
+        !this.$refs.countryDropdownTrigger.contains(event.target)
       ) {
         this.isCountryDropdownOpen = false;
       }

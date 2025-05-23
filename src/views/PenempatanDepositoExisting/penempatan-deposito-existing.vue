@@ -1,33 +1,41 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <label class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900 mb-4">Untuk melakukan pembukaan
-      Deposito sebagai Nasabah Universal BPR, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
+    <label class="block text-xs sm:text-sm md:text-sm font-regular text-neutral-900 mb-4">Untuk melakukan pembukaan
+      Deposito sebagai Nasabah BPR Universal, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
       dipergunakan sebagai tempat penyetoran nominal Deposito Anda.</label>
 
     <RadioButtonChoose label="Apakah Anda sudah memiliki Tabungan Universal?" id="memilikiTabungan"
       :options="memilikiTabunganOptions" v-model="form.memilikiTabungan" name="memilikiTabungan" required />
 
     <div class="flex items-center mb-6" v-if="form.memilikiTabungan == 1">
-      <input type="checkbox" id="belumPunyaRekening" v-model="form.belumPunyaRekening" class="mr-2" />
-      <label for="belumPunyaRekening" class="text-sm font-semibold text-neutral-800 cursor-pointer">
-        Belum Punya Rekening Tabungan Universal
-      </label>
+      <div class="">
+        <CustomCheckbox v-model="form.belumPunyaRekening"
+          labelText="Saya bersedia melakukan pembukaan rekening Tabungan Universal untuk melanjutkan Pembukaan Deposito" />
+      </div>
     </div>
 
-    <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekening"
-      placeholder="Masukkan Nomor Rekening" required
+    <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
+      variant="numeric" maxlength="16" placeholder="Masukkan Nomor Rekening" required
       hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank."
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
-    <FormField label="Pilih Kantor Cabang *" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
+    <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
       placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
     <div v-if="form.kantorCabang" class="mt-4">
       <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
         v-model="form.alamatKantorCabang" :readonly="true" />
     </div>
 
+    <!-- <FormField label="Produk yang diinginkan" id="produkyangDiingikan" v-model="form.produk"
+      placeholder="Tabungan Universal" :readonly="true" required /> -->
+
     <FormField label="Pilih Produk Deposito" id="produk" :isDropdown="true" v-model="form.produkDeposito"
       placeholder="Pilih Produk Deposito yang Anda Inginkan" :options="produkDepositoOptions" required />
+
+    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekening"
+      variant="numeric" maxlength="16" placeholder="Masukkan Nomor Rekening" required
+      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank."
+      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" /> -->
 
     <FlagBox type="info" closable class="mb-4">
       <p class="text-sm font-normal">Informasi mengenai Produk dan Layanan dapat diakses melalui website
@@ -58,7 +66,7 @@
       :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       required :error="emailError" @blur="handleEmailBlur" />
 
-    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
         ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
         : form.phone?.startsWith('0')
@@ -71,12 +79,12 @@
     <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
       :options="penghasilanOptions" placeholder="Pilih Sumber Dana Anda" />
 
-    <div v-if="form.sumberDana === 'lainnya'" class="">
+    <div v-if="form.sumberDana === '0'" class="">
       <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" type="text" v-model="form.sumberDanaLainnya"
         placeholder="Masukkan Sumber Penghasilan Lainnya" />
     </div>
 
-    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text"
+    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan nama funding officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
     <div class="text-right">
@@ -88,10 +96,12 @@
 
   <ReusableModal title='Syarat dan Ketentuan Deposito' :isOpen="isModalOpen" :apiUrl="apiUrl"
     @close="isModalOpen = false" @confirm="handleModalConfirm" />
+
   <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
     @buttonClick1="handleModalClose" @buttonClick2="handleToDeposito" />
+
   <ModalError :isOpen="isModalErrorEmail" :features="modalContentEmail" icon="otp-error-illus.svg"
-    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" />
+    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
 </template>
 
 <script>
@@ -107,6 +117,7 @@ import { produkDepositoOptions, memilikiRekeningOptions, memilikiTabunganOptions
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/icon-deposito.svg";
 import { fetchBranches } from '@/services/service.js';
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
 export default {
   emits: ["update-progress"],
@@ -117,6 +128,7 @@ export default {
     ReusableModal,
     FlagBox,
     ModalError,
+    CustomCheckbox,
   },
   data() {
     return {
@@ -144,12 +156,12 @@ export default {
       kantorCabangAlamat: {},
       modalContent: [
         {
-          label: "Konfirmasi Penempatan Deposito",
+          label: "Konfirmasi Pembukaan Deposito",
           icon: errorIcon,
           description:
-            "Apakah Anda yakin ingin melanjutkan penempatan deposito nasabah baru?",
+            "Apakah Anda yakin ingin melanjutkan Pembukaan Deposito nasabah baru?",
           buttonString1: "Tetap Dihalaman Ini",
-          buttonString2: "Penempatan Deposito Nasabah Baru",
+          buttonString2: "Lanjutkan Pembukaan Deposito Berjangka",
         },
       ],
       modalContentEmail: [
@@ -161,6 +173,12 @@ export default {
           buttonString2: "",
         },
       ],
+      whatsappContact: {
+        label: "WhatsApp",
+        number: "(+62) 21 2221 3993",
+        icon: "whatsapp-icon.svg",
+        whatsapp: "+622122213993",
+      },
     };
   },
 
@@ -176,6 +194,19 @@ export default {
   },
 
   methods: {
+    getWhatsAppLink(number) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    openWhatsApp() {
+      if (this.whatsappContact.whatsapp) {
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+      }
+    },
     showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
       this.modalContentEmail = [
         {
@@ -311,18 +342,18 @@ export default {
 
       } catch (error) {
         let subtitle = "";
-        let modalTitle = "Verifikasi OTP Gagal";
+        let modalTitle = "Terjadi Kesalahan";
         let modalIcon = "otp-error-illus.svg";
         let button1 = "Tutup";
-        let button2 = "Hubungi Customer Care";
+        let button2 = "Hubungi Universal Care";
 
         if (error.response && error.response.data && error.response.data.message) {
           this.temporaryBanMessage = error.response.data.message;
-          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai ${this.temporaryBanMessage}. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg";
         } else {
-          subtitle = "Terjadi kesalahan saat memverifikasi OTP.";
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Mohon untuk menghubungi Universal Care untuk bantuan lebih lanjut.";
         }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);

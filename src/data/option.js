@@ -23,6 +23,7 @@ export const metodePenyetoranExisitingOptions = [
   { label: " Debet Rekening Tabungan Universal", value: "2" },
 ];
 
+// DEPOSITO UNIVERSAL
 export const jangkaWaktuDepositoUniversalOptions = [
   { label: "1 Bulan (5.5% per tahun)", value: "1", jangkaWaktu: "1", sukuBunga: "5.5" },
   { label: "3 Bulan (6,25% per tahun)", value: "2", jangkaWaktu: "3", sukuBunga: "6.25" },
@@ -32,17 +33,61 @@ export const jangkaWaktuDepositoUniversalOptions = [
   { label: "24 Bulan (6,75% per tahun)", value: "5", jangkaWaktu: "24", sukuBunga: "6.75" },
 ];
 
-export const jangkaWaktuDepositoGreenOptions = [
-  { label: "3 Bulan (6,25% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.25" },
-  { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
-  { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
+export const jangkaWaktuDepositoUniversalOptionsTier1 = [
+  { label: "1 Bulan (5.5% per tahun)", value: "1", jangkaWaktu: "1", sukuBunga: "5.5" },
+  { label: "3 Bulan (6.25% per tahun)", value: "2", jangkaWaktu: "3", sukuBunga: "6.25" },
+  { label: "6 Bulan (6.75% per tahun)", value: "3", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6.75% per tahun)", value: "4", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6.75% per tahun)", value: "5", jangkaWaktu: "12", sukuBunga: "6.75" },
+  { label: "24 Bulan (6.75% per tahun)", value: "6", jangkaWaktu: "24", sukuBunga: "6.75" }, // Perbaiki value jika ada duplikasi
 ];
 
-export const jangkaWaktuDepositoDEBUTSanmereOptions = [
-  { label: "12 Bulan (5,75% per tahun + donasi 2% per tahun)", value: "1", jangkaWaktu: "12", sukuBunga: "5.75" },
-  { label: "24 Bulan (6,25% per tahun + donasi 1,5% per tahun)", value: "2", jangkaWaktu: "24", sukuBunga: "6.25" },
-  { label: "36 Bulan (6,75% per tahun + donasi 1% per tahun)", value: "3", jangkaWaktu: "36", sukuBunga: "6.75" },
+export const jangkaWaktuDepositoUniversalOptionsTier2 = [
+  { label: "1 Bulan (5.75% per tahun)", value: "1", jangkaWaktu: "1", sukuBunga: "5.75" },
+  { label: "3 Bulan (6.50% per tahun)", value: "2", jangkaWaktu: "3", sukuBunga: "6.50" },
+  { label: "6 Bulan (6.75% per tahun)", value: "3", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6.75% per tahun)", value: "4", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6.75% per tahun)", value: "5", jangkaWaktu: "12", sukuBunga: "6.75" },
+  { label: "24 Bulan (6.75% per tahun)", value: "6", jangkaWaktu: "24", sukuBunga: "6.75" },
 ];
+
+export const jangkaWaktuDepositoUniversalOptionsTier3 = [
+  { label: "1 Bulan (6.00% per tahun)", value: "1", jangkaWaktu: "1", sukuBunga: "6.00" },
+  { label: "3 Bulan (6.75% per tahun)", value: "2", jangkaWaktu: "3", sukuBunga: "6.75" },
+  { label: "6 Bulan (6.75% per tahun)", value: "3", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6.75% per tahun)", value: "4", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6.75% per tahun)", value: "5", jangkaWaktu: "12", sukuBunga: "6.75" },
+  { label: "24 Bulan (6.75% per tahun)", value: "6", jangkaWaktu: "24", sukuBunga: "6.75" },
+];
+// DEPOSITO UNIVERSAL
+
+// DEPOSITO PEDULI
+export const jangkaWaktuDepositoPeduliOptions = [
+  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
+];
+
+export const jangkaWaktuDepositoPeduliOptionsTier1 = [
+  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
+];
+
+export const jangkaWaktuDepositoPeduliOptionsTier2 = [
+  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
+];
+// DEPOSITO PEDULI
+
+// DEPOSITO DEBUTS SANMERE
+export const jangkaWaktuDepositoDEBUTSanmereOptions = [
+  { label: "12 Bulan (5,75% per tahun + donasi 2% per tahun)", value: "1", jangkaWaktu: "12", sukuBunga: "5.75", donasi: "2" },
+  { label: "24 Bulan (6,25% per tahun + donasi 1,5% per tahun)", value: "2", jangkaWaktu: "24", sukuBunga: "6.25", donasi: "1.5" },
+  { label: "36 Bulan (6,75% per tahun + donasi 1% per tahun)", value: "3", jangkaWaktu: "36", sukuBunga: "6.75", donasi: "1" },
+];
+// DEPOSITO DEBUTS SANMERE
 
 export const jangkaWaktuDepositoDEBUTMatiusOptions = [
   { label: "12 Bulan (5,75% per tahun + donasi 2% per tahun)", value: "1", jangkaWaktu: "12", sukuBunga: "5.75" },
@@ -50,11 +95,27 @@ export const jangkaWaktuDepositoDEBUTMatiusOptions = [
   { label: "36 Bulan (6,75% per tahun + donasi 1% per tahun)", value: "3", jangkaWaktu: "36", sukuBunga: "6.75" },
 ];
 
-export const jangkaWaktuDepositoPeduliOptions = [
-  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
-  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
-  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
+// DEPOSITO GREEN
+export const jangkaWaktuDepositoGreenOptions = [
+  { label: "3 Bulan (6,25% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.25" },
+  { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
 ];
+
+export const jangkaWaktuDepositoGreenOptionsTier1 = [
+  { label: "3 Bulan (6,25% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.25" },
+  { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6,75% per tahun + investasi bibit pohon)", value: "4", jangkaWaktu: "12", sukuBunga: "6.75" },
+];
+
+export const jangkaWaktuDepositoGreenOptionsTier2 = [
+  { label: "3 Bulan (6,50% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.50" },
+  { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
+  { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
+  { label: "12 Bulan (6,75% per tahun + investasi bibit pohon)", value: "4", jangkaWaktu: "12", sukuBunga: "6.75" },
+];
+// DEPOSITO GREEN
 
 export const jangkaWaktuDepositoOptions = [
   { label: "1 Bulan", value: "1" },
@@ -67,12 +128,12 @@ export const jangkaWaktuDepositoOptions = [
 ];
 
 export const sukuBungaDepositoOptions = [
-  { label: "5,50%", value: "5,50" },
-  { label: "5,75%", value: "5,75" },
-  { label: "6,00%", value: "6,00" },
-  { label: "6,25%", value: "6,25" },
-  { label: "6,50%", value: "6,50" },
-  { label: "6,75%", value: "6,75" },
+  { label: "5,50%", value: "5.50" },
+  { label: "5,75%", value: "5.75" },
+  { label: "6,00%", value: "6.00" },
+  { label: "6,25%", value: "6.25" },
+  { label: "6,50%", value: "6.50" },
+  { label: "6,75%", value: "6.75" },
 ];
 
 export const tandaPengenalOptions = [
@@ -88,7 +149,7 @@ export const memilikiTabunganOptions = [
 export const pembayaranBungaOptions = [
   { label: "Tambahkan ke Nominal Deposito", subtitle: " Bunga akan ditambahkan ke nominal Deposito saat jatuh tempo", value: "1" },
   { label: "Pindah buku ke Rekening Tabungan Universal atas nama pihak lain", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal atas nama pihak lain", value: "2" },
-  { label: "Pindah buku ke Rekening Tabungan Universal atas nama saya ", subtitle: "Bunga Deposito akan dipindahbuku melalui transfer ke rekening bank lain", value: "3" },
+  { label: "Pindah buku ke Rekening Tabungan Universal atas nama saya ", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal Atas Nama Anda", value: "3" },
   { label: "Transfer ke Rekening Bank lain", subtitle: " Bunga akan ditambahkan ke nominal Deposito saat jatuh tempo", value: "4" },
 ];
 
@@ -174,11 +235,11 @@ export const produkTabunganOptions = [
 ];
 
 export const produkDepositoOptions = [
-  { label: "Deposito Universal", value: "1", subtitle: "Minimal penempatan deposito: Rp 5.000.000" },
-  { label: "Deposito Peduli", value: "2", subtitle: "Minimal penempatan deposito: Rp 100.000.000" },
-  { label: "Deposito Berdonasi Umat Sanmare", value: "3", subtitle: "Minimal penempatan deposito: Rp 5.000.000" },
-  { label: "Deposito Berdonasi Umat Matius", value: "4", subtitle: "Minimal penempatan deposito: Rp 5.000.000" },
-  { label: "Deposito Peduli Lingkungan (Green Deposit)", value: "5", subtitle: "Minimal penempatan deposito: Rp 100.000.000" },
+  { label: "Deposito Universal", value: "1", subtitle: "Minimal Pembukaan Deposito: Rp 5.000.000" },
+  { label: "Deposito Peduli", value: "2", subtitle: "Minimal Pembukaan Deposito: Rp 100.000.000" },
+  { label: "Deposito Berdonasi Umat Sanmare", value: "3", subtitle: "Minimal Pembukaan Deposito: Rp 5.000.000" },
+  { label: "Deposito Berdonasi Umat Matius", value: "4", subtitle: "Minimal Pembukaan Deposito: Rp 5.000.000" },
+  { label: "Deposito Peduli Lingkungan (Green Deposit)", value: "5", subtitle: "Minimal Pembukaan Deposito: Rp 100.000.000" },
 ];
 
 export const korespondensiOptions = [
@@ -191,7 +252,7 @@ export const hubunganNasabahOptions = [
   { label: "Suami / Istri", value: "1" },
   { label: "Orang Tua / Anak", value: "2" },
   { label: "Pimpinan / Karyawan", value: "3" },
-  { label: "Lainnya", value: "lainnya" },
+  { label: "Lainnya", value: "0" },
 
 ];
 
@@ -204,7 +265,7 @@ export const hubunganPemohonKDOptions = [
 export const jenisIdentitasBOOptions = [
   { label: "KTP", value: "1" },
   { label: "Paspor", value: "2" },
-  { label: "Lainnya", value: "lainnya" },
+  { label: "Lainnya", value: "0" },
 ];
 
 export const penghasilanOptions = [
@@ -213,7 +274,8 @@ export const penghasilanOptions = [
   { label: "Hasil Investasi", value: "3" },
   { label: "Hibah / Warisan", value: "4" },
   { label: "Suami / Istri", value: "5" },
-  { label: "Lainnya", value: "lainnya" },
+  { label: "Orang Tua", value: "6" },
+  { label: "Lainnya", value: "0" },
 ];
 
 export const jumlahPenghasilanOptions = [
@@ -247,13 +309,14 @@ export const hobiOptions = [
   { label: "Jalan - Jalan", value: "2" },
   { label: "Seni", value: "3" },
   { label: "Belanja", value: "4" },
-  { label: "Lainnya", value: "lainnya" },
+  { label: "Lainnya", value: "0" },
 ];
 
 export const tujuanOptions = [
   { label: "Simpanan", value: "1" },
   { label: "Transaksi", value: "2" },
   { label: "Investasi", value: "3" },
+  { label: "Lainnya", value: "0" },
 ];
 
 export const alasanPencairanOptions = [
@@ -290,7 +353,7 @@ export const memilikiRekeningOptions = [
 ];
 
 export const npwpOptions = [
-  { label: "Belum memiliki NPWP", value: true },
+  { label: "Saya tidak memiliki NPWP", value: true },
   { label: "Berdasarkan peraturan tidak diwajibkan memiliki NPWP", value: false },
 ];
 
@@ -298,6 +361,14 @@ export const npwp2Options = [
   { label: "Menggunakan NPWP Suami (untuk istri bekerja)", value: "SUAMI" },
   {
     label: "Menggunakan NPWP Pemilik Manfaat (termasuk orang tua)",
+    value: "PEMILIK_MANFAAT",
+  },
+];
+
+export const npwp3Options = [
+  { label: "Belum Memiliki NPWP", value: "1" },
+  {
+    label: "Berdasarkan peraturan tidak diwajibkan memiliki NPWP dan berkomitmen akan segera menyampaikan kepada bank setelah memiliki NPWP. (Tidak berlaku bagi nasabah yang telah menyerahkan dokumen NPWP ",
     value: "PEMILIK_MANFAAT",
   },
 ];
@@ -310,8 +381,8 @@ export const jenisKelaminOptions = [
 export const sumberDataNasabahOptions = [
   { label: "Website", value: "1" },
   { label: "Brosur", value: "2" },
-  { label: "Sosial Media", value: "3" },
-  { label: "Lainnya", value: "lainnya" },
+  { label: "Media Sosial", value: "3" },
+  { label: "Lainnya", value: "0" },
 ];
 
 export const agamaOptions = [

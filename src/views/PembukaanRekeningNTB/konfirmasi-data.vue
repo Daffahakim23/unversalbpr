@@ -33,8 +33,8 @@
           </div>
 
           <div>
-            <img :src="file ? '/src/assets/success.svg' : '/src/assets/download.svg'
-              " alt="Status Upload" class="h-6" />
+            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
+            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@
           Dengan ini, saya/kami menyatakan bahwa:
         </p>
         <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
-          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT. BPR Universal (selanjutnya
+          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT BPR Universal (selanjutnya
             disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
           <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
             ini.</li>
@@ -157,19 +157,28 @@
     </div>
 
     <!-- Checkbox Persetujuan -->
-    <div class="flex items-center">
+    <!-- <div class="flex items-center">
       <input type="checkbox" id="agreement1" v-model="agreement1" class="mr-2 cursor-pointer" />
       <label for="agreement1" class="text-sm text-neutral-900 cursor-pointer">
         Saya setuju dengan pernyataan dan persetujuan di atas
       </label>
+    </div> -->
+
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
     </div>
 
-    <div class="flex items-center mt-2">
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement2"
+        labelText="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*" />
+    </div>
+
+    <!-- <div class="flex items-center mt-2">
       <input type="checkbox" id="agreement2" v-model="agreement2" class="mr-2 cursor-pointer items-baseline" />
       <label for="agreement2" class="text-sm text-neutral-900 cursor-pointer">
         Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
       </label>
-    </div>
+    </div> -->
 
 
     <div class="flex justify-between mt-6">
@@ -198,11 +207,14 @@ import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
 import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, masaAktifKTPOptions, hubunganNasabahOptions, sumberDataNasabahOptions } from '@/data/option.js';
 import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
+
 
 
 export default {
   emits: ['updateProgress'],
   components: {
+    CustomCheckbox,
     ButtonComponent,
     RadioButtonChoose,
     // ModalOTP,
@@ -338,6 +350,9 @@ export default {
             }
             if (key === "korespondensi") {
               value = this.getLabelFromOptions(value, korespondensiOptions);
+            }
+            if (key === "sumberDanaMilikPribadi") {
+              value = this.getLabelFromOptions(value, trueFalseOptions);
             }
             if (key === "pekerjaan") {
               if (this.pekerjaanOptions && this.pekerjaanOptions.length > 0) {
@@ -491,6 +506,7 @@ export default {
           method2: 'sms'
         },
       ],
+      iconSize: 20,
     };
   },
 
@@ -577,6 +593,13 @@ export default {
         sumber: "Sumber Informasi Nasabah",
 
         // Data Pekerjaan (Beneficial Owner)
+        penghasilanLainnya: "Penghasilan Lainnya",
+        sumberDanaMilikPribadi: "Sumber Dana Milik Pribadi",
+        hubunganNasabahLainnyaBO: "Hubungan Nasabah Lainnya",
+        jenisIdentitasLainnyaBO: "Jenis Identitas Lainnya",
+        pekerjaanLainnyaBO: "Pekerjaan Lainnya",
+        jabatanLainnyaBO: "Jabatan Lainnya",
+        penghasilanLainnyaBO: "Penghasilan Lainnya",
         pekerjaan: "Pekerjaan",
         pekerjaanLainnya: "Pekerjaan Lainnya",
         penghasilan: "Sumber Dana",
@@ -585,7 +608,7 @@ export default {
         jenisIdentitasBO: "Jenis Identitas",
         hubunganNasabahBO: "Hubungan dengan Nasabah",
         kotaPerusahaanBO: "Kota Perusahaan",
-        kodePosPerushaanBO: "Kode Pos Perusahaan",
+        kodePosPerusahaanBO: "Kode Pos Perusahaan",
         kewarganegaraanBO: "Kewarganegaraan",
         namaLengkapBO: "Nama",
         nomorDokumenIdentitasBO: "Nomor Dokumentasi Identitas",
@@ -800,5 +823,41 @@ h2 {
   .form-value {
     font-size: 14px;
   }
+}
+
+.hidden-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  /* height: 0;
+  width: 0; */
+}
+
+.custom-checkbox-label {
+  display: flex;
+  align-items: center;
+}
+
+.custom-checkbox-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-checkbox-icon img {
+  display: block;
+  /* Mencegah ruang ekstra di sekitar gambar inline */
+}
+
+/* Styling saat fokus (opsional) */
+.hidden-checkbox:focus+.custom-checkbox-label .custom-checkbox-icon img {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.custom-checkbox-icon img,
+.custom-checkbox-icon svg {
+  display: block;
+  /* Memastikan elemen ikon tidak memiliki padding atau margin inline default */
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div class="bg-white rounded-2xl shadow-lg dark:bg-gray-700 max-w-2xl w-full h-[80vh] flex flex-col p-10">
+        <div
+            class="w-sm max-w-xl flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto h-[80vh]">
             <div class="flex items-center pb-4 justify-between dark:border-gray-600">
                 <h3 class="text-2xl font-semibold text-primary dark:text-white">{{ apiData ? apiData.title : title }}
                 </h3>
@@ -12,10 +13,7 @@
             <div class="overflow-y-auto flex-1">
                 <div v-if="apiData" v-html="apiData.detail"></div>
                 <div v-for="(checkbox, index) in checkboxes" :key="index" class="mt-4">
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" v-model="checkbox.checked" class="form-checkbox h-5 w-5 text-primary">
-                        <span class="ml-2 text-gray-700 dark:text-gray-300">{{ checkbox.label }}</span>
-                    </label>
+                    <CustomCheckbox v-model="checkbox.checked" :labelText="checkbox.label" />
                 </div>
             </div>
             <div class="flex justify-center pt-8">
@@ -29,10 +27,12 @@
 <script>
 import axios from 'axios';
 import ButtonComponent from "@/components/button.vue";
+import CustomCheckbox from "@/components/CustomCheckbox.vue"; // Pastikan pathnya benar
 
 export default {
     components: {
         ButtonComponent,
+        CustomCheckbox,
     },
     props: {
         title: {
@@ -55,7 +55,7 @@ export default {
                 { label: "Saya tidak memiliki kewajiban/domisili perpajakan di negara selain Indonesia", checked: false },
                 { label: "Bahwa berkaitan dengan Pajak Amerika, saya bukan penduduk US", checked: false },
             ],
-            isLoading: false, // Tambahkan isLoading
+            isLoading: false,
         };
     },
     computed: {
@@ -77,10 +77,10 @@ export default {
                 }
             } catch (error) {
                 console.error('Error fetching API data:', error);
-                console.log(error); // Tambahkan console.log(error)
+                console.log(error);
                 this.apiData = null;
             } finally {
-                this.isLoading = false; // Set isLoading ke false
+                this.isLoading = false;
             }
         },
         closeModal() {

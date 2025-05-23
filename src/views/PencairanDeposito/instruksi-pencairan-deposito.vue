@@ -1,21 +1,33 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Nomor Rekening Deposito*" id="nomorRekeningDeposito" type="text"
-      v-model="form.nomorRekeningDeposito" placeholder="Masukkan Nomor Rekening Deposito Anda" required
+    <FormField label="Nomor Deposito*" id="nomorRekeningDeposito" v-model="form.nomorRekeningDeposito"
+      placeholder="Masukkan Nomor Rekening Deposito Anda" required
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
-    <FormField label="Tanggal Jatuh Tempo Deposito" id="tanggalJatuhTempoDeposito" type="date"
+    <FormField label="Nama Lengkap*" id="namaLengkap" v-model="form.namaLengkap"
+      placeholder="Masukkan Nama Lengkap Anda" variant="alpha" required />
+
+    <FormField label="Tanggal Jatuh Tempo Deposito*" id="tanggalJatuhTempoDeposito" type="date"
       v-model="form.tanggalJatuhTempoDeposito" required />
 
-    <FormField label="Tanggal Instruksi Pencairan Deposito" id="tanggalInstruksiPencairanDeposito" type="date"
+    <FormField label="Tanggal Instruksi Penutupan Deposito*" id="tanggalInstruksiPencairanDeposito" type="date"
       v-model="form.tanggalInstruksiPencairanDeposito" required />
 
-    <FormField label="Nominal Deposito*" id="nominal" type="text" :isDropdown="false" v-model="formattedNominal"
-      placeholder="Masukkan Nominal Penempatan Deposito" :disabled="!form.produk" :required="true"
-      @input="updateNominal" />
+    <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
+      placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
+
+    <div v-if="form.kantorCabang" class="mt-4">
+      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
+        v-model="form.alamatKantorCabang" :readonly="true" />
+    </div>
+
+    <FormField label="Nominal Deposito*" id="nominal" :isDropdown="false" v-model="formattedNominal" variant="numeric"
+      :maxlength="20" placeholder="Masukkan Nominal Pembukaan Deposito"
+      :disabled="!form.produkDeposito || formattedNominal.length >= 12" :required="true" :hint="nominalError || ''"
+      :error="!!nominalError" @input="updateNominal($event.target.value)" />
 
     <FormField label="Terbilang" id="terbilang" :isDropdown="false" v-model="form.terbilang" :required="true"
-      placeholder="Masukkan Nominal Penempatan Deposito" :readonly="true" />
+      placeholder="Masukkan Nominal Pembukaan Deposito" :readonly="true" />
 
     <FormField label="Suku Bunga*" id="sukuBunga" :isDropdown="true" v-model="form.sukuBunga"
       placeholder="Pilih Jangka Waktu & Suku Bunga" :options="sukuBungaDepositoOptions" required />
@@ -27,28 +39,29 @@
       <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-1">
         Biaya Pinalti
       </h2>
-      <p class="text-sm text-gray-600 mb-4">
-        Pencairan Deposito sebelum jatuh tempo akan dikenakan biaya penalti sesuai dengan Ketentuan PT. BPR Universal
+      <p class="font-normal text-xs md:text-sm text-gray-600 mb-4">
+        Penutupan Deposito sebelum jatuh tempo akan dikenakan biaya penalti sesuai dengan Ketentuan PT BPR Universal
       </p>
       <FlagBox type="warning" closable class="mb-4">
-        <p class="text-sm font-normal">*Biaya Penalti akan dikenakan berdasarkan produk/program Deposito Anda sebagai
+        <p class="font-normal text-xs md:text-sm mb-2">*Biaya Penalti akan dikenakan berdasarkan produk/program Deposito
+          Anda sebagai
           berikut:</p>
-        <ul style="list-style-type: disc;" class="ml-8">
+        <ul style="list-style-type: disc;" class="ml-8 font-normal text-xs md:text-sm">
           <li>Deposito Universal: 0,5%</li>
           <li>Deposito Berdonasi Umat Sanmare: 0,5%</li>
           <li>Deposito Berdonasi Umat Matius: 0,5%</li>
           <li>Deposito Peduli: 1%</li>
           <li>Deposito Peduli Lingkungan (Green Deposit): 1%</li>
         </ul>
-        <p>Dari nominal deposito Anda.</p>
+        <p class="font-normal text-xs md:text-sm mt-2">Dari nominal deposito Anda.</p>
       </FlagBox>
     </div>
 
-    <FormField label="Alasan Pencairan*" id="alasanPencairan" :isDropdown="true" v-model="form.alasanPencairan"
+    <FormField label="Alasan Penutupan*" id="alasanPencairan" :isDropdown="true" v-model="form.alasanPencairan"
       placeholder="Pilih Alasan Pencairan Deposito" :options="alasanPencairanOptions" required />
 
-    <RadioButtonChoose label="Rekening Tujuan*" id="rekeningTujuan" name="rekeningTujuan" :isDropdown="true"
-      v-model="form.rekeningTujuan" :options="rekeningTujuanOptions" required />
+    <RadioButtonChoose label="Rekening Tujuan Penutupan Deposito*" id="rekeningTujuan" name="rekeningTujuan"
+      :isDropdown="true" v-model="form.rekeningTujuan" :options="rekeningTujuanOptions" required />
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -69,6 +82,8 @@ import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
 import { rekeningTujuanOptions, alasanPencairanOptions, jangkaWaktuDepositoOptions, sukuBungaDepositoOptions } from "@/data/option.js";
 import { FormModelPenempatanDeposito } from "@/models/formModel";
+import { toTerbilang } from "@/utils/toTerbilang.js";
+import { fetchBranches } from '@/services/service.js';
 
 export default {
   components: {
@@ -88,7 +103,10 @@ export default {
       rekeningTujuanOptions,
       alasanPencairanOptions,
       jangkaWaktuDepositoOptions,
-      sukuBungaDepositoOptions
+      sukuBungaDepositoOptions,
+      nominalError: false,
+      kantorCabangOptions: [],
+      kantorCabangAlamat: {},
 
     };
   },
@@ -119,34 +137,60 @@ export default {
 
   },
   watch: {
+    "form.kantorCabang"(newVal) {
+      this.form.alamatKantorCabang = this.kantorCabangAlamat[newVal] || "Alamat tidak ditemukan";
+    },
     "form.nominal"(newVal) {
       this.form.terbilang = this.toTerbilang(parseInt(newVal) || 0);
     },
   },
   methods: {
-    async fetchDataFromStore(storeKey) {
+    async fetchBranches() {
       try {
-        const fileStore = useFileStore();
-        const data = fileStore[storeKey];
-        console.log(`Data from Pinia (${storeKey}):`, data);
-
-        if (data) {
-          Object.keys(this.form).forEach((key) => {
-            if (data[key] !== undefined) {
-              this.form[key] = data[key];
-            }
-          });
-        }
-        console.log("form data : ", this.form);
+        const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();
+        this.kantorCabangOptions = kantorCabangOptions;
+        this.kantorCabangAlamat = kantorCabangAlamat;
       } catch (error) {
-        console.error(`Error fetching data from ${storeKey}:`, error);
+        console.error('Gagal mengambil data kantor cabang:', error);
+      }
+    },
+    validateNamaLengkap(namaLengkap) {
+      return /^[^\d]+$/.test(namaLengkap);
+    },
+    handleNamaLengkapBlur() {
+      this.touched.namaLengkap = true;
+      if (this.form.namaLengkap) {
+        this.namaLengkapError = !this.validateNamaLengkap(this.form.namaLengkap);
       }
     },
     async fetchData() {
-      await this.fetchDataFromStore('formEmailRequestPencairanDeposito');
-    },
-    async fetchDataInstruksi() {
-      await this.fetchDataFromStore('formInstruksiPencairanDeposito');
+      try {
+        const fileStore = useFileStore();
+        const pengirim = fileStore.formEmailRequestPencairanDeposito;
+        const pindahBuku = fileStore.formInstruksiPencairanDeposito;
+
+        if (pengirim) {
+          Object.keys(this.form).forEach((key) => {
+            if (pengirim[key] !== undefined) {
+              this.form[key] = pengirim[key];
+            }
+          });
+          console.log("Form setelah fetchData Data Pengirim:", this.form);
+        }
+
+        if (pindahBuku) {
+          Object.keys(this.form).forEach((key) => {
+            if (pindahBuku[key] !== undefined) {
+              this.form[key] = pindahBuku[key];
+            }
+          });
+          console.log("Form setelah fetchData Data Pemindahbukuan:", this.form);
+        }
+
+        console.log("Form setelah fetchData Data Penerima:", this.form);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     },
     updateNominal(value) {
       const rawValue = value.replace(/\D/g, "");
@@ -165,13 +209,19 @@ export default {
           return;
         }
 
+        const selectedBranch = this.kantorCabangOptions.find(
+          branch => branch.value === this.form.kantorCabang
+        );
+
         const requestData = {
           uuid: uuid,
+          kode_kantor_cabang: this.form.kantorCabang,
+          kantor_cabang: selectedBranch ? selectedBranch.label : "",
           nomor_deposito: this.form.nomorRekeningDeposito,
           tanggal_jatuh_tempo: this.form.tanggalJatuhTempoDeposito,
           tanggal_instruksi_pencairan: this.form.tanggalInstruksiPencairanDeposito,
           nominal_deposito: Number(this.form.nominal),
-          suku_bunga: Number(this.form.sukuBunga),
+          suku_bunga: parseFloat(this.form.sukuBunga),
           jangka_waktu: Number(this.form.jangkaWaktu),
           alasan_pencairan: this.form.alasanPencairan
         };
@@ -208,81 +258,14 @@ export default {
         console.error("Error saat mengirim data:", error);
       }
     },
-    toTerbilang(angka) {
-      const satuan = [
-        "",
-        "Satu",
-        "Dua",
-        "Tiga",
-        "Empat",
-        "Lima",
-        "Enam",
-        "Tujuh",
-        "Delapan",
-        "Sembilan",
-      ];
-      const belasan = [
-        "Sepuluh",
-        "Sebelas",
-        "Dua Belas",
-        "Tiga Belas",
-        "Empat Belas",
-        "Lima Belas",
-        "Enam Belas",
-        "Tujuh Belas",
-        "Delapan Belas",
-        "Sembilan Belas",
-      ];
-      const puluhan = [
-        "",
-        "",
-        "Dua Puluh",
-        "Tiga Puluh",
-        "Empat Puluh",
-        "Lima Puluh",
-        "Enam Puluh",
-        "Tujuh Puluh",
-        "Delapan Puluh",
-        "Sembilan Puluh",
-      ];
-      const ribuan = ["", "Ribu", "Juta", "Miliar", "Triliun"];
+    toTerbilang,
 
-      if (angka === 0) return "Masukkan Nominal Penempatan Deposito";
-
-      let hasil = "";
-      let i = 0;
-      while (angka > 0) {
-        let tigaDigit = angka % 1000;
-        if (tigaDigit !== 0) {
-          let ratus = Math.floor(tigaDigit / 100);
-          let puluh = Math.floor((tigaDigit % 100) / 10);
-          let satu = tigaDigit % 10;
-          let bagian = "";
-
-          if (ratus > 0) {
-            bagian += ratus === 1 ? "Seratus " : satuan[ratus] + " Ratus ";
-          }
-          if (puluh === 1) {
-            bagian += belasan[satu] + " ";
-          } else {
-            if (puluh > 1) bagian += puluhan[puluh] + " ";
-            if (satu > 0) bagian += satuan[satu] + " ";
-          }
-          hasil = bagian + ribuan[i] + " " + hasil;
-        }
-        angka = Math.floor(angka / 1000);
-        i++;
-      }
-      return hasil.trim() + " Rupiah";
-    },
   },
   mounted() {
     this.$emit("update-progress", 60);
-  },
-  created() {
     this.fetchData();
-    this.fetchDataInstruksi();
-    this.fetchDataFromStore();
+    this.fetchBranches();
   },
+
 };
 </script>

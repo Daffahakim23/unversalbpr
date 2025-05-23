@@ -50,11 +50,11 @@
     </p>
 
     <FormField label="Nominal Deposito*" id="nominal" type="text" :isDropdown="false" v-model="formattedNominal"
-      placeholder="Masukkan Nominal Penempatan Deposito" :disabled="!form.produkDeposito" :required="true"
+      placeholder="Masukkan Nominal Pembukaan Deposito" :disabled="!form.produkDeposito" :required="true"
       @input="updateNominal" />
 
     <FormField label="Terbilang" id="terbilang" :isDropdown="false" v-model="form.terbilang" :required="true"
-      placeholder="Masukkan Nominal Penempatan Deposito" :readonly="true" />
+      placeholder="Masukkan Nominal Pembukaan Deposito" :readonly="true" />
 
     <FormField label="Keterangan Transaksi*" id="keteranganTransaksi" v-model="form.keteranganTransaksi"
       placeholder="Masukkan Nama Keterangan Transaksi" required />
@@ -337,7 +337,7 @@ export default {
       ];
       const ribuan = ["", "Ribu", "Juta", "Miliar", "Triliun"];
 
-      if (angka === 0) return "Masukkan Nominal Penempatan Deposito";
+      if (angka === 0) return "Masukkan Nominal Pembukaan Deposito";
 
       let hasil = "";
       let i = 0;

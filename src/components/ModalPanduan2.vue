@@ -19,9 +19,10 @@
                 </div>
             </div>
 
-            <div class="flex justify-center mt-4">
+            <div class="flex justify-between mt-4">
+                <ButtonComponent variant="ghost" @click="closeModal">Batalkan</ButtonComponent>
                 <ButtonComponent @click="handleSubmit">
-                    Oke
+                    Mengerti
                 </ButtonComponent>
             </div>
         </div>

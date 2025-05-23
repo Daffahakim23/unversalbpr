@@ -33,8 +33,8 @@
           </div>
 
           <div>
-            <img :src="file ? '/src/assets/success.svg' : '/src/assets/download.svg'
-              " alt="Status Upload" class="h-6" />
+            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
+            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
           </div>
         </div>
       </div>
@@ -47,17 +47,21 @@
         Rekening Sumber Dana
       </h1>
       <div class="form-container">
-        <div class="form-item" v-if="formRekeningSumber.namaLengkap">
+        <div class="form-item" v-if="formRekeningSumber.namaLengkapPengirim">
           <div class="form-label">Nama pemilik Sumber Dana:</div>
-          <strong class="form-value">{{ formRekeningSumber.namaLengkap }}</strong>
+          <strong class="form-value">{{ formRekeningSumber.namaLengkapPengirim }}</strong>
         </div>
-        <div class="form-item" v-if="formRekeningSumber.nomorRekening">
+        <div class="form-item" v-if="formRekeningSumber.nomorRekeningPengirim">
           <div class="form-label">Nomor Rekening:</div>
-          <strong class="form-value">{{ formRekeningSumber.nomorRekening }}</strong>
+          <strong class="form-value">{{ formRekeningSumber.nomorRekeningPengirim }}</strong>
         </div>
         <div class="form-item" v-if="formRekeningSumber.sumberDana">
           <div class="form-label">Sumber Dana:</div>
           <strong class="form-value">{{ formRekeningSumber.sumberDana }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenerima.kantorCabang">
+          <div class="form-label">Kantor Cabang:</div>
+          <strong class="form-value">{{ formPenerima.kantorCabang }}</strong>
         </div>
       </div>
     </div>
@@ -66,7 +70,7 @@
 
     <div class="py-4">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Data Penerima Pemindahbukuan
+        Data Penerima Transfer
       </h1>
       <div v-if="formPenerima.namaLengkap || formPenerima.nomorRekening || formPenerima.sumberDana"
         class="form-container">
@@ -88,7 +92,7 @@
         </div>
         <div class="form-item" v-if="formPenerima.phone">
           <div class="form-label">Nomor Telepon:</div>
-          <strong class="form-value">{{ formPenerima.phone }}</strong>
+          <strong class="form-value">0{{ formPenerima.phone }}</strong>
         </div>
       </div>
     </div>
@@ -97,15 +101,15 @@
 
     <div class="py-4">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Rincian Pemindahbukuan
+        Rincian Transfer
       </h1>
       <div class="form-container">
         <div class="form-item" v-if="formPenerima.nominal">
-          <div class="form-label">Nama pemilik Rekening Penerima:</div>
+          <div class="form-label">Nominal:</div>
           <strong class="form-value">{{ formPenerima.nominal }}</strong>
         </div>
         <div class="form-item" v-if="formPenerima.terbilang">
-          <div class="form-label">Nomor Rekening:</div>
+          <div class="form-label">Terbilang:</div>
           <strong class="form-value">{{ formPenerima.terbilang }}</strong>
         </div>
         <div class="form-item" v-if="formPenerima.metodeTransfer">
@@ -114,14 +118,18 @@
         </div>
         <div class="form-item" v-if="formPenerima.biayaTransfer">
           <div class="form-label">Biaya Transfer:</div>
-          <strong class="form-value">{{ formPenerima.biayaTransfer }}</strong>
+          <strong class="form-value">{{ formatCurrency(formPenerima.biayaTransfer) }}</strong>
         </div>
-        <div class="form-item">
-          <div class="form-label">Jumlah Total:</div>
-          <div class="flex flex-col gap-2 mt-2" style="align-items: flex-start;">
-            <strong class="font-semibold text-2xl text-secondary-base">{{ jumlahTotal }}</strong>
-            <p class="form-value">{{ terbilangJumlahTotal }}</p>
-          </div>
+        <div class="form-item" v-if="formPenerima.keteranganTransaksi">
+          <div class="form-label">Biaya Transfer:</div>
+          <strong class="form-value">{{ formatCurrency(formPenerima.keteranganTransaksi) }}</strong>
+        </div>
+      </div>
+      <div class="form-item mt-4">
+        <div class="form-label">Jumlah Total:</div>
+        <div class="flex flex-col gap-2 mt-2" style="align-items: flex-start;">
+          <strong class="font-semibold text-2xl text-secondary-base">{{ jumlahTotal }}</strong>
+          <p class="form-value">{{ terbilangJumlahTotal }}</p>
         </div>
       </div>
     </div>
@@ -136,39 +144,39 @@
         <p>
           Sehubungan dengan pengajuan aplikasi ini, maka saya menyatakan bahwa: 
         </p>
-        <ul class="list-decimal list-inside text-neutral-700 space-y-2">
+        <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
           <li>Saya menyatakan bahwa sumber dana dan tujuan penggunaan dana bukan untuk kegiatan pencucian uang, dan
             pendanaan terorisme, serta yang dilarang oleh peraturan perundang-undangan yang berlaku.</li>
           <li>Saya menyatakan bahwa data, informasi, dan/atau dokumen yang telah saya isi maupun berikan melalui layanan
-            E-Form Universal BPR ini adalah benar dan merupakan data terbaru.</li>
-          <li>Saya setuju bahwa PT. BPR Universal berhak melakukan pemeriksaan terhadap kebenaran data yang saya
+            E-Form BPR Universal ini adalah benar dan merupakan data terbaru.</li>
+          <li>Saya setuju bahwa PT BPR Universal berhak melakukan pemeriksaan terhadap kebenaran data yang saya
             berikan.</li>
           <li>Saya telah membaca dan menyatakan tunduk, serta terikat dengan semua Ketentuan dan Persyaratan
-            Pemindahbukuan melalui Layanan E-Form Universal BPR, dan telah memahami biaya, manfaat, risiko, dan
+            Transfer melalui Layanan E-Form BPR Universal, dan telah memahami biaya, manfaat, risiko, dan
             konsekuensi terhadap penggunaan layanan tersebut.</li>
-          <li>Saya setuju memberikan hak dan wewenang kepada PT. BPR Universal dalam memproses data pribadi saya dan
+          <li>Saya setuju memberikan hak dan wewenang kepada PT BPR Universal dalam memproses data pribadi saya dan
             melakukan pendebetan rekening saya sesuai nomor rekening yang telah saya isi pada formulir ini untuk tujuan
-            menindaklanjuti pemindahbukuan yang saya ajukan pada layanan E-Form Universal BPR ini.</li>
-          <li>Saya setuju atas pemotongan biaya administrasi atas pemindahbukuan ke rekening Bank lain sesuai dengan
-            ketentuan PT. BPR Universal.</li>
+            menindaklanjuti Transfer yang saya ajukan pada layanan E-Form BPR Universal ini.</li>
+          <li>Saya setuju atas pemotongan biaya administrasi atas Transfer ke rekening Bank lain sesuai dengan
+            ketentuan PT BPR Universal.</li>
           <li>Saya setuju data pribadi saya digunakan, dan dibagikan kepada pihak lain yang bekerja sama atau
-            terafiliasi dengan PT. BPR Universal sehubungan dengan pengajuan pemindahbukuan melalui layanan E-Form
-            Universal BPR berdasarkan ketentuan Peraturan Perundang-Undangan yang berlaku.</li>
-          <li>Saya setuju bahwa PT. BPR Universal dapat memperoleh, menggunakan, mengelola, dan menyimpan data biometrik
+            terafiliasi dengan PT BPR Universal sehubungan dengan pengajuan Transfer melalui layanan E-Form
+            BPR Universal berdasarkan ketentuan Peraturan Perundang-Undangan yang berlaku.</li>
+          <li>Saya setuju bahwa PT BPR Universal dapat memperoleh, menggunakan, mengelola, dan menyimpan data biometrik
             saya, termasuk namun tidak terbatas pada pemanfaatan dokumen identitas diri saya, face recognition,
             teknologi digital signature, rekaman suara, untuk tujuan verifikasi identitas saya dalam memproses transaksi
-            pemindahbukuan yang diajukan melalui layanan E-Form Universal BPR berdasarkan Ketentuan Peraturan
+            Transfer yang diajukan melalui layanan E-Form BPR Universal berdasarkan Ketentuan Peraturan
             Perundang-Undangan yang berlaku.</li>
-          <li>Saya bertanggung jawab penuh atas pengajuan transaksi pemindahbukuan, termasuk namun tidak terbatas pada
-            kebenaran identitas saya sebagai nasabah, jumlah nominal pemindahbukuan, serta nama dan nomor rekening
+          <li>Saya bertanggung jawab penuh atas pengajuan transaksi Transfer, termasuk namun tidak terbatas pada
+            kebenaran identitas saya sebagai nasabah, jumlah nominal Transfer, serta nama dan nomor rekening
             penerima.</li>
-          <li>Saya memastikan bahwa saldo rekening saya mencukupi untuk transaksi pemindahbukuan.</li>
-          <li>Saya setuju bahwa PT. BPR Universal berhak untuk tidak melaksanakan perintah pemindahbukuan dari saya,
+          <li>Saya memastikan bahwa saldo rekening saya mencukupi untuk transaksi Transfer.</li>
+          <li>Saya setuju bahwa PT BPR Universal berhak untuk tidak melaksanakan perintah Transfer dari saya,
             apabila: 
-            <ul class="list-disc list-inside ml-2 mt-2 space-y-1">
-              <li>Saldo rekening saya di PT. BPR Universal  tidak cukup atau rekening di blokir/ditutup atau berdasarkan
-                pertimbangan lain dari PT. BPR Universal yang  tidak akan diberitahukan kepada Nasabah.</li>
-              <li>PT. BPR Universal  mengetahui atau mempunyai alasan untuk menduga bahwa penipuan atau kejahatan telah
+            <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
+              <li>Saldo rekening saya di PT BPR Universal  tidak cukup atau rekening di blokir/ditutup atau berdasarkan
+                pertimbangan lain dari PT BPR Universal yang  tidak akan diberitahukan kepada Nasabah.</li>
+              <li>PT BPR Universal  mengetahui atau mempunyai alasan untuk menduga bahwa penipuan atau kejahatan telah
                 atau akan dilakukan.</li>
             </ul>
           </li>
@@ -177,12 +185,15 @@
     </div>
 
     <!-- Checkbox Persetujuan -->
-    <div class="flex items-center">
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+    </div>
+    <!-- <div class="flex items-center">
       <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />
       <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
         Saya setuju dengan pernyataan dan persetujuan di atas
       </label>
-    </div>
+    </div> -->
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -191,8 +202,9 @@
       </ButtonComponent>
     </div>
   </div>
-  <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
-    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" />
+  <!-- <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
+    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" /> -->
+  <ModalKonfirmasi :isOpen="isModalOpen" @close="closeModalKonfirmasi" @yes="handleKonfirmasi" />
 </template>s
 
 <script>
@@ -201,10 +213,14 @@ import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
-import { trueFalseOptions } from "@/data/option";
+import { kewarganegaraanOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
-import ModalOTP from "@/components/ModalOTP.vue";
+// import ModalOTP from "@/components/ModalOTP.vue";
+import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
 import { sumberDanaOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, masaAktifKTPOptions, hubunganNasabahOptions } from '@/data/option.js';
+import { toTerbilang } from "@/utils/toTerbilang.js";
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
+import { fetchBranches } from '@/services/service.js';
 
 
 export default {
@@ -212,31 +228,42 @@ export default {
   components: {
     ButtonComponent,
     RadioButtonChoose,
-    ModalOTP,
+    // ModalOTP,
+    CustomCheckbox,
+    ModalKonfirmasi,
   },
   name: "DataPribadi",
   computed: {
     isButtonDisabled() {
-      return !this.agreement; // Tombol dinonaktifkan jika agreement belum dicentang
-    },
-    hasBeneficialOwner() {
-      return this.formBeneficialOwner && Object.keys(this.formBeneficialOwner).length > 0;
+      return !this.agreement;
     },
     formKTP() {
       const fileStore = useFileStore();
       const data = fileStore.formKTP || {};
       const processedData = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key]) {
+        if (data.hasOwnProperty(key)) {
           let value = data[key];
+          if (key === "jenisKelamin") {
+            value = this.getLabelFromOptions(value, [
+              { value: true, label: "Laki-laki" },
+              { value: false, label: "Perempuan" },
+            ]);
+          }
+          if (value === null || value === undefined || value === "") {
+            continue;
+          }
+          if (key === "kewarganegaraan") {
+            value = this.getLabelFromOptions(value, kewarganegaraanOptions);
+          }
+          if (key === "masaAktifKtp") {
+            value = this.getLabelFromOptions(value, masaAktifKTPOptions);
+          }
           if (key === "agama") {
             value = this.getLabelFromOptions(value, agamaOptions);
           }
           if (key === "statusPerkawinan") {
             value = this.getLabelFromOptions(value, statusPerkawinanOptions);
-          }
-          if (key === "masaAktifKtp") {
-            value = this.getLabelFromOptions(value, masaAktifKTPOptions);
           }
           processedData[key] = value;
         }
@@ -245,7 +272,7 @@ export default {
     },
     formRekeningSumber() {
       const fileStore = useFileStore();
-      const data = fileStore.formDataPemindahbukuan || {};
+      const data = fileStore.formDataPengirimPemindahbukuan || {};
       const processedData = {};
       for (const key in data) {
         if (data.hasOwnProperty(key) && data[key]) {
@@ -275,6 +302,14 @@ export default {
           if (key === "sumberDana") {
             value = this.getLabelFromOptions(value, sumberDanaOptions);
           }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
+          }
           processedData[key] = value;
         }
       }
@@ -286,6 +321,30 @@ export default {
         Object.entries(fileStore.uploadedFiles || {}).filter(([_, value]) => value)
       );
     },
+    jumlahTotal() {
+      const nominal = this.parseCurrency(this.formPenerima.nominal);
+      const biaya = this.parseCurrency(this.formPenerima.biayaTransfer);
+
+      if (!isNaN(nominal) && !isNaN(biaya)) {
+        return this.formatCurrency(nominal + biaya);
+      } else if (!isNaN(nominal)) {
+        return this.formatCurrency(nominal);
+      } else {
+        return "Rp 0";
+      }
+    },
+    terbilangJumlahTotal() {
+      const nominal = this.parseCurrency(this.formPenerima.nominal);
+      const biaya = this.parseCurrency(this.formPenerima.biayaTransfer);
+
+      if (!isNaN(nominal) && !isNaN(biaya)) {
+        return this.toTerbilang(nominal + biaya);
+      } else if (!isNaN(nominal)) {
+        return toTerbilang(nominal);
+      } else {
+        return "Nol Rupiah";
+      }
+    },
   },
   setup() {
     const fileStore = useFileStore();
@@ -295,18 +354,15 @@ export default {
 
   data() {
     return {
-      nominal: "Rp100.000.000",
-      terbilang: "Seratus Juta Rupiah",
-      metodeTransfer: "RTGS",
-      biayaTransfer: "Rp 30.000",
-      jumlahTotal: "Rp 100.030.000",
-      terbilangJumlahTotal: "Seratus Tiga Puluh Juta Rupiah",
       form: new FormModelKonfirmasiData(),
       trueFalseOptions,
       RadioButtonChoose,
       agreement: false,
       isSubmitting: false,
-      isModalOTPOpen: false,
+      // isModalOTPOpen: false,
+      isModalOpen: false,
+      kantorCabangOptions: [],
+      kantorCabangAlamat: {},
       features: [
         {
           label: 'Pilih Metode Konfirmasi OTP',
@@ -323,6 +379,23 @@ export default {
   },
 
   methods: {
+    toTerbilang,
+    async fetchBranches() {
+      try {
+        const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();
+        this.kantorCabangOptions = kantorCabangOptions;
+        this.kantorCabangAlamat = kantorCabangAlamat;
+      } catch (error) {
+        console.error("Gagal mengambil data kantor cabang:", error);
+      }
+    },
+    parseCurrency(currencyString) {
+      if (typeof currencyString === 'string') {
+        return parseFloat(currencyString.replace(/[^\d,-]/g, '').replace(',', '.'));
+      }
+      return isNaN(currencyString) ? 0 : parseFloat(currencyString);
+    },
+
     formatCurrency(amount) {
       if (typeof amount !== 'number') return amount;
 
@@ -333,11 +406,13 @@ export default {
       }).format(amount);
     },
     getLabelFromOptions(value, options) {
-      const option = options.find((opt) => opt.value === value);
-      return option ? option.label : value;
+      if (!options || options.length === 0) return value;
+
+      const found = options.find((option) => option.value === value);
+      return found ? found.label : value;
     },
     goBack() {
-      this.$router.push({ path: "/dashboard/dataPenerimaPemindahbukuan" });
+      this.$router.push({ path: "/dashboard/dataPengirimPemindahbukuan" });
     },
     formatLabel(key) {
       const labels = {
@@ -380,51 +455,57 @@ export default {
       };
       return icons[key] || "/src/assets/default.svg";
     },
-    async handleSubmit() {
+    handleSubmit(event) {
+      event.preventDefault();
       if (!this.agreement) {
         alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
         return;
       }
+      this.isModalOpen = true;
+    },
+    closeModalKonfirmasi() {
+      this.isModalOpen = false;
+    },
+    handleKonfirmasi(confirm) {
+      this.isModalOpen = false;
+
+      if (confirm) {
+        this.lanjutkanPengiriman();
+      } else {
+        console.log("Pengiriman data dibatalkan oleh pengguna.");
+      }
+    },
+
+    async lanjutkanPengiriman() {
+      if (this.isSubmitting) {
+        return;
+      }
       const fileStore = useFileStore();
+      this.isSubmitting = true;
+
       try {
         this.requestData = {
           uuid: fileStore.uuid || "",
           s_k_nasabah_bersedia_info_tambahan: true,
-          s_k_data_benar_dipertanggungjawabkan: true
-        };
-        console.log("Data sementara disimpan:", this.requestData);
-        this.isModalOTPOpen = true;
-      } catch (error) {
-        console.error("Error saat membuka modal:", error);
-      }
-    },
-    async handleOTPMethodSelected(method) {
-      console.log('Metode OTP yang dipilih:', method);
-
-      try {
-        if (!this.requestData) {
-          console.error("Error: Data request tidak ditemukan.");
-          this.isSubmitting = false;
-          return;
-        }
-
-        const finalData = {
-          ...this.requestData,
-          otp_wa: method === 'whatsapp',
+          s_k_data_benar_dipertanggungjawabkan: true,
         };
 
-        console.log("Mengirim data:", finalData);
+        console.log("Mengirim data:", this.requestData);
 
-        const response = await api.post("/buka-pengkinian-data", finalData, {
+        const response = await api.post("/buka-rekening-pindah-buku", this.requestData, {
           headers: { "Content-Type": "application/json" },
         });
 
+        console.log("Respons dari API:", response);
+
         if (response.status === 200) {
-          this.$router.push({ path: "/dashboard/emailOTPPengkinianData" });
+          fileStore.setEnvelopeId(response.data.envelope_id);
+          fileStore.setSignUrl(response.data.sign_url);
+
+          this.$router.push({ path: "/dashboard/tandaTanganDigitalPemindahbukuan" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
-
       } catch (error) {
         if (error.response) {
           console.error("Error response data:", error.response.data);
@@ -432,13 +513,14 @@ export default {
         console.error("Error saat mengirim data:", error);
       } finally {
         this.isSubmitting = false;
-        this.isModalOTPOpen = false; // Tutup modal setelah request selesai
       }
     },
+
   },
   mounted() {
     console.log("Component mounted!");
     this.$emit("update-progress", 90);
+    this.fetchBranches();
   },
 };
 </script>

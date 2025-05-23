@@ -2,25 +2,26 @@
   <div>
     <div>
       <div class="flex items-center justify-between mb-4 gap-2">
-        <button @click="openModal" class="flex items-center text-primary gap-1">
+        <button @click="openModal2" class="flex items-center text-primary gap-1">
           <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
           <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
         </button>
-        <button v-if="fileUrl || photoUrl" @click="changeFile" class="flex items-center text-primary-400 gap-1">
+        <!-- <button v-if="(fileUrl || photoUrl) && documentType !== 'fotoDiri'" @click="changeFile"
+          class="flex items-center text-primary-400 gap-1">
           <p class="text-base font-semibold">Ubah Metode</p>
           <img src="@/assets/upload-dokumen.svg" alt="Panduan" class="h-5" />
-        </button>
+        </button> -->
       </div>
 
       <div v-if="!fileUrl && documentType !== 'fotoDiri'">
         <div v-if="showInitialUI"
           class="flex flex-col items-center justify-end py-8 rounded-lg cursor-pointer bg-white border-dashed border-2 border-neutral-200 h-90">
-          <img src="@/assets/upload-dokumen.svg" alt="Tambah Dokumen" class="h-32 w-32 mt-12">
-          <div class="flex mt-12 justify-between w-full px-16">
-            <ButtonComponent variant="ghost" @click="startWebcamDokumen">
-              Ambil Gambar
+          <img src="@/assets/upload-dokumen.svg" alt="Tambah Dokumen" class="h-16 sm:h-24 md:h-32 lg:h-48 mt-12">
+          <div class="flex flex-col md:flex-row mt-12 justify-between w-full px-4 md:px-16 gap-y-4 md:gap-x-8">
+            <ButtonComponent variant="ghost" @click="startWebcamDokumen" class="w-full md:w-auto">
+              Ambil Foto
             </ButtonComponent>
-            <ButtonComponent variant="ghost" @click="openFilePicker">
+            <ButtonComponent variant="ghost" @click="openFilePicker" class="w-full md:w-auto">
               Upload Gambar
             </ButtonComponent>
           </div>
@@ -40,16 +41,14 @@
           <div v-if="photoUrl" class="mt-4 ">
             <div v-if="documentType === 'npwp'" class="mt-4">
               <FormField label="Nomor NPWP" id="nomornpwp" v-model="nomorNpwp" placeholder="Masukkan Nomor NPWP"
-                required />
+                required variant="numeric" :maxlength="20" />
             </div>
             <img :src="photoUrl" alt="Foto yang Diambil" class="w-full h-90 rounded-lg shadow-md object-cover" />
             <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
-              <input id="persetujuan-ttd" type="checkbox" v-model="isAgreementChecked"
-                class="w-4 h-4 text-primary border-neutral-300 rounded-sm focus:ring-primary focus:ring-2" />
-              <label for="persetujuan-ttd" class="ml-2 text-sm font-regular text-gray-900">
-                Saya menyetujui bahwa tanda tangan yang saya unggah adalah sah dan digunakan untuk keperluan pembukaan
-                rekening.
-              </label>
+              <div class="mt-2">
+                <CustomCheckbox v-model="isAgreementChecked"
+                  labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir transfer ini merupakan spesimen tanda tangan saya." />
+              </div>
             </div>
             <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
               {{ flagMessage }}
@@ -64,14 +63,15 @@
             </div>
             <div v-else class="controls flex justify-between mt-4 w-full">
               <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isButtonDisabled || isUploading">Simpan Foto
+              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">
+                {{ isSubmitting ? "Mengirim..." : "Simpan" }}
               </ButtonComponent>
             </div>
           </div>
         </div>
-        <div class="flex justify-between mt-6">
+        <!-- <div class="flex justify-between mt-6">
           <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-        </div>
+        </div> -->
       </div>
 
       <div v-if="documentType === 'fotoDiri'">
@@ -101,7 +101,8 @@
           </div>
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isButtonDisabled || isUploading">Simpan Foto
+            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">{{
+              isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
             </ButtonComponent>
           </div>
         </div>
@@ -109,7 +110,8 @@
 
       <div v-if="fileUrl">
         <div v-if="documentType === 'npwp'" class="mt-4">
-          <FormField label="Nomor NPWP" id="nomornpwp" v-model="nomorNpwp" placeholder="Masukkan Nomor NPWP" required />
+          <FormField label="Nomor NPWP" id="nomornpwp" v-model="nomorNpwp" placeholder="Masukkan Nomor NPWP" required
+            variant="numeric" :maxlength="20" />
         </div>
         <img :src="fileUrl" alt="Preview Dokumen" class="w-full rounded-lg" @error="handleFileNotFound" />
         <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
@@ -117,23 +119,24 @@
           petunjuk verifikasi
         </Flagbox>
         <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
-          <input id="persetujuan-ttd" type="checkbox" v-model="isAgreementChecked"
-            class="w-4 h-4 text-primary border-neutral-300 rounded-sm focus:ring-primary focus:ring-2" />
-          <label for="persetujuan-ttd" class="ml-2 text-sm font-regular text-gray-900">
-            Saya menyetujui bahwa tanda tangan yang saya unggah adalah sah dan digunakan untuk keperluan pembukaan
-            rekening.
-          </label>
+          <div class="mt-2">
+            <CustomCheckbox v-model="isAgreementChecked"
+              labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir transfer ini merupakan spesimen tanda tangan saya." />
+          </div>
         </div>
       </div>
 
 
       <ModalPanduanFoto :isOpen="isModalOpen" :documentType="documentType" @close="handleModalClose"
         @back="handleBack" />
+      <ModalPanduanFoto2 :isOpen="isModalOpen2" :documentType="documentType" @close="handleModalClose"
+        @back="handleBack" />
 
       <div class="mt-6 flex justify-between" v-if="documentType !== 'fotoDiri' && fileUrl">
-        <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent>
-        <ButtonComponent @click="saveFile" :disabled="isButtonDisabled || isUploading">
-          Simpan
+        <!-- <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent> -->
+        <ButtonComponent variant="outline" @click="changeFile">Ulangi</ButtonComponent>
+        <ButtonComponent @click="saveFile" :disabled="isSubmitting || isButtonDisabled || isUploading">
+          {{ isSubmitting ? "Mengirim..." : "Simpan" }}
         </ButtonComponent>
       </div>
 
@@ -152,11 +155,13 @@ import api from "@/API/api.js"
 import { useFileStore } from "@/stores/filestore";
 import { useRouter, useRoute } from "vue-router";
 import ModalPanduanFoto from "@/components/ModalPanduan.vue";
+import ModalPanduanFoto2 from "@/components/ModalPanduan2.vue";
 import ButtonComponent from "@/components/button.vue"
 import FormField from "@/components/FormField.vue";
 import ModalError from "@/components/ModalError.vue";
 import Toaster from "@/components/toaster.vue";
 import Flagbox from "@/components/flagbox.vue";
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
 export default {
   props: {
@@ -164,35 +169,39 @@ export default {
       type: String,
     },
   },
-  emits: ["update-progress"],
+  emits: ['update-progress', 'set-navbar-config', 'set-cancel-route'],
   components: {
     FormField,
     ModalPanduanFoto,
+    ModalPanduanFoto2,
     ButtonComponent,
     ModalError,
     Toaster,
-    Flagbox
+    Flagbox,
+    CustomCheckbox
   },
 
   data() {
     return {
       showFlag: false,
-      flagType: "info",
+      flagType: "warning",
       flagMessage: "",
       showToaster: false,
       toasterType: 'success',
       toasterMessage: '',
       isModalOpen: true,
+      isModalOpen2: false,
       isUploading: false,
       isModalError: false,
       isAgreementChecked: false,
       nomorNpwp: "",
+      isSubmitting: false,
       modalContent: [
         {
           label: "Verifikasi Gagal",
           description: "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.",
           buttonString1: "Ulangi Verifikasi",
-          buttonString2: "Hubungi Customer Care",
+          buttonString2: "Hubungi Universal Care",
         },
       ],
     };
@@ -260,7 +269,7 @@ export default {
 
     const showWarning = () => {
       showFlag.value = true;
-      flagType.value = 'warning';
+      flagType.value = 'error';
       flagMessage.value = 'Data yang Anda masukkan tidak valid.';
     };
     const showErrorModal = (title, message, btnString1 = "OK", btnString2 = "Batal", icon = "error-icon.svg") => {
@@ -363,7 +372,6 @@ export default {
       try {
         console.log(`📤 Uploading file for: ${documentType.value}`);
         if (!documentType.value || !fileStore.uuid) {
-          // showErrorModal("Terjadi Kesalahan", "Tipe dokumen tidak valid atau UUID tidak ditemukan.");
           showFlag.value = true;
           flagType.value = 'warning';
           flagMessage.value = "User ID tidak ditemukan silahkan ulangi pengisian data dari awal.";
@@ -374,33 +382,18 @@ export default {
         const blob = await response.blob();
         const fileName =
           documentType.value === "ktp" ? "ktp_upload.png" :
-            documentType.value === "tandaTangan" ? "tanda_tangan.png" :
-              documentType.value === "npwp" ? "npwp_upload.png" :
-                "foto_diri.png";
+            "foto_diri.png";
 
         const fileField =
-          documentType.value === "ktp" ? "user_ktp" :
-            documentType.value === "tandaTangan" ? "user_ttd" :
-              documentType.value === "npwp" ? "user_npwp" :
-                "user_foto";
+          documentType.value === "ktp" ? "user_ktp" : "user_foto";
 
         const apiEndpoint =
-          documentType.value === "ktp" ? "/ocr-ktp-pindah-buku" :
-            documentType.value === "tandaTangan" ? "/tt-basah-pindah-buku" :
-              documentType.value === "npwp" ? "/npwp" : "/foto-diri-pindah-buku";
+          documentType.value === "ktp" ? "/ocr-ktp-pindah-buku" : "/foto-diri-pindah-buku";
 
         const file = new File([blob], fileName, { type: "image/png" });
         const formData = new FormData();
         formData.append(fileField, file);
         formData.append("uuid", fileStore.uuid);
-
-        if (documentType.value === "npwp") {
-          if (!nomorNpwp.value.trim()) {
-            alert("Harap isi nomor NPWP sebelum menyimpan.");
-            return;
-          }
-          formData.append("nomor_npwp", nomorNpwp.value);
-        }
 
         const uploadResponse = await api.post(`${apiEndpoint}`, formData, {
           headers: {
@@ -417,14 +410,6 @@ export default {
           fileStore.setFormDataFotoDiri(uploadResponse.data);
           fileStore.isFotoDiriUploaded = true;
           fileStore.uploadedFiles["fotoDiri"] = "Foto Diri";
-        } else if (documentType.value === "tandaTangan") {
-          fileStore.setFormDataTandaTangan(uploadResponse.data);
-          fileStore.isTandaTanganUploaded = true;
-          fileStore.uploadedFiles["tandaTangan"] = "Foto Tanda Tangan";
-        } else if (documentType.value === "npwp") {
-          fileStore.setFormDataNPWP(uploadResponse.data);
-          fileStore.isNpwpUploaded = true;
-          fileStore.uploadedFiles["npwp"] = "Foto NPWP";
         }
 
         if (documentType.value === "ktp") {
@@ -433,25 +418,25 @@ export default {
             query: { fileUrl: photoUrl, documentType: "ktp" },
           });
         } else {
-          router.push({ name: "UploadDokumenPemindahbukuan" });
+          router.push({ name: "uploadDokumenPemindahbukuan" });
         }
       } catch (error) {
         // showErrorModal(error.response?.data?.Message, error.response?.data?.Subtext, "Verifikasi Ulang", "Tutup");
         showFlag.value = true;
         flagType.value = 'warning';
         if (documentType.value === "fotoDiri") {
-          flagMessage.value = error.response?.data?.message || "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
+          let message = error.response?.data?.Message;
+          let subtext = error.response?.data?.Subtext;
+          flagMessage.value = `${message}, ${subtext}`;
+          // if (documentType.value === "fotoDiri") {
+          //   flagMessage.value = error.response?.data?.message || "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
         } else if (documentType.value === "ktp") {
           flagMessage.value = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
-        } else if (documentType.value === "npwp") {
-          flagMessage.value = "Verifikasi NPWP gagal. Pastikan gambar NPWP jelas dan terbaca.";
-        } else if (documentType.value === "tandaTangan") {
-          flagMessage.value = "Verifikasi tanda tangan gagal. Pastikan gambar tanda tangan jelas dan terbaca.";
         } else {
           flagMessage.value = "Gagal mengunggah foto. Silakan coba lagi.";
         }
         console.error("❌ Gagal upload:", error.response?.data || error.message);
-        // showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
+        // showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Universal Care", "data-failed-illus.svg");
       } finally {
         isUploading.value = false;
       }
@@ -497,17 +482,20 @@ export default {
 
   methods: {
     goBack() {
-      this.$router.push({ name: 'UploadDokumenPemindahbukuan' });
+      this.$router.push({ name: 'uploadDokumenPemindahbukuan' });
     },
     handleBack() {
-      this.$router.push({ name: 'UploadDokumenPemindahbukuan' });
+      this.$router.push({ name: 'uploadDokumenPemindahbukuan' });
     },
     changeFile() {
       this.photoUrl = null;
       this.fileUrl = null;
       this.showInitialUI = true;
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.value = null;
+      }
       this.$router.push({
-        name: "PreviewScreenPemindahbukuan",
+        name: "previewScreenPemindahbukuan",
         query: { documentType: this.documentType },
       });
     },
@@ -574,13 +562,16 @@ export default {
       console.log("File dipilih:", file.name);
       const fileUrl = URL.createObjectURL(file);
       this.$router.push({
-        name: "PreviewScreenPemindahbukuan",
+        name: "previewScreenPemindahbukuan",
         query: { documentType: this.documentType, fileUrl },
       });
     },
 
     handleModalClose() {
       this.isModalOpen = false;
+      this.isModalOpen2 = false;
+      // if (this.documentType === "ktp" || this.documentType === "liveness" || this.documentType === "npwp" || this.documentType === "tandaTangan") {
+      // this.openFilePicker();
     },
 
 
@@ -593,7 +584,16 @@ export default {
       this.isModalOpen = true;
     },
 
+    openModal2() {
+      console.log("Modal dibuka!");
+      this.isModalOpen2 = true;
+    },
+
     async saveFile() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         if (!this.documentType || !this.fileStore.uuid) {
           this.showFlag = true;
@@ -637,14 +637,6 @@ export default {
         formData.append(fileField, file);
         formData.append("uuid", fileStore.uuid);
 
-        if (this.documentType === "npwp") {
-          if (!this.nomorNpwp.trim()) {
-            alert("Harap isi nomor NPWP sebelum menyimpan.");
-            return;
-          }
-          formData.append("nomor_npwp", this.nomorNpwp);
-        }
-
         const uploadResponse = await api.post(`/${apiEndpoint}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -671,7 +663,7 @@ export default {
             query: { fileUrl: this.fileUrl, documentType: "ktp" },
           });
         } else {
-          this.$router.push({ name: "UploadDokumenPemindahbukuan" });
+          this.$router.push({ name: "uploadDokumenPemindahbukuan" });
         }
       } catch (error) {
         console.error("❌ Gagal upload:", error.response?.data || error.message);
@@ -680,17 +672,22 @@ export default {
         if (this.documentType === "fotoDiri") {
           this.flagMessage = error.response?.data?.Message;
         } else if (this.documentType === "ktp") {
+          this.showError();
           this.flagMessage = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (this.documentType === "npwp") {
+          this.showError();
           this.flagMessage = "Verifikasi NPWP gagal. Pastikan gambar NPWP jelas dan terbaca.";
         } else if (this.documentType === "tandaTangan") {
+          this.showError();
           this.flagMessage = "Verifikasi tanda tangan gagal. Pastikan gambar tanda tangan jelas dan terbaca.";
         } else {
+          this.showError();
           this.flagMessage = "Gagal mengunggah foto. Silakan coba lagi.";
         }
-        // this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Customer Care", "data-failed-illus.svg");
+        // this.showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Universal Care", "data-failed-illus.svg");
       } finally {
         this.isUploading = false;
+        this.isSubmitting = false;
       }
     },
 
@@ -709,6 +706,13 @@ export default {
   },
   mounted() {
     this.$emit("update-progress", 45);
+    this.$emit("set-navbar-config", {
+      showBackButton: true,
+      showInfoButton: true,
+      showLogoBPR: true,
+      centerTitle: true,
+    });
+    this.$emit("set-cancel-route", { name: 'uploadDokumenPemindahbukuan' });
   },
 };
 </script>

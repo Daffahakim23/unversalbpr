@@ -1,5 +1,7 @@
 <template>
-    <iframe :src="signLink" width="600" height="400"></iframe>
+    <div class="iframe-container">
+        <iframe :src="signLink" frameborder="0" allowfullscreen></iframe>
+    </div>
     <div class="flex justify-between mt-6">
         <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
         <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
@@ -75,3 +77,23 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.iframe-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%;
+    /* Contoh aspek rasio 4:3 (tinggi = 75% dari lebar) */
+    /* Anda perlu menyesuaikan persentase ini berdasarkan aspek rasio iframe yang sebenarnya */
+    height: 0;
+    overflow: hidden;
+}
+
+.iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+</style>

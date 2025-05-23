@@ -7,12 +7,44 @@
         </button>
       </div>
 
-      <div class="flex flex-row gap-4">
-        <button class="flex items-center text-primary" @click="goToHome">
-          <img src="@/assets/info-button.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+      <div class="flex gap-4">
+        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="focus:outline-none" type="button">
+          <img src="@/assets/info-product-icon.svg" alt="Info Produk" class="h-8 sm:h-10 md:h-10" />
         </button>
+
+        <div id="dropdown"
+          class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
+          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+            <li>
+              <a @click="downloadProductDetails" download="info-produk.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
+                Produk</a>
+            </li>
+            <li>
+              <a @click="downloadSK" download="syarat-ketentuan.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
+                &
+                Ketentuan</a>
+            </li>
+            <li>
+              <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
+                Privasi</a>
+            </li>
+            <li>
+              <a @click="downloadFAQ" download="FAQ.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
+              </a>
+            </li>
+            <li>
+              <a @click="downloadTentang" download="Tentang.pdf"
+                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
+              </a>
+            </li>
+          </ul>
+        </div>
         <button class="flex items-center text-primary">
-          <img src="@/assets/cs-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+          <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
         </button>
       </div>
     </div>
@@ -22,7 +54,7 @@
       <div class="w-full md:w-2/3 flex-shrink-0 mb-16">
         <div class="text-center sm:text-center">
           <h1 class="text-3xl sm:text-4xl md:text-5xl mb-8 font-medium items-center">
-            Selamat Datang di Layanan Digital Universal BPR
+            Selamat Datang di Layanan Digital BPR Universal
           </h1>
           <p class="text-sm sm:text-base md:text-xl text-neutral-600 ">
             Silahkan pilih tipe nasabah untuk melanjutkan.
@@ -33,19 +65,19 @@
         <Section class="flex flex-col justify-center w-full">
           <!-- Card: Rekening -->
           <Card type="1" title="Masuk di sini"
-            :features="[{ label: 'Nasabah Universal BPR', description: 'Apabila Anda sudah menjadi Nasabah Universal BPR, Anda bebas memilih mengajukan berbagai layanan digital kami, seperti:', bottom: 'Dengan pengisian data yang lebih ringkas. Semuanya dirancang untuk kenyamanan Anda.' }]"
+            :features="[{ label: 'Nasabah BPR Universal', description: 'Apabila Anda sudah menjadi Nasabah BPR Universal, Anda bebas memilih mengajukan berbagai layanan digital kami, seperti:', bottom: 'Dengan pengisian data yang lebih ringkas. Semuanya dirancang untuk kenyamanan Anda.' }]"
             icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard', 'nasabah')"
-            @cardClick="handleCardClick" buttonString="Saya adalah Nasabah Universal BPR" :items="[
+            @cardClick="handleCardClick" buttonString="Saya adalah Nasabah BPR Universal" :items="[
               'Pembukaan Rekening Tabungan',
-              'Penempatan Deposito',
+              'Pembukaan Deposito',
               'Pengkinian Data',
               'Pemindah bukuan',
               'Pencairan Deposito'
             ]" />
           <Card type="1" title="Masuk di sini"
-            :features="[{ label: 'Non-Nasabah Universal BPR', description: 'Apabila Anda belum terdaftar sebagai Nasabah Universal BPR, silakan melalui registrasi pembukaan rekening Nasabah Baru, baik Tabungan maupun Deposito untuk dapat memperoleh berbagai layanan digital kami.' }]"
+            :features="[{ label: 'Non-Nasabah BPR Universal', description: 'Apabila Anda belum terdaftar sebagai Nasabah BPR Universal, silakan melalui registrasi pembukaan rekening Nasabah Baru, baik Tabungan maupun Deposito untuk dapat memperoleh berbagai layanan digital kami.' }]"
             icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard', 'non-nasabah')"
-            @cardClick="handleCardClick" buttonString="Saya bukan Nasabah Universal BPR" />
+            @cardClick="handleCardClick" buttonString="Saya bukan Nasabah BPR Universal" />
         </Section>
       </div>
     </div>
@@ -60,9 +92,66 @@ import Header from "@/components/Header.vue";
 import Section from "@/components/Section.vue";
 import Card from "@/components/Card.vue";
 import Footer from "@/components/Footer.vue";
+import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
+import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
+import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
+import faqPdf from '@/assets/FAQ.pdf';
+import tentangKamiPdf from '@/assets/Tentang.pdf';
 
 export default {
+  data() {
+    return {
+      isInfoProductDropdownOpen: false,
+      isInfoDropdownOpen: false,
+    }
+  },
+
   methods: {
+    downloadProductDetails() {
+      const fileUrl = infoProdukPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "INFO-PRODUK.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadSK() {
+      const fileUrl = syaratKetentuanPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Syarat & ketentuan.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadKP() {
+      const fileUrl = kebijakanPrivasiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Kebijakan Privasi.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadFAQ() {
+      const fileUrl = faqPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "FAQ.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadTentang() {
+      const fileUrl = tentangKamiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Tentang.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
     goToHome() {
       this.$router.push("/");
     },
@@ -72,6 +161,13 @@ export default {
     handleCardClick() {
       console.log("Card clicked!");
     }
+  },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+    // this.resetNavbarConfig();
   },
   components: {
     Header,

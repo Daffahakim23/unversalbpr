@@ -25,7 +25,7 @@
                         placeholder="Pilih Nama Bank" :options="bankOptions" required />
 
                     <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
-                        placeholder="Masukan Nomor Rekening" required />
+                        placeholder="Masukkan Nomor Rekening" required />
 
                     <div class="text-right mt-4">
                         <ButtonComponent type="button" @click="handleSubmit" class="w-full">

@@ -33,14 +33,14 @@ export async function fetchPekerjaan() {
                 value: p.code
             }));
             console.log("Pekerjaan options:", pekerjaanOptions);
-            return pekerjaanOptions; // Mengembalikan pekerjaanOptions
+            return pekerjaanOptions;
         } else {
             console.error("Format data pekerjaan tidak sesuai:", response.data);
-            return []; // Mengembalikan array kosong jika format tidak sesuai
+            return [];
         }
     } catch (error) {
         console.error("Gagal mengambil data pekerjaan:", error.response ? error.response.data : error.message);
-        return []; // Mengembalikan array kosong jika terjadi kesalahan
+        return [];
     }
 }
 
@@ -55,14 +55,14 @@ export async function fetchBidangPekerjaan() {
                 value: p.code
             }));
             console.log("Bidang pekerjaan options:", bidangPekerjaanOptions);
-            return bidangPekerjaanOptions; // Mengembalikan bidangPekerjaanOptions
+            return bidangPekerjaanOptions;
         } else {
             console.error("Format data bidang pekerjaan tidak sesuai:", response.data);
-            return []; // Mengembalikan array kosong jika format tidak sesuai
+            return [];
         }
     } catch (error) {
         console.error("Gagal mengambil data bidang pekerjaan:", error.response ? error.response.data : error.message);
-        return []; // Mengembalikan array kosong jika terjadi kesalahan
+        return [];
     }
 }
 

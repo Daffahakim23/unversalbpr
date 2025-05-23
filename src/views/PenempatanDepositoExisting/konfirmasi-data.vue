@@ -33,8 +33,8 @@
           </div>
 
           <div>
-            <img :src="file ? '/src/assets/success.svg' : '/src/assets/download.svg'
-              " alt="Status Upload" class="h-6" />
+            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
+            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@
 
     <div class="py-4">
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
-        Instruksi Penempatan Deposito
+        Instruksi Pembukaan Deposito
       </h1>
       <div v-if="formPenempatanDeposito" class="form-container">
         <div class="form-item" v-for="(value, key) in formPenempatanDeposito" :key="key">
@@ -133,7 +133,7 @@
           Dengan ini, saya/kami menyatakan bahwa:
         </p>
         <ul class="ml-4 list-decimal list-outside text-neutral-900 space-y-2">
-          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT. BPR Universal (selanjutnya
+          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT BPR Universal (selanjutnya
             disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
           <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
             ini.</li>
@@ -158,7 +158,7 @@
     </div>
 
     <!-- Checkbox Persetujuan -->
-    <div class="flex items-center">
+    <!-- <div class="flex items-center">
       <input type="checkbox" id="agreement1" v-model="agreement1" class="mr-2 cursor-pointer" />
       <label for="agreement1" class="text-sm text-neutral-900 cursor-pointer">
         Saya setuju dengan pernyataan dan persetujuan di atas
@@ -170,6 +170,15 @@
       <label for="agreement2" class="text-sm text-neutral-900 cursor-pointer">
         Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
       </label>
+    </div> -->
+
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+    </div>
+
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement2"
+        labelText="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*" />
     </div>
 
 
@@ -198,6 +207,7 @@ import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
 import { metodePencairanOptions, tujuanOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, kewarganegaraanOptions, masaAktifKTPOptions } from '@/data/option.js';
 import { fetchBranches } from '@/services/service.js';
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
 
 export default {
@@ -207,6 +217,7 @@ export default {
     RadioButtonChoose,
     // ModalOTP,
     ModalKonfirmasi,
+    CustomCheckbox,
   },
   name: "DataPribadi",
   computed: {

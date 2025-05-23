@@ -1,15 +1,15 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="NIK" id="nik" v-model="form.nik" required />
+    <FormField label="NIK" id="nik" v-model="form.nik" variant="numeric" :maxlength="16" required />
 
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
-      @blur="handleNamaLengkapBlur" required />
+      @blur="handleNamaLengkapBlur" variant="alpha" required />
     <!-- <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required /> -->
 
     <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required />
 
-    <FormField label="Tempat Lahir" id="tempatLahir" v-model="form.tempatLahir" required />
+    <FormField label="Tempat Lahir" id="tempatLahir" v-model="form.tempatLahir" variant="alpha" required />
 
     <FormField label="Jenis Kelamin" id="jenisKelamin" :isDropdown="true" v-model="form.jenisKelamin"
       :options="jenisKelaminOptions" required />
@@ -18,9 +18,9 @@
 
     <FormField label="Alamat" id="alamat" v-model="form.alamat" required />
 
-    <FormField label="RT" id="rt" v-model="form.rt" required />
+    <FormField label="RT" id="rt" v-model="form.rt" variant="numeric" required :maxlength="3" />
 
-    <FormField label="RW" id="rw" v-model="form.rw" required />
+    <FormField label="RW" id="rw" v-model="form.rw" variant="numeric" required :maxlength="3" />
 
     <FormField label="Provinsi" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
       placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
@@ -35,7 +35,8 @@
     <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan" :options="kelurahanOptions"
       placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-    <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" required />
+    <FormField label="Kode Pos" id="kodePos" variant="numeric" v-model="form.kodePos" :maxlength="5"
+      placeholder="Masukkan Kode Pos Anda" required />
 
     <FormField label="Status Perkawinan" id="statusPerkawinan" :isDropdown="true" v-model="form.statusPerkawinan"
       :options="statusPerkawinanOptions" required />
@@ -122,6 +123,10 @@ export default {
   },
   computed: {
     isButtonDisabled() {
+      const nikValue = this.form.nik;
+      if (!nikValue || String(nikValue).length !== 16) {
+        return true;
+      }
       return Object.entries(this.form).some(([key, value]) => {
         if (key === "jenisKelamin") {
           return false;

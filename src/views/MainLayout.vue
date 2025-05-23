@@ -4,18 +4,18 @@
       <div class="flex items-center justify-between">
         <div>
           <button @click="goBack2" v-if="navbarConfig.showBackButton" class="flex items-center text-neutral-900 pl-2">
-            <img src="@/assets/batal-icon.svg" alt="Kembali" class="h-8 mr-2" />
+            <img src="@/assets/batal-icon.svg" alt="Kembali" class="h-8 md:h-8 lg:h-10 mr-2" />
             <p class="text-sm sm:text-md md:text-md font-semibold text-left">Batalkan</p>
           </button>
           <button v-else @click="isModalError = true" class="flex items-center text-neutral-900 pl-2">
-            <img src="@/assets/home-icon.svg" alt="Logo" class="h-10 mr-2" />
-            <p class="text-sm sm:text-md md:text-md font-semibold text-left">{{ featureTitle }}</p>
+            <img src="@/assets/home-icon.svg" alt="Logo" class="h-8 md:h-8 lg:h-10 mr-2" />
+            <p class="text-sm sm:text-md md:text-md font-semibold text-left hidden sm:block">{{ featureTitle }}</p>
           </button>
         </div>
 
         <div class="flex text-center" v-if="navbarConfig.showLogoBPR">
           <button @click="isModalError = true" class="hidden sm:block">
-            <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 mr-2" />
+            <img src="@/assets/LogoBPR.png" alt="Logo" class="h-10 hidden md:block" />
           </button>
         </div>
         <div v-else class="flex-grow">
@@ -27,9 +27,9 @@
 
         <div class="flex gap-4">
           <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="focus:outline-none" type="button">
-            <img src="@/assets/info-product-icon.svg" alt="Info Produk" class="h-8 sm:h-10 md:h-10" />
+            <img src="@/assets/info-mini-icon.svg" alt="Info Produk" class="h-8 block md:hidden" />
+            <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini" class="h-10 hidden md:block" />
           </button>
-
           <div id="dropdown"
             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
@@ -61,8 +61,8 @@
               </li>
             </ul>
           </div>
-          <button class="flex items-center text-primary">
-            <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+          <button class="flex items-center text-primary" @click="openWhatsApp">
+            <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 md:h-10 lg:h-10" />
           </button>
         </div>
       </div>
@@ -146,6 +146,9 @@ export default {
         centerTitle: false,
         title: null,
       },
+      whatsappContact: { // Inisialisasi objek whatsappContact
+        whatsapp: '622122213993' // Contoh nomor default, atau sesuaikan dengan kebutuhan Anda
+      },
     };
   },
   computed: {
@@ -161,6 +164,19 @@ export default {
     },
   },
   methods: {
+    getWhatsAppLink(number = 622122213993) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    openWhatsApp() {
+      if (this.whatsappContact.whatsapp) {
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+      }
+    },
     setNavbarConfig(config) {
       this.navbarConfig = { ...this.navbarConfig, ...config };
     },

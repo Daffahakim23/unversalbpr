@@ -4,6 +4,7 @@ export const useFileStore = defineStore("fileStore", {
     envelope_id: null,
     nik: null,
     no_npwp: null,
+    npwp: null,
     sign_url: null,
     uuid: null,
     alamat_email: null,
@@ -54,6 +55,9 @@ export const useFileStore = defineStore("fileStore", {
     },
     setNik(value) {
       this.nik = value;
+    },
+    setNpwp(value) {
+      this.npwp = value;
     },
     setNoNpwp(value) {
       this.no_npwp = value;

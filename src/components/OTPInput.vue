@@ -1,20 +1,11 @@
 <template>
   <div class="otp-container flex justify-center">
-    <input
-      v-for="(_, index) in otpArray"
-      :key="index"
-      type="text"
-      maxlength="1"
-      class="otp-box w-14 h-16 text-center border-2 border-gray-300 rounded-md text-2xl"
-      :class="{
-        'border-primary-700': otpArray[index],
+    <input v-for="(_, index) in otpArray" :key="index" type="text" maxlength="1"
+      class="otp-box w-14 h-16 text-center border-2 border-gray-300 rounded-md text-2xl" :class="{
+        'border-primary-400': otpArray[index],
         'border-gray-300': !otpArray[index],
-      }"
-      :value="otpArray[index]"
-      @input="onInput($event, index)"
-      @keydown="onKeyDown(index, $event)"
-      ref="otpInputs"
-    />
+      }" :value="otpArray[index]" @input="onInput($event, index)" @keydown="onKeyDown(index, $event)"
+      ref="otpInputs" />
   </div>
 </template>
 

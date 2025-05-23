@@ -1,13 +1,13 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Produk yang diinginkan" id="produk" :isDropdown="true" v-model="form.produk"
+    <FormField label="Produk yang diinginkan*" id="produk" :isDropdown="true" v-model="form.produk"
       placeholder="Pilih Produk yang Anda Inginkan" :options="produkOptions" />
 
-    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+    <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
       :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       :error="emailError" @blur="handleEmailBlur" />
 
-    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
         ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
         : form.phone?.startsWith('0')
@@ -19,10 +19,10 @@
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
 
-    <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui Universal BPR?" :options="sumberDataNasabahOptions"
-      v-model="form.sumber" name="sumber" />
-    <div v-if="form.sumber === 'lainnya'">
-      <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder=" "
+    <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui BPR Universal?*"
+      :options="sumberDataNasabahOptions" v-model="form.sumber" name="sumber" />
+    <div v-if="form.sumber === '0'">
+      <FormField label="Lainnya*" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder=" "
         :required="true" />
     </div>
 
@@ -37,7 +37,7 @@
   <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
     @buttonClick1="handleModalClose" @buttonClick2="handleToDeposito" />
   <ModalError :isOpen="isModalErrorEmail" :features="modalContentEmail" icon="otp-error-illus.svg"
-    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" />
+    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
 </template>
 
 <script>
@@ -82,12 +82,12 @@ export default {
       temporaryBanMessage: "",
       modalContent: [
         {
-          label: "Konfirmasi Penempatan Deposito",
+          label: "Konfirmasi Pembukaan Deposito",
           icon: errorIcon,
           description:
-            "Apakah Anda yakin ingin melanjutkan penempatan deposito?",
-          buttonString1: "Tetap Dihalaman Ini",
-          buttonString2: "Penempatan Deposito",
+            "Apakah Anda yakin ingin melanjutkan Pembukaan Rekening Deposito Baru?",
+          buttonString1: "Tetap di Halaman ini",
+          buttonString2: "Lanjutkan Pembukaan Deposito Berjangka",
         },
       ],
       modalContentEmail: [
@@ -99,6 +99,12 @@ export default {
           buttonString2: "",
         },
       ],
+      whatsappContact: {
+        label: "WhatsApp",
+        number: "(+62) 21 2221 3993",
+        icon: "whatsapp-icon.svg",
+        whatsapp: "+622122213993",
+      },
     };
   },
 
@@ -106,10 +112,13 @@ export default {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
       const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
-      if (this.form.sumber === "lainnya") {
-        return !this.form.sumberLainnya.trim();
+      const produkTerisi = !!this.form.produk; // Memastikan produk dipilih
+      const sumberTerisi = !!this.form.sumber; // Memastikan sumber dipilih
+
+      if (this.form.sumber === "0") {
+        return !(emailValid && phoneValid && produkTerisi && sumberTerisi && this.form.sumberLainnya.trim());
       }
-      return !(emailValid && phoneValid && this.form.sumber);
+      return !(emailValid && phoneValid && produkTerisi && sumberTerisi);
     },
   },
 
@@ -128,6 +137,19 @@ export default {
   },
 
   methods: {
+    getWhatsAppLink(number) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    openWhatsApp() {
+      if (this.whatsappContact.whatsapp) {
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+      }
+    },
     showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "otp-error-illus.svg") {
       this.modalContentEmail = [
         {
@@ -256,15 +278,15 @@ export default {
         let modalTitle = "Terjadi Kesalahan";
         let modalIcon = "otp-error-illus.svg";
         let button1 = "Tutup";
-        let button2 = "Hubungi Customer Care";
+        let button2 = "Hubungi Universal Care";
 
         if (error.response && error.response.data && error.response.data.message) {
           this.temporaryBanMessage = error.response.data.message;
-          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai ${this.temporaryBanMessage}. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
         } else {
-          subtitle = "Terjadi kesalahan saat memverifikasi OTP.";
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Mohon untuk menghubungi Universal Care untuk bantuan lebih lanjut.";
         }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar

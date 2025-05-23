@@ -83,6 +83,7 @@ export default {
                 fileStore.setFormDataNPWP(response.data);
                 fileStore.isNpwpUploaded = true;
                 this.$router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningNTB" });
+                fileStore.setNpwp(this.form);
             } catch (error) {
                 console.error("Error mengirim data:", error.response ? error.response.data : error.message);
             }

@@ -102,7 +102,8 @@
     </div>
   </div>
 
-  <div class="flex justify-center mt-6">
+  <div class="flex justify-between mt-6">
+    <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
     <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
       {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
     </ButtonComponent>
@@ -248,7 +249,7 @@ export default {
         }
       } catch (error) {
         console.error("Error checking envelope:", error);
-        this.showErrorModal("Terjadi Kesalahan", "Data KTP dan Foto Diri Anda tidak sesuai.", "Upload Ulang", "Hubungi Customer Care");
+        this.showErrorModal("Terjadi Kesalahan", "Data KTP dan Foto Diri Anda tidak sesuai.", "Upload Ulang", "Hubungi Universal Care");
         alert("Terjadi kesalahan saat menghubungi server. Silakan coba lagi.");
       } finally {
         this.isSubmitting = false;

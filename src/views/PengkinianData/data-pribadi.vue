@@ -1,36 +1,40 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <FormField label="Nama Alias/Panggilan (Opsional)" id="namaPanggilan" :isDropdown="false"
-      v-model="form.namaPanggilan" placeholder="Masukan Nama Alias" />
+      v-model="form.namaPanggilan" placeholder="Masukkan Nama Alias/Panggilan" variant="alpha" />
 
     <FormField label="Pendidikan Terakhir (Opsional)" id="pendidikanTerakhir" :isDropdown="true"
-      v-model="form.pendidikanTerakhir" :options="pendidikanOptions" placeholder="Pilih Pendidikan Terakhir Anda" />
+      v-model="form.pendidikanTerakhir" :options="pendidikanOptions" placeholder="Pilih Pendidikan Terakhir" />
 
-    <FormField label="Hobi (Opsional)" id="hobi" :isDropdown="true" v-model="form.hobi" :options="hobiOptions"
-      placeholder="Pilih Hobi Anda" />
+    <FormField label="Pilih Hobi (Opsional)" id="hobi" :isDropdown="true" v-model="form.hobi" :options="hobiOptions"
+      placeholder="Pilih Hobi" />
 
-    <RadioButtonChoose label="Apakah anda ingin mengubah No. Telepon Anda? *" :options="trueFalseOptions"
+    <RadioButtonChoose label="Apakah Anda ingin mengubah No. Telepon Anda? (Opsional)" :options="trueFalseOptions"
       v-model="form.ubahNoTelepon" name="ubahNoTelepon" />
+
     <div v-if="form.ubahNoTelepon === true" class="mt-4">
-      <FormField label="Nomor Telepon Terikini*" id="nomorTelepon" type="Number" v-model="form.nomorTelepon"
-        placeholder="Masukkan Nomor Telepon Terkini Anda" />
+      <FormField label="Detail Nomor Telepon Terikini*" id="nomorTelepon" v-model="form.nomorTelepon" variant="numeric"
+        :maxlength="13" placeholder="Masukkan Nomor Telepon Terkini" />
     </div>
 
-    <FormField label="Nomor Fax (opsional)" id="nomorFax" type="Number" v-model="form.nomorFax"
+    <FormField label="Nomor Fax (opsional)" id="nomorFax" v-model="form.nomorFax" variant="numeric"
       placeholder="Masukkan Nomor Fax" />
 
-    <FormField label="Email (Opsional)" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+    <FormField label="Email (Opsional)" id="email" type="email" v-model="form.email" placeholder="Masukkan Email"
       hint="Pastikan Anda mengisi alamat email yang aktif" />
 
     <RadioButtonChoose label="Apakah alamat domisili sesuai dengan alamat E-KTP?*" :options="alamatSesuaiEktpOptions"
       v-model="form.alamatSesuaiEktp" name="alamatSesuaiEktp" />
 
     <div v-if="form.alamatSesuaiEktp === false" class="">
-      <FormField label="Alamat" id="alamat" v-model="form.alamat" :required="true" placeholder="Masukkan Alamat Anda" />
+      <FormField label="Detail Alamat Tempat Tinggal Terkini*" id="alamat" v-model="form.alamat" :required="true"
+        placeholder="Masukkan Alamat Anda" />
       <div class="flex flex-row gap-4 w-full">
-        <FormField label="RT" id="rt" v-model="form.rt" :required="true" placeholder="Masukkan RT" class="flex-1" />
+        <FormField label="RT*" id="rt" v-model="form.rt" :required="true" placeholder="Masukkan RT" class="flex-1"
+          variant="numeric" :maxlength="3" />
 
-        <FormField label="RW" id="rw" v-model="form.rw" :required="true" placeholder="Masukkan RW" class="flex-1" />
+        <FormField label="RW*" id="rw" v-model="form.rw" :required="true" placeholder="Masukkan RW" class="flex-1"
+          variant="numeric" :maxlength="3" />
       </div>
       <FormField label="Provinsi*" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
         placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
@@ -45,7 +49,9 @@
 
       <FormField label="Kelurahan*" id="kelurahan" :isDropdown="true" v-model="form.kelurahan"
         :options="kelurahanOptions" placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
-      <FormField label="Kode Pos" id="kodePos" v-model="form.kodePos" :required="true" placeholder="Masukan Kode Pos" />
+
+      <FormField label="Kode Pos*" id="kodePos" v-model="form.kodePos" :required="true" variant="numeric" :maxlength="5"
+        placeholder="Masukkan Kode Pos" />
     </div>
 
     <div class="flex justify-between mt-6">
@@ -89,25 +95,35 @@ export default {
 
   computed: {
     isButtonDisabled() {
-      const isFormFilled = this.form.alamatSesuaiEktp !== null;
+      const isAlamatSesuaiEktpFilled = this.form.alamatSesuaiEktp !== null;
+      const isUbahNoTeleponFilled = this.form.ubahNoTelepon !== null;
 
+      // Kondisi wajib jika "Apakah alamat domisili sesuai dengan alamat E-KTP?" adalah False
+      const isAlamatLengkapFilled =
+        this.form.alamat &&
+        this.form.rt &&
+        this.form.rw &&
+        this.form.provinsi &&
+        this.form.kabupaten &&
+        this.form.kecamatan &&
+        this.form.kelurahan &&
+        this.form.kodePos;
+
+      // Kondisi wajib jika "Apakah Anda ingin mengubah No. Telepon Anda?" adalah True
+      const isNomorTeleponTerisiJikaUbah = this.form.ubahNoTelepon === true ? !!this.form.nomorTelepon : true;
+
+      // Kondisi awal: tombol non-aktif jika kedua pertanyaan mandatory belum dijawab
+      if (!isAlamatSesuaiEktpFilled || !isUbahNoTeleponFilled) {
+        return true;
+      }
+
+      // Kondisi jika alamat tidak sesuai E-KTP
       if (this.form.alamatSesuaiEktp === false) {
-        const isAddressFilled =
-          this.form.alamat &&
-          this.form.rt &&
-          this.form.rw &&
-          this.form.provinsi &&
-          this.form.kabupaten &&
-          this.form.kecamatan &&
-          this.form.kelurahan &&
-          this.form.kodePos;
-        return !(isFormFilled && isAddressFilled);
+        return !isAlamatLengkapFilled;
       }
 
-      if (this.form.ubahNoTelepon === true) {
-        return !this.form.nomorTelepon;
-      }
-      return !isFormFilled;
+      // Kondisi jika ingin mengubah nomor telepon
+      return !(isNomorTeleponTerisiJikaUbah && this.form.alamatSesuaiEktp);
     },
   },
 
@@ -116,8 +132,11 @@ export default {
       if (!newProvinsi) {
         this.form.kabupaten = "";
         this.form.kecamatan = "";
+        this.form.kelurahan = ""; // Tambahkan reset kelurahan juga
+        this.form.kodePos = "";     // Tambahkan reset kode pos juga
         this.kabupatenOptions = [];
         this.kecamatanOptions = [];
+        this.kelurahanOptions = []; // Tambahkan reset options kelurahan
       } else {
         this.fetchKabupaten();
       }
@@ -125,7 +144,10 @@ export default {
     "form.kabupaten": function (newKabupaten) {
       if (!newKabupaten) {
         this.form.kecamatan = "";
+        this.form.kelurahan = ""; // Tambahkan reset kelurahan juga
+        this.form.kodePos = "";     // Tambahkan reset kode pos juga
         this.kecamatanOptions = [];
+        this.kelurahanOptions = []; // Tambahkan reset options kelurahan
       } else {
         this.fetchKecamatan();
       }
@@ -133,9 +155,30 @@ export default {
     "form.kecamatan": function (newKecamatan) {
       if (!newKecamatan) {
         this.form.kelurahan = "";
+        this.form.kodePos = "";     // Tambahkan reset kode pos juga
         this.kelurahanOptions = [];
       } else {
         this.fetchKelurahan();
+      }
+    },
+    "form.ubahNoTelepon": function (newVal) {
+      if (!newVal) {
+        this.form.nomorTelepon = "";
+      }
+    },
+    "form.alamatSesuaiEktp": function (newVal) {
+      if (newVal === true) {
+        this.form.alamat = "";
+        this.form.rt = "";
+        this.form.rw = "";
+        this.form.provinsi = "";
+        this.form.kabupaten = "";
+        this.form.kecamatan = "";
+        this.form.kelurahan = "";
+        this.form.kodePos = "";
+        this.kabupatenOptions = [];
+        this.kecamatanOptions = [];
+        this.kelurahanOptions = [];
       }
     },
   },

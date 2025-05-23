@@ -32,12 +32,14 @@
       <button type="button"
         class="flex items-center justify-between flex-row gap-4 border-2 border-primary-100 py-4 px-4 rounded-xl w-full"
         @click="downloadPdf">
-        <div>
-          <img src="@/assets/zip-icon.svg" alt="PDF Icon" width="32">
+        <div class="h-8 md:h-8 lg:h-10 items-center">
+          <img src="@/assets/zip-icon.svg" alt="PDF Icon" class="h-8 md:h-8 lg:h-10">
         </div>
-        <div class="">
-          <p class="text-sm text-left font-semibold text-primary">Formulir Pengajuan Pembukaan Rekening Tabungan - {{
-            namaLengkap }}.zip</p>
+        <div class="overflow-hidden">
+          <p
+            class="text-xs md:text-sm text-left font-semibold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            Formulir Pengajuan Pembukaan Rekening Tabungan - {{ namaLengkap }}.zip
+          </p>
         </div>
         <div class="">
           <img src="@/assets/download-icon.svg" alt="PDF Icon">
@@ -68,15 +70,16 @@
       </p>
 
       <p class="text-sm my-4">
-        Terima kasih telah memilih Universal BPR. Kami senang menjadi bagian dari perjalanan finansial Anda.
+        Terima kasih telah memilih BPR Universal. Kami senang menjadi bagian dari perjalanan finansial Anda.
       </p>
 
       <div class="bg-primary-50 flex items-center justify-between flex-row gap-4 py-2 px-4 rounded-xl w-full">
         <div>
-          <img src="@/assets/helper-illus.svg" alt="PDF Icon" width="56">
+          <img src="@/assets/helper-illus.svg" alt="PDF Icon" class="h-8 md:h-8 lg:h-10">
         </div>
         <div class="">
-          <p class="text-sm text-primary">Butuh bantuan? Hubungi kami di <strong>021 2221 3993</strong> atau email ke
+          <p class="text-xs md:text-sm text-primary">Butuh bantuan? Hubungi kami di <strong>021 2221 3993</strong> atau
+            email ke
             <strong>customercare@universalbpr.co.id</strong>
           </p>
         </div>

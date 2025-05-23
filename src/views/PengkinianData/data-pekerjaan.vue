@@ -726,21 +726,22 @@ export default {
     <!-- Apakah terdapat perubahan dalam pekerjaan Anda saat ini?* -->
     <RadioButtonChoose label="Apakah terdapat perubahan dalam pekerjaan Anda saat ini?*" :options="trueFalseOptions"
       v-model="form.ubahPekerjaan" name="ubahPekerjaan" />
+
     <div v-if="form.ubahPekerjaan === true" class="mt-4">
       <FormField label="Pekerjaan*" id="pekerjaan" :isDropdown="true" v-model="form.pekerjaan"
         :options="pekerjaanOptions" placeholder="Pilih Pekerjaan Anda" />
 
-      <div v-if="form.pekerjaan === 'lainnya'" class="">
-        <FormField label="Pekerjaan Lainnya *" id="pekerjaanLainnya" type="text" v-model="form.pekerjaanLainnya"
+      <div v-if="form.pekerjaan === '9999'" class="">
+        <FormField label="Pekerjaan Lainnya *" id="pekerjaanLainnya" variant="alpha" v-model="form.pekerjaanLainnya"
           placeholder="Masukkan Pekerjaan Lainnya" />
       </div>
 
       <FormField label="Sumber Dana*" id="penghasilan" :isDropdown="true" v-model="form.penghasilan"
         :options="penghasilanOptions" placeholder="Pilih Sumber Penghasilan Anda" />
 
-      <div v-if="form.penghasilan === 'lainnya'" class="">
-        <FormField label="penghasilan Lainnya *" id="penghasilanLainnya" type="text" v-model="form.penghasilanLainnya"
-          placeholder="Masukkan Sumber Penghasilan Lainnya" />
+      <div v-if="form.penghasilan === '0'" class="">
+        <FormField label="Sumber Dana Lainnya *" id="penghasilanLainnya" variant="alpha"
+          v-model="form.penghasilanLainnya" placeholder="Masukkan Sumber Penghasilan Lainnya" />
       </div>
 
       <FormField label="Penghasilan Perbulan*" id="jumlahPenghasilan" :isDropdown="true"
@@ -750,10 +751,10 @@ export default {
 
     <!-- Apakah Anda yakin dana yang digunakan milik Anda pribadi?* -->
     <RadioButtonChoose label="Apakah Anda yakin dana yang digunakan milik Anda pribadi?*" :options="trueFalseOptions"
-      v-model="form.sumberDana" name="sumberDana" />
+      v-model="form.sumberDanaMilikPribadi" name="sumberDana" />
 
-    <!-- Form Benefial Owner -->
-    <div v-if="form.sumberDana === true" class="mt-4">
+    <!-- Form Detail Pekerjaan -->
+    <div v-if="form.sumberDanaMilikPribadi === true" class="mt-4">
       <FormField label="Nama Perusahaan*" id="namaPerusahaanDK" :isDropdown="false" v-model="form.namaPerusahaanDK"
         placeholder="Masukkan Nama Perusahaan Anda" />
 
@@ -765,14 +766,15 @@ export default {
           v-model="form.bidangPekerjaanLainnyaDK" placeholder="Masukkan Bidang Pekerjaan Lainnya" />
 
       </div>
-      <FormField label="Jabatan*" id="jabatanDK" :isDropdown="true" v-model="form.jabatanDK" :options="jabatanOptions"
-        placeholder="Pilih Jabatan Anda" />
-
-      <div v-if="form.jabatanDK === 'lainnya'" class="">
-        <FormField label="Jabatan Lainnya *" id="jabatanLainnyaDK" type="text" v-model="form.jabatanLainnyaDK"
-          placeholder="Masukkan Jabatan Lainnya" />
-
+      <div v-if="form.pekerjaan !== '9999'" class="">
+        <FormField label="Jabatan*" id="jabatanDK" :isDropdown="true" v-model="form.jabatanDK" :options="jabatanOptions"
+          placeholder="Pilih Jabatan Anda" />
       </div>
+      <div v-if="form.pekerjaan === '9999'" class="">
+        <FormField label="Jabatan*" id="jabatanLainnyaDK" type="text" v-model="form.jabatanLainnyaDK"
+          placeholder="Masukkan Jabatan" />
+      </div>
+
       <FormField label="Alamat Perusahaan*" id="alamatDK" :isDropdown="false" v-model="form.alamatDK"
         placeholder="Masukkan Alamat Anda" />
 
@@ -781,7 +783,7 @@ export default {
           placeholder="Masukkan Kota Perusahaan" class="flex-1" />
 
         <FormField label="Kode Pos Perusahaan*" id="kodePosDK" v-model="form.kodePosPerusahaanDK" :required="true"
-          type="Number" placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
+          variant="numeric" :maxlength="5" placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
       </div>
 
       <div class="flex flex-row gap-4">
@@ -793,16 +795,16 @@ export default {
       </div>
 
       <FormField label="Nomor Telepon Kantor (Opsional)" id="nomorTeleponKantorDK" v-model="form.nomorTeleponKantorDK"
-        placeholder="Masukkan Nomor Telepon Kantor Anda" />
+        variant="numeric" placeholder="Masukkan Nomor Telepon Kantor Anda" />
 
       <FormField label="Nomor Telepon Fax (Opsional)" id="nomorTeleponFaxDK" v-model="form.nomorTeleponFaxDK"
-        placeholder="Masukkan Nomor Telepon Fax Anda" />
+        variant="numeric" placeholder="Masukkan Nomor Telepon Fax Anda" />
 
       <RadioButtonChoose label="Alamat korespondensi/Pengiriman Surat Menyurat*" :options="korespondensiOptions"
         v-model="form.korespondensi" name="korespondensi" />
     </div>
 
-    <div v-if="form.sumberDana === false" class="mt-4">
+    <div v-if="form.sumberDanaMilikPribadi === false" class="mt-4">
       <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-1">
         Pemilik Manfaat <i>(Beneficial Owner)</i>
       </h2>
@@ -815,43 +817,51 @@ export default {
       <FormField label="Hubungan Nasabah*" id="hubunganNasabahBO" :isDropdown="true" :options="hubunganNasabahOptions"
         v-model="form.hubunganNasabahBO" placeholder="Pilih Hubungan Nasabah" :required="true" />
 
-      <div v-if="form.hubunganNasabahBO === 'lainnya'" class="">
-        <FormField label="Hubungan Nasabah Lainnya *" id="hubunganNasabahLainnyaBO" type="text"
+      <div v-if="form.hubunganNasabahBO === '0'" class="">
+        <FormField label="Hubungan Nasabah Lainnya *" id="hubunganNasabahLainnyaBO" variant="alpha"
           v-model="form.hubunganNasabahLainnyaBO" placeholder="Masukkan Hubungan Nasabah Lainnya" />
 
       </div>
       <FormField label="Jenis Identitas*" id="jenisIdentitasBO" :isDropdown="true" :options="jenisIdentitasBOOptions"
         v-model="form.jenisIdentitasBO" placeholder="Pilih Jenis Identitas Beneficial Owner Anda" :required="true" />
 
-      <div v-if="form.jenisIdentitasBO === 'lainnya'" class="">
-        <FormField label="Jenis Identitas Lainnya *" id="jenisIdentitasLainnyaBO" type="text"
+      <div v-if="form.jenisIdentitasBO === '0'" class="">
+        <FormField label="Jenis Identitas Lainnya *" id="jenisIdentitasLainnyaBO" variant="alpha"
           v-model="form.jenisIdentitasLainnyaBO" placeholder="Masukkan Jenis Identitas Lainnya" />
 
       </div>
-      <FormField label="Kewarganegaraan*" id="kewarganegaraanBO" :isDropdown="true" type="text"
+      <FormField label="Kewarganegaraan*" id="kewarganegaraanBO" :isDropdown="true" variant="alpha"
         v-model="form.kewarganegaraanBO" :options="kewarganegaraanBOOptions"
         placeholder="Pilih Kewarganegaraan Beneficial Owner Anda" />
 
       <div v-if="form.kewarganegaraanBO === false" class="">
-        <FormField label="Kewarganegaraan Lainnya *" id="kewarganegaraanLainnyaBO" type="text"
+        <FormField label="Kewarganegaraan Lainnya *" id="kewarganegaraanLainnyaBO" variant="alpha"
           v-model="form.kewarganegaraanLainnyaBO" placeholder="Masukkan Kewarganegaraan Lainnya" />
 
       </div>
       <FormField label="Nama Lengkap*" id="namaLengkapBO" :isDropdown="false" v-model="form.namaLengkapBO"
-        placeholder="Masukkan Nama Lengkap Beneficial Owner Anda" :required="true" />
+        variant="alpha" placeholder="Masukkan Nama Lengkap Beneficial Owner Anda" :required="true" />
 
-      <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false" type="Number"
-        v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
-        :required="true" />
+        <div v-if="form.jenisIdentitasBO === '1'" class="">
+        <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
+          v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
+          :required="true" variant="numeric" :maxlength="20" />
+      </div>
+
+      <div v-if="form.jenisIdentitasBO === '2'" class="">
+        <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
+          v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
+          :required="true" variant="alphanumeric" :maxlength="20" />
+      </div>
 
       <FormField label="Detail Alamat Tempat Tinggal Terkini*" id="alamatBO" v-model="form.alamatBO" :required="true"
         placeholder="Masukkan Alamat Beneficial Owner Anda" />
 
       <div class="flex flex-row gap-4">
-        <FormField label="RT*" id="rtBO" v-model="form.rtBO" :required="true"
+        <FormField label="RT*" id="rtBO" v-model="form.rtBO" :required="true" variant="numeric" :maxlength="3"
           placeholder="Masukkan RT Beneficial Owner Anda" class="flex-1" />
 
-        <FormField label="RW*" id="rwBO" v-model="form.rwBO" :required="true"
+        <FormField label="RW*" id="rwBO" v-model="form.rwBO" :required="true" variant="numeric" :maxlength="3"
           placeholder="Masukkan RW Beneficial Owner Anda" class="flex-1" />
       </div>
 
@@ -868,8 +878,8 @@ export default {
       <FormField label="Kelurahan*" id="kelurahanBO" :isDropdown="true" v-model="form.kelurahanBO"
         :options="kelurahanOptions" placeholder="Pilih Kelurahan Beneficial Owner Anda" :disabled="!form.kecamatanBO" />
 
-      <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO" :required="true"
-        placeholder="Masukkan Kode Pos Beneficial Owner Anda" />
+      <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO" :required="true" variant="numeric"
+        :maxlength="5" placeholder="Masukkan Kode Pos Beneficial Owner Anda" />
 
       <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
         placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
@@ -887,9 +897,9 @@ export default {
       <FormField label="Pekerjaan*" id="pekerjaanBO" :isDropdown="true" v-model="form.pekerjaanBO"
         placeholder="Pilih Pekerjaan Beneficial Owner Anda" :options="pekerjaanOptions" />
 
-      <div v-if="form.pekerjaanBO === 'lainnya'" class="">
-        <FormField label="Pekerjaan Lainnya *" id="pekerjaanLainnyaBO" type="text" v-model="form.pekerjaanLainnyaBO"
-          placeholder=" " />
+      <div v-if="form.pekerjaanBO === '9999'" class="">
+        <FormField label="Pekerjaan Lainnya *" id="pekerjaanLainnyaBO" variant="alpha" v-model="form.pekerjaanLainnyaBO"
+          placeholder="Masukkan Pekerjaan Lainnya" />
       </div>
 
       <FormField label="Nama Perusahaan*" id="namaPerusahaanBO" v-model="form.namaPerusahaanBO"
@@ -902,16 +912,25 @@ export default {
         <FormField label="Kota*" id="kotaBO" v-model="form.kotaPerusahaanBO" :required="true"
           placeholder="Masukkan Kota Perusahaan" class="flex-1" />
 
-        <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosPerusahaanBO" :required="true" type="Number"
-          placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
+        <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosPerusahaanBO" :required="true"
+          variant="numeric" placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" :maxlength="5" />
 
       </div>
-      <FormField label="Jabatan*" id="jabatanBO" :isDropdown="true" v-model="form.jabatanBO" :options="jabatanOptions"
-        placeholder="Pilih Jabatan Beneficial Owner Anda" />
+      <!-- <FormField label="Jabatan*" id="jabatanBO" :isDropdown="true" v-model="form.jabatanBO" :options="jabatanOptions"
+        placeholder="Pilih Jabatan Beneficial Owner Anda" /> -->
 
-      <div v-if="form.jabatanBO === 'lainnya'" class="">
+      <!-- <div v-if="form.jabatanBO === 'lainnya'" class="">
         <FormField label="Jabatan Lainnya *" id="jabatanLainnyaBO" type="text" v-model="form.jabatanLainnyaBO"
           placeholder="Masukkan Jabatan Lainnya" />
+      </div> -->
+
+      <div v-if="form.pekerjaanBO !== '9999'" class="">
+        <FormField label="Jabatan*" id="jabatanBO" :isDropdown="true" v-model="form.jabatanBO" :options="jabatanOptions"
+          placeholder="Pilih Jabatan Anda" />
+      </div>
+      <div v-if="form.pekerjaanBO === '9999'" class="">
+        <FormField label="Jabatan*" id="jabatanLainnyaBO" type="text" v-model="form.jabatanLainnyaBO"
+          placeholder="Masukkan Jabatan" />
       </div>
 
       <div class="flex flex-row gap-4">
@@ -923,28 +942,33 @@ export default {
       </div>
 
       <FormField label="Sumber Dana*" id="penghasilanBO" :isDropdown="true" v-model="form.penghasilanBO"
-        placeholder="Pilih Sumber Beneficial Owner Anda" :options="penghasilanOptions" />
+        placeholder="Pilih Sumber Dana Beneficial Owner Anda" :options="penghasilanOptions" />
 
-      <div v-if="form.penghasilanBO === 'lainnya'" class="">
-        <FormField label="Penghasilan Lainnya *" id="penghasilanLainnyaBO" type="text"
-          placeholder="Masukkan Penghasilan Lainnya" v-model="form.penghasilanLainnyaBO" />
-
+      <div v-if="form.penghasilanBO === '0'" class="">
+        <FormField label="Sumber Dana Lainnya *" id="penghasilanLainnyaBO" type="text"
+          placeholder="Masukkan Sumber Dana Lainnya" v-model="form.penghasilanLainnyaBO" />
       </div>
+
       <FormField label="Penghasilan Perbulan*" id="jumlahPenghasilanBO" :isDropdown="true"
         placeholder="Pilih Penghasilan Beneficial Owner Anda" v-model="form.jumlahPenghasilanBO"
         :options="jumlahPenghasilanOptions" />
 
+      <RadioButtonChoose label="Alamat korespondensi/Pengiriman Surat Menyurat*" :options="korespondensiOptions"
+        v-model="form.korespondensi" name="korespondensi" />
+
       <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-1">
         Pernyataan dan Persetujuan Nasabah
       </h2>
-      <div class="flex items-baseline pt-2 pb-6">
-        <input type="checkbox" v-model="form.pernyataanChecked"
-          class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600">
-        <div class="flex flex-col items-start pt-0">
-          <p class="ml-2 mt-0 text-neutral-900 text-xs sm:text-sm md:text-sm">Dengan menandatangani aplikasi
+      <div class="flex flex-col items-start pt-2 pb-6">
+        <!-- <input type="checkbox" v-model="form.pernyataanChecked"
+          class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600"> -->
+        <div class="mr-2">
+          <CustomCheckbox v-model="pernyataanChecked" labelText="Dengan menandatangani aplikasi
             ini,
-            saya/kami menyatakan bahwa:</p>
-          <ul class="list-decimal list-outside text-neutral-900 text-xs sm:text-sm md:text-sm space-y-2 ml-6">
+            saya/kami menyatakan bahwa:" />
+        </div>
+        <div class="flex flex-col items-start pt-0">
+          <ul class="list-decimal list-outside text-neutral-900 text-xs sm:text-sm md:text-sm space-y-2 ml-10 mt-1">
             <li>Data Beneficial Owner yang diisikan dalam Formulir Beneficial Owner ini adalah data yang
               sebenar-benarnya dan sebagai ketentuan untuk melakukan transaksi/pembukaan rekening di PT
               BPR Universal
@@ -986,7 +1010,7 @@ export default {
       oleh pihak BANK <strong>(WAJIB DIISI)</strong>
     </p>
     <FormField label="Nama Lengkap Kontak Darurat*" id="namaLengkapKD" :isDropdown="false" v-model="form.namaLengkapKD"
-      placeholder="Masukkan Nama Lengkap Kontak Darurat" />
+      placeholder="Masukkan Nama Lengkap Kontak Darurat" variant="alpha" />
 
     <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD"
       placeholder="Masukkan Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
@@ -1000,8 +1024,8 @@ export default {
     <FormField label="Alamat Terkini Kontak Darurat*" id="alamatKD" :isDropdown="false" v-model="form.alamatKD"
       placeholder="Masukkan Alamat Kontak Darurat" />
 
-    <FormField label="Nomor Telepon Kontak Darurat*" id="nomorTeleponKD" v-model="form.nomorTeleponKD" type="Number"
-      placeholder="Masukkan Nomor Telepon Kontak Darurat" />
+    <FormField label="Nomor Telepon Kontak Darurat*" id="nomorTeleponKD" v-model="form.nomorTeleponKD"
+      placeholder="Masukkan Nomor Telepon Kontak Darurat" variant="numeric" :maxlength="13" />
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -1025,10 +1049,12 @@ import {
   penghasilanOptions, jumlahPenghasilanOptions, hubunganNasabahOptions, statusPerkawinanOptions, korespondensiOptions, hubunganPemohonKDOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, npwpOptions, trueFalseOptions
 } from "@/data/option.js";
 import { fetchBidangPekerjaan, fetchPekerjaan } from '@/services/service.js';
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
 
 export default {
   components: {
+    CustomCheckbox,
     FormField,
     RadioButtonChoose,
     ButtonComponent,
@@ -1064,15 +1090,72 @@ export default {
   computed: {
     isButtonDisabled() {
       const isLainnyaEmpty = (
-        (this.form.pekerjaan === "lainnya" && !this.form.pekerjaanLainnya?.trim()) ||
-        (this.form.penghasilan === "lainnya" && !this.form.penghasilanLainnya?.trim()) ||
+        (this.form.pekerjaan === "9999" && !this.form.pekerjaanLainnya?.trim()) ||
+        (this.form.penghasilan === "0" && !this.form.penghasilanLainnya?.trim()) ||
         (this.form.bidangPekerjaanDK === "lainnya" && !this.form.bidangPekerjaanLainnyaDK?.trim()) ||
         (this.form.jabatanDK === "lainnya" && !this.form.jabatanLainnyaDK?.trim()) ||
         (this.form.pekerjaanBO === "lainnya" && !this.form.pekerjaanLainnyaBO?.trim()) ||
-        (this.form.penghasilanBO === "lainnya" && !this.form.penghasilanLainnyaBO?.trim()) ||
+        (this.form.penghasilanBO === "0" && !this.form.penghasilanLainnyaBO?.trim()) ||
         (this.form.jabatanBO === "lainnya" && !this.form.jabatanLainnyaBO?.trim())
       );
-      if (isLainnyaEmpty) return true;
+
+      // Kondisi wajib untuk form kontak darurat
+      const isKontakDaruratMandatory = !!this.form.namaLengkapKD?.trim() &&
+        !!this.form.hubunganPemohonKD?.trim() &&
+        !!this.form.alamatKD?.trim() &&
+        !!this.form.nomorTeleponKD?.trim();
+
+      // Kondisi wajib untuk pertanyaan perubahan pekerjaan
+      const isUbahPekerjaanAnswered = this.form.ubahPekerjaan !== null;
+
+      // Kondisi wajib untuk pertanyaan sumber dana pribadi
+      const isSumberDanaAnswered = this.form.sumberDanaMilikPribadi !== null;
+
+      // Kondisi wajib jika "Apakah terdapat perubahan dalam pekerjaan Anda saat ini?" adalah true
+      const isDetailPekerjaanMandatory = this.form.ubahPekerjaan === true
+        ? !!this.form.pekerjaan && !!this.form.penghasilan && !!this.form.jumlahPenghasilan
+        : true;
+
+      // Kondisi wajib jika "Apakah Anda yakin dana yang digunakan milik Anda pribadi?" adalah true
+      const isDetailPekerjaanPribadiMandatory = this.form.sumberDanaMilikPribadi === true
+        ? !!this.form.namaPerusahaanDK?.trim() && !!this.form.bidangPekerjaanDK &&
+        (!!this.form.jabatanDK || !!this.form.jabatanLainnyaDK?.trim()) &&
+        !!this.form.alamatDK?.trim() && !!this.form.kotaPerusahaanDK?.trim() && !!this.form.kodePosPerusahaanDK?.trim() &&
+        (!!this.form.lamaBekerjaTahunDK > 0 || !!this.form.lamaBekerjaBulanDK > 0) && !!this.form.korespondensi
+        : true;
+
+      // Kondisi wajib jika "Apakah Anda yakin dana yang digunakan milik Anda pribadi?" adalah false (Beneficial Owner)
+      const isBeneficialOwnerMandatory = this.form.sumberDanaMilikPribadi === false
+        ? !!this.form.hubunganNasabahBO &&
+        (this.form.hubunganNasabahBO === '0' ? !!this.form.hubunganNasabahLainnyaBO?.trim() : true) &&
+
+        // (!!this.form.hubunganNasabahBO ||
+        // (this.form.hubunganNasabahBO === '0' && !!this.form.hubunganNasabahLainnyaBO?.trim())) &&
+
+
+        !!this.form.jenisIdentitasBO &&
+        (this.form.jenisIdentitasBO === '0' ? !!this.form.jenisIdentitasLainnyaBO?.trim() : true) &&
+        !!this.form.kewarganegaraanBO &&
+        (this.form.kewarganegaraanBO === false ? !!this.form.kewarganegaraanLainnyaBO?.trim() : true) &&
+        !!this.form.namaLengkapBO?.trim() && !!this.form.nomorDokumenIdentitasBO?.trim() &&
+        !!this.form.alamatBO?.trim() && !!this.form.rtBO?.trim() && !!this.form.rwBO?.trim() &&
+        !!this.form.provinsiBO && !!this.form.kabupatenBO && !!this.form.kecamatanBO &&
+        !!this.form.kelurahanBO && !!this.form.kodePosBO?.trim() && !!this.form.tempatLahirBO?.trim() &&
+        !!this.form.tanggalLahirBO && !!this.form.jenisKelaminBO && !!this.form.statusPerkawinanBO &&
+        !!this.form.pekerjaanBO &&
+        (this.form.pekerjaanBO === '9999' ? !!this.form.pekerjaanLainnyaBO?.trim() : true) &&
+        !!this.form.namaPerusahaanBO?.trim() && !!this.form.alamatPerusahaanBO?.trim() &&
+        !!this.form.kotaPerusahaanBO?.trim() && !!this.form.kodePosPerusahaanBO?.trim() &&
+        (!!this.form.jabatanBO || !!this.form.jabatanLainnyaBO?.trim()) &&
+        (!!this.form.lamaBekerjaTahunBO > 0 || !!this.form.lamaBekerjaBulanBO > 0) &&
+        !!this.form.penghasilanBO &&
+        (this.form.penghasilanBO === '0' ? !!this.form.penghasilanLainnyaBO?.trim() : true) &&
+        !!this.form.jumlahPenghasilanBO && !!this.pernyataanChecked
+        : true;
+
+      return !(isKontakDaruratMandatory && isUbahPekerjaanAnswered && isSumberDanaAnswered) ||
+        !isDetailPekerjaanMandatory || !isDetailPekerjaanPribadiMandatory ||
+        !isBeneficialOwnerMandatory || isLainnyaEmpty;
     },
   },
 
@@ -1136,6 +1219,68 @@ export default {
         this.jabatanOptions = [];
       } else {
         this.fetchJabatan(newVal);
+      }
+    },
+    'form.ubahPekerjaan': function (newVal) {
+      if (!newVal) {
+        this.form.pekerjaan = '';
+        this.form.pekerjaanLainnya = '';
+        this.form.penghasilan = '';
+        this.form.penghasilanLainnya = '';
+        this.form.jumlahPenghasilan = '';
+      }
+    },
+    'form.sumberDanaMilikPribadi': function (newVal) {
+      if (!newVal) { // Jika sumber dana BUKAN milik pribadi (false)
+        this.form.namaPerusahaanDK = "";
+        this.form.bidangPekerjaanDK = "";
+        this.form.bidangPekerjaanLainnyaDK = "";
+        this.form.jabatanDK = "";
+        this.form.jabatanLainnyaDK = "";
+        this.form.alamatDK = "";
+        this.form.kotaPerusahaanDK = "";
+        this.form.kodePosPerusahaanDK = "";
+        this.form.lamaBekerjaTahunDK = "";
+        this.form.lamaBekerjaBulanDK = "";
+        this.form.nomorTeleponKantorDK = "";
+        this.form.nomorTeleponFaxDK = "";
+        this.form.korespondensi = "";
+      } else { // Jika sumber dana milik pribadi (true)
+        this.form.hubunganNasabahBO = "";
+        this.form.hubunganNasabahLainnyaBO = "";
+        this.form.jenisIdentitasBO = "";
+        this.form.jenisIdentitasLainnyaBO = "";
+        this.form.kewarganegaraanBO = "";
+        this.form.kewarganegaraanLainnyaBO = "";
+        this.form.namaLengkapBO = "";
+        this.form.nomorDokumenIdentitasBO = "";
+        this.form.alamatBO = "";
+        this.form.rtBO = "";
+        this.form.rwBO = "";
+        this.form.provinsiBO = "";
+        this.form.kabupatenBO = "";
+        this.form.kecamatanBO = "";
+        this.form.kelurahanBO = "";
+        this.form.kodePosBO = "";
+        this.form.tempatLahirBO = "";
+        this.form.tanggalLahirBO = "";
+        this.form.jenisKelaminBO = "";
+        this.form.statusPerkawinanBO = "";
+        this.form.pekerjaanBO = "";
+        this.form.pekerjaanLainnyaBO = "";
+        this.form.namaPerusahaanBO = "";
+        this.form.alamatPerusahaanBO = "";
+        this.form.kotaPerusahaanBO = "";
+        this.form.kodePosPerusahaanBO = "";
+        this.form.jabatanBO = "";
+        this.form.jabatanLainnyaBO = "";
+        this.form.lamaBekerjaTahunBO = "";
+        this.form.lamaBekerjaBulanBO = "";
+        this.form.penghasilanBO = "";
+        this.form.penghasilanLainnyaBO = "";
+        this.form.jumlahPenghasilanBO = "";
+        this.form.pernyataanChecked = false;
+        this.form.npwp = "";
       }
     },
     // "form.pekerjaan": function (newPekerjaan, oldPekerjaan) {
@@ -1401,8 +1546,8 @@ export default {
         const requestData = {
           uuid: uuid,
           kode_pekerjaan: this.form.pekerjaan,
-          pekerjaan: this.pekerjaanOptions.find(p => p.value === this.form.pekerjaan)?.label || "",
-          pekerjaan_lainnya: this.form.pekerjaanLainnya,
+          pekerjaan: this.form.pekerjaan === '9999' ? this.form.pekerjaanLainnya : this.pekerjaanOptions.find(p => p.value === this.form.pekerjaan)?.label || "",
+          // pekerjaan_lainnya: this.form.pekerjaanLainnya,
           sumber_penghasilan: Number(this.form.penghasilan),
           sumber_penghasilan_lainnya: String(this.form.penghasilanLainnya),
           penghasilan_perbulan: Number(this.form.jumlahPenghasilan),
@@ -1412,7 +1557,8 @@ export default {
           bidang_pekerjaan_usaha:
             this.bidangPekerjaanOptions.find((b) => b.value === this.form.bidangPekerjaanDK)?.label || "",
           kode_jabatan: this.form.jabatanDK,
-          jabatan_pekerjaan: this.jabatanOptions.find(j => j.value === this.form.jabatanDK)?.label || "",
+          // jabatan_pekerjaan: this.jabatanOptions.find(j => j.value === this.form.jabatanDK)?.label || "",
+          jabatan_pekerjaan: this.form.pekerjaan === '9999' ? this.form.jabatanLainnyaDK : this.jabatanOptions.find(p => p.value === this.form.jabatanDK)?.label || "",
           alamat_pekerjaan: this.form.alamatDK,
           lama_bekerja_tahun: String(this.form.lamaBekerjaTahunDK),
           lama_bekerja_bulan: String(this.form.lamaBekerjaBulanDK),
@@ -1436,7 +1582,8 @@ export default {
           provinsi_bo: this.form.provinsiBO,
           kota_bo: this.form.kabupatenBO,
           kode_jabatan_bo: this.form.jabatanBO,
-          jabatan_bo: this.jabatanOptions.find(j => j.value === this.form.jabatanBO)?.label || "",
+          // jabatan_bo: this.jabatanOptions.find(j => j.value === this.form.jabatanBO)?.label || "",
+          jabatan_bo: this.form.pekerjaanBO === '9999' ? this.form.jabatanLainnyaBO : this.jabatanOptions.find(p => p.value === this.form.jabatanBO)?.label || "",
           kecamatan_bo: this.form.kecamatanBO,
           desa_kelurahan_bo: this.form.kelurahanBO,
           kode_pos_bo: Number(this.form.kodePosBO),
@@ -1445,7 +1592,8 @@ export default {
             ? new Date(this.form.tanggalLahirBO).toISOString().split("T")[0]
             : null,
           kode_pekerjaan_bo: this.form.pekerjaanBO,
-          pekerjaan_bo: this.pekerjaanOptions.find(p => p.value === this.form.pekerjaanBO)?.label || "",
+          // pekerjaan_bo: this.pekerjaanOptions.find(p => p.value === this.form.pekerjaanBO)?.label || "",
+          pekerjaan_bo: this.form.pekerjaanBO === '9999' ? this.form.pekerjaanLainnyaBO : this.pekerjaanOptions.find(p => p.value === this.form.pekerjaanBO)?.label || "",
           nama_perusahaan_bo: this.form.namaPerusahaanBO,
           alamat_perusahaan_bo: this.form.alamatPerusahaanBO,
           lama_bekerja_tahun_bo: String(this.form.lamaBekerjaTahunBO),

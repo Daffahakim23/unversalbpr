@@ -156,7 +156,7 @@ export default {
       ];
       const ribuan = ["", "Ribu", "Juta", "Miliar", "Triliun"];
 
-      if (angka === 0) return "Masukkan Nominal Penempatan Deposito";
+      if (angka === 0) return "Masukkan Nominal Pembukaan Deposito";
 
       let hasil = "";
       let i = 0;
