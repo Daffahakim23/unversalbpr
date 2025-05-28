@@ -185,7 +185,7 @@
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
       <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
-        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+        {{ isSubmitting ? "Mengirim..." : "Simpan" }}
       </ButtonComponent>
     </div>
   </div>
@@ -208,6 +208,7 @@ import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
 import { metodePencairanOptions, tujuanOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, kewarganegaraanOptions, masaAktifKTPOptions } from '@/data/option.js';
 import { fetchBranches } from '@/services/service.js';
 import CustomCheckbox from '@/components/CustomCheckbox.vue';
+import PerubahanData from './perubahan-data.vue';
 
 
 export default {
@@ -341,6 +342,14 @@ export default {
           if (key === "produkDeposito") {
             value = this.getLabelFromOptions(value, produkDepositoOptions);
           }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
+          }
           processedData[key] = value;
         }
       }
@@ -437,6 +446,7 @@ export default {
         kewarganegaraan: "Kewarganegaraan",
 
         // Data Pribadi
+        PerubahanData: "Perubahan Data",
         namaPanggilan: "Nama Alias / Panggilan",
         tujuan: "Tujuan Menabung",
         KantorCabang: "Kantor Cabang",

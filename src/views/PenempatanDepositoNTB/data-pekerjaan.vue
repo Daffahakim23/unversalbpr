@@ -104,7 +104,7 @@
         placeholder="Masukkan Kode Pos Beneficial Owner Anda" variant="numeric" :maxlength="5" />
 
       <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
-        placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
+        variant="alpha" placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
 
       <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"
         placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
@@ -141,7 +141,7 @@
       <div
         v-if="['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013'].includes(form.pekerjaanBO)">
         <FormField label="Jabatan*" id="jabatanBO" :isDropdown="true" v-model="form.jabatanBO" :options="jabatanOptions"
-          placeholder="Pilih Jabatan Anda" />
+          placeholder="Pilih Jabatan Benefial Owner Anda" />
       </div>
 
       <div v-if="form.pekerjaanBO === '9999'" class="">

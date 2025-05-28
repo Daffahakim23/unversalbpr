@@ -166,19 +166,45 @@
 //     return diffDays;
 // }
 
+// function getJumlahHariFromJangkaWaktu(jangkaWaktuInMonths) {
+//     const today = new Date();
+//     console.log("Tanggal Hari Ini:", today.toLocaleDateString('id-ID')); // Opsional: untuk melihat tanggal awal
+
+//     const futureDate = new Date(today);
+//     futureDate.setMonth(today.getMonth() + parseInt(jangkaWaktuInMonths)); // Tambahkan bulan
+//     console.log("Tanggal Setelah Ditambah Bulan:", futureDate.toLocaleDateString('id-ID')); // Opsional: untuk melihat tanggal akhir
+
+//     // Hitung selisih hari
+//     const diffTime = Math.abs(futureDate - today);
+//     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+//     // Ini adalah baris yang Anda minta untuk menampilkan jumlah hari
+//     console.log(`Jangka Waktu: ${jangkaWaktuInMonths} bulan, Jumlah Hari: ${diffDays} hari`);
+//     return diffDays;
+// }
+
 function getJumlahHariFromJangkaWaktu(jangkaWaktuInMonths) {
     const today = new Date();
-    console.log("Tanggal Hari Ini:", today.toLocaleDateString('id-ID')); // Opsional: untuk melihat tanggal awal
+    // Set tanggal menjadi hari pertama bulan ini untuk menghindari masalah "loncat" hari saat menambahkan bulan
+    today.setDate(1); 
+    console.log("Tanggal Mulai (Hari Ini, diset ke tgl 1):", today.toLocaleDateString('id-ID'));
 
     const futureDate = new Date(today);
     futureDate.setMonth(today.getMonth() + parseInt(jangkaWaktuInMonths)); // Tambahkan bulan
-    console.log("Tanggal Setelah Ditambah Bulan:", futureDate.toLocaleDateString('id-ID')); // Opsional: untuk melihat tanggal akhir
+
+    // Setelah bulan ditambahkan, set hari kembali ke hari yang sama dengan 'today'
+    // atau ke hari terakhir bulan tersebut jika bulan tujuan tidak memiliki hari tersebut.
+    // Misalnya, jika start 31 Jan, dan target adalah akhir Februari, set ke 28/29 Feb.
+    const originalDay = new Date().getDate(); // Ambil hari asli dari "hari ini"
+    const lastDayOfMonth = new Date(futureDate.getFullYear(), futureDate.getMonth() + 1, 0).getDate();
+    futureDate.setDate(Math.min(originalDay, lastDayOfMonth));
+    
+    console.log("Tanggal Setelah Ditambah Bulan (disesuaikan harinya):", futureDate.toLocaleDateString('id-ID'));
 
     // Hitung selisih hari
-    const diffTime = Math.abs(futureDate - today);
+    const diffTime = Math.abs(futureDate.getTime() - new Date().getTime()); // Gunakan new Date() untuk hari ini yang aktual
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    // Ini adalah baris yang Anda minta untuk menampilkan jumlah hari
     console.log(`Jangka Waktu: ${jangkaWaktuInMonths} bulan, Jumlah Hari: ${diffDays} hari`);
     return diffDays;
 }

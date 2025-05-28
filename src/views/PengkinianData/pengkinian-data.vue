@@ -4,7 +4,7 @@
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" variant="alpha" required />
 
-    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening"
+    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric" :maxlength="20"
       placeholder="Masukkan Nomor Rekening Anda" required
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
@@ -337,7 +337,7 @@ export default {
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg";
         } else {
-          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Mohon untuk menghubungi Universal Care untuk bantuan lebih lanjut.";
+           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);

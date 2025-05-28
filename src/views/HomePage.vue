@@ -54,10 +54,10 @@
       <div class="w-full md:w-2/3 flex-shrink-0 mb-16">
         <div class="text-center sm:text-center">
           <h1 class="text-3xl sm:text-4xl md:text-5xl mb-8 font-medium items-center">
-            Selamat Datang di Layanan Digital BPR Universal
+            Selamat Datang di Layanan E-Form Universal BPR
           </h1>
           <p class="text-sm sm:text-base md:text-xl text-neutral-600 ">
-            Silahkan pilih tipe nasabah untuk melanjutkan.
+            Silakan pilih tipe nasabah untuk melanjutkan.
           </p>
         </div>
       </div>
@@ -71,8 +71,8 @@
               'Pembukaan Rekening Tabungan',
               'Pembukaan Deposito',
               'Pengkinian Data',
-              'Pemindah bukuan',
-              'Pencairan Deposito'
+              'Transfer',
+              'Penutupan Deposito'
             ]" />
           <Card type="1" title="Masuk di sini"
             :features="[{ label: 'Non-Nasabah BPR Universal', description: 'Apabila Anda belum terdaftar sebagai Nasabah BPR Universal, silakan melalui registrasi pembukaan rekening Nasabah Baru, baik Tabungan maupun Deposito untuk dapat memperoleh berbagai layanan digital kami.' }]"

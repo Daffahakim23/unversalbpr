@@ -35,7 +35,8 @@
     <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan" :options="kelurahanOptions"
       placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-    <FormField label="Kode Pos" id="kodePos" variant="numeric" v-model="form.kodePos"  placeholder="Masukkan Kode Pos Anda" required :maxlength="5" />
+    <FormField label="Kode Pos" id="kodePos" variant="numeric" v-model="form.kodePos"
+      placeholder="Masukkan Kode Pos Anda" required :maxlength="5" />
 
     <FormField label="Status Perkawinan" id="statusPerkawinan" :isDropdown="true" v-model="form.statusPerkawinan"
       :options="statusPerkawinanOptions" required />
@@ -92,6 +93,7 @@ export default {
       kecamatanOptions: [],
       kelurahanOptions: [],
       namaLengkapError: false,
+      isDataFromFilestore: false,
     };
   },
   watch: {
@@ -124,17 +126,31 @@ export default {
     isButtonDisabled() {
       const nikValue = this.form.nik;
       if (!nikValue || String(nikValue).length !== 16) {
-        return true;
+        return true; // NIK tidak valid atau kurang dari 16 digit
       }
-      return Object.entries(this.form).some(([key, value]) => {
-        if (key === "jenisKelamin") {
-          return false;
+
+      // Daftar semua field yang wajib diisi
+      const requiredFields = [
+        'nik', 'namaLengkap', 'tanggalLahir', 'tempatLahir', 'jenisKelamin',
+        'agama', 'alamat', 'rt', 'rw', 'provinsi', 'kabupaten',
+        'kecamatan', 'kelurahan', 'kodePos', 'statusPerkawinan',
+        'kewarganegaraan', 'masaAktifKtp'
+      ];
+
+      for (const field of requiredFields) {
+        // Khusus untuk 'kewarganegaraanLainnya', cek hanya jika kewarganegaraan adalah 'false'
+        if (field === 'kewarganegaraanLainnya') {
+          if (this.form.kewarganegaraan === false && !this.form.kewarganegaraanLainnya) {
+            return true; // Wajib diisi tapi kosong
+          }
+        } else if (this.form[field] === null || this.form[field] === undefined || this.form[field] === '') {
+          // Cek jika field wajib lainnya kosong/null/undefined
+          return true;
         }
-        if (key === "kewarganegaraanLainnya" && this.form.kewarganegaraan) {
-          return false;
-        }
-        return !value;
-      });
+      }
+
+      // Jika semua validasi lolos, maka tombol tidak dinonaktifkan
+      return false;
     },
   },
 
@@ -253,6 +269,8 @@ export default {
     },
 
     async fetchData() {
+      const fileStore = useFileStore();
+      const data = fileStore.formKTP;
       console.log("Checking fileStore:", this.fileStore.formKTP);
       if (this.fileStore.formKTP?.message && Object.keys(this.fileStore.formKTP.message).length > 0) {
         const message = this.fileStore.formKTP.message;
@@ -261,6 +279,7 @@ export default {
 
         const tanggalBerlakuSampai = message.berlaku_sampai;
         this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
+
 
         this.form = {
           nik: message.nik || "",
@@ -285,17 +304,39 @@ export default {
           // nama_gadis_ibu_kandung: "ini ibu",
         };
         console.log("Form filled:", this.form);
+        this.isDataFromFilestore = false;
+      } else if (data) {
+        const tanggalBerlakuSampai = data.masaAktifKtp; // Ambil dari data.masaAktifKtp
+        this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
+        Object.keys(this.form).forEach((key) => {
+          if (data[key] !== undefined) {
+            this.form[key] = data[key];
+          }
+          if (key === 'masaAktifKtp') {
+            this.form[key] = this.tanggalBerlakuSampai || (data.berlaku_seumur_hidup ? "Seumur Hidup" : "");
+          }
+        });
+        if (!this.form.masaAktifKtp && data.berlaku_seumur_hidup) {
+          this.form.masaAktifKtp = "Seumur Hidup";
+        } else if (!this.form.masaAktifKtp && data.masaAktifKtp) {
+          this.form.masaAktifKtp = data.masaAktifKtp; // Pastikan mengambil nilai tanggal jika ada
+        }
       }
     },
-
     goBack() {
-      this.$router.push({
-        name: "PreviewScreenPengkinianData",
-        query: {
-          documentType: "ktp",
-          fileUrl: this.$route.query.fileUrl,
-        },
-      });
+      if (this.isDataFromFilestore == true) {
+        // Jika data KTP berasal dari fileStore, langsung ke UploadDokumenPenempatanDepositoNTB
+        this.$router.push({ name: "UploadDokumenPengkinianData" });
+      } else {
+        // Jika data KTP berasal dari OCR (atau tidak ada), kembali ke PreviewScreenPengkinianData
+        this.$router.push({
+          name: "PreviewScreenPengkinianData",
+          query: {
+            documentType: "ktp",
+            fileUrl: this.$route.query.fileUrl,
+          },
+        });
+      }
     },
     async handleSubmit() {
       if (this.isSubmitting) {
@@ -370,6 +411,7 @@ export default {
   mounted() {
     this.$emit("update-progress", 60);
     this.fetchData();
+    // this.fetchDataFilestore();
     this.fetchProvinsi();
     this.fetchKabupaten();
     this.fetchKecamatan();

@@ -97,20 +97,17 @@ export const jangkaWaktuDepositoDEBUTMatiusOptions = [
 
 // DEPOSITO GREEN
 export const jangkaWaktuDepositoGreenOptions = [
-  { label: "3 Bulan (6,25% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.25" },
   { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
   { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoGreenOptionsTier1 = [
-  { label: "3 Bulan (6,25% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.25" },
   { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
   { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
   { label: "12 Bulan (6,75% per tahun + investasi bibit pohon)", value: "4", jangkaWaktu: "12", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoGreenOptionsTier2 = [
-  { label: "3 Bulan (6,50% per tahun + investasi bibit pohon)", value: "1", jangkaWaktu: "3", sukuBunga: "6.50" },
   { label: "6 Bulan (6,75% per tahun + investasi bibit pohon)", value: "2", jangkaWaktu: "6", sukuBunga: "6.75" },
   { label: "9 Bulan (6,75% per tahun + investasi bibit pohon)", value: "3", jangkaWaktu: "9", sukuBunga: "6.75" },
   { label: "12 Bulan (6,75% per tahun + investasi bibit pohon)", value: "4", jangkaWaktu: "12", sukuBunga: "6.75" },
@@ -149,8 +146,8 @@ export const memilikiTabunganOptions = [
 export const pembayaranBungaOptions = [
   { label: "Tambahkan ke Nominal Deposito", subtitle: " Bunga akan ditambahkan ke nominal Deposito saat jatuh tempo", value: "1" },
   { label: "Pindah buku ke Rekening Tabungan Universal atas nama pihak lain", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal atas nama pihak lain", value: "2" },
-  { label: "Pindah buku ke Rekening Tabungan Universal atas nama saya ", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal Atas Nama Anda", value: "3" },
-  { label: "Transfer ke Rekening Bank lain", subtitle: " Bunga akan ditambahkan ke nominal Deposito saat jatuh tempo", value: "4" },
+  { label: "Pindah buku ke Rekening Tabungan Universal atas nama saya", subtitle: "Bunga Deposito akan dipindahbuku ke Rekening Tabungan Universal Atas Nama Anda", value: "3" },
+  { label: "Transfer ke Rekening Bank lain", subtitle: "Bunga Deposito akan ditransfer ke rekening Bank lain", value: "4" },
 ];
 
 export const metodePencairanOptions = [
@@ -320,7 +317,7 @@ export const tujuanOptions = [
 ];
 
 export const alasanPencairanOptions = [
-  { label: "Pencairan Deposito Sesuai Jatuh Tempo", value: "1" },
+  { label: "Penutupan Deposito Sesuai Jatuh Tempo", value: "1" },
   { label: "Keperluan Pribadi", value: "2" },
   { label: "Kebutuhan Data Mendesak", value: "3" },
   { label: "Perubahan Rencana Keuangan", value: "4" },

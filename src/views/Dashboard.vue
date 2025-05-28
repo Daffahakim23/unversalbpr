@@ -92,7 +92,7 @@
             <div class="flex flex-col md:flex-row gap-4">
               <Card type="1" :features="[
                 {
-                  label: 'Pencairan Deposito',
+                  label: 'Penutupan Deposito',
                   description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
                   dokumen: [
                     { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
@@ -102,9 +102,9 @@
                   ]
                 }
               ]" icon="homepage-icon.svg" :onBtnClick="() => openCSModal({
-                label: 'Pencairan Deposito',
+                label: 'Penutupan Deposito',
                 description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
-              })" @cardClick="handleCardClick" buttonString="Ajukan Pencairan Deposito" />
+              })" @cardClick="handleCardClick" buttonString="Ajukan Penutupan Deposito" />
 
               <Card type="1" :features="[
                 {

@@ -18,7 +18,7 @@
         placeholder="Masukkan Sumber Penghasilan Lainnya" :readonly="true" />
     </div>
 
-    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekeningPengirim"
+    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekeningPengirim" :maxlength="10" variant="numeric"
       placeholder="Masukkan Nomor Rekening" required :readonly="true" />
 
     <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" v-model="form.namaLengkapPengirim"

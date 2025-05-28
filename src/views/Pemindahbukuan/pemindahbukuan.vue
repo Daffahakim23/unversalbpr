@@ -23,7 +23,7 @@
         placeholder="Masukkan Sumber Penghasilan Lainnya" />
     </div>
 
-    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" variant="numeric"
+    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" variant="numeric" :maxlength="10"
       v-model="form.nomorRekeningPengirim" placeholder="Masukkan Nomor Rekening Anda" required
       @input="form.nomorRekeningPengirim = form.nomorRekeningPengirim.replace(/\D/g, '')" />
 
@@ -246,7 +246,7 @@ export default {
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
         } else {
-          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Mohon untuk menghubungi Universal Care untuk bantuan lebih lanjut.";
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar

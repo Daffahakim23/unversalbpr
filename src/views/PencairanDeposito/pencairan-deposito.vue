@@ -241,33 +241,33 @@ export default {
           console.error("Gagal mengirim data, status:", response.status);
         }
       } catch (error) {
+        console.error("Terjadi error saat mengirim data:", error); // Log keseluruhan objek error
+        if (error.response) {
+          console.error("Detail error response:", error.response.data); // Log detail response dari server (jika ada)
+          console.error("Status error response:", error.response.status);
+          console.error("Headers error response:", error.response.headers);
+        } else if (error.request) {
+          console.error("Tidak ada response dari server:", error.request); // Log jika tidak ada response
+        } else {
+          console.error("Error saat menyiapkan request:", error.message); // Log error saat menyiapkan request
+        }
+
         let subtitle = "";
         let modalTitle = "Terjadi Kesalahan";
         let modalIcon = "otp-error-illus.svg";
         let button1 = "Tutup";
         let button2 = "Hubungi Universal Care";
 
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
+        if (error.response && error.response.data && error.response.data.message) {
           this.temporaryBanMessage = error.response.data.message;
           subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 Menit Kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
           modalTitle = "Alamat Email Dibatasi Sementara";
-          modalIcon = "otp-error-illus.svg";
+          modalIcon = "data-failed-illus.svg";
         } else {
-          subtitle =
-            "Terjadi kesalahan saat melanjutkan proses verifikasi. Mohon untuk menghubungi Universal Care untuk bantuan lebih lanjut.";
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
         this.isModalError = false;
-        this.showErrorModal(
-          modalTitle,
-          subtitle,
-          button1,
-          button2,
-          modalIcon
-        );
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }

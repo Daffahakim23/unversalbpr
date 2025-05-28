@@ -881,7 +881,7 @@ export default {
       <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO" :required="true" variant="numeric"
         :maxlength="5" placeholder="Masukkan Kode Pos Beneficial Owner Anda" />
 
-      <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
+      <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO" variant="alpha"
         placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
 
       <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"
@@ -926,7 +926,7 @@ export default {
 
       <div v-if="form.pekerjaanBO !== '9999'" class="">
         <FormField label="Jabatan*" id="jabatanBO" :isDropdown="true" v-model="form.jabatanBO" :options="jabatanOptions"
-          placeholder="Pilih Jabatan Anda" />
+          placeholder="Pilih Jabatan Beneficial Owner Anda" />
       </div>
       <div v-if="form.pekerjaanBO === '9999'" class="">
         <FormField label="Jabatan*" id="jabatanLainnyaBO" type="text" v-model="form.jabatanLainnyaBO"
@@ -1012,7 +1012,7 @@ export default {
     <FormField label="Nama Lengkap Kontak Darurat*" id="namaLengkapKD" :isDropdown="false" v-model="form.namaLengkapKD"
       placeholder="Masukkan Nama Lengkap Kontak Darurat" variant="alpha" />
 
-    <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD"
+    <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD" variant="alpha"
       placeholder="Masukkan Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
       name="hubunganPemohonKD" />
 

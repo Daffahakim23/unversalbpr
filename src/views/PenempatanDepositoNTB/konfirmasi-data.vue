@@ -198,7 +198,7 @@
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
       <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
-        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+        {{ isSubmitting ? "Mengirim..." : "Simpan" }}
       </ButtonComponent>
     </div>
   </div>
@@ -438,6 +438,14 @@ export default {
           }
           if (key === "produkDeposito") {
             value = this.getLabelFromOptions(value, produkDepositoOptions);
+          }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
           }
           processedData[key] = value;
         }

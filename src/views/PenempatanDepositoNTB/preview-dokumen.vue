@@ -234,7 +234,9 @@ export default {
     },
   },
 
-  setup() {
+   setup() {
+    const livenessFailuresCount = ref(0); // Tambahkan ini
+    const maxLivenessFailures = 5; // Batas maksimal kegagalan
     const showFlag = ref(false);
     const flagType = ref('info');
     const flagMessage = ref('');
@@ -283,6 +285,62 @@ export default {
         },
       ];
       isModalError.value = true;
+    };
+    const showErrorModalLiveness = (title, message, buttons = []) => {
+      modalContent.value = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/otp-error-illus.svg`, import.meta.url).href,
+          buttonString1: buttons[0] || "Tutup",
+          buttonString2: buttons[1],
+        },
+      ];
+      isModalErrorLiveness.value = true;
+    };
+
+    const whatsappContact = ref({
+      whatsapp: '+622122213993',
+    });
+
+    const handleButtonClick1 = (feature) => {
+      isModalError.value = false;
+      if (feature.buttonString1 === "Hubungi Universal Care") {
+        event.stopPropagation();
+        openWhatsApp();
+        fileStore.$reset();
+        router.push({ path: "/" });
+        // window.location.reload();
+      } else if (feature.buttonString1 === "Coba Lagi") {
+        isModalErrorLiveness.value = false;
+      }
+    };
+
+    const handleButtonClick2 = (feature) => {
+      isModalError.value = false;
+      if (feature.buttonString2 === "Hubungi Universal Care") {
+        event.stopPropagation();
+        openWhatsApp();
+        fileStore.$reset();
+        router.push({ path: "/" });
+      } else if (feature.buttonString2 === "Batal" || feature.buttonString2 === "Tutup") {
+        isModalErrorLiveness.value = false;
+      }
+    };
+
+    const getWhatsAppLink = (number) => {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    };
+
+    const openWhatsApp = () => {
+      if (whatsappContact.value.whatsapp) {
+        window.open(getWhatsAppLink(whatsappContact.value.whatsapp), '_blank');
+      }
     };
 
     const startWebcamFotoDiri = async () => {
@@ -366,6 +424,10 @@ export default {
     };
 
     const uploadPhoto = async () => {
+      if (isSubmitting.value) {
+        return;
+      }
+      isSubmitting.value = true;
       if (isUploading.value || !photoUrl.value) return;
       isUploading.value = true;
 
@@ -396,7 +458,7 @@ export default {
         const apiEndpoint =
           documentType.value === "ktp" ? "/ocr-ktp-deposito" :
             documentType.value === "tandaTangan" ? "/tt-basah-deposito" :
-              documentType.value === "npwp" ? "/npwp-deposito" : "/foto-diri-deposito";
+              documentType.value === "npwp" ? "/npwp" : "/foto-diri-deposito";
 
         const file = new File([blob], fileName, { type: "image/png" });
         const formData = new FormData();
@@ -449,10 +511,27 @@ export default {
         // showErrorModal(error.response?.data?.Message, error.response?.data?.Subtext, "Verifikasi Ulang", "Tutup");
         showFlag.value = true;
         flagType.value = 'warning';
+        // if (documentType.value === "fotoDiri") {
+        //   let message = error.response?.data?.message || "Terjadi kesalahan saat verifikasi wajah.";
+        //   let subtext = error.response?.data?.Subtext || "Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
+        //   flagMessage.value = `${message}, ${subtext}`;
+        // } 
         if (documentType.value === "fotoDiri") {
-          let message = error.response?.data?.Message || "Terjadi kesalahan saat verifikasi wajah.";
+          livenessFailuresCount.value++;
+          console.log("Liveness Failures Count:", livenessFailuresCount.value);
+          let message = error.response?.data?.message || "Terjadi kesalahan saat verifikasi wajah.";
           let subtext = error.response?.data?.Subtext || "Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
           flagMessage.value = `${message}, ${subtext}`;
+          let title = "Terjadi Kesalahan";
+          let subtitle = "Periksa kembali koneksi internet Anda";
+          let buttons = ["Coba Lagi", "Hubungi Universal Care"];
+          if (livenessFailuresCount.value >= maxLivenessFailures) {
+            title = "Akun Anda dibatasi";
+            subtitle = "Anda telah gagal melakukan verifikasi wajah sebanyak 5 kali. Untuk alasan keamanan, Anda bisa mencoba kembali verifikasi wajah 24 jam ke depan. Jika Anda membutuhkan bantuan segera, silakan hubungi Universal Care.";
+            buttons = ["Hubungi Universal Care"];
+            livenessFailuresCount.value = 0;
+            showErrorModalLiveness(title, subtitle, buttons);
+          }
         } else if (documentType.value === "ktp") {
           flagMessage.value = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (documentType.value === "npwp") {
@@ -466,6 +545,7 @@ export default {
         // showModalError("Verifikasi Gagal", "Data yang Anda masukkan tidak sesuai dengan data yang terdaftar. Mohon periksa kembali informasi Anda dan coba lagi.", "Verifikasi Ulang", "Hubungi Universal Care", "data-failed-illus.svg");
       } finally {
         isUploading.value = false;
+        isSubmitting.value = false;
       }
     };
 
@@ -482,6 +562,15 @@ export default {
     });
 
     return {
+      whatsappContact,
+      getWhatsAppLink,
+      openWhatsApp,
+      handleButtonClick1,
+      handleButtonClick2,
+      isSubmitting,
+      isModalErrorLiveness,
+      livenessFailuresCount,
+      showErrorModalLiveness,
       showInitialUI,
       isWebcamActive,
       isModalError,
@@ -582,9 +671,32 @@ export default {
       }, 300);
     },
 
+    // handleFileUpload(event) {
+    //   const file = event.target.files[0];
+    //   if (!file) return;
+
+    //   console.log("File dipilih:", file.name);
+    //   const fileUrl = URL.createObjectURL(file);
+    //   this.$router.push({
+    //     name: "PreviewScreenPenempatanDepositoNTB",
+    //     query: { documentType: this.documentType, fileUrl },
+    //   });
+    // },
+
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+      if (!allowedTypes.includes(file.type)) {
+        this.showModalError("Format Gambar Salah", "Hanya format gambar JPG/JPEG atau PNG yang diizinkan. Harap periksa kembali format file yang Anda coba unggah.", null, "Tutup", "data-failed-illus.svg");
+        // this.showError();
+        if (this.$refs.fileInput) {
+          this.$refs.fileInput.value = null;
+        }
+        return;
+      }
 
       console.log("File dipilih:", file.name);
       const fileUrl = URL.createObjectURL(file);
@@ -706,7 +818,7 @@ export default {
         this.showFlag = true;
         this.flagType = "warning";
         if (this.documentType === "fotoDiri") {
-          this.flagMessage = error.response?.data?.Message;
+          this.flagMessage = error.response?.data?.message;
         } else if (this.documentType === "ktp") {
           this.flagMessage = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (this.documentType === "npwp") {

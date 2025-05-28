@@ -3,7 +3,7 @@
     <FormField label="Nama Bank*" id="namaBank" v-model="form.namaBank" placeholder="Masukkan Nama Bank"
       :readonly="true" required />
 
-    <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
+    <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening" :maxlength="20" variant="numeric"
       placeholder="Masukkan Nomor Rekening" hint="*Nomor rekening harus terdiri dari 10 digit angka" required />
 
     <FormField label="Nama Pemilik Rekening*" id="namaPemilikRekening" v-model="form.namaPemilikRekening"

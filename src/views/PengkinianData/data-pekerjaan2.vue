@@ -163,7 +163,7 @@
             <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO"
                 placeholder="Masukkan Kode Pos Beneficial Owner Anda" />
 
-            <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
+            <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO" variant="alpha"
                 placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" />
 
             <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"

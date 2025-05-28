@@ -156,7 +156,7 @@
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
       <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
-        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+        {{ isSubmitting ? "Mengirim..." : "Simpan" }}
       </ButtonComponent>
     </div>
   </div>

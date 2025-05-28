@@ -63,13 +63,13 @@
 
     <!-- Jika opsi value = 2 -->
     <div v-if="form.pembayaranBunga == 2" class="mt-4">
-      <!-- <FormField label="Nomor Rekening Tabungan Universal*" type="number" id="nomorRekening"
+      <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" variant="numeric" :maxlength="10"
         v-model="form.nomorRekening" placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
 
       <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaLengkap" v-model="form.namaLengkap"
-        placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" required /> -->
+        placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" variant="alpha" required />
 
-      <div class="mb-4">
+      <!-- <div class="mb-4">
         <div v-if="form.namaLengkap && form.nomorRekening && form.namaBank">
           <div class="flex flex-row items-center justify-between mb-2 w-full">
             <h2 class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900">Detail Penerima</h2>
@@ -102,7 +102,7 @@
             Masukkan
           </ButtonComponent>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Jika opsi value = 3 -->
@@ -163,7 +163,7 @@
       <label class="flex items-baseline space-x-2 mt-4">
         <div class="mr-2 mb-6">
           <CustomCheckbox v-model="setujuBiayaTransfer" labelText="Saya menyetujui pemotongan biaya administrasi transfer pembayaran bunga deposito ke Rekening Bank Lain,
-          sesuai dengan ketentuan BPR Universal." />
+          sesuai dengan ketentuan PT BPR Universal." />
         </div>
         <!-- <input type="checkbox" v-model="setujuBiayaTransfer" required />
         <p class="ms-2 text-sm text-gray-900 dark:text-gray-300 mb-4">
@@ -177,9 +177,9 @@
       Cara Penyetoran
     </h2>
     <FormField label="Metode Penyetoran*" id="pembayaranBunga" :isDropdown="true" v-model="form.metodePenyetoran"
-      placeholder="PIlih Metode Metode Penyetoran" :options="metodePenyetoranNTBOptions" required />
+      placeholder="PIlih Metode Penyetoran" :options="metodePenyetoranNTBOptions" required />
 
-    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekeningPenyetoran" variant="numeric" :maxlength="13"
+    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekeningPenyetoran" variant="numeric" :maxlength="10"
       v-model="form.nomorRekeningPenyetoran" placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
 
     <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaRekeningPenyetoran" variant="alpha"
@@ -505,6 +505,12 @@ export default {
         };
       }
     },
+    "fileStore.formPenempatanDeposito": {
+      handler() {
+        this.fetchData();
+      },
+      deep: true,
+    },
     "form.nominal"(newVal, oldVal) {
       this.form.terbilang = this.toTerbilang(parseInt(newVal) || 0);
       console.log(this.form.nominal);
@@ -678,32 +684,33 @@ export default {
         const namaBank = this.form.pembayaranBunga == 4 ? this.form.namaBank : "";
         const nomorRekening = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.nomorRekening : "";
         const namaPemilik = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.namaLengkap : "";
+        const selectedOption = this.currentJangkaWaktuOptions.find(option => option.value === this.form.jangkaWaktu);
 
-        let selectedOption = null;
-        let currentOptions = [];
+        // let selectedOption = null;
+        // let currentOptions = [];
 
-        switch (Number(this.form.produkDeposito)) {
-          case 1:
-            currentOptions = jangkaWaktuDepositoUniversalOptions;
-            break;
-          case 2:
-            currentOptions = jangkaWaktuDepositoPeduliOptions;
-            break;
-          case 3:
-            currentOptions = jangkaWaktuDepositoDEBUTSanmereOptions;
-            break;
-          case 4:
-            currentOptions = jangkaWaktuDepositoDEBUTMatiusOptions;
-            break;
-          case 5:
-            currentOptions = jangkaWaktuDepositoGreenOptions;
-            break;
-          default:
-            console.error("Produk deposito tidak valid");
-            return;
-        }
+        // switch (Number(this.form.produkDeposito)) {
+        //   case 1:
+        //     currentOptions = jangkaWaktuDepositoUniversalOptions;
+        //     break;
+        //   case 2:
+        //     currentOptions = jangkaWaktuDepositoPeduliOptions;
+        //     break;
+        //   case 3:
+        //     currentOptions = jangkaWaktuDepositoDEBUTSanmereOptions;
+        //     break;
+        //   case 4:
+        //     currentOptions = jangkaWaktuDepositoDEBUTMatiusOptions;
+        //     break;
+        //   case 5:
+        //     currentOptions = jangkaWaktuDepositoGreenOptions;
+        //     break;
+        //   default:
+        //     console.error("Produk deposito tidak valid");
+        //     return;
+        // }
 
-        selectedOption = currentOptions.find(option => option.value === this.form.jangkaWaktu);
+        // selectedOption = currentOptions.find(option => option.value === this.form.jangkaWaktu);
 
         let jangkaWaktuToSend = null;
         let sukuBungaToSend = null;
@@ -712,8 +719,10 @@ export default {
           jangkaWaktuToSend = Number(selectedOption.jangkaWaktu);
           sukuBungaToSend = parseFloat(selectedOption.sukuBunga);
         } else {
-          console.warn("Opsi jangka waktu tidak ditemukan");
-          return;
+          // Tambahkan log yang lebih informatif untuk debugging
+          console.error("Opsi jangka waktu tidak ditemukan untuk produk", this.form.produkDeposito, "dan jangka waktu", this.form.jangkaWaktu, ". Periksa currentJangkaWaktuOptions:", this.currentJangkaWaktuOptions);
+          alert("Terjadi kesalahan: Opsi jangka waktu tidak valid. Mohon pilih ulang.");
+          return; // Hentikan proses submit jika opsi tidak ditemukan
         }
 
         const requestData = {

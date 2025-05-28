@@ -248,7 +248,7 @@ export default {
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg";
         } else {
-          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Mohon untuk menghubungi Universal Care untuk bantuan lebih lanjut.";
+           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar

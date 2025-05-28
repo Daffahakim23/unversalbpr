@@ -86,7 +86,7 @@
                   {{ pageTitle }}
                 </h2>
               </div>
-              <p v-if="pageSubtitle" class="text-sm text-gray-600">
+              <p v-if="pageSubtitle" class="text-sm text-gray-600 text-justify">
                 {{ pageSubtitle }}
               </p>
             </div>

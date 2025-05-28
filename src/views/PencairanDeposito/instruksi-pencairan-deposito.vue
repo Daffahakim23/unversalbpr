@@ -58,7 +58,7 @@
     </div>
 
     <FormField label="Alasan Penutupan*" id="alasanPencairan" :isDropdown="true" v-model="form.alasanPencairan"
-      placeholder="Pilih Alasan Pencairan Deposito" :options="alasanPencairanOptions" required />
+      placeholder="Pilih Alasan Penutupan Deposito" :options="alasanPencairanOptions" required />
 
     <RadioButtonChoose label="Rekening Tujuan Penutupan Deposito*" id="rekeningTujuan" name="rekeningTujuan"
       :isDropdown="true" v-model="form.rekeningTujuan" :options="rekeningTujuanOptions" required />

@@ -235,7 +235,7 @@ export default {
         } else {
           otpErrorCount.value++;
           isOtpError.value = true;
-          errorMessage.value = "Kode OTP Salah";
+          errorMessage.value = response.data.message || "Verifikasi OTP gagal. Silakan coba lagi.";
 
           if (otpErrorCount.value >= 3) {
             let title = "Kode OTP Salah";
@@ -268,7 +268,7 @@ export default {
       } catch (error) {
         otpErrorCount.value++;
         isOtpError.value = true;
-        errorMessage.value = "Kode OTP Salah";
+        errorMessage.value = error.response?.data?.message || "Proses Verifikasi OTP gagal. Silakan coba lagi.";
 
         if (otpErrorCount.value >= 3) {
           let title = "Kode OTP Salah";

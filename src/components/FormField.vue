@@ -51,7 +51,7 @@
               'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
               'border-red-500': error,
               'border-neutral-200 focus:ring-1': !readonly && !error
-            }" class="w-full h-10 p-2 rounded-md" :required="required" :maxlength="35" />
+            }" class="w-full h-10 p-2 rounded-md" :required="required" :maxlength="20" />
         </div>
       </template>
       <template v-else>

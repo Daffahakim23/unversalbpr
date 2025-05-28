@@ -411,7 +411,7 @@ const routes = [
         component: DataPenempatanDepositoNTB,
         meta: {
           feature: "Pembukaan Deposito",
-          title: "Atur Pembukaan Deposito",
+          title: "Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },
@@ -566,7 +566,7 @@ const routes = [
         component: DataPenempatanDepositoExisting,
         meta: {
           feature: "Pembukaan Deposito",
-          title: "Atur Pembukaan Deposito",
+          title: "Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },
@@ -952,7 +952,7 @@ const routes = [
         meta: {
           feature: "Transfer",
           title: "Formulir Elektronik Transfer",
-          subtitle: "Silahkan isi formulir berikut untuk mengajukan transaksi  Transfer Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
+          subtitle: "Silakan isi formulir berikut untuk mengajukan transaksi  Transfer Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
         },
       },
       {
