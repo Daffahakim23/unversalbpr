@@ -215,7 +215,7 @@ export const sumberDanaOptions = [
 ];
 
 export const getMasaAktifKTPOptions = (tanggalBerlakuSampai) => {
-  const options = [{ label: "Seumur Hidup", value: "Seumur Hidup" }];
+  const options = [{ label: "Seumur Hidup", value: "Seumur Hidup" }, { label: "Pilih Tanggal Berlaku Sampai", value: "0" }];
   if (tanggalBerlakuSampai) {
     options.push({ label: tanggalBerlakuSampai, value: tanggalBerlakuSampai });
   }

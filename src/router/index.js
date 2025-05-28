@@ -94,6 +94,16 @@ import EmailOTPPemindahbukuan from "../views/Pemindahbukuan/otp-no-hp.vue";
 import HalamanSuksesPemindahbukuan from "../views/Pemindahbukuan/halaman-sukses.vue";
 import TandaTanganDigitalPemindahbukuan from "../views/Pemindahbukuan/tanda-tangan-digital.vue";
 
+// Other
+import InfoProdukPembukaanRekeningNTB from "../views/Other/infoProdukPembukaanRekeningNTB.vue";
+import InfoProdukPembukaanRekeningExisting from "../views/Other/infoProdukPembukaanRekeningExisting.vue";
+import InfoProdukPenempatanDepositoNTB from "../views/Other/infoProdukPenempatanDepositoNTB.vue";
+import InfoProdukPenempatanDepositoExisting from "../views/Other/infoProdukPenempatanDepositoExisting.vue";
+import InfoProdukPencairanDeposito from "../views/Other/infoProdukPencairanDeposito.vue";
+import InfoProdukPengkinianData from "../views/Other/infoProdukPengkinianData.vue";
+import InfoProdukPemindahbukuan from "../views/Other/infoProdukPemindahbukuan.vue";
+
+
 const routes = [
   {
     path: "/",
@@ -789,7 +799,7 @@ const routes = [
         },
       },
 
-      // Pencairan Deposito
+      // Penutupan Deposito
       {
         path: "formPencairanDeposito",
         name: "formPencairanDeposito",
@@ -1083,6 +1093,80 @@ const routes = [
           feature: "Transfer",
         },
       },
+
+
+      {
+        path: "infoProdukPembukaanRekeningNTB",
+        name: "infoProdukPembukaanRekeningNTB",
+        component: InfoProdukPembukaanRekeningNTB,
+        meta: {
+          feature: "Info Produk",
+          title: "Pembukaan Rekening Nasabah Baru",
+          subtitle: "Dapatkan informasi lengkap mengenai jenis rekening dan panduan pembukaan untuk nasabah non-eksisting."
+        },
+      },
+      {
+        path: "infoProdukPembukaanRekeningExisting",
+        name: "infoProdukPembukaanRekeningExisting",
+        component: InfoProdukPembukaanRekeningExisting,
+        meta: {
+          feature: "Info Produk",
+          title: "Pembukaan Rekening Nasabah Eksisting",
+          subtitle: "Temukan informasi detail tentang opsi dan proses pembukaan rekening tambahan bagi nasabah yang sudah terdaftar."
+        },
+      },
+      {
+        path: "infoProdukPenempatanDepositoNTB",
+        name: "infoProdukPenempatanDepositoNTB",
+        component: InfoProdukPenempatanDepositoNTB,
+        meta: {
+          feature: "Info Produk",
+          title: "Pembukaan Deposito Nasabah Baru",
+          subtitle: "Pelajari keuntungan, syarat, dan cara penempatan deposito untuk nasabah yang baru bergabung."
+        },
+      },
+      {
+        path: "infoProdukPenempatanDepositoExisting",
+        name: "infoProdukPenempatanDepositoExisting",
+        component: InfoProdukPenempatanDepositoExisting,
+        meta: {
+          feature: "Info Produk",
+          title: "Pembukaan Deposito Nasabah Eksisting",
+          subtitle: "Pahami opsi dan panduan penempatan deposito bagi Anda yang sudah menjadi nasabah kami."
+        },
+      },
+      {
+        path: "infoProdukPengkinianData",
+        name: "infoProdukPengkinianData",
+        component: InfoProdukPengkinianData,
+        meta: {
+          feature: "Info Produk",
+          title: "Pengkinian Data",
+          subtitle: "Pastikan data Anda selalu terbarui. Temukan prosedur dan dokumen yang dibutuhkan untuk pengkinian data."
+        },
+      },
+      {
+        path: "infoProdukPencairanDeposito",
+        name: "infoProdukPencairanDeposito",
+        component: InfoProdukPencairanDeposito,
+        meta: {
+          feature: "Info Produk",
+          title: "Penutupan Deposito",
+          subtitle: "Informasi lengkap mengenai prosedur, syarat, dan estimasi waktu pencairan deposito Anda."
+        },
+      },
+      {
+        path: "infoProdukPemindahbukuan",
+        name: "infoProdukPemindahbukuan",
+        component: InfoProdukPemindahbukuan,
+        meta: {
+          feature: "Info Produk",
+          title: "Transfer",
+          subtitle: "Pahami alur dan persyaratan untuk proses transfer dana antar rekening dengan aman dan mudah."
+        },
+      },
+
+
     ],
   },
 ];

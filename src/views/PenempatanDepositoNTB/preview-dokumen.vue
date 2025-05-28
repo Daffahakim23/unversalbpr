@@ -242,6 +242,7 @@ export default {
     const flagMessage = ref('');
     const nomorNpwp = ref('');
     const showInitialUI = ref(true);
+    const isSubmitting = ref(false);
     const isWebcamActive = ref(false);
     const fileStore = useFileStore();
     const router = useRouter();
@@ -252,6 +253,7 @@ export default {
     const stream = ref(null);
     const isUploading = ref(false);
     const isModalError = ref(false);
+    const isModalErrorLiveness = ref(false);
     const documentType = computed(() => route.query.documentType);
     const modalContent = ref([
       {
@@ -562,20 +564,15 @@ export default {
     });
 
     return {
-      whatsappContact,
-      getWhatsAppLink,
-      openWhatsApp,
-      handleButtonClick1,
-      handleButtonClick2,
-      isSubmitting,
       isModalErrorLiveness,
       livenessFailuresCount,
-      showErrorModalLiveness,
+      maxLivenessFailures,
       showInitialUI,
       isWebcamActive,
       isModalError,
       modalContent,
       showErrorModal,
+      showErrorModalLiveness,
       startWebcamDokumen,
       startWebcam,
       capturePhoto,
@@ -592,7 +589,13 @@ export default {
       flagMessage,
       showError,
       showWarning,
-      nomorNpwp
+      nomorNpwp,
+      whatsappContact,
+      getWhatsAppLink,
+      openWhatsApp,
+      handleButtonClick1,
+      handleButtonClick2,
+      isSubmitting,
     };
   },
 

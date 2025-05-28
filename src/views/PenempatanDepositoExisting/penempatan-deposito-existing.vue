@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <label class="block text-xs sm:text-sm md:text-sm font-regular text-neutral-900 mb-4">Untuk melakukan pembukaan
+    <label class="block text-xs sm:text-sm md:text-sm font-regular text-neutral-900 text-justify mb-4">Untuk melakukan pembukaan
       Deposito sebagai Nasabah BPR Universal, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
       dipergunakan sebagai tempat penyetoran nominal Deposito Anda.</label>
 
@@ -183,13 +183,33 @@ export default {
   },
 
   computed: {
+    // isButtonDisabled() {
+    //   const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
+    //   const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,11}$/.test(this.form.phone);
+    //   if (!this.form.produkDeposito || !this.form.nomorRekening || !this.form.tujuan || !this.form.sumberDana || !this.form.memilikiTabungan || !emailValid || !phoneValid) {
+    //     return true;
+    //   }
+    //   return false;
+    // }
+
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
       const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,11}$/.test(this.form.phone);
-      if (!this.form.produkDeposito || !this.form.nomorRekening || !this.form.tujuan || !this.form.sumberDana || !this.form.memilikiTabungan || !emailValid || !phoneValid) {
-        return true;
+
+      let basicFieldsFilled =
+        this.form.produkDeposito &&
+        this.form.nomorRekening &&
+        this.form.tujuan &&
+        this.form.sumberDana &&
+        this.form.memilikiTabungan &&
+        emailValid &&
+        phoneValid;
+
+      if (this.form.sumberDana === '0') {
+        return !basicFieldsFilled || !this.form.sumberDanaLainnya; 
       }
-      return false;
+
+      return !basicFieldsFilled;
     }
   },
 
@@ -353,7 +373,7 @@ export default {
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg";
         } else {
-           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);

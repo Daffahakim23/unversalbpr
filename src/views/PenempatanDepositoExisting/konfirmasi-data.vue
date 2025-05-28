@@ -2,7 +2,7 @@
   <div>
     <div class="">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Data KTP
+        Data e-KTP
       </h1>
       <div v-if="formKTP" class="form-container ">
         <div class="form-item" v-for="(value, key) in formKTP" :key="key">

@@ -62,8 +62,8 @@ export default {
         guideList() {
             const guides = {
                 ktp: [
-                    { icon: ektpIcon1, text: "Gunakan eKTP asli, dengan kondisi baik dan tidak rusak" },
-                    { icon: ektpIcon2, text: "Pastikan semua sisi dan informasi eKTP Anda terlihat jelas" },
+                    { icon: ektpIcon1, text: "Gunakan e-KTP asli, dengan kondisi baik dan tidak rusak" },
+                    { icon: ektpIcon2, text: "Pastikan semua sisi dan informasi e-KTP Anda terlihat jelas" },
                     { icon: ektpIcon3, text: "Hindari pantulan cahaya dan pastikan gambar tidak blur" },
                 ],
                 npwp: [
