@@ -165,7 +165,7 @@
     </div> -->
 
     <div class="mt-2">
-      <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+      <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
     </div>
 
     <div class="mt-2">

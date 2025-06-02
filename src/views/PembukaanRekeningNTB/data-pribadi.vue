@@ -30,7 +30,7 @@
       placeholder="Masukkan Nomor Telepon" variant="numeric" />
 
     <FormField label="Nomor Fax (opsional)" id="nomorFax" v-model="form.nomorFax" placeholder="Masukkan Nomor Fax"
-      variant="numeric" />
+      variant="numeric" :maxlength="10"/>
 
     <RadioButtonChoose label="Apakah alamat domisili sesuai dengan alamat E-KTP?*" :options="alamatSesuaiEktpOptions"
       v-model="form.alamatSesuaiEktp" name="alamatSesuaiEktp" />

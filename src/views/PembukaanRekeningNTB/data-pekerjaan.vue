@@ -107,7 +107,7 @@
         placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
 
       <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"
-        placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
+        placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" :maxdate="new Date().toJSON().split('T')[0].toString()"/>
 
       <FormField label="Jenis Kelamin*" id="jenisKelamin" :isDropdown="true" v-model="form.jenisKelaminBO"
         :options="jenisKelaminOptions" placeholder="Pilih Jenis Kelamin Beneficial Owner Anda" />

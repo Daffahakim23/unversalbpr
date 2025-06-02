@@ -63,7 +63,7 @@
             </div>
             <div v-else class="controls flex justify-between mt-4 w-full">
               <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">
+              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">
                 {{ isSubmitting ? "Mengirim..." : "Simpan" }}
               </ButtonComponent>
             </div>
@@ -101,8 +101,8 @@
           </div>
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">{{
-              isSubmitting ? "Mengirim..." : "Simpan" }}
+            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isDataFail || isSubmitting || isButtonDisabled || isUploading ">{{
+              isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
             </ButtonComponent>
           </div>
         </div>
@@ -198,6 +198,7 @@ export default {
       isAgreementChecked: false,
       nomorNpwp: "",
       isSubmitting: false,
+      isDataFail: false,
       modalContent: [
         {
           label: "Verifikasi Gagal",
@@ -248,6 +249,7 @@ export default {
     const isWebcamActive = ref(false);
     const fileStore = useFileStore();
     const isSubmitting = ref(false);
+    const isDataFail = ref(false);
     const router = useRouter();
     const route = useRoute();
     const photoUrl = ref(null);
@@ -425,6 +427,7 @@ export default {
       photoUrl.value = null;
       isModalError.value = false;
       showFlag.value = false;
+      isDataFail.value = false;
       startWebcam();
     };
 
@@ -530,6 +533,7 @@ export default {
           let title = "Terjadi Kesalahan";
           let subtitle = "Periksa kembali koneksi internet Anda";
           let buttons = ["Coba Lagi", "Hubungi Universal Care"];
+          isDataFail.value = true;
           if (livenessFailuresCount.value >= maxLivenessFailures) {
             title = "Akun Anda dibatasi";
             subtitle = "Anda telah gagal melakukan verifikasi wajah sebanyak 5 kali. Untuk alasan keamanan, Anda bisa mencoba kembali verifikasi wajah 24 jam ke depan. Jika Anda membutuhkan bantuan segera, silakan hubungi Universal Care.";
@@ -599,6 +603,7 @@ export default {
       handleButtonClick1,
       handleButtonClick2,
       isSubmitting,
+      isDataFail,
     };
   },
 
@@ -823,6 +828,7 @@ export default {
         this.showFlag = true;
         this.flagType = "warning";
         if (this.documentType === "fotoDiri") {
+          this.isDataFail = true;
           this.flagMessage = error.response?.data?.message;
         } else if (this.documentType === "ktp") {
           this.flagMessage = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";

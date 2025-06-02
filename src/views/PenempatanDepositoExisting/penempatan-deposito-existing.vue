@@ -14,9 +14,8 @@
       </div>
     </div>
 
-    <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
+    <FormField v-if="form.memilikiTabungan != 1" class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
       variant="numeric" maxlength="10" placeholder="Masukkan Nomor Rekening" required
-      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank."
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
     <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
