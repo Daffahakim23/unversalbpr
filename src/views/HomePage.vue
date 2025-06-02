@@ -7,46 +7,95 @@
         </button>
       </div>
 
-      <div class="flex gap-4">
-        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="focus:outline-none" type="button">
-          <img src="@/assets/info-product-icon.svg" alt="Info Produk" class="h-8 sm:h-10 md:h-10" />
-        </button>
-
-        <div id="dropdown"
-          class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
-          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-            <li>
-              <a @click="downloadProductDetails" download="info-produk.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
-                Produk</a>
-            </li>
-            <li>
-              <a @click="downloadSK" download="syarat-ketentuan.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
-                &
-                Ketentuan</a>
-            </li>
-            <li>
-              <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
-                Privasi</a>
-            </li>
-            <li>
-              <a @click="downloadFAQ" download="FAQ.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
-              </a>
-            </li>
-            <li>
-              <a @click="downloadTentang" download="Tentang.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
-              </a>
-            </li>
-          </ul>
+        <div class="flex gap-4">
+          <button id="mainDropdownButton" data-dropdown-toggle="main-dropdown" class="focus:outline-none" type="button">
+            <img src="@/assets/info-mini-icon.svg" alt="Info Produk" class="h-8 block md:hidden" />
+            <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini" class="h-10 hidden md:block" />
+          </button>
+          <div id="main-dropdown"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="mainDropdownButton">
+              <!-- <li>
+                <a @click="downloadProductDetails" download="info-produk.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
+                  Produk</a>
+              </li> -->
+              <li>
+                <button id="nestedDropdownButton" data-dropdown-toggle="nested-dropdown"
+                  data-dropdown-placement="right-start" type="button"
+                  class="px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex justify-between items-center w-full">Info
+                  Produk<svg class="w-2.5 h-2.5 ms-3 rtl:rotate-180" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 9 4-4-4-4" />
+                  </svg></button>
+                <div id="nested-dropdown"
+                  class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="nestedDropdownButton">
+                    <li>
+                      <a @click="$router.push('/dashboard/infoProdukPembukaanRekeningNTB')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
+                        Rekening Nasabah</a>
+                    </li>
+                    <li>
+                      <a @click="$router.push('/dashboard/infoProdukPembukaanRekeningExisting')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
+                        Rekening Non-Nasabah</a>
+                    </li>
+                    <li>
+                      <a @click="$router.push('/dashboard/infoProdukPenempatanDepositoNTB')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
+                        Deposito Nasabah</a>
+                    </li>
+                    <li>
+                      <a @click="$router.push('/dashboard/infoProdukPenempatanDepositoExisting')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
+                        Deposito Non-Nasabah</a>
+                    </li>
+                    <li>
+                      <a @click="$router.push('/dashboard/infoProdukPencairanDeposito')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Penutupan
+                        Deposito</a>
+                    </li>
+                    <li>
+                      <a @click="$router.push('/dashboard/infoProdukPemindahbukuan')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Transfer</a>
+                    </li>
+                    <li>
+                      <a @click="$router.push('/dashboard/infoProdukPengkinianData')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pengkinian
+                        Data</a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a @click="downloadSK" download="syarat-ketentuan.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
+                  &
+                  Ketentuan</a>
+              </li>
+              <li>
+                <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
+                  Privasi</a>
+              </li>
+              <li>
+                <a @click="downloadFAQ" download="FAQ.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
+                </a>
+              </li>
+              <li>
+                <a @click="downloadTentang" download="Tentang.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
+                </a>
+              </li>
+            </ul>
+          </div>
+          <button class="flex items-center text-primary" @click="openWhatsApp">
+            <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 md:h-10 lg:h-10" />
+          </button>
         </div>
-        <button class="flex items-center text-primary">
-          <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
-        </button>
-      </div>
     </div>
 
     <!-- Main content section -->
@@ -65,9 +114,9 @@
         <Section class="flex flex-col justify-center w-full">
           <!-- Card: Rekening -->
           <Card type="1" title="Masuk di sini"
-            :features="[{ label: 'Nasabah BPR Universal', description: 'Apabila Anda sudah menjadi Nasabah BPR Universal, Anda bebas memilih mengajukan berbagai layanan digital kami, seperti:', bottom: 'Dengan pengisian data yang lebih ringkas. Semuanya dirancang untuk kenyamanan Anda.' }]"
+            :features="[{ label: 'Nasabah Universal BPR', description: 'Apabila Anda sudah menjadi Nasabah Universal BPR, Anda bebas memilih mengajukan berbagai layanan digital kami, seperti:', bottom: 'Dengan pengisian data yang lebih ringkas. Semuanya dirancang untuk kenyamanan Anda.' }]"
             icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard', 'nasabah')"
-            @cardClick="handleCardClick" buttonString="Saya adalah Nasabah BPR Universal" :items="[
+            @cardClick="handleCardClick" buttonString="Saya adalah Nasabah Universal BPR" :items="[
               'Pembukaan Rekening Tabungan',
               'Pembukaan Deposito',
               'Pengkinian Data',
@@ -75,9 +124,9 @@
               'Penutupan Deposito'
             ]" />
           <Card type="1" title="Masuk di sini"
-            :features="[{ label: 'Non-Nasabah BPR Universal', description: 'Apabila Anda belum terdaftar sebagai Nasabah BPR Universal, silakan melalui registrasi pembukaan rekening Nasabah Baru, baik Tabungan maupun Deposito untuk dapat memperoleh berbagai layanan digital kami.' }]"
+            :features="[{ label: 'Non-Nasabah Universal BPR', description: 'Apabila Anda belum terdaftar sebagai Nasabah Universal BPR, silakan melalui registrasi pembukaan rekening Nasabah Baru, baik Tabungan maupun Deposito untuk dapat memperoleh berbagai layanan digital kami.' }]"
             icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard', 'non-nasabah')"
-            @cardClick="handleCardClick" buttonString="Saya bukan Nasabah BPR Universal" />
+            @cardClick="handleCardClick" buttonString="Saya bukan Nasabah Universal BPR" />
         </Section>
       </div>
     </div>

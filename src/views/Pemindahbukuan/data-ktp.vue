@@ -52,6 +52,11 @@
     <FormField label="Masa Aktif KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
       :options="masaAktifKTPOptions" required />
 
+    <div v-if="form.masaAktifKtp === '0'" class="mt-4">
+      <FormField label="Tanggal Masa Aktif KTP" id="masaAktifKtpLainnyaDate" type="date"
+        v-model="form.masaAktifKtpLainnya" required />
+    </div>
+
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
       <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
@@ -121,6 +126,11 @@ export default {
         this.fetchKelurahan();
       }
     },
+    "form.masaAktifKtp": function (newValue) {
+      if (newValue !== '0') {
+        this.form.masaAktifKtpLainnya = '';
+      }
+    },
   },
   computed: {
     isButtonDisabled() {
@@ -143,7 +153,17 @@ export default {
           if (this.form.kewarganegaraan === false && !this.form.kewarganegaraanLainnya) {
             return true; // Wajib diisi tapi kosong
           }
-        } else if (this.form[field] === null || this.form[field] === undefined || this.form[field] === '') {
+        }
+        else if (field === 'masaAktifKtp') {
+          if (this.form.masaAktifKtp === null || this.form.masaAktifKtp === undefined || this.form.masaAktifKtp === '') {
+            return true;
+          }
+          if (this.form.masaAktifKtp === '0' && !this.form.masaAktifKtpLainnya) {
+            return true; // Jika '0' dipilih tapi tanggal belum diisi
+          }
+        }
+
+        else if (this.form[field] === null || this.form[field] === undefined || this.form[field] === '') {
           // Cek jika field wajib lainnya kosong/null/undefined
           return true;
         }
@@ -372,6 +392,14 @@ export default {
           return;
         }
 
+                // Tentukan nilai berlaku_sampai berdasarkan pilihan masaAktifKtp
+        let berlakuSampaiValue = "";
+        if (this.form.masaAktifKtp === '0') {
+          berlakuSampaiValue = this.form.masaAktifKtpLainnya; // Ambil dari input tanggal lainnya
+        } else {
+          berlakuSampaiValue = this.form.masaAktifKtp; // Ambil nilai langsung dari dropdown (contoh: "Seumur Hidup")
+        }
+
         const requestData = {
           id: uuid,
           nik: this.form.nik,
@@ -389,7 +417,8 @@ export default {
           desa_kelurahan: this.form.kelurahan,
           kode_pos: Number(this.form.kodePos),
           status_pernikahan: Number(this.form.statusPerkawinan),
-          berlaku_sampai: this.form.masaAktifKtp,
+          // berlaku_sampai: this.form.masaAktifKtp,
+          berlaku_sampai: berlakuSampaiValue,
           kewarganegaraan: Boolean(this.form.kewarganegaraan),
           kewarganegaraanLainnya: this.form.kewarganegaraanLainnya,
           is_ekstrak_ktp_ocr: true,

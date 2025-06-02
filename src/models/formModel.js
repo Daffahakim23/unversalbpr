@@ -18,6 +18,7 @@ export class FormModelDataKTP {
     this.kodePos = "";
     this.statusPerkawinan = "";
     this.masaAktifKtp = "";
+    this.masaAktifKtpLainnya = "";
     this.namaIbuKandung = "";
   }
 }

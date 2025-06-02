@@ -211,8 +211,14 @@ export default {
       this.resetNavbarConfig(to);
       this.cancelRoute = null;
     },
+
   },
   methods: {
+    handleBeforeUnload(event) {
+      event.preventDefault();
+      event.returnValue = 'Yakin Mba?'; // Open your modal to confirm exit
+      alert("Data yang sudah Anda isi akan hilang dan Anda diharuskan untuk mengisi dari awal lagi.");
+    },
     getWhatsAppLink(number = 622122213993) {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
@@ -328,9 +334,37 @@ export default {
     import('flowbite').then(() => {
     });
   },
+  mounted() {
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+    this.updatePageTitle(this.$route);
+    document.addEventListener('click', this.handleClickOutside);
+    import('flowbite').then(() => {
+    });
+
+    //   // Cek apakah ini refresh atau navigasi baru
+    //   // Kita gunakan sessionStorage untuk menandai bahwa ini adalah refresh
+      // if (!sessionStorage.getItem('isNavigating')) {
+      //   // Ini adalah refresh atau halaman pertama kali dibuka
+      //   // Arahkan ke halaman utama jika bukan di halaman '/'
+      //   if (this.$route.path !== '/') {
+      //     this.$router.push('/');
+      //   }
+      // }
+      // // Set flag untuk menandakan bahwa navigasi sedang berlangsung
+      // sessionStorage.setItem('isNavigating', 'true');
+  },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
     // this.resetNavbarConfig();
+    // Hapus flag saat komponen dihancurkan (misalnya, jika pengguna menutup tab)
+    sessionStorage.removeItem('isNavigating');
   },
+  created() {
+    // Tambahkan event listener untuk membersihkan sessionStorage sebelum halaman dimuat ulang
+    // window.addEventListener('beforeunload', () => {
+    //   sessionStorage.removeItem('isNavigating');
+    // });
+  }
 };
 </script>
