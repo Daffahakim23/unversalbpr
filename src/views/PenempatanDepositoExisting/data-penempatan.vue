@@ -17,32 +17,6 @@
         required />
     </div>
 
-    <!-- <div v-if="form.produkDeposito == 1" class="mt-4">
-      <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
-        v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
-        :options="jangkaWaktuDepositoUniversalOptions" required />
-    </div>
-    <div v-if="form.produkDeposito == 2" class="mt-4">
-      <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
-        v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
-        :options="jangkaWaktuDepositoPeduliOptions" required />
-    </div>
-    <div v-if="form.produkDeposito == 3" class="mt-4">
-      <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
-        v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
-        :options="jangkaWaktuDepositoDEBUTSanmereOptions" required />
-    </div>
-    <div v-if="form.produkDeposito == 4" class="mt-4">
-      <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
-        v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
-        :options="jangkaWaktuDepositoDEBUTMatiusOptions" required />
-    </div>
-    <div v-if="form.produkDeposito == 5" class="mt-4">
-      <FormField label="Jangka Waktu & Suku Bunga yang Anda Inginkan*" id="jangkaWaktu" :isDropdown="true"
-        v-model="form.jangkaWaktu" placeholder="Pilih Jangka Waktu & Suku Bunga"
-        :options="jangkaWaktuDepositoGreenOptions" required />
-    </div> -->
-
     <div class="mb-6">
       <label class="text-neutral-800">Perkiraan Bunga yang didapatkan (-20% Pajak)</label>
       <p class="text-2xl font-semibold mt-2 text-secondary-base">
@@ -109,17 +83,17 @@
     <div v-if="form.pembayaranBunga == 3" class="mt-2">
       <div class=" flex items-baseline mb-6">
         <div class="mr-2 mb-6">
-          <CustomCheckbox v-model="isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
+          <CustomCheckbox v-if="form.memilikiTabungan == 1" v-model="isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
           sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi
           PT BPR Universal: notifikasi@universalbpr.co.id" />
         </div>
-        <!-- <input id="modal-checkbox" type="checkbox" v-model="isChecked"
-          class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600 self-start" />
-        <p for="modal-checkbox" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">
-          Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
-          sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi
-          Universal BPR: <strong>notifikasi@universalbpr.co.id</strong>
-        </p> -->
+        <div v-if="form.memilikiTabungan == 2" class="w-full">
+          <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekeningPemilik" variant="numeric"
+            :maxlength="10" v-model="form.nomorRekeningPemilik" placeholder="Masukkan Nomor Rekening Tabungan Universal"
+            required />
+          <FormField label="Nama Pemilik Tabungan Universal*" id="namaLengkap" variant="alpha" :maxlength="25"
+            v-model="form.namaLengkap" placeholder="Masukkan Nama Pemilik Tabungan Universal" required />
+        </div>
       </div>
     </div>
 
@@ -185,8 +159,8 @@
     <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaRekeningPenyetoran" variant="alpha"
       v-model="form.namaRekeningPenyetoran" placeholder="Masukkan Nama Rekening Tabungan Universal" required />
 
-    <div class="flex justify-between mt-6">
-      <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
+    <div class="text-right">
+      <!-- <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent> -->
       <!-- <ButtonComponent variant="default" @click="form.pembayaranBunga == 4 ? openModalTransfer() : handleSubmit()"
         :disabled="isButtonDisabled">
         Lanjutkan
@@ -226,7 +200,7 @@ import {
   produkDepositoOptions,
   metodePenyetoranNTBOptions
 } from "@/data/option.js";
-import { FormModelPenempatanDeposito } from "@/models/formModel";
+import { FormModelPenempatanDeposito } from "@/models/formModel"; // Asumsi FormEmailRequestDepositoNTB juga ada di sini
 import {
   hitungBungaUniversal,
   hitungBungaPeduli,
@@ -260,8 +234,17 @@ export default {
     return { fileStore };
   },
   data() {
+    // Asumsi formEmailRequestDepositoNTB diinisialisasi di suatu tempat
+    // atau dilewatkan sebagai prop, atau diakses dari store.
+    // Misal: Anda punya prop `initialEmailForm` atau diakses dari store seperti `this.fileStore.emailForm`
+    // const initialEmailForm = this.fileStore.emailForm || new FormModelRequestEmailVerification(); // Sesuaikan dengan cara Anda mendapatkannya
+
+    // const form = new FormModelPenempatanDeposito();
+    // // Ambil hanya nilai memilikiTabungan dari initialEmailForm
+    // form.memilikiTabungan = initialEmailForm.memilikiTabungan;
     return {
       form: new FormModelPenempatanDeposito(),
+      // form: form,
       isChecked: false,
       setujuBiayaTransfer: false,
       metodePencairanOptions,
@@ -329,10 +312,44 @@ export default {
           }
           break;
         case "2": // Deposito Peduli
-          if (nominal >= 100000000 && nominal < 1000000000) {
-            optionsByProduct = jangkaWaktuDepositoPeduliOptionsTier1;
-          } else if (nominal >= 1000000000) {
-            optionsByProduct = jangkaWaktuDepositoPeduliOptionsTier2;
+          if (nominal < 100000000) {
+            this.nominalError = "Nominal Deposito Peduli minimal Rp 100.000.000";
+            optionsByProduct = [];
+          } else {
+            this.nominalError = "";
+            let baseOptions = [];
+            if (nominal >= 100000000 && nominal < 1000000000) {
+              baseOptions = [...jangkaWaktuDepositoPeduliOptionsTier1];
+            } else if (nominal >= 1000000000) {
+              baseOptions = [...jangkaWaktuDepositoPeduliOptionsTier2];
+            }
+
+            optionsByProduct = baseOptions.map(option => {
+              let calculatedDonasi = 0;
+              let rawDonasi = 0;
+
+              switch (option.jangkaWaktu) {
+                case "6":
+                  rawDonasi = nominal / 100000000
+                  calculatedDonasi = Math.round(rawDonasi);
+                  break;
+                case "9":
+                  rawDonasi = nominal / 50000000;
+                  calculatedDonasi = Math.round(rawDonasi);
+                  break;
+                case "12":
+                  rawDonasi = nominal / 30000000;
+                  calculatedDonasi = Math.round(rawDonasi);
+                  break;
+                default:
+                  calculatedDonasi = 0;
+              }
+              return {
+                ...option,
+                donasi: calculatedDonasi.toString(),
+                label: `${option.jangkaWaktu} Bulan (${parseFloat(option.sukuBunga).toLocaleString('id-ID', { minimumFractionDigits: 2 })}% per tahun + donasi ${calculatedDonasi} Paket Sembako)`
+              };
+            });
           }
           break;
         case "3": // DEBUT Sanmere
@@ -423,7 +440,7 @@ export default {
         !this.form.nomorRekeningPenyetoran ||
         !this.form.namaRekeningPenyetoran ||
         (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaLengkap)) ||
-        (this.form.pembayaranBunga == 3 && (!this.isChecked)) ||
+        (this.form.pembayaranBunga == 3 && (!this.isChecked && (!this.form.nomorRekeningPemilik || !this.form.namaLengkap))) ||
         // (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.form.setujuBiayaTransfer)) ||
         (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.setujuBiayaTransfer)) ||
         !!this.nominalError
@@ -484,6 +501,9 @@ export default {
       }
       if (newValue !== 3) {
         this.isChecked = false;
+        this.form.namaLengkap = "";
+        // this.form.nomorRekening = "";
+
       }
     },
 
@@ -525,13 +545,11 @@ export default {
         this.nominalError = "Nominal tidak boleh lebih dari 12 digit.";
       }
 
-      // Reset jangka waktu jika nominal berubah, karena opsi mungkin tidak valid lagi
-      // Hanya reset jika tier berubah, atau jika tidak ada opsi yang dipilih di tier baru
       const oldJangkaWaktuOptions = this.getJangkaWaktuOptionsForNominal(oldVal, this.form.produkDeposito);
       const newJangkaWaktuOptions = this.currentJangkaWaktuOptions;
 
       if (!newJangkaWaktuOptions.some(option => option.value === this.form.jangkaWaktu)) {
-        this.form.jangkaWaktu = null; // Setel ke null atau default value jika opsi saat ini tidak ada di tier baru
+        this.form.jangkaWaktu = null;
       }
     },
     "form.produkDeposito"(newVal) {
@@ -664,7 +682,7 @@ export default {
               this.form[key] = depositoData[key];
             }
           });
-          console.log("Form setelah fetchData Data Penerima:", this.form); // Tambahkan ini
+          console.log("Form setelah fetchData Data Penerima:", this.form);
         }
 
 
@@ -681,10 +699,20 @@ export default {
     },
     async handleSubmit() {
       try {
-        const namaBank = this.form.pembayaranBunga == 4 ? this.form.namaBank : "";
-        const nomorRekening = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.nomorRekening : "";
-        const namaPemilik = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4 ? this.form.namaLengkap : "";
+        const namaBank = this.form.pembayaranBunga == 4 ? this.form.namaBank : (this.form.pembayaranBunga == 3 ? "BPR UNIVERSAL" : "");
+        // const nomorRekening = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 3 || this.form.pembayaranBunga == 4 ? this.form.nomorRekening : "";
+        const namaPemilik = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 3 || this.form.pembayaranBunga == 4 ? this.form.namaLengkap : "";
         const selectedOption = this.currentJangkaWaktuOptions.find(option => option.value === this.form.jangkaWaktu);
+
+        let nomorRekening = "";
+
+        if (this.form.pembayaranBunga == 2) {
+          nomorRekening = this.form.nomorRekening;
+        } else if (this.form.pembayaranBunga == 3) {
+          nomorRekening = this.form.nomorRekeningPemilik;
+        } else if (this.form.pembayaranBunga == 4) {
+          nomorRekening = this.form.nomorRekening;
+        }
 
         // let selectedOption = null;
         // let currentOptions = [];
@@ -714,15 +742,19 @@ export default {
 
         let jangkaWaktuToSend = null;
         let sukuBungaToSend = null;
+        let jumlahSembakoToSend = null;
 
         if (selectedOption) {
           jangkaWaktuToSend = Number(selectedOption.jangkaWaktu);
           sukuBungaToSend = parseFloat(selectedOption.sukuBunga);
+
+          if (this.form.produkDeposito === "2") {
+            jumlahSembakoToSend = Number(selectedOption.donasi);
+          }
         } else {
-          // Tambahkan log yang lebih informatif untuk debugging
           console.error("Opsi jangka waktu tidak ditemukan untuk produk", this.form.produkDeposito, "dan jangka waktu", this.form.jangkaWaktu, ". Periksa currentJangkaWaktuOptions:", this.currentJangkaWaktuOptions);
           alert("Terjadi kesalahan: Opsi jangka waktu tidak valid. Mohon pilih ulang.");
-          return; // Hentikan proses submit jika opsi tidak ditemukan
+          return;
         }
 
         const requestData = {
@@ -740,6 +772,7 @@ export default {
           penyetoran_deposito: Number(this.form.metodePenyetoran),
           nomor_rekening_penyetoran: this.form.nomorRekeningPenyetoran,
           nama_rekening_penyetoran: this.form.namaRekeningPenyetoran,
+          ...(jumlahSembakoToSend !== null && { jumlah_sembako: jumlahSembakoToSend }),
         };
 
         const response = await api.post("/penempatan-deposito-existing", requestData, {
@@ -750,6 +783,7 @@ export default {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormPenempatanDeposito({
             ...this.form,
+            namaBank: namaBank,
           });
 
           window.scrollTo(0, 0);

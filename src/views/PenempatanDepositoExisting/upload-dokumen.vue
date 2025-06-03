@@ -151,6 +151,9 @@ export default {
         document.body.removeChild(input);
       });
     },
+    goBack() {
+      this.$router.push({ path: "/dashboard/dataPenempatanDepositoExisting" });
+    },
 
     handleCloseModal() {
       this.isModalError = false;

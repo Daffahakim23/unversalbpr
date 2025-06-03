@@ -10,7 +10,7 @@
     </div>
 
     <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
-      placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
+      placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
 
     <div v-if="form.kantorCabang" class="mt-4">
       <FormField label="Alamat Kantor" id="alamatKantorCabang" v-model="form.alamatKantorCabang" :readonly="true" />

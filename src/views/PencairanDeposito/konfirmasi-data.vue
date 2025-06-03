@@ -97,7 +97,7 @@
           <strong class="form-value">{{ formInstruksiPencairan.sukuBunga }}</strong>
         </div>
         <div class="form-item" v-if="formInstruksiPencairan.kantorCabang">
-          <div class="form-label">Pilihan Kantor Cabang:</div>
+          <div class="form-label">Pilihan Jaringan Kantor:</div>
           <strong class="form-value">{{ formInstruksiPencairan.kantorCabang }}</strong>
         </div>
         <!-- <div class="form-item" v-if="formRekeningSumber.nomorRekeningPengirim">
@@ -167,7 +167,7 @@
     </div>
   </div>
   <div class="mt-2">
-    <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+    <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
   </div>
 
   <div class="mt-2">
@@ -382,20 +382,20 @@ export default {
         kelurahan: "Kelurahan",
         kodePos: "Kode Pos",
         statusPerkawinan: "Status Perkawinan",
-        masaAktifKtp: "Masa Aktif KTP",
+        masaAktifKtp: "Masa Aktif e-KTP",
         namaIbuKandung: "Nama Ibu Kandung",
         kewarganegaraan: "Kewarganegaraan",
 
         // Data Pribadi
         namaPanggilan: "Nama Alias / Panggilan",
         tujuan: "Tujuan Menabung",
-        KantorCabang: "Kantor Cabang",
+        KantorCabang: "Jaringan Kantor",
         pendidikanTerakhir: "Pendidikan Terakhir",
         hobi: "Hobi",
         nomorTelepon: "Nomor Telepon",
         nomorFax: "Nomor Fax",
-        kantorCabang: "Kantor Cabang",
-        alamatKantorCabang: "Alamat Kantor Cabang",
+        kantorCabang: "Jaringan Kantor",
+        alamatKantorCabang: "Alamat Jaringan Kantor",
         alamatSesuaiEktp: "Alamat Sesuai EKTP",
 
         // Instruksi Pencairan Deposito

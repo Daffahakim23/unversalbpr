@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <label class="block text-xs sm:text-sm md:text-sm font-regular text-neutral-900 text-justify mb-4">Untuk melakukan pembukaan
+    <label class="block text-xs sm:text-sm md:text-sm font-regular text-neutral-900 text-justify mb-4">Untuk melakukan
+      pembukaan
       Deposito sebagai Nasabah BPR Universal, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
       dipergunakan sebagai tempat penyetoran nominal Deposito Anda.</label>
 
@@ -14,37 +15,44 @@
       </div>
     </div>
 
-    <FormField v-if="form.memilikiTabungan != 1" class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
-      variant="numeric" maxlength="10" placeholder="Masukkan Nomor Rekening" required
-      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
+    <FormField v-if="form.belumPunyaRekening == true" label="Produk yang diinginkan" id="produkyangDiingikan"
+      v-model="form.produk" placeholder="Tabungan Universal" :readonly="true" required />
+
+    <FormField v-if="form.belumPunyaRekening == true" label="Pilih Produk Deposito*" id="produkDeposito"
+      :isDropdown="true" v-model="form.produkDeposito" placeholder="Pilih Produk Deposito yang Anda Inginkan"
+      :options="produkDepositoOptions" required />
+
+    <FormField v-if="form.memilikiTabungan == 2" class="mb-2" label="Nomor Rekening Tabungan Universal*"
+      id="nomorRekening" v-model="form.nomorRekeningPemilik" variant="numeric" maxlength="10"
+      placeholder="Masukkan Nomor Rekening" required
+      @input="form.nomorRekeningPemilik = form.nomorRekeningPemilik.replace(/\D/g, '')" />
 
     <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
-      placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
+      placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
     <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
+      <FormField label="Alamat Jaringan Kantor Pembukaan Rekening" id="alamatKantorCabang"
         v-model="form.alamatKantorCabang" :readonly="true" />
     </div>
 
-    <!-- <FormField label="Produk yang diinginkan" id="produkyangDiingikan" v-model="form.produk"
-      placeholder="Tabungan Universal" :readonly="true" required /> -->
+    <FormField v-if="form.belumPunyaRekening == false" label="Pilih Produk Deposito*" id="produkDeposito"
+      :isDropdown="true" v-model="form.produkDeposito" placeholder="Pilih Produk Deposito yang Anda Inginkan"
+      :options="produkDepositoOptions" required />
 
-    <FormField label="Pilih Produk Deposito" id="produk" :isDropdown="true" v-model="form.produkDeposito"
-      placeholder="Pilih Produk Deposito yang Anda Inginkan" :options="produkDepositoOptions" required />
 
-    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekening"
+    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekeningPemilik"
       variant="numeric" maxlength="16" placeholder="Masukkan Nomor Rekening" required
-      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank."
-      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" /> -->
+      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Jaringan Kantor Pembukaan Bank."
+      @input="form.nomorRekeningPemilik = form.nomorRekeningPemilik.replace(/\D/g, '')" /> -->
 
     <FlagBox type="info" closable class="mb-4">
       <p class="text-sm font-normal">Informasi mengenai Produk dan Layanan dapat diakses melalui website
         universalbpr.co.id atau dengan mengklik tombol "Info Produk" di bagian atas halaman ini.</p>
     </FlagBox>
 
-    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekening"
+    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekeningPemilik"
       placeholder="Masukkan Nomor Rekening" required :readonly="form.belumPunyaRekening"
       @input="handleNomorRekeningInput"
-      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Kantor Cabang Pembukaan Bank." /> -->
+      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Jaringan Kantor Pembukaan Bank." /> -->
 
     <!-- <div class="flex items-center mb-6">
       <input type="checkbox" id="belumPunyaRekening" v-model="form.belumPunyaRekening" @change="handleCheckboxChange"
@@ -54,10 +62,10 @@
       </label>
     </div> -->
 
-    <!-- <FormField v-if="form.belumPunyaRekening" label="Pilih Kantor Cabang *" id="kantorCabang" :isDropdown="true"
-      v-model="form.kantorCabang" placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
+    <!-- <FormField v-if="form.belumPunyaRekening" label="Pilih Jaringan Kantor *" id="kantorCabang" :isDropdown="true"
+      v-model="form.kantorCabang" placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
     <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
+      <FormField label="Alamat Jaringan Kantor Pembukaan Rekening" id="alamatKantorCabang"
         v-model="form.alamatKantorCabang" :readonly="true" />
     </div> -->
 
@@ -75,12 +83,17 @@
 
     <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
 
+    <div v-if="form.tujuan === '0'" class="">
+      <FormField label="Tujuan Simpanan Lainnya*" id="tujuanLainnya" type="text" v-model="form.tujuanLainnya"
+        placeholder="Masukkan Simpananan Lainnya" variant="alpha" />
+    </div>
+
     <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
       :options="penghasilanOptions" placeholder="Pilih Sumber Dana Anda" />
 
     <div v-if="form.sumberDana === '0'" class="">
       <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" type="text" v-model="form.sumberDanaLainnya"
-        placeholder="Masukkan Sumber Penghasilan Lainnya" />
+        placeholder="Masukkan Sumber Penghasilan Lainnya" variant="alpha" />
     </div>
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
@@ -149,6 +162,7 @@ export default {
       isSubmitting: false,
       emailError: false,
       phoneError: false,
+      belumPunyaRekening: false,
       isModalErrorEmail: false,
       temporaryBanMessage: "",
       kantorCabangOptions: [],
@@ -182,30 +196,35 @@ export default {
   },
 
   computed: {
-    // isButtonDisabled() {
-    //   const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-    //   const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,11}$/.test(this.form.phone);
-    //   if (!this.form.produkDeposito || !this.form.nomorRekening || !this.form.tujuan || !this.form.sumberDana || !this.form.memilikiTabungan || !emailValid || !phoneValid) {
-    //     return true;
-    //   }
-    //   return false;
-    // }
-
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
       const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
 
       let basicFieldsFilled =
-        this.form.produkDeposito &&
-        this.form.nomorRekening &&
-        this.form.tujuan &&
-        this.form.sumberDana &&
         this.form.memilikiTabungan &&
-        emailValid &&
-        phoneValid;
+        this.form.kantorCabang &&
+        this.form.email && emailValid &&
+        this.form.phone && phoneValid &&
+        this.form.tujuan &&
+        this.form.sumberDana;
+
+      if (this.form.memilikiTabungan == 1) {
+        basicFieldsFilled = basicFieldsFilled &&
+          this.form.belumPunyaRekening === true &&
+          // this.form.produk &&
+          this.form.produkDeposito;
+      } else if (this.form.memilikiTabungan == 2) {
+        basicFieldsFilled = basicFieldsFilled &&
+          this.form.nomorRekeningPemilik &&
+          this.form.produkDeposito;
+      }
+
+      if (this.form.tujuan === '0') {
+        basicFieldsFilled = basicFieldsFilled && !!this.form.tujuanLainnya;
+      }
 
       if (this.form.sumberDana === '0') {
-        return !basicFieldsFilled || !this.form.sumberDanaLainnya; 
+        basicFieldsFilled = basicFieldsFilled && !!this.form.sumberDanaLainnya;
       }
 
       return !basicFieldsFilled;
@@ -271,9 +290,9 @@ export default {
       }
     },
     handleNomorRekeningInput() {
-      this.form.nomorRekening = this.form.nomorRekening.replace(/\D/g, "").slice(0, 10);
+      this.form.nomorRekeningPemilik = this.form.nomorRekeningPemilik.replace(/\D/g, "").slice(0, 10);
 
-      if (this.form.nomorRekening.length > 0) {
+      if (this.form.nomorRekeningPemilik.length > 0) {
         this.form.belumPunyaRekening = false;
         this.form.kantorCabang = "";
       }
@@ -290,8 +309,8 @@ export default {
     async handleSubmit() {
       try {
         let kodeKantorCabang = this.form.kantorCabang;
-        if (!kodeKantorCabang && this.form.nomorRekening) {
-          kodeKantorCabang = this.form.nomorRekening.slice(0, 3);
+        if (!kodeKantorCabang && this.form.nomorRekeningPemilik) {
+          kodeKantorCabang = this.form.nomorRekeningPemilik.slice(0, 3);
         }
 
         const selectedBranch = this.kantorCabangOptions.find(branch => branch.value === kodeKantorCabang);
@@ -304,10 +323,12 @@ export default {
           // sumber_data_nasabah_lainnya: this.form.sumberLainnya,
           tanggal: new Date().toISOString().split("T")[0],
           produk_yang_diinginkan: Number(this.form.produkDeposito),
-          nomor_rekening_lama: this.form.nomorRekening,
+          nomor_rekening_lama: this.form.nomorRekeningPemilik,
           kantor_cabang: selectedBranch ? selectedBranch.label : "",
           tujuan_simpanan: Number(this.form.tujuan),
+          tujuan_simpanan_lainnya: this.form.tujuanLainnya,
           sumber_dana: Number(this.form.sumberDana),
+          sumber_dana_lainnya: this.form.sumberDanaLainnya,
         };
         console.log("Data sementara disimpan:", this.requestData);
         this.isModalOpen = true;
@@ -397,15 +418,41 @@ export default {
         this.form.alamatKantorCabang = this.kantorCabangAlamat[newVal] || "Alamat tidak ditemukan";
       }
     },
-    'form.belumPunyaRekening'(newVal) {
-      if (newVal == 1) {
-        this.isModalError = true;
-        this.$nextTick(() => {
-          this.form.memilikiTabungan = '';
-          this.form.belumPunyaRekening = '';
-        });
+    'form.memilikiRekening'(newVal, oldVal) {
+      if (newVal == 2 || (oldVal === 1 && newVal !== 1)) {
+        this.form.memilikiTabungan = '';
+        this.form.belumPunyaRekening = false;
+        this.form.produk = '';
+        this.form.produkDeposito = '';
+        this.form.nomorRekeningPemilik = '';
       }
-    }
+    },
+    'form.memilikiTabungan'(newVal) {
+      if (newVal != 1) {
+        this.form.belumPunyaRekening = false;
+        this.form.produk = '';
+        this.form.produkDeposito = '';
+      } else {
+        this.form.nomorRekeningPemilik = '';
+      }
+    },
+    'form.belumPunyaRekening'(newVal) {
+      if (!newVal) {
+        this.form.produk = '';
+        this.form.produkDeposito = '';
+      }
+    },
+    'form.tujuan'(newVal) {
+      if (newVal !== '0') {
+        this.form.tujuanLainnya = '';
+      }
+    },
+    'form.sumberDana'(newVal) {
+      if (newVal !== '0') {
+        this.form.sumberDanaLainnya = '';
+      }
+    },
+
   },
 
   mounted() {

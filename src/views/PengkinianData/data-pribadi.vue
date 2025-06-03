@@ -18,7 +18,7 @@
     </div>
 
     <FormField label="Nomor Fax (opsional)" id="nomorFax" v-model="form.nomorFax" variant="numeric"
-      placeholder="Masukkan Nomor Fax" />
+      placeholder="Masukkan Nomor Fax":maxlength="10" />
 
     <FormField label="Email (Opsional)" id="email" type="email" v-model="form.email" placeholder="Masukkan Email"
       hint="Pastikan Anda mengisi alamat email yang aktif" />

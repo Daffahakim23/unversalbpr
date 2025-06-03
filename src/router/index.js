@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import MainLayout from "../views/MainLayout.vue";
+import MainLayoutInfo from "../views/MainLayoutInfo.vue";
 
 // Pembukaan Rekening NTB
 import PembukaanRekeningNTB from "../views/PembukaanRekeningNTB/pembukaan-rekening.vue";
@@ -102,6 +103,7 @@ import InfoProdukPenempatanDepositoExisting from "../views/Other/infoProdukPenem
 import InfoProdukPencairanDeposito from "../views/Other/infoProdukPencairanDeposito.vue";
 import InfoProdukPengkinianData from "../views/Other/infoProdukPengkinianData.vue";
 import InfoProdukPemindahbukuan from "../views/Other/infoProdukPemindahbukuan.vue";
+// import { title } from "node:process";
 
 
 const routes = [
@@ -115,13 +117,85 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: "/dashboard/pencairanDeposito",
+    path: "/pencairanDepositoRegular/",
     component: PencairanDeposito,
   },
   {
-    path: "/dashboard/pemindahbukuan",
+    path: "/pemindahbukuan/",
     component: PemindahBukuan,
   },
+  {
+    path: "/dashboard",
+    name: "MainLayoutInfo",
+    component: MainLayoutInfo,
+    children: [
+      {
+        path: "infoProdukPembukaanRekeningNTB",
+        name: "infoProdukPembukaanRekeningNTB",
+        component: InfoProdukPembukaanRekeningNTB,
+        meta: {
+          title: "Pembukaan Rekening Non-Nasabah",
+          // subtitle: "Dapatkan informasi lengkap mengenai jenis rekening dan panduan pembukaan untuk nasabah non-eksisting.",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPembukaanRekeningExisting",
+        name: "infoProdukPembukaanRekeningExisting",
+        component: InfoProdukPembukaanRekeningExisting,
+        meta: {
+          title: "Pembukaan Rekening Nasabah",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPenempatanDepositoNTB",
+        name: "infoProdukPenempatanDepositoNTB",
+        component: InfoProdukPenempatanDepositoNTB,
+        meta: {
+          title: "Pembukaan Deposito Non-Nasabah",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPenempatanDepositoExisting",
+        name: "infoProdukPenempatanDepositoExisting",
+        component: InfoProdukPenempatanDepositoExisting,
+        meta: {
+          title: "Pembukaan Deposito",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPengkinianData",
+        name: "infoProdukPengkinianData",
+        component: InfoProdukPengkinianData,
+        meta: {
+          title: "Pengkinian Data",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPencairanDeposito",
+        name: "infoProdukPencairanDeposito",
+        component: InfoProdukPencairanDeposito,
+        meta: {
+          title: "Penutupan Deposito",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPemindahbukuan",
+        name: "infoProdukPemindahbukuan",
+        component: InfoProdukPemindahbukuan,
+        meta: {
+          title: "Transfer",
+          centerTitle: true
+        },
+      },
+    ]
+  },
+
   {
     path: "/dashboard",
     name: "MainLayout",
@@ -1093,80 +1167,6 @@ const routes = [
           feature: "Transfer",
         },
       },
-
-
-      {
-        path: "infoProdukPembukaanRekeningNTB",
-        name: "infoProdukPembukaanRekeningNTB",
-        component: InfoProdukPembukaanRekeningNTB,
-        meta: {
-          feature: "Info Produk",
-          title: "Pembukaan Rekening Nasabah Baru",
-          subtitle: "Dapatkan informasi lengkap mengenai jenis rekening dan panduan pembukaan untuk nasabah non-eksisting."
-        },
-      },
-      {
-        path: "infoProdukPembukaanRekeningExisting",
-        name: "infoProdukPembukaanRekeningExisting",
-        component: InfoProdukPembukaanRekeningExisting,
-        meta: {
-          feature: "Info Produk",
-          title: "Pembukaan Rekening Nasabah Eksisting",
-          subtitle: "Temukan informasi detail tentang opsi dan proses pembukaan rekening tambahan bagi nasabah yang sudah terdaftar."
-        },
-      },
-      {
-        path: "infoProdukPenempatanDepositoNTB",
-        name: "infoProdukPenempatanDepositoNTB",
-        component: InfoProdukPenempatanDepositoNTB,
-        meta: {
-          feature: "Info Produk",
-          title: "Pembukaan Deposito Nasabah Baru",
-          subtitle: "Pelajari keuntungan, syarat, dan cara penempatan deposito untuk nasabah yang baru bergabung."
-        },
-      },
-      {
-        path: "infoProdukPenempatanDepositoExisting",
-        name: "infoProdukPenempatanDepositoExisting",
-        component: InfoProdukPenempatanDepositoExisting,
-        meta: {
-          feature: "Info Produk",
-          title: "Pembukaan Deposito Nasabah Eksisting",
-          subtitle: "Pahami opsi dan panduan penempatan deposito bagi Anda yang sudah menjadi nasabah kami."
-        },
-      },
-      {
-        path: "infoProdukPengkinianData",
-        name: "infoProdukPengkinianData",
-        component: InfoProdukPengkinianData,
-        meta: {
-          feature: "Info Produk",
-          title: "Pengkinian Data",
-          subtitle: "Pastikan data Anda selalu terbarui. Temukan prosedur dan dokumen yang dibutuhkan untuk pengkinian data."
-        },
-      },
-      {
-        path: "infoProdukPencairanDeposito",
-        name: "infoProdukPencairanDeposito",
-        component: InfoProdukPencairanDeposito,
-        meta: {
-          feature: "Info Produk",
-          title: "Penutupan Deposito",
-          subtitle: "Informasi lengkap mengenai prosedur, syarat, dan estimasi waktu pencairan deposito Anda."
-        },
-      },
-      {
-        path: "infoProdukPemindahbukuan",
-        name: "infoProdukPemindahbukuan",
-        component: InfoProdukPemindahbukuan,
-        meta: {
-          feature: "Info Produk",
-          title: "Transfer",
-          subtitle: "Pahami alur dan persyaratan untuk proses transfer dana antar rekening dengan aman dan mudah."
-        },
-      },
-
-
     ],
   },
 ];
@@ -1187,254 +1187,3 @@ const router = createRouter({
 
 
 export default router;
-
-// import { createRouter, createWebHistory } from "vue-router";
-// import LoginView from "../views/LoginView.vue";
-// import HomeView from "../views/HomeView.vue";
-
-// import BeritaKampusView from "../views/beritakampus/BeritaKampusView.vue";
-// import LaporanViewVue from "../views/laporan/LaporanView.vue";
-
-// // Aset Gambar
-// import AsetGambarView from "../views/asetgambar/AsetGambarView.vue";
-// import AsetGambarDetailView from "@/views/asetgambar/AsetGambarDetailView.vue";
-
-// import UserProfileView from "../views/usercms/UserProfileView.vue";
-// import NotificationItemDetailView from "../views/notifikasi/NotificationItemDetailView.vue";
-// import DashboardWeAreUi from "../views/DashboardWeAreUi.vue";
-// import DataTempatView from "../views/tempat/DataTempatView.vue";
-
-// import CustomerView from "../views/CustomerView.vue";
-// import CustomerDetailView from "@/views/customermanagement/CustomerDetailView.vue";
-
-// // CMS User Management
-// import CmsUserView from "../views/CmsUserView.vue";
-// import CmsUserDetailView from "../views/cmsusermanagement/CmsUserDetailView.vue";
-
-// // E-money
-// import EmoneyView from "../views/emoney/EmoneyView.vue";
-// import TopUpMethodView from "../views/emoney/TopUpMethodView.vue";
-// import ExploreEmoneyView from "../views/emoney/ExploreEmoneyView.vue";
-// import TransactionEmoneyView from "../views/emoney/TransactionEmoneyView.vue";
-
-// // Asrama
-// import AsramaDashboardView from "../views/layanan/asrama/AsramaDashboardView.vue";
-// import AsramaKamarView from "../views/layanan/asrama/AsramaKamarView.vue";
-// import AsramaPendaftaranView from "../views/layanan/asrama/AsramaPendaftaranView.vue";
-// import AsramaPendaftaranEdit from "../views/layanan/asrama/EditScreen/AsramaPendaftaranEdit.vue";
-// import AsramaPembayaranView from "../views/layanan/asrama/AsramaPembayaranView.vue";
-// import AsramaPembayaranEdit from "../views/layanan/asrama/EditScreen/AsramaPembayaranEdit.vue";
-// import AsramaPengaturanView from "../views/layanan/asrama/AsramaPengaturanView.vue";
-// import AsramaPenghuniView from "../views/layanan/asrama/AsramaPenghuniView.vue";
-// import AsramaPenghuniEdit from "../views/layanan/asrama/EditScreen/AsramaPenghuniEdit.vue";
-// import PengaturanUmumAsramaView from "../views/layanan/asrama/pengaturan/PengaturanUmumAsrama.vue";
-// import PengaturanTataTertibAsramaView from "../views/layanan/asrama/pengaturan/PengaturanTataTertibAsrama.vue";
-// import PengaturanPaketAsramaView from "../views/layanan/asrama/pengaturan/PengaturanPaketAsrama.vue";
-// import PengaturanAlurPendaftaranAsramaView from "../views/layanan/asrama/pengaturan/PengaturanAlurPendaftaranAsrama.vue";
-// import PengaturanFaqAsramaView from "../views/layanan/asrama/pengaturan/PengaturanFaqAsrama.vue";
-// import PengaturanNotifikasiAsramaView from "../views/layanan/asrama/pengaturan/PengaturanNotifikasiAsrama.vue";
-// import AsramaNotifikasiEdit from "../views/layanan/asrama/EditScreen/AsramaPengaturanNotifikasiEdit.vue";
-
-// // Parkir
-// import ParkirDashboardView from "../views/layanan/parkir/ParkirDashboardView.vue";
-// import ParkirLanggananView from "../views/layanan/parkir/ParkirLanggananView.vue";
-// import ParkirLanggananEdit from "../views/layanan/parkir/EditScreen/ParkirLanggananEdit.vue";
-// import ParkirPengaturanView from "../views/layanan/parkir/ParkirPengaturanView.vue";
-// import ParkirRiwayatView from "../views/layanan/parkir/ParkirRiwayatView.vue";
-// import PengaturanAlurPendaftaranParkirView from "../views/layanan/parkir/pengaturan/PengaturanAlurPendaftaranParkirView.vue";
-// import PengaturanCaraPenggunaanParkirView from "../views/layanan/parkir/pengaturan/PengaturanCaraPenggunaanParkirView.vue";
-// import PengaturanFaqParkirView from "../views/layanan/parkir/pengaturan/PengaturanFaqParkirView.vue";
-// import PengaturanKetentuanPelangganParkirView from "../views/layanan/parkir/pengaturan/PengaturanKetentuanPelangganParkirView.vue";
-// import PengaturanNotifikasiParkirView from "../views/layanan/parkir/pengaturan/PengaturanNotifikasiParkirView.vue";
-// import PengaturanPaketParkirView from "../views/layanan/parkir/pengaturan/PengaturanPaketParkirView.vue";
-// import PengaturanPeraturanParkirView from "../views/layanan/parkir/pengaturan/PengaturanPeraturanParkirView.vue";
-// import PengaturanTempatParkirView from "../views/layanan/parkir/pengaturan/PengaturanTempatParkirView.vue";
-// import PengaturanUmumParkirView from "../views/layanan/parkir/pengaturan/PengaturanUmumParkirView.vue";
-// import ParkirNotifikasiEdit from "../views/layanan/parkir/EditScreen/ParkirPengaturanNotifikasiEdit.vue";
-
-// // Tenant
-// import TenantDashboardView from "../views/layanan/tenant/TenantDashboardView.vue";
-// import TenantPendaftaranView from "../views/layanan/tenant/TenantPendaftaranView.vue";
-// import TenantPendaftaranEdit from "../views/layanan/tenant/EditScreen/TenantPendaftaranEdit.vue";
-// import TenantPengaturanView from "../views/layanan/tenant/TenantPengaturanView.vue";
-// import TenantPenjualView from "../views/layanan/tenant/TenantPenjualView.vue";
-// import TenantNotifikasiEdit from "../views/layanan/tenant/EditScreen/TenantPengaturanNotifikasiEdit.vue";
-// import TenantPenjualEdit from "../views/layanan/tenant/EditScreen/TenantPenjualEdit.vue";
-// import TenantPengaturanAlurPendaftaranView from "../views/layanan/tenant/pengaturan/PengaturanAlurPendaftaranTenantView.vue";
-// import TenantPengaturanFaqView from "../views/layanan/tenant/pengaturan/PengaturanFaqTenantView.vue";
-// import TenantPengaturanNotifikasiView from "../views/layanan/tenant/pengaturan/PengaturanNotifikasiTenantView.vue";
-// import TenantPengaturanTataTertibView from "../views/layanan/tenant/pengaturan/PengaturanTataTertibTenantView.vue";
-// import TenantPengaturanUmumView from "../views/layanan/tenant/pengaturan/PengaturanUmumTenantView.vue";
-
-// // Pengaturan Umum
-// import PengaturanView from "../views/pengaturan/PengaturanView.vue";
-// import PengaturanNotifikasiView from "../views/pengaturan/detail/NotifikasiPengaturanView.vue";
-// import PengaturanUrutLayananView from "../views/pengaturan/detail/UrutanLayananPengaturanView.vue";
-
-// // Kantin
-// import KantinDashboardView from "../views/layanan/kantin/KantinDashboardView.vue";
-// import OtherKantinView from "../views/layanan/kantin/OtherKantinView.vue";
-
-// const router = createRouter({
-//   history: createWebHistory(import.meta.env.BASE_URL),
-//   routes: [
-//     {
-//       path: "/login",
-//       name: "login",
-//       component: LoginView,
-//     },
-//     {
-//       path: "/",
-//       name: "WeAreUI CMS",
-//       component: DashboardWeAreUi,
-//       children: [
-//         {
-//           path: "",
-//           name: "Dashboard",
-//           component: HomeView,
-//         },
-//         {
-//           path: "/data-tempat",
-//           name: "data tempat",
-//           component: DataTempatView,
-//         },
-//         {
-//           path: "/berita-kampus",
-//           name: "berita-kampus",
-//           component: BeritaKampusView,
-//         },
-//         { path: "/laporan", name: "laporan", component: LaporanViewVue },
-
-//         // aset gambar
-//         {
-//           path: "/aset-gambar",
-//           name: "asset gambar",
-//           component: AsetGambarView,
-//         },
-//         {
-//           path: "/aset-gambar/detail",
-//           name: "detail asset gambar",
-//           component: AsetGambarDetailView,
-//         },
-
-//         {
-//           path: "/profile-cms-user",
-//           name: "profile CMS User",
-//           component: UserProfileView,
-//         },
-//         {
-//           path: "/notification-item",
-//           name: "notification item",
-//           component: NotificationItemDetailView,
-//         },
-
-//         // customer management
-//         { path: "/customer", name: "Customer", component: CustomerView },
-//         {
-//           path: "/customer/detail-customer",
-//           name: "Customer Detail",
-//           component: CustomerDetailView,
-//         },
-
-//         // cms user management
-//         { path: "/cmsuser", name: "CMS User", component: CmsUserView },
-//         {
-//           path: "/cmsuser/detail-user",
-//           name: "CMS User Detail",
-//           component: CmsUserDetailView,
-//         },
-
-//         // emoney
-//         { path: "/emoney", name: "emoney", component: EmoneyView },
-//         {
-//           path: "/emoney/transaction",
-//           name: "Transaksi",
-//           component: TransactionEmoneyView,
-//         },
-//         {
-//           path: "/emoney/topupmethod",
-//           name: "Cara Top-Up",
-//           component: TopUpMethodView,
-//         },
-//         {
-//           path: "/emoney/explore",
-//           name: "Explore",
-//           component: ExploreEmoneyView,
-//         },
-//         {
-//           path: "/emoney/transaction",
-//           name: "Transaksi",
-//           component: TransactionEmoneyView,
-//         },
-
-//         // asrama
-//         { path: "/asrama", name: "Asrama", component: AsramaDashboardView },
-//         { path: "/asrama/kamar", name: "kamar asrama", component: AsramaKamarView },
-//         { path: "/asrama/pembayaran", name: "pembayaran asrama", component: AsramaPembayaranView },
-//         { path: "/asrama/pembayaran/edit", name: "edit pembayaran asrama", component: AsramaPembayaranEdit },
-//         { path: "/asrama/pendaftaran", name: "pendaftaran asrama", component: AsramaPendaftaranView },
-//         { path: "/asrama/pendaftaran/edit", name: "edit pendaftaran asrama", component: AsramaPendaftaranEdit },
-//         { path: "/asrama/pengaturan", name: "pengaturan asrama", component: AsramaPengaturanView },
-//         { path: "/asrama/pengaturan/notifikasi", name: "notifikasi asrama", component: PengaturanNotifikasiAsramaView },
-//         { path: "/asrama/pengaturan/pengaturan-umum", name: "pengaturan umum", component: PengaturanUmumAsramaView },
-//         { path: "/asrama/pengaturan/tata-tertib", name: "tata tertib", component: PengaturanTataTertibAsramaView },
-//         { path: "/asrama/pengaturan/paket", name: "paket asrama", component: PengaturanPaketAsramaView },
-//         { path: "/asrama/pengaturan/alur-pendaftaran", name: "alur pendaftaran", component: PengaturanAlurPendaftaranAsramaView },
-//         { path: "/asrama/pengaturan/faq", name: "faq", component: PengaturanFaqAsramaView },
-//         { path: "/asrama/penghuni", name: "penghuni asrama", component: AsramaPenghuniView },
-//         { path: "/asrama/penghuni/edit", name: "data penghuni", component: AsramaPenghuniEdit },
-//         { path: "/asrama/notifikasi/edit", name: "edit asrama notifikasi", component: AsramaNotifikasiEdit },
-
-//         // Parkir
-//         { path: "/parkir", name: "parkir", component: ParkirDashboardView },
-//         { path: "/parkir/langganan", name: "parkir langganan", component: ParkirLanggananView },
-//         { path: "/parkir/langganan/edit", name: "edit parkir langganan", component: ParkirLanggananEdit },
-//         { path: "/parkir/pengaturan", name: "parkir pengaturan", component: ParkirPengaturanView },
-//         { path: "/parkir/pengaturan/pengaturan-umum", name: "pengaturan umum parkir", component: PengaturanUmumParkirView },
-//         { path: "/parkir/pengaturan/tempat-parkir", name: "pengaturan tempat parkir", component: PengaturanTempatParkirView },
-//         { path: "/parkir/pengaturan/alur-parkir", name: "pengaturan alur pendaftaran langganan parkir", component: PengaturanAlurPendaftaranParkirView },
-//         { path: "/parkir/pengaturan/cara-penggunaan-parkir", name: "pengaturan cara penggunaan parkir", component: PengaturanCaraPenggunaanParkirView },
-//         { path: "/parkir/pengaturan/faq-parkir", name: "pengaturan faq parkir", component: PengaturanFaqParkirView },
-//         { path: "/parkir/pengaturan/peraturan-parkir", name: "pengaturan peraturan parkir", component: PengaturanPeraturanParkirView },
-//         { path: "/parkir/pengaturan/paket-parkir", name: "pengaturan paket parkir", component: PengaturanPaketParkirView },
-//         { path: "/parkir/pengaturan/notifikasi-parkir", name: "pengaturan notifikasi parkir", component: PengaturanNotifikasiParkirView },
-//         { path: "/parkir/pengaturan/ketentuan-pelanggan", name: "pengaturan ketentuan pelanggan", component: PengaturanKetentuanPelangganParkirView },
-//         { path: "/parkir/riwayat", name: "parkir riwayat", component: ParkirRiwayatView },
-//         { path: "/parkir/notifikasi/edit", name: "edit parkir notifikasi", component: ParkirNotifikasiEdit },
-
-//         // tenant
-//         { path: "/tenant", name: "tenant", component: TenantDashboardView },
-//         { path: "/tenant/pendaftaran", name: "tenant pendaftaran", component: TenantPendaftaranView },
-//         { path: "/tenant/pendaftaran/edit", name: "edit tenant pendaftaran", component: TenantPendaftaranEdit },
-//         { path: "/tenant/pengaturan", name: "tenant pengaturan", component: TenantPengaturanView },
-//         { path: "/tenant/pengaturan/alur-pendaftaran", name: "alur pendaftaran tenant", component: TenantPengaturanAlurPendaftaranView },
-//         { path: "/tenant/pengaturan/faq", name: "faq tenant", component: TenantPengaturanFaqView },
-//         { path: "/tenant/pengaturan/notifikasi", name: "notifikasi tenant", component: TenantPengaturanNotifikasiView },
-//         { path: "/tenant/pengaturan/tata-tertib", name: "tata tertib tenant", component: TenantPengaturanTataTertibView },
-//         { path: "/tenant/pengaturan/pengaturan-umum", name: "pengaturan umum tenant", component: TenantPengaturanUmumView },
-//         { path: "/tenant/penjual", name: "tenant penjual", component: TenantPenjualView },
-//         { path: "/tenant/penjual/edit", name: "edit tenant penjual", component: TenantPenjualEdit },
-//         { path: "/tenant/notifikasi/edit", name: "edit tenant notifikasi", component: TenantNotifikasiEdit },
-
-//         // kantin
-//         { path: "/kantin", name: "Kantin", component: KantinDashboardView },
-//         { path: "/kantin/other", name: "Other", component: OtherKantinView },
-
-//         // pengaturan
-//         { path: "/pengaturan", name: "pengaturan", component: PengaturanView },
-//         {
-//           path: "/pengaturan/notifikasi",
-//           name: "notifikasi",
-//           component: PengaturanNotifikasiView,
-//         },
-//         {
-//           path: "/pengaturan/urutan-layanan",
-//           name: "urutan layanan",
-//           component: PengaturanUrutLayananView,
-//         },
-//       ],
-//     },
-//   ],
-// });
-
-// export default router;

@@ -198,8 +198,8 @@
       </p> -->
       </label>
 
-      <div class="flex justify-between mt-6">
-        <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
+      <div class="text-right">
+        <!-- <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent> -->
         <ButtonComponent variant="default" @click="handleSubmit" :disabled="isButtonDisabled">
           Lanjutkan
         </ButtonComponent>
@@ -315,10 +315,44 @@ export default {
           }
           break;
         case "2": // Deposito Peduli
-          if (nominal >= 100000000 && nominal < 1000000000) {
-            optionsByProduct = jangkaWaktuDepositoPeduliOptionsTier1;
-          } else if (nominal >= 1000000000) {
-            optionsByProduct = jangkaWaktuDepositoPeduliOptionsTier2;
+          if (nominal < 100000000) {
+            this.nominalError = "Nominal Deposito Peduli minimal Rp 100.000.000";
+            optionsByProduct = [];
+          } else {
+            this.nominalError = "";
+            let baseOptions = [];
+            if (nominal >= 100000000 && nominal < 1000000000) {
+              baseOptions = [...jangkaWaktuDepositoPeduliOptionsTier1];
+            } else if (nominal >= 1000000000) {
+              baseOptions = [...jangkaWaktuDepositoPeduliOptionsTier2];
+            }
+
+            optionsByProduct = baseOptions.map(option => {
+              let calculatedDonasi = 0;
+              let rawDonasi = 0;
+
+              switch (option.jangkaWaktu) {
+                case "6":
+                  rawDonasi = nominal / 100000000
+                  calculatedDonasi = Math.round(rawDonasi);
+                  break;
+                case "9":
+                  rawDonasi = nominal / 50000000;
+                  calculatedDonasi = Math.round(rawDonasi);
+                  break;
+                case "12":
+                  rawDonasi = nominal / 30000000;
+                  calculatedDonasi = Math.round(rawDonasi);
+                  break;
+                default:
+                  calculatedDonasi = 0;
+              }
+              return {
+                ...option,
+                donasi: calculatedDonasi.toString(),
+                label: `${option.jangkaWaktu} Bulan (${parseFloat(option.sukuBunga).toLocaleString('id-ID', { minimumFractionDigits: 2 })}% per tahun + donasi ${calculatedDonasi} Paket Sembako)`
+              };
+            });
           }
           break;
         case "3": // DEBUT Sanmere
@@ -379,35 +413,6 @@ export default {
       }
     },
 
-    // formattedBunga() {
-    //   const nominal = parseFloat(this.form.nominal) || 0;
-    //   const jangkaWaktu = this.form.jangkaWaktu;
-
-    //   if (nominal <= 0 || !jangkaWaktu) return "Rp 0";
-    //   // Gunakan currentJangkaWaktuOptions untuk mendapatkan suku bunga dan jangka waktu yang tepat
-    //   const selectedOption = this.currentJangkaWaktuOptions.find(option => option.value === jangkaWaktu);
-
-    //   if (!selectedOption) return "Rp 0"; // Jika opsi tidak ditemukan (misal karena nominal berubah dan opsi sebelumnya tidak ada di tier baru)
-
-    //   // Pastikan fungsi hitungBunga menerima suku bunga sebagai angka, bukan string
-    //   const sukuBungaForCalculation = parseFloat(selectedOption.sukuBunga) / 100;
-
-    //   switch (this.form.produkDeposito) {
-    //     case "1":
-    //       return hitungBungaUniversal(nominal, jangkaWaktu, sukuBungaForCalculation);
-    //     case "2":
-    //       return hitungBungaPeduli(nominal, jangkaWaktu, sukuBungaForCalculation);
-    //     case "3":
-    //       return hitungBungaDEBUTSanmere(nominal, jangkaWaktu, sukuBungaForCalculation);
-    //     case "4":
-    //       return hitungBungaDEBUTMatius(nominal, jangkaWaktu, sukuBungaForCalculation);
-    //     case "5":
-    //       return hitungBungaGreen(nominal, jangkaWaktu, sukuBungaForCalculation);
-    //     default:
-    //       return "Rp 0";
-    //   }
-    // },
-
     formattedNominal: {
       get() {
         return this.form.nominal !== null && this.form.nominal !== undefined
@@ -436,26 +441,6 @@ export default {
         !!this.nominalError
       );
     },
-    // formattedBunga() {
-    //   const nominal = parseFloat(this.form.nominal) || 0;
-    //   const jangkaWaktu = this.form.jangkaWaktu;
-
-    //   if (nominal <= 0 || !jangkaWaktu) return "Rp 0";
-    //   switch (this.form.produkDeposito) {
-    //     case "1":
-    //       return hitungBungaUniversal(nominal, jangkaWaktu);
-    //     case "2":
-    //       return hitungBungaPeduli(nominal, jangkaWaktu);
-    //     case "3":
-    //       return hitungBungaDEBUTSanmere(nominal, jangkaWaktu);
-    //     case "4":
-    //       return hitungBungaDEBUTMatius(nominal, jangkaWaktu);
-    //     case "5":
-    //       return hitungBungaGreen(nominal, jangkaWaktu);
-    //     default:
-    //       return "Rp 0";
-    //   }
-    // },
   },
   watch: {
     "form.pembayaranBunga": function (newValue) {
@@ -699,12 +684,16 @@ export default {
 
         let jangkaWaktuToSend = null;
         let sukuBungaToSend = null;
+        let jumlahSembakoToSend = null;
 
         if (selectedOption) {
           jangkaWaktuToSend = Number(selectedOption.jangkaWaktu);
           sukuBungaToSend = parseFloat(selectedOption.sukuBunga);
+
+          if (this.form.produkDeposito === "2") {
+            jumlahSembakoToSend = Number(selectedOption.donasi);
+          }
         } else {
-          // Tambahkan log yang lebih informatif untuk debugging
           console.error("Opsi jangka waktu tidak ditemukan untuk produk", this.form.produkDeposito, "dan jangka waktu", this.form.jangkaWaktu, ". Periksa currentJangkaWaktuOptions:", this.currentJangkaWaktuOptions);
           alert("Terjadi kesalahan: Opsi jangka waktu tidak valid. Mohon pilih ulang.");
           return; // Hentikan proses submit jika opsi tidak ditemukan
@@ -726,6 +715,7 @@ export default {
           penyetoran_deposito: Number(this.form.penyetoranDeposito),
           nomor_rekening_penyetoran: this.form.nomorRekeningPenyetoran,
           nama_rekening_penyetoran: this.form.namaRekeningPenyetoran,
+          ...(jumlahSembakoToSend !== null && { jumlah_sembako: jumlahSembakoToSend }),
         };
 
         const response = await api.post("/penempatan-deposito", requestData, {

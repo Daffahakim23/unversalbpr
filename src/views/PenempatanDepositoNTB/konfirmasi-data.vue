@@ -186,7 +186,7 @@
     </div> -->
 
     <div class="mt-2">
-      <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+      <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
     </div>
 
     <div class="mt-2">
@@ -714,20 +714,20 @@ export default {
         kelurahan: "Kelurahan",
         kodePos: "Kode Pos",
         statusPerkawinan: "Status Perkawinan",
-        masaAktifKtp: "Masa Aktif KTP",
+        masaAktifKtp: "Masa Aktif e-KTP",
         namaIbuKandung: "Nama Ibu Kandung",
         kewarganegaraan: "Kewarganegaraan",
 
         // Data Pribadi
         namaPanggilan: "Nama Alias / Panggilan",
         tujuan: "Tujuan Menabung",
-        KantorCabang: "Kantor Cabang",
+        KantorCabang: "Jaringan Kantor",
         pendidikanTerakhir: "Pendidikan Terakhir",
         hobi: "Hobi",
         nomorTelepon: "Nomor Telepon",
         nomorFax: "Nomor Fax",
-        kantorCabang: "Kantor Cabang",
-        alamatKantorCabang: "Alamat Kantor Cabang",
+        kantorCabang: "Jaringan Kantor",
+        alamatKantorCabang: "Alamat Jaringan Kantor",
         alamatSesuaiEktp: "Alamat Sesuai EKTP",
         phone: "Nomor Handphone",
         namaFundingOfficer: "Nama Funding Officer",

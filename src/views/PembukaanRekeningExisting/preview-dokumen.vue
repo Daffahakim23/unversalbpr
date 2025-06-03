@@ -19,7 +19,7 @@
           <img src="@/assets/upload-dokumen.svg" alt="Tambah Dokumen" class="h-16 sm:h-24 md:h-32 lg:h-48 mt-12">
           <div class="flex flex-col md:flex-row mt-12 justify-between w-full px-4 md:px-16 gap-y-4 md:gap-x-8">
             <ButtonComponent variant="ghost" @click="startWebcamDokumen" class="w-full md:w-auto">
-              Ambil Foto
+              Gunakan Foto
             </ButtonComponent>
             <ButtonComponent variant="ghost" @click="openFilePicker" class="w-full md:w-auto">
               Upload Gambar
@@ -61,7 +61,7 @@
           <div class=" controls item-center mt-6 w-full">
             <div v-if="!photoUrl" class="flex justify-center">
               <ButtonComponent @click="capturePhoto">
-                Ambil Foto
+                Gunakan Foto
               </ButtonComponent>
             </div>
             <div v-else class="controls flex justify-between mt-4 w-full">
@@ -99,7 +99,7 @@
         <div class="controls item-center mt-6 w-full">
           <div v-if="!photoUrl" class="flex justify-center">
             <ButtonComponent @click="capturePhoto">
-              Ambil Foto
+              Gunakan Foto
             </ButtonComponent>
           </div>
           <div v-else class="controls flex justify-between mt-4 w-full">

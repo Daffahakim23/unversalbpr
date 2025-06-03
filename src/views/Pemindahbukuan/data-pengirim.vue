@@ -18,8 +18,8 @@
         placeholder="Masukkan Sumber Penghasilan Lainnya" :readonly="true" />
     </div>
 
-    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekeningPengirim" :maxlength="10" variant="numeric"
-      placeholder="Masukkan Nomor Rekening" required :readonly="true" />
+    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekeningPengirim"
+      :maxlength="10" variant="numeric" placeholder="Masukkan Nomor Rekening" required :readonly="true" />
 
     <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" v-model="form.namaLengkapPengirim"
       placeholder="Masukkan Nama Pemilik Sumber Dana" required :readonly="true" />
@@ -28,7 +28,7 @@
       placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
 
     <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
+      <FormField label="Alamat Jaringan Kantor Pembukaan Rekening" id="alamatKantorCabang"
         v-model="form.alamatKantorCabang" :readonly="true" />
     </div>
 

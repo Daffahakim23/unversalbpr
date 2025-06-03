@@ -60,7 +60,7 @@
           <strong class="form-value">{{ formRekeningSumber.sumberDana }}</strong>
         </div>
         <div class="form-item" v-if="formPenerima.kantorCabang">
-          <div class="form-label">Kantor Cabang:</div>
+          <div class="form-label">Jaringan Kantor:</div>
           <strong class="form-value">{{ formPenerima.kantorCabang }}</strong>
         </div>
       </div>
@@ -186,7 +186,7 @@
 
     <!-- Checkbox Persetujuan -->
     <div class="mt-2">
-      <CustomCheckbox v-model="agreement" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+      <CustomCheckbox v-model="agreement" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
     </div>
     <!-- <div class="flex items-center">
       <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />
@@ -431,7 +431,7 @@ export default {
         kelurahan: "Kelurahan",
         kodePos: "Kode Pos",
         statusPerkawinan: "Status Perkawinan",
-        masaAktifKtp: "Masa Aktif KTP",
+        masaAktifKtp: "Masa Aktif e-KTP",
         namaIbuKandung: "Nama Ibu Kandung",
         kewarganegaraan: "Kewarganegaraan",
       };

@@ -17,7 +17,7 @@
       placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
 
     <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
+      <FormField label="Alamat Jaringan Kantor Pembukaan Rekening" id="alamatKantorCabang"
         v-model="form.alamatKantorCabang" :readonly="true" />
     </div>
 

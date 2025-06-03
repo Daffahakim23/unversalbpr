@@ -1,7 +1,6 @@
-<template>
+<template #center-title>
     <div>
-       
-        <div v-if="pdfUrl" style="width: 100%; height: 800px;">
+        <div v-if="pdfUrl" style="width: 100%; height: 10000px;">
             <iframe :src="pdfUrl" width="100%" height="100%" frameborder="0">
                 <p>Browser Anda tidak mendukung iframe. Silakan unduh PDF dari link berikut:
                     <a :href="pdfUrl" target="_blank">Unduh PDF</a>

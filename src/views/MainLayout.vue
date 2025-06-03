@@ -33,11 +33,6 @@
           <div id="main-dropdown"
             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="mainDropdownButton">
-              <!-- <li>
-                <a @click="downloadProductDetails" download="info-produk.pdf"
-                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
-                  Produk</a>
-              </li> -->
               <li>
                 <button id="nestedDropdownButton" data-dropdown-toggle="nested-dropdown"
                   data-dropdown-placement="right-start" type="button"
@@ -215,8 +210,8 @@ export default {
   },
   methods: {
     handleBeforeUnload(event) {
+      sessionStorage.removeItem('appWasNavigatingInternally');
       event.preventDefault();
-      event.returnValue = 'Yakin Mba?'; // Open your modal to confirm exit
       alert("Data yang sudah Anda isi akan hilang dan Anda diharuskan untuk mengisi dari awal lagi.");
     },
     getWhatsAppLink(number = 622122213993) {
@@ -329,42 +324,101 @@ export default {
     },
   },
   mounted() {
-    this.updatePageTitle(this.$route);
-    document.addEventListener('click', this.handleClickOutside);
-    import('flowbite').then(() => {
-    });
+    // this.updatePageTitle(this.$route);
+    // document.addEventListener('click', this.handleClickOutside);
+    // import('flowbite').then(() => {
+    // });
   },
+
   mounted() {
-    window.addEventListener('beforeunload', this.handleBeforeUnload);
     this.updatePageTitle(this.$route);
     document.addEventListener('click', this.handleClickOutside);
-    import('flowbite').then(() => {
+
+    // Inisialisasi Flowbite setelah DOM diperbarui
+    this.$nextTick(() => {
+      initDropdowns();
     });
 
-    //   // Cek apakah ini refresh atau navigasi baru
-    //   // Kita gunakan sessionStorage untuk menandai bahwa ini adalah refresh
-      // if (!sessionStorage.getItem('isNavigating')) {
-      //   // Ini adalah refresh atau halaman pertama kali dibuka
-      //   // Arahkan ke halaman utama jika bukan di halaman '/'
-      //   if (this.$route.path !== '/') {
-      //     this.$router.push('/');
-      //   }
-      // }
-      // // Set flag untuk menandakan bahwa navigasi sedang berlangsung
-      // sessionStorage.setItem('isNavigating', 'true');
+    // 1. Tambahkan listener beforeunload
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+
+    // 2. Logika untuk mengarahkan jika ini adalah MUAT ULANG PENUH (refresh)
+    // const navigationEntry = performance.getEntriesByType('navigation')[0];
+    // const isReload = navigationEntry && navigationEntry.type === 'reload';
+
+    // // Kondisi untuk redirect:
+    // // - Path saat ini BUKAN '/'
+    // // - Ini adalah REFRESH browser (bukan kunjungan pertama atau navigasi internal)
+    // if (this.$route.path !== '/' && isReload) {
+    //   console.log('Redirecting to /: Path saat ini', this.$route.path, ', Tipe Navigasi:', navigationEntry.type);
+    //   this.$router.push('/');
+    // } else {
+    //   console.log('Tidak redirect. Path saat ini:', this.$route.path, ', Tipe Navigasi:', navigationEntry ? navigationEntry.type : 'N/A');
+    // }
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
-    // this.resetNavbarConfig();
-    // Hapus flag saat komponen dihancurkan (misalnya, jika pengguna menutup tab)
-    sessionStorage.removeItem('isNavigating');
   },
   created() {
-    // Tambahkan event listener untuk membersihkan sessionStorage sebelum halaman dimuat ulang
-    // window.addEventListener('beforeunload', () => {
-    //   sessionStorage.removeItem('isNavigating');
-    // });
+    this.$router.beforeEach((to, from, next) => {
+      // Set flag ini HANYA untuk navigasi internal Vue Router
+      sessionStorage.setItem('appWasNavigatingInternally', 'true');
+      console.log('Router beforeEach: appWasNavigatingInternally diatur ke true');
+      next();
+    });
   }
+  // mounted() {
+  //   window.addEventListener('beforeunload', this.handleBeforeUnload);
+  //   this.updatePageTitle(this.$route);
+  //   document.addEventListener('click', this.handleClickOutside);
+  //   import('flowbite').then(() => {
+  //   });
+
+  // mounted() {
+  //   window.addEventListener('beforeunload', this.handleBeforeUnload);
+  //   if (this.$route.path !== '/' && !sessionStorage.getItem('isNavigatingFromApp')) {
+  //     this.$router.push('/');
+  //   }
+  //   // Remove the flag immediately after checking. This ensures it's only active for internal navigations.
+  //   sessionStorage.removeItem('isNavigatingFromApp');
+
+  //   this.updatePageTitle(this.$route);
+  //   document.addEventListener('click', this.handleClickOutside);
+  //   // Ensure Flowbite is initialized if you are using it dynamically
+  //   import('flowbite').then(() => {
+  //     // Flowbite initialized
+  //   });
+  // },
+
+  // //   // Cek apakah ini refresh atau navigasi baru
+  // //   // Kita gunakan sessionStorage untuk menandai bahwa ini adalah refresh
+  // // if (!sessionStorage.getItem('isNavigating')) {
+  // //   // Ini adalah refresh atau halaman pertama kali dibuka
+  // //   // Arahkan ke halaman utama jika bukan di halaman '/'
+  // //   if (this.$route.path !== '/') {
+  // //     this.$router.push('/');
+  // //   }
+  // // }
+  // // // Set flag untuk menandakan bahwa navigasi sedang berlangsung
+  // // sessionStorage.setItem('isNavigating', 'true');
+  // // },
+  // beforeUnmount() {
+  //   document.removeEventListener('click', this.handleClickOutside);
+  //   window.removeEventListener('beforeunload', this.handleBeforeUnload);
+  //   // this.resetNavbarConfig();
+  //   // Hapus flag saat komponen dihancurkan (misalnya, jika pengguna menutup tab)
+  //   // sessionStorage.removeItem('isNavigating');
+  // },
+  // created() {
+  //   this.$router.beforeEach((to, from, next) => {
+  //     sessionStorage.setItem('isNavigatingFromApp', 'true');
+  //     next();
+  //   });
+  //   // Tambahkan event listener untuk membersihkan sessionStorage sebelum halaman dimuat ulang
+  //   // window.addEventListener('beforeunload', () => {
+  //   //   sessionStorage.removeItem('isNavigating');
+  //   // });
+  // }
 };
 </script>

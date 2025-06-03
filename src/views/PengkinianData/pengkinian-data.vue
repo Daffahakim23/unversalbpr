@@ -4,7 +4,7 @@
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" variant="alpha" required />
 
-    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric" :maxlength="20"
+    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric" :maxlength="10"
       placeholder="Masukkan Nomor Rekening Anda" required
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 

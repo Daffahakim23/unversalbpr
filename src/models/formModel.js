@@ -103,6 +103,7 @@ export class FormModelPenempatanDeposito {
     this.metodePencairan = "";
     this.namaBank = namaBank;
     this.nomorRekening = "";
+    this.nomorRekeningPemilik = "";
     this.namaLengkap = "";
     this.kantorCabang = "";
     this.alamatKantorCabang = "";
@@ -118,6 +119,8 @@ export class FormModelPenempatanDeposito {
     this.setujuBiayaTransfer = "";
     this.nomorRekeningPenyetoran = "";
     this.namaRekeningPenyetoran = "";
+    this.belumPunyaRekening = "";
+    this.memilikiTabungan = "";
   }
 }
 
@@ -131,6 +134,7 @@ export class FormModelRequestEmailVerification {
     this.sumber = "";
     this.sumberLainnya = "";
     this.nomorRekening = "";
+    this.nomorRekeningPemilik = "";
     this.kantorCabang = "";
     this.belumPunyaRekening = false;
     this.alamatKantorCabang = "";

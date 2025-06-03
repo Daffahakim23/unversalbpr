@@ -49,11 +49,11 @@
         v-model="form.kewarganegaraanLainnya" placeholder=" " required />
     </div>
 
-    <FormField label="Masa Aktif KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
+    <FormField label="Masa Aktif e-KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
       :options="masaAktifKTPOptions" required />
 
     <div v-if="form.masaAktifKtp === '0'" class="mt-4">
-      <FormField label="Tanggal Masa Aktif KTP" id="masaAktifKtpLainnyaDate" type="date"
+      <FormField label="Tanggal Masa Aktif e-KTP" id="masaAktifKtpLainnyaDate" type="date"
         v-model="form.masaAktifKtpLainnya" required />
     </div>
 
@@ -160,6 +160,12 @@ export default {
           }
           if (this.form.masaAktifKtp === '0' && !this.form.masaAktifKtpLainnya) {
             return true; // Jika '0' dipilih tapi tanggal belum diisi
+          }
+        }
+
+        else if (field === 'kodePos') {
+          if (!this.form.kodePos || String(this.form.kodePos).length !== 5) {
+            return true; // Kode Pos tidak valid atau panjangnya bukan 5
           }
         }
 
@@ -392,7 +398,7 @@ export default {
           return;
         }
 
-                // Tentukan nilai berlaku_sampai berdasarkan pilihan masaAktifKtp
+        // Tentukan nilai berlaku_sampai berdasarkan pilihan masaAktifKtp
         let berlakuSampaiValue = "";
         if (this.form.masaAktifKtp === '0') {
           berlakuSampaiValue = this.form.masaAktifKtpLainnya; // Ambil dari input tanggal lainnya
@@ -433,7 +439,7 @@ export default {
           this.fileStore.setNamaLengkap(requestData.nama_lengkap);
           this.fileStore.setNik(requestData.nik);
           this.fileStore.isKtpUploaded = true;
-          this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
+          this.fileStore.uploadedFiles["ktp"] = "Foto e-KTP";
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/uploadDokumenPemindahbukuan" });
         } else {

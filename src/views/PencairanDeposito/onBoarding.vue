@@ -136,7 +136,7 @@
                                 </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Siapkan Identitas Diri</h3>
                                 <p class="text-sm text-gray-600">
-                                    Gunakan KTP yang valid untuk keperluan verifikasi identitas
+                                    Gunakan e-KTP yang valid untuk keperluan verifikasi identitas
                                 </p>
                             </div>
 

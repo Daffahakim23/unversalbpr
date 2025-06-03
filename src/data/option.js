@@ -63,21 +63,21 @@ export const jangkaWaktuDepositoUniversalOptionsTier3 = [
 
 // DEPOSITO PEDULI
 export const jangkaWaktuDepositoPeduliOptions = [
-  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
-  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
-  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
+  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75", donasi: "1" },
+  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75", donasi: "1" },
+  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75", donasi: "1" },
 ];
 
 export const jangkaWaktuDepositoPeduliOptionsTier1 = [
-  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
-  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
-  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
+  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75", donasi: "1" },
+  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75", donasi: "1" },
+  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75", donasi: "1" },
 ];
 
 export const jangkaWaktuDepositoPeduliOptionsTier2 = [
-  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75" },
-  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75" },
-  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75" },
+  { label: "6 Bulan (6,75% per tahun + donasi 1 Paket Sembako)", value: "1", jangkaWaktu: "6", sukuBunga: "6.75", donasi: "1" },
+  { label: "9 Bulan (6,75% per tahun + donasi 2 Paket Sembako)", value: "2", jangkaWaktu: "9", sukuBunga: "6.75", donasi: "1" },
+  { label: "12 Bulan (6,75% per tahun + donasi 3 Paket Sembako)", value: "3", jangkaWaktu: "12", sukuBunga: "6.75", donasi: "1" },
 ];
 // DEPOSITO PEDULI
 
@@ -240,7 +240,7 @@ export const produkDepositoOptions = [
 ];
 
 export const korespondensiOptions = [
-  { label: "Alamat Tempat Tinggal sesuai KTP", value: "1" },
+  { label: "Alamat Tempat Tinggal sesuai e-KTP", value: "1" },
   { label: "Alamat Tempat Tinggal Terkini", value: "2" },
   { label: "Alamat kantor", value: "3" },
 ];

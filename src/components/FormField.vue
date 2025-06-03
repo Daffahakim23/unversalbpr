@@ -16,8 +16,8 @@
 
       <template v-if="!isDropdown && type !== 'phone'">
         <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue" @focus="$emit('focus', $event)"
-          @keypress="handleKeyPress" @input="handleInput" @blur="$emit('blur', $event)" :maxlength="maxlength" :max="maxdate"
-          :readonly="readonly" :class="{
+          @keypress="handleKeyPress" @input="handleInput" @blur="$emit('blur', $event)" :maxlength="maxlength"
+          :max="maxdate" :readonly="readonly" :class="{
             'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
             'border-red-500 focus:ring-red-400 focus:border-red-400': error,
             'border-neutral-200 focus:ring-1': !readonly && !error
@@ -218,13 +218,13 @@ export default {
         event.preventDefault();
       }
       if (this.variant === "alphanumeric" && !/^[a-zA-Z0-9]$/.test(key)) {
-    event.preventDefault();
-  }
+        event.preventDefault();
+      }
       if (this.type === "phone") {
         const isDigit = /^\d$/.test(key);
         if (!isDigit) {
           event.preventDefault();
-        } else if (this.modelValue.length >= 35) {
+        } else if (this.modelValue.length >= 16) {
           event.preventDefault();
         } else if (this.modelValue.length === 0 && key === "0") {
           event.preventDefault();

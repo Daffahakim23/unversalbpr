@@ -36,7 +36,7 @@
         placeholder="Masukkan Nomor Telepon" variant="numeric" :required="false" />
 
       <FormField label="Nomor Fax (Opsional)" id="nomor_fax" type="number" v-model="form.nomor_fax"
-        placeholder="Masukkan Nomor Fax" :required="false" variant="numeric" />
+        placeholder="Masukkan Nomor Fax" :required="false" variant="numeric" :maxlength="10"  />
 
       <FormField label="Alamat Email (Opsional)" id="email" type="email" v-model="form.email"
         placeholder="Masukkan email Anda" :required="false" />

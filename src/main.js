@@ -19,7 +19,6 @@
 // app.use(VueApexCharts);
 
 // app.mount("#app");
-
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router"; // Pastikan ini mengimpor router yang sudah Anda definisikan
@@ -36,45 +35,33 @@ const pinia = createPinia();
 
 app.use(pinia);
 
-// --- Logika Deteksi Reload dan Reset State Dimulai ---
+const navigationEntry = performance.getEntriesByType("navigation")[0];
 
-// Fungsi untuk "mereset" data atau state aplikasi
-// Sesuaikan fungsi ini dengan kebutuhan reset data spesifik Anda.
-// Misalnya, membersihkan data dari localStorage, sessionStorage, atau state Pinia/Vuex.
-
-
-// Deteksi apakah halaman dimuat ulang
-// Kita menggunakan sessionStorage untuk melacak apakah ini adalah reload dalam sesi yang sama.
-if (sessionStorage.getItem('isReloaded')) {
-    console.log('Aplikasi terdeteksi dimuat ulang (reload).');
-    // Ini adalah reload, lakukan reset state aplikasi
-    // resetApplicationState();
-
-    // Arahkan ke halaman utama (/) setelah router siap
+// Periksa apakah jenis navigasi adalah "reload"
+if (navigationEntry && navigationEntry.type === "reload") {
+    console.log('Aplikasi terdeteksi dimuat ulang (refresh). Mengarahkan ke halaman utama (/).');
+    // Ini adalah reload, arahkan ke halaman utama (/) setelah router siap
     router.isReady().then(() => {
-        router.push({ path: "/" });
-        console.log('Diarahkan ke halaman utama (/) setelah reload dan reset state.');
+        router.push({ path: "/" }).catch(err => {
+            // Tangani error jika push gagal, misalnya navigasi ke rute yang sama
+            if (err.name !== 'NavigationDuplicated') {
+                console.error('Gagal mengarahkan router setelah reload:', err);
+            }
+        });
     }).catch(err => {
-        console.error('Gagal mengarahkan router setelah reload:', err);
+        console.error('Gagal menunggu router siap setelah reload:', err)
     });
 } else {
-    console.log('Aplikasi dimuat pertama kali atau navigasi normal.');
-    // Ini adalah kunjungan pertama atau navigasi normal, tandai sebagai bukan reload
-    sessionStorage.setItem('isReloaded', 'true');
+    console.log('Aplikasi dimuat pertama kali atau navigasi normal. Memuat rute yang diminta.');
+    // Ini adalah kunjungan pertama atau navigasi normal, biarkan router memuat rute yang diminta.
 }
 
-// Tambahkan event listener untuk membersihkan flag 'isReloaded' saat tab/browser ditutup.
-// Ini memastikan bahwa kunjungan berikutnya (setelah menutup dan membuka lagi)
-// akan dianggap sebagai sesi baru, bukan reload.
-window.addEventListener('beforeunload', () => {
-    sessionStorage.removeItem('isReloaded');
-    console.log('Flag isReloaded dihapus dari sessionStorage karena tab ditutup.');
-});
+// Tidak perlu lagi event listener 'beforeunload' untuk sessionStorage
+// karena kita tidak lagi menggunakan sessionStorage untuk logika reload ini.
 
-// --- Logika Deteksi Reload dan Reset State Berakhir ---
+// --- Logika Deteksi Reload yang Akurat Berakhir ---
 
-app.use(router); // Router harus dipasang setelah logika deteksi reload,
-// agar router.isReady() bisa bekerja dengan benar.
+app.use(router); // Router harus dipasang.
 
 app.use(VueApexCharts);
 

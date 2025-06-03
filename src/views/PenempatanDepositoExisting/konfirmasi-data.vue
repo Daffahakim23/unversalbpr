@@ -115,9 +115,61 @@
         Instruksi Pembukaan Deposito
       </h1>
       <div v-if="formPenempatanDeposito" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPenempatanDeposito" :key="key">
+        <!-- <div class="form-item" v-for="(value, key) in formPenempatanDeposito" :key="key">
           <div class="form-label"> {{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
+        </div> -->
+        <div class="form-item" v-if="formPenempatanDeposito.nominal">
+          <div class=" form-label">Nominal Deposito:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.nominal }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.terbilang">
+          <div class=" form-label">Terbilang:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.terbilang }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.metodePencairan">
+          <div class=" form-label">Saat Jatuh Tempo Nominal:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.metodePencairan }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.jangkaWaktu">
+          <div class=" form-label">Jangka Waktu & Suku Bunga:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.jangkaWaktu }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.nomorRekeningPenyetoran">
+          <div class=" form-label">Nomor Rekening Penyetoran Deposito:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.nomorRekeningPenyetoran }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.nomorRekeningPemilik">
+          <div class=" form-label">Nomor Rekening Pembayaran Bunga:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.nomorRekeningPemilik }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.namaRekeningPenyetoran">
+          <div class=" form-label">Nama Pemilik Rekening Penyetoran Deposito:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.namaRekeningPenyetoran }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.namaLengkap">
+          <div class=" form-label">Nama Pemilik Rekening Pembayaran Bunga:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.namaLengkap }}</strong>
+        </div>
+        <div class="form-item">
+          <div class=" form-label">Nama Bank:</div>
+          <strong class="form-value">Universal BPR</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.namaBank">
+          <div class=" form-label">Nama Bank:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.namaBank }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
+          <div class=" form-label">Produk Deposito:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.metodePenyetoran">
+          <div class=" form-label">Cara Penyetoran:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.metodePenyetoran }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.pembayaranBunga">
+          <div class=" form-label">Metode Pembayaran Bunga:</div>
+          <strong class="form-value">{{ formPenempatanDeposito.pembayaranBunga }}</strong>
         </div>
       </div>
     </div>
@@ -173,7 +225,7 @@
     </div> -->
 
     <div class="mt-2">
-      <CustomCheckbox v-model="agreement1" labelText="Saya setuju dengan pernyataan dan persetujuan di atas" />
+      <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
     </div>
 
     <div class="mt-2">
@@ -441,30 +493,30 @@ export default {
         kelurahan: "Kelurahan",
         kodePos: "Kode Pos",
         statusPerkawinan: "Status Perkawinan",
-        masaAktifKtp: "Masa Aktif KTP",
+        masaAktifKtp: "Masa Aktif e-KTP",
         namaIbuKandung: "Nama Ibu Kandung",
         kewarganegaraan: "Kewarganegaraan",
 
         // Data Pribadi
-        PerubahanData: "Perubahan Data",
+        perubahanData: "Perubahan Data",
         namaPanggilan: "Nama Alias / Panggilan",
         tujuan: "Tujuan Menabung",
-        KantorCabang: "Kantor Cabang",
+        KantorCabang: "Jaringan Kantor",
         pendidikanTerakhir: "Pendidikan Terakhir",
         hobi: "Hobi",
         nomorTelepon: "Nomor Telepon",
         nomorFax: "Nomor Fax",
-        kantorCabang: "Kantor Cabang",
-        alamatKantorCabang: "Alamat Kantor Cabang",
+        kantorCabang: "Jaringan Kantor",
+        alamatKantorCabang: "Alamat Jaringan Kantor",
         alamatSesuaiEktp: "Alamat Sesuai EKTP",
-        kantorCabang: "Kantor Cabang",
+        kantorCabang: "Jaringan Kantor",
         nomor_telp: "Nomor Telepon",
         nomor_fax: "Nomor Fax",
         email: "Email",
         alamat_kantor: "Alamat Kantor",
 
         // Data Penempatan
-        nominal: "Nominal",
+        nominal: "Nominal Deposito",
         terbilang: "Terbilang",
         jangkaWaktu: "Jangka Waktu & Suku Bunga",
         metodePencairan: "Saat Jatuh Tempo Nominal",
