@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <RadioButtonChoose label="Apakah Anda ingin melakukan pembaharuan data" :options="sumberOptions"
+    <RadioButtonChoose label="Apakah Anda ingin melakukan pembaharuan data?" :options="sumberOptions"
       v-model="form.perubahanData" name="perubahaDataD" />
 
     <div v-if="form.perubahanData === true" class="mt-4">

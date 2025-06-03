@@ -108,7 +108,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(8(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(this.form.phone);
+      const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
       const produkTabunganTerisi = !!this.form.produk;
       const produkDepositoTerisi = !!this.form.produkDeposito;
       const sumberTerisi = !!this.form.sumber;
@@ -249,6 +249,13 @@ export default {
           modalIcon = "data-failed-illus.svg";
         } else {
            subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
+        }
+        if (error.response.data.message.replace(/ .*/,'') == "liveness") {
+          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        } else if (error.response.data.message.replace(/ .*/,'') == "fraud") {
+          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar

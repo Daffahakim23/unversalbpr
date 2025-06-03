@@ -94,7 +94,7 @@ export default {
   computed: {
     isButtonDisabled() {
       const phoneValid =
-        this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
+        this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
       return !(phoneValid && this.form.alamat && this.form.keteranganTransaksi);
     },
   },

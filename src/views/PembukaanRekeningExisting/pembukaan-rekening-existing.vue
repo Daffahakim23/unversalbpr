@@ -332,6 +332,13 @@ export default {
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
+        if (error.response.data.message.replace(/ .*/,'') == "liveness") {
+          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        } else if (error.response.data.message.replace(/ .*/,'') == "fraud") {
+          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        }
         this.isModalError = false;
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
       } finally {

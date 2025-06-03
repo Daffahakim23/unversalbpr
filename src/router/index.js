@@ -365,7 +365,7 @@ const routes = [
           feature: "Pembukaan Rekening Baru",
           title: "Pembaharuan Data",
           subtitle:
-            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah',
+            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah ini',
         },
       },
       {
@@ -650,7 +650,7 @@ const routes = [
           feature: "Pembukaan Deposito",
           title: "Pembaharuan Data",
           subtitle:
-            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah',
+            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah ini',
         },
       },
       {
