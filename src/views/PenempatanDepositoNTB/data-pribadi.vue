@@ -3,11 +3,11 @@
     <FormField label="Nama Alias/Panggilan" id="namaPanggilan" :isDropdown="false" v-model="form.namaPanggilan"
       placeholder="Masukkan Nama Alias/Panggilan Anda" :required="true" variant="alpha" />
 
-    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
-    <div v-if="form.tujuan === '0'">
+    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
+    <!-- <div v-if="form.tujuan === '0'">
       <FormField label="Tujuan Simpanan Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
         placeholder="Masukkan Simpananan Lainnya" :required="true" />
-    </div>
+    </div> -->
 
     <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
       placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />

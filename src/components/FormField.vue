@@ -17,7 +17,7 @@
       <template v-if="!isDropdown && type !== 'phone'">
         <input :type="type" :id="id" :placeholder="placeholder" :value="modelValue" @focus="$emit('focus', $event)"
           @keypress="handleKeyPress" @input="handleInput" @blur="$emit('blur', $event)" :maxlength="maxlength"
-          :max="maxdate" :readonly="readonly" :class="{
+          :max="maxdate" :minlength="minlength" :readonly="readonly" :class="{
             'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
             'border-red-500 focus:ring-red-400 focus:border-red-400': error,
             'border-neutral-200 focus:ring-1': !readonly && !error
@@ -141,6 +141,7 @@ export default {
     variant: { type: String, default: "" },
     maxlength: { type: Number, default: null },
     maxdate: { type: String, default: null },
+    minlength: { type: Number, default: null },
 
     selectedCountryCode: String,
   },
