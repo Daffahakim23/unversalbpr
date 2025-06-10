@@ -476,7 +476,7 @@ const routes = [
         meta: {
           feature: "Pembukaan Deposito",
           title: "Halo, Senang Bertemu Dengan Anda",
-          subtitle: "Sebagai calon Nasabah BPR Universal yang hendak membuka deposito, Anda diwajibkan terlebih dahulu membuka rekening Tabungan Universal sebagai rekening penyetoran dana deposito. Silakan pilih produk Tabungan Universal di bawah ini, lalu lanjutkan dengan memilih produk deposito, dan mengisi data diri Anda."
+          subtitle: "Sebagai calon Nasabah Universal BPR yang hendak membuka deposito, Anda diwajibkan terlebih dahulu membuka rekening Tabungan Universal sebagai rekening penyetoran dana deposito. Silakan pilih produk Tabungan Universal di bawah ini, lalu lanjutkan dengan memilih produk deposito, dan mengisi data diri Anda."
         },
       },
       {
@@ -495,7 +495,7 @@ const routes = [
         component: DataPenempatanDepositoNTB,
         meta: {
           feature: "Pembukaan Deposito",
-          title: "Pembukaan Deposito",
+          title: "Atur Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },

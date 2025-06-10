@@ -313,7 +313,6 @@ export const tujuanOptions = [
   { label: "Simpanan", value: "1" },
   { label: "Transaksi", value: "2" },
   { label: "Investasi", value: "3" },
-  { label: "Lainnya", value: "0" },
 ];
 
 export const alasanPencairanOptions = [

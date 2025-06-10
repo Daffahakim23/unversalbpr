@@ -47,7 +47,7 @@
             <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
               <div class="mt-2">
                 <CustomCheckbox v-model="isAgreementChecked"
-                  labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir pembukaan deposito ini merupakan spesimen tanda tangan saya." />
+                  labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir pembukaan rekening baru ini merupakan spesimen tanda tangan saya." />
               </div>
             </div>
             <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
@@ -126,7 +126,7 @@
         <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
           <div class="mt-2">
             <CustomCheckbox v-model="isAgreementChecked"
-              labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir pembukaan deposito ini merupakan spesimen tanda tangan saya." />
+              labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir pembukaan rekening baru ini merupakan spesimen tanda tangan saya." />
           </div>
         </div>
       </div>

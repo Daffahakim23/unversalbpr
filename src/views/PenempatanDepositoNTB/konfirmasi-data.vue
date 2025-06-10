@@ -850,7 +850,7 @@ export default {
         nomorTeleponKantorDK: "Nomor Telepon Kantor",
         nomorTeleponFaxDK: "Nomor Telepon Fax",
         alamatDK: "Alamat Kantor",
-        korespondensi: "Korespondensi",
+        korespondensi: "Alamat Korespondensi Surat Menyurat",
 
         // Data Penempatan
         nominal: "Nominal",

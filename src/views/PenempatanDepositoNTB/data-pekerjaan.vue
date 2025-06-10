@@ -67,7 +67,8 @@
       <div v-if="form.jenisIdentitasBO === '1'" class="">
         <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
           v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
-          :required="true" variant="numeric" :maxlength="20" />
+          :required="true" variant="numeric" :maxlength="20" :minlength="16" :hint="nomorDokumenError ? '*Nomor Dokumen Identitas yang Anda Masukkan Salah' : ''"
+          :error="nomorDokumenError"  @blur="handleNomorDokumenIdentitasBlur"/>
       </div>
 
       <div v-if="form.jenisIdentitasBO === '2'" class="">
@@ -101,7 +102,8 @@
         :options="kelurahanOptions" placeholder="Pilih Kelurahan Beneficial Owner Anda" :disabled="!form.kecamatanBO" />
 
       <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO" :required="true"
-        placeholder="Masukkan Kode Pos Beneficial Owner Anda" variant="numeric" :maxlength="5" />
+        placeholder="Masukkan Kode Pos Beneficial Owner Anda" variant="numeric" :maxlength="5" :minlength="5" 
+        :hint="kodePosError ? '*Kode Pos yang Anda Masukkan Salah' : ''" :error="kodePosError"  @blur="handleKodePosBlur"/>
 
       <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
         variant="alpha" placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
@@ -118,7 +120,7 @@
         :required="true" />
 
       <FormField label="Pekerjaan*" id="pekerjaanBO" :isDropdown="true" v-model="form.pekerjaanBO"
-        placeholder="Pilih Pekerjaan Beneficial Owner Anda" :options="pekerjaanOptions" />
+        placeholder="Pilih Pekerjaan Beneficial Owner Anda" :options="pekerjaanBOOptions" />
 
       <div v-if="form.pekerjaanBO === '9999'" class="">
         <FormField label="Pekerjaan Lainnya *" id="pekerjaanLainnyaBO" type="text" v-model="form.pekerjaanLainnyaBO"
@@ -347,11 +349,14 @@ export default {
       quantity: 5,
       jabatanOptions: [],
       pekerjaanOptions: [],
+      pekerjaanBOOptions: [],
       bidangPekerjaanOptions: [],
       provinsiOptions: [],
       kabupatenOptions: [],
       kecamatanOptions: [],
       kelurahanOptions: [],
+      nomorDokumenError: false,
+      kodePosError: false,
       fileStore: useFileStore(),
     };
   },
@@ -710,6 +715,12 @@ export default {
   },
 
   methods: {
+    handleNomorDokumenIdentitasBlur() {
+      this.form.nomorDokumenIdentitasBO.length < 16 ? (this.nomorDokumenError = true) : (this.nomorDokumenError = false);
+    },
+    handleKodePosBlur() {
+      this.form.kodePosBO.length < 5 ? (this.kodePosError = true) : (this.kodePosError = false);
+    },
     resetFormKecualiPekerjaan() {
       const pekerjaanSebelumReset = this.form.pekerjaan;
       this.form = new FormModelDataPekerjaan();
@@ -719,6 +730,9 @@ export default {
       try {
         const pekerjaanOptions = await fetchPekerjaan();
         this.pekerjaanOptions = pekerjaanOptions;
+        const valuesToRemove = ["MAHASISWA/PELAJAR", "IBU RUMAH TANGGA"];
+        const pekerjaanBOOptions = pekerjaanOptions.filter(item => !valuesToRemove.includes(item.label));
+        this.pekerjaanBOOptions = pekerjaanBOOptions
       } catch (error) {
         console.error("Gagal mengambil data Jabatan:", error);
       }
