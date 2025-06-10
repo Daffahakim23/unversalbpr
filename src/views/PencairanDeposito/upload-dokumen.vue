@@ -132,6 +132,8 @@ export default {
         },
       ];
       this.isModalError = true;
+      this.fileStore.setFileUploaded('ktp', false);
+      this.fileStore.setFileUploaded('fotoDiri', false);
     },
 
     handleCloseModal() {
@@ -166,9 +168,8 @@ export default {
 
     handleFileUpload(event, documentType) {
       console.log(`Dokumen yang akan diunggah: ${documentType}`);
-      // Logika baru ditambahkan di sini
       if (documentType === 'ktp' && this.fileStore.isKtpUploaded) {
-        this.$router.push({ path: "/dashboard/dataKTPPencairanDeposito" }); // Arahkan langsung ke dataKTP
+        this.$router.push({ path: "/dashboard/dataKTPPencairanDeposito" }); 
       } else {
         this.$router.push({
           name: "PreviewScreenPencairanDeposito",

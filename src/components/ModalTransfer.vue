@@ -45,7 +45,7 @@ export default {
     methods: {
         selectMethod(methodId) {
             this.$emit("update:selectedMethod", methodId);
-            this.$emit("confirm", methodId); // Langsung emit confirm
+            this.$emit("confirm", methodId);
         },
     },
 };

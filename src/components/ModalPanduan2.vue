@@ -4,10 +4,10 @@
             class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="text-left">
                 <h3 class="text-xl font-semibold text-primary dark:text-white items-center">
-                    Panduan Upload {{ documentTypeText }}
+                    Panduan {{ documentTypeText }}
                 </h3>
                 <p class="text-neutral-800 dark:text-gray-300 mt-2">
-                    Pastikan hal berikut saat upload {{ documentTypeText }}:
+                    Pastikan hal berikut saat {{ documentTypeText }}:
                 </p>
             </div>
 
@@ -79,17 +79,17 @@ export default {
                 fotoDiri: [
                     { icon: liveness1, text: "Lepas kacamata, masker, topi atau aksesoris wajah lainnya." },
                     { icon: liveness2, text: "Sesuaikan wajah Anda di area foto yang sudah ditentukan" },
-                    { icon: liveness3, text: "Untuk hasil yang akurat, verifikasi di tempat dengan pencahayaan yang baik." },
+                    { icon: liveness3, text: "Untuk hasil yang akurat, ambil foto di tempat dengan pencahayaan yang cukup." },
                 ],
             };
             return guides[this.documentType] || [];
         },
         documentTypeText() {
             const textMap = {
-                ktp: "e-KTP",
-                npwp: "NPWP",
-                tandaTangan: "Tanda Tangan",
-                fotoDiri: "Foto Diri",
+                ktp: "Upload e-KTP",
+                npwp: "Upload NPWP",
+                tandaTangan: "Upload Tanda Tangan",
+                fotoDiri: "Ambil Foto Diri",
             };
             return textMap[this.documentType] || "Dokumen";
         },

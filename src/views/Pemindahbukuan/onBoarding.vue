@@ -221,7 +221,7 @@ export default {
                 whatsapp: "+622122213993",
             },
             cancelRoute: null,
-            navbarConfig: { // State untuk mengontrol konfigurasi navbar
+            navbarConfig: { 
                 showBackButton: false,
                 showInfoButton: true,
                 showLogoBPR: true,
@@ -241,7 +241,7 @@ export default {
         const router = useRouter();
         const fileStore = useFileStore();
 
-        return { route, router, fileStore }; // <--- Ini seharusnya mengembalikan 'route'
+        return { route, router, fileStore };
     },
     watch: {
         $route(to) {
@@ -286,7 +286,7 @@ export default {
                     buttonString2: btnString2,
                 },
             ];
-            this.error = true; // Set error menjadi true agar modal ditampilkan.
+            this.error = true; 
             this.loading = false;
         },
         async startDepositClosure() {

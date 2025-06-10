@@ -102,14 +102,13 @@ export default {
                 navigator.clipboard.writeText(this.callContact.number)
                     .then(() => {
                         alert(`Nomor telepon ${this.callContact.number} berhasil disalin!`);
-                        this.$emit('close'); // Optional: Tutup modal setelah menyalin
+                        this.$emit('close');
                     })
                     .catch(err => {
                         console.error('Gagal menyalin ke clipboard: ', err);
                         alert('Gagal menyalin nomor telepon.');
                     });
             } else {
-                // Fallback untuk browser yang tidak mendukung Clipboard API
                 const tempInput = document.createElement("input");
                 tempInput.value = this.callContact.number;
                 document.body.appendChild(tempInput);
@@ -117,7 +116,7 @@ export default {
                 document.execCommand("copy");
                 document.body.removeChild(tempInput);
                 alert(`Nomor telepon ${this.callContact.number} berhasil disalin!`);
-                this.$emit('close'); // Optional: Tutup modal setelah menyalin
+                this.$emit('close');
             }
         }
     },

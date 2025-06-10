@@ -98,7 +98,7 @@
           <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.alamatKantorCabang">
-          <div class="form-label">Alamat Kantor cabang:</div>
+          <div class="form-label">Alamat Jaringan Kantor:</div>
           <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.namaFundingOfficer">
@@ -541,7 +541,7 @@ export default {
     },
     formatFileLabel(key) {
       const labels = {
-        ktp: "KTP",
+        ktp: "e-KTP",
         npwp: "NPWP",
         fotoDiri: "Foto Diri",
         tandaTangan: "Tanda Tangan",

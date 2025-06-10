@@ -93,7 +93,7 @@
           <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.alamatKantorCabang">
-          <div class="form-label">Alamat Kantor cabang:</div>
+          <div class="form-label">Alamat Jaringan Kantor:</div>
           <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formGabungan.produk">
@@ -332,6 +332,9 @@ export default {
       const data = fileStore.formPekerjaan || {};
       const processedData = {};
       for (const key in data) {
+        if (key === 'npwp') {
+          continue; // Lewati iterasi ini jika key adalah 'npwp'
+        }
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
@@ -660,7 +663,7 @@ export default {
     },
     formatFileLabel(key) {
       const labels = {
-        ktp: "KTP",
+        ktp: "e-KTP",
         npwp: "NPWP",
         fotoDiri: "Foto Diri",
         tandaTangan: "Tanda Tangan",

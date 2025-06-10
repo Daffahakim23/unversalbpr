@@ -567,10 +567,9 @@ export default {
     isButtonDisabled() {
       const nikValue = this.form.nik;
       if (!nikValue || String(nikValue).length !== 16) {
-        return true; // NIK tidak valid atau kurang dari 16 digit
+        return true; 
       }
 
-      // Daftar semua field yang wajib diisi
       const requiredFields = [
         'nik', 'namaLengkap', 'tanggalLahir', 'tempatLahir', 'jenisKelamin',
         'agama', 'alamat', 'rt', 'rw', 'provinsi', 'kabupaten',
@@ -584,19 +583,18 @@ export default {
             return true;
           }
         }
-        // Pastikan 'masaAktifKtpLainnya' hanya divalidasi jika 'masaAktifKtp' adalah '0'
         else if (field === 'masaAktifKtp') {
           if (this.form.masaAktifKtp === null || this.form.masaAktifKtp === undefined || this.form.masaAktifKtp === '') {
             return true;
           }
           if (this.form.masaAktifKtp === '0' && !this.form.masaAktifKtpLainnya) {
-            return true; // Jika '0' dipilih tapi tanggal belum diisi
+            return true; 
           }
         }
 
         else if (field === 'kodePos') {
           if (!this.form.kodePos || String(this.form.kodePos).length !== 5) {
-            return true; // Kode Pos tidak valid atau panjangnya bukan 5
+            return true;
           }
         }
 
@@ -761,7 +759,7 @@ export default {
         console.log("Form filled:", this.form);
         this.isDataFromFilestore = false;
       } else if (data) {
-        const tanggalBerlakuSampai = data.masaAktifKtp; // Ambil dari data.masaAktifKtp
+        const tanggalBerlakuSampai = data.masaAktifKtp;
         this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
         Object.keys(this.form).forEach((key) => {
           if (data[key] !== undefined) {
@@ -774,7 +772,7 @@ export default {
         if (!this.form.masaAktifKtp && data.berlaku_seumur_hidup) {
           this.form.masaAktifKtp = "Seumur Hidup";
         } else if (!this.form.masaAktifKtp && data.masaAktifKtp) {
-          this.form.masaAktifKtp = data.masaAktifKtp; // Pastikan mengambil nilai tanggal jika ada
+          this.form.masaAktifKtp = data.masaAktifKtp;
         }
       }
     },
@@ -816,12 +814,11 @@ export default {
           return;
         }
 
-        // Tentukan nilai berlaku_sampai berdasarkan pilihan masaAktifKtp
         let berlakuSampaiValue = "";
         if (this.form.masaAktifKtp === '0') {
-          berlakuSampaiValue = this.form.masaAktifKtpLainnya; // Ambil dari input tanggal lainnya
+          berlakuSampaiValue = this.form.masaAktifKtpLainnya;
         } else {
-          berlakuSampaiValue = this.form.masaAktifKtp; // Ambil nilai langsung dari dropdown (contoh: "Seumur Hidup")
+          berlakuSampaiValue = this.form.masaAktifKtp; 
         }
 
         const requestData = {

@@ -262,7 +262,7 @@ export default {
         const fileStore = useFileStore();
         const emailData = fileStore.formEmailRequestDepositoNTB;
         const depositoData = fileStore.formPenempatanDeposito;
-        const pencairanDeposito = fileStore.formInstruksiPencairanDeposito; // Asumsi Anda menyimpan nominal di sini
+        const pencairanDeposito = fileStore.formInstruksiPencairanDeposito;
 
         if (emailData) {
           Object.keys(this.form).forEach((key) => {
@@ -281,19 +281,19 @@ export default {
         }
 
         if (depositoData && depositoData.namaLengkap !== undefined) {
-          this.form.namaLengkap = depositoData.namaLengkap; // Pastikan Anda mengambil nilai nominal
+          this.form.namaLengkap = depositoData.namaLengkap;
         }
 
         if (depositoData && depositoData.nomorRekening !== undefined) {
-          this.form.nomorRekening = depositoData.nomorRekening; // Pastikan Anda mengambil nilai nominal
+          this.form.nomorRekening = depositoData.nomorRekening;
         }
 
         if (depositoData && depositoData.namaBank !== undefined) {
-          this.form.namaBank = depositoData.namaBank; // Pastikan Anda mengambil nilai nominal
+          this.form.namaBank = depositoData.namaBank;
         }
 
         if (pencairanDeposito && pencairanDeposito.nominal !== undefined) {
-          this.form.nominal = pencairanDeposito.nominal; // Pastikan Anda mengambil nilai nominal
+          this.form.nominal = pencairanDeposito.nominal;
         }
 
       } catch (error) {

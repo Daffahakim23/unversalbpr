@@ -103,7 +103,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-/* Gaya tambahan jika diperlukan */
-</style>

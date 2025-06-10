@@ -185,24 +185,18 @@
 
 function getJumlahHariFromJangkaWaktu(jangkaWaktuInMonths) {
     const today = new Date();
-    // Set tanggal menjadi hari pertama bulan ini untuk menghindari masalah "loncat" hari saat menambahkan bulan
     today.setDate(1); 
     console.log("Tanggal Mulai (Hari Ini, diset ke tgl 1):", today.toLocaleDateString('id-ID'));
 
     const futureDate = new Date(today);
-    futureDate.setMonth(today.getMonth() + parseInt(jangkaWaktuInMonths)); // Tambahkan bulan
-
-    // Setelah bulan ditambahkan, set hari kembali ke hari yang sama dengan 'today'
-    // atau ke hari terakhir bulan tersebut jika bulan tujuan tidak memiliki hari tersebut.
-    // Misalnya, jika start 31 Jan, dan target adalah akhir Februari, set ke 28/29 Feb.
-    const originalDay = new Date().getDate(); // Ambil hari asli dari "hari ini"
+    futureDate.setMonth(today.getMonth() + parseInt(jangkaWaktuInMonths));
+    const originalDay = new Date().getDate();
     const lastDayOfMonth = new Date(futureDate.getFullYear(), futureDate.getMonth() + 1, 0).getDate();
     futureDate.setDate(Math.min(originalDay, lastDayOfMonth));
     
     console.log("Tanggal Setelah Ditambah Bulan (disesuaikan harinya):", futureDate.toLocaleDateString('id-ID'));
 
-    // Hitung selisih hari
-    const diffTime = Math.abs(futureDate.getTime() - new Date().getTime()); // Gunakan new Date() untuk hari ini yang aktual
+    const diffTime = Math.abs(futureDate.getTime() - new Date().getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     console.log(`Jangka Waktu: ${jangkaWaktuInMonths} bulan, Jumlah Hari: ${diffDays} hari`);
@@ -231,7 +225,6 @@ export function hitungBungaPeduli(nominal, jangkaWaktuParameter, sukuBungaParame
         return "Rp 0";
     }
 
-    // Menggunakan helper yang sama untuk mendapatkan jumlah hari
     const jumlahHari = getJumlahHariFromJangkaWaktu(jangkaWaktuParameter);
 
     const bungaKotorPerPeriode = (nominal * sukuBungaParameter / 365) * jumlahHari;
@@ -248,12 +241,10 @@ export function hitungBungaDEBUTSanmere(nominal, jangkaWaktuParameter, sukuBunga
     if (nominal <= 0 || !sukuBungaParameter || !jangkaWaktuParameter) {
         return "Rp 0";
     }
-
-    // Menggunakan helper yang sama untuk mendapatkan jumlah hari
     const jumlahHari = getJumlahHariFromJangkaWaktu(jangkaWaktuParameter);
 
     const bungaKotorPerPeriode = (nominal * sukuBungaParameter / 365) * jumlahHari;
-    const bungaBersih = bungaKotorPerPeriode * 0.8; // Setelah pajak 20%
+    const bungaBersih = bungaKotorPerPeriode * 0.8;
 
     return new Intl.NumberFormat("id-ID", {
         style: "currency",

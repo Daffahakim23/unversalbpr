@@ -52,8 +52,8 @@
     <div :class="[
       'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md cursor-pointer relative',
       fileStore.isFotoDiriUploaded
-        ? 'bg-semantic/success-100 border-semantic/success-600 pointer-events-none' // Tambahkan opacity dan pointer-events-none
-        : 'border-primary-100', // Tambahkan kembali hover dan cursor-pointer saat tidak di-disable
+        ? 'bg-semantic/success-100 border-semantic/success-600 pointer-events-none'
+        : 'border-primary-100',
     ]" @click="handleFileUpload(null, 'fotoDiri')" :aria-disabled="fileStore.isFotoDiriUploaded ? 'true' : null">
       <div class="flex items-center">
         <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
@@ -190,6 +190,8 @@ export default {
         },
       ];
       this.isModalError = true;
+      this.fileStore.setFileUploaded('ktp', false);
+      this.fileStore.setFileUploaded('fotoDiri', false);
     },
     createFileInput(documentType) {
       const input = document.createElement("input");

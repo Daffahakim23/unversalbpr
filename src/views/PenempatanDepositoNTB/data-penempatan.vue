@@ -114,10 +114,10 @@
       <!-- Jika opsi value = 3 -->
       <div v-if="form.pembayaranBunga == 3" class="mt-2">
         <div class=" flex items-baseline mb-6">
-          <!-- <input id="modal-checkbox" type="checkbox" v-model="isChecked"
+          <!-- <input id="modal-checkbox" type="checkbox" v-model="form.isChecked"
           class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600 self-start" /> -->
           <div class="mr-2">
-            <CustomCheckbox v-model="isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
+            <CustomCheckbox v-model="form.isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
           sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi PT
           BPR Universal: notifikasi@universalbpr.co.id" />
           </div>
@@ -187,10 +187,10 @@
         placeholder="PIlih Metode Penyetoran" :options="metodePenyetoranNTBOptions" required />
       <label class=" flex items-baseline mb-6">
         <div class="mr-2 mb-6">
-          <CustomCheckbox v-model="setujuPenyetoran"
+          <CustomCheckbox v-model="form.setujuPenyetoran"
             labelText="Saya Setuju bahwa penyetoran untuk pembukaan deposito akan dilakukan pendebetan melalui rekening Tabungan Universal atas nama saya sendiri yang akan dibuat oleh Petugas Bank dan diinformasikan kepada saya melalui email resmi PT BPR Universal: notifikasi@universalbpr.co.id." />
         </div>
-        <!-- <input type="checkbox" v-model="setujuPenyetoran" required />
+        <!-- <input type="checkbox" v-model="form.setujuPenyetoran" required />
       <p for="modal-checkbox" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">
         Saya Setuju bahwa penyetoran untuk pembukaan deposito akan dilakukan pendebetan melalui rekening Tabungan
         Universal atas nama saya sendiri yang akan dibuat oleh Petugas Bank dan diinformasikan kepada saya melalui email
@@ -270,8 +270,8 @@ export default {
   data() {
     return {
       form: new FormModelPenempatanDeposito(),
-      isChecked: false,
-      setujuPenyetoran: false,
+      // form.isChecked: false,
+      // form.setujuPenyetoran: false,
       setujuBiayaTransfer: false,
       metodePencairanOptions,
       produkDepositoOptions,
@@ -430,12 +430,12 @@ export default {
         !this.form.nominal ||
         !this.form.terbilang ||
         !this.form.jangkaWaktu ||
-        !this.setujuPenyetoran ||
+        !this.form.setujuPenyetoran ||
         !this.form.metodePenyetoran ||
         !this.form.metodePencairan ||
         !this.form.pembayaranBunga ||
         (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaLengkap)) ||
-        (this.form.pembayaranBunga == 3 && (!this.isChecked)) ||
+        (this.form.pembayaranBunga == 3 && (!this.form.isChecked)) ||
         // (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.form.setujuBiayaTransfer)) ||
         (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.setujuBiayaTransfer)) ||
         !!this.nominalError
@@ -449,7 +449,7 @@ export default {
         this.form.nomorRekening = "";
         this.form.namaBank = "";
         this.setujuBiayaTransfer = false;
-        this.isChecked = false;
+        this.form.isChecked = false;
       } else if (newValue !== 2 && newValue !== 4) {
         this.form.namaLengkap = "";
         this.form.nomorRekening = "";
@@ -457,8 +457,12 @@ export default {
         this.setujuBiayaTransfer = false;
       }
       if (newValue !== 3) {
-        this.isChecked = false;
+        this.form.isChecked = false;
       }
+    },
+
+    "form.metodePenyetoran": function (newValue) {
+      this.form.setujuPenyetoran = false;
     },
 
     isModalOpen(newValue) {

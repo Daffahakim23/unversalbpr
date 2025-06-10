@@ -13,7 +13,8 @@
       placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
 
     <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Kantor" id="alamatKantorCabang" v-model="form.alamatKantorCabang" :readonly="true" />
+      <FormField label="Alamat Jaringan Kantor" id="alamatKantorCabang" v-model="form.alamatKantorCabang"
+        :readonly="true" />
 
     </div>
     <FormField label="Pendidikan Terakhir*" id="pendidikanTerakhir" :isDropdown="true" v-model="form.pendidikanTerakhir"
@@ -30,7 +31,7 @@
       placeholder="Masukkan Nomor Telepon" variant="numeric" />
 
     <FormField label="Nomor Fax (opsional)" id="nomorFax" v-model="form.nomorFax" placeholder="Masukkan Nomor Fax"
-      variant="numeric" :maxlength="10"/>
+      variant="numeric" :maxlength="10" />
 
     <RadioButtonChoose label="Apakah alamat domisili sesuai dengan alamat E-KTP?*" :options="alamatSesuaiEktpOptions"
       v-model="form.alamatSesuaiEktp" name="alamatSesuaiEktp" />
@@ -138,6 +139,7 @@ export default {
 
   computed: {
     isButtonDisabled() {
+      const isKodePosValid = this.form.kodePos && String(this.form.kodePos).length === 5;
       const isFormFilled =
         this.form.namaPanggilan &&
         this.form.tujuan &&
@@ -154,7 +156,7 @@ export default {
           this.form.kabupaten &&
           this.form.kecamatan &&
           this.form.kelurahan &&
-          this.form.kodePos);
+          isKodePosValid);
 
       const isOtherHobbyFilled = this.form.hobi === '0' ? this.form.hobiLainnya : true;
       const isOtherSimpananFilled = this.form.tujuan === '0' ? this.form.tujuanLainnya : true;
@@ -170,7 +172,7 @@ export default {
 
         if (response.data && response.data.branch) {
           this.kantorCabangOptions = response.data.branch.map(branch => {
-            const label = branch.branch_name.replace(/\s*\(\d+\)$/, ''); // Regex untuk menghapus (kode) di akhir string
+            const label = branch.branch_name.replace(/\s*\(\d+\)$/, '');
 
             return {
               label: label.trim(),

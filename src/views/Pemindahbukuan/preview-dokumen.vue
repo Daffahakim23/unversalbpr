@@ -3,7 +3,7 @@
     <div>
       <div class="flex items-center justify-between mb-4 gap-2">
         <button @click="openModal2" class="flex items-center text-primary gap-1">
-          <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
+          <p class="text-base font-semibold">Panduan {{ documentTypeText }}</p>
           <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
         </button>
         <!-- <button v-if="(fileUrl || photoUrl) && documentType !== 'fotoDiri'" @click="changeFile"
@@ -45,10 +45,13 @@
             </div>
             <img :src="photoUrl" alt="Foto yang Diambil" class="w-full h-90 rounded-lg shadow-md object-cover" />
             <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
-              <div class="mt-2">
-                <CustomCheckbox v-model="isAgreementChecked"
-                  labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir transfer ini merupakan spesimen tanda tangan saya." />
-              </div>
+              <input id="persetujuan-ttd" type="checkbox" v-model="isAgreementChecked"
+                class="w-4 h-4 text-primary border-neutral-300 rounded-sm focus:ring-primary focus:ring-2" />
+              <label for="persetujuan-ttd" class="ml-2 text-sm font-regular text-gray-900">
+                Saya setuju bahwa tanda tangan yang saya foto
+                dan unggah pada aplikasi formulir Penempatan deposito baru ini merupakan
+                spesimen tanda tangan saya.
+              </label>
             </div>
             <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
               {{ flagMessage }}
@@ -63,7 +66,8 @@
             </div>
             <div v-else class="controls flex justify-between mt-4 w-full">
               <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading">
+              <ButtonComponent @click.prevent="uploadPhoto"
+                :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">
                 {{ isSubmitting ? "Mengirim..." : "Simpan" }}
               </ButtonComponent>
             </div>
@@ -95,14 +99,18 @@
 
         <div class="controls item-center mt-6 w-full">
           <div v-if="!photoUrl" class="flex justify-center">
-            <ButtonComponent @click="capturePhoto">
+            <!-- <ButtonComponent @click="capturePhoto">
+              Gunakan Foto
+            </ButtonComponent> -->
+            <ButtonComponent @click="delayedCapturePhoto" :disabled="isCapturing">
               Gunakan Foto
             </ButtonComponent>
           </div>
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">{{
-              isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
+            <ButtonComponent @click.prevent="uploadPhoto"
+              :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">{{
+                isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
             </ButtonComponent>
           </div>
         </div>
@@ -119,10 +127,12 @@
           petunjuk verifikasi
         </Flagbox>
         <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
-          <div class="mt-2">
-            <CustomCheckbox v-model="isAgreementChecked"
-              labelText="Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir transfer ini merupakan spesimen tanda tangan saya." />
-          </div>
+          <input id="persetujuan-ttd" type="checkbox" v-model="isAgreementChecked"
+            class="w-4 h-4 text-primary border-neutral-300 rounded-sm focus:ring-primary focus:ring-2" />
+          <label for="persetujuan-ttd" class="ml-2 text-sm font-regular text-gray-900">
+            Saya setuju bahwa tanda tangan yang saya foto dan unggah pada aplikasi formulir pembukaan rekening baru ini
+            merupakan spesimen tanda tangan saya.
+          </label>
         </div>
       </div>
 
@@ -135,7 +145,7 @@
       <div class="mt-6 flex justify-between" v-if="documentType !== 'fotoDiri' && fileUrl">
         <!-- <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent> -->
         <ButtonComponent variant="outline" @click="changeFile">Ulangi</ButtonComponent>
-        <ButtonComponent @click="saveFile" :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">
+        <ButtonComponent @click="saveFile" :disabled="isSubmitting || isButtonDisabled || isUploading">
           {{ isSubmitting ? "Mengirim..." : "Simpan" }}
         </ButtonComponent>
       </div>
@@ -144,6 +154,9 @@
     <input type="file" ref="fileInput" class="hidden" @change="handleFileUpload" accept="image/*" />
     <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg"
       @close="isModalError = false" @buttonClick1="retakePhoto" @buttonClick2="handleModalErrorClose" />
+    <ModalError :isOpen="isModalErrorLiveness" :features="modalContent" icon="otp-error-illus.svg"
+      @close="isModalError = false" @buttonClick1="handleButtonClick1(modalContent[0])"
+      @buttonClick2="handleButtonClick2(modalContent[0])" />
     <Toaster :type="toasterType" :message="toasterMessage" :show="showToaster" @close="closeToaster" />
   </div>
 </template>
@@ -211,10 +224,10 @@ export default {
   computed: {
     documentTypeText() {
       const textMap = {
-        ktp: "e-KTP",
-        npwp: "NPWP",
-        tandaTangan: "Tanda Tangan",
-        fotoDiri: "Liveness",
+        ktp: "Foto e-KTP",
+        npwp: "Foto NPWP",
+        tandaTangan: "Foto Tanda Tangan",
+        fotoDiri: "Verifikasi Wajah",
       };
       return textMap[this.documentType] || "Dokumen";
     },
@@ -236,8 +249,9 @@ export default {
   },
 
   setup() {
-    const livenessFailuresCount = ref(0); // Tambahkan ini
-    const maxLivenessFailures = 5; // Batas maksimal kegagalan
+    const isCapturing = ref(false);
+    const livenessFailuresCount = ref(0);
+    const maxLivenessFailures = 5;
     const showFlag = ref(false);
     const flagType = ref('info');
     const flagMessage = ref('');
@@ -357,6 +371,19 @@ export default {
 
         if (video.value) {
           video.value.srcObject = mediaStream;
+          // if (video.value) {
+          //   video.value.srcObject = mediaStream;
+
+          //   // KUNCI PERBAIKAN: Tunggu event loadedmetadata
+          //   await new Promise(resolve => {
+          //     video.value.onloadedmetadata = () => {
+          //       video.value.play(); // Pastikan video mulai diputar
+          //       resolve();
+          //     };
+          //   });
+
+          //   // Setelah ini, Anda bisa yakin video sudah mulai memutar stream
+          //   console.log("Webcam untuk Foto Diri berhasil dimulai dan siap.");
         } else {
           console.error("Video element not found!");
         }
@@ -403,6 +430,14 @@ export default {
       }
     };
 
+    const delayedCapturePhoto = () => {
+      isCapturing.value = true;
+      setTimeout(() => {
+        capturePhoto();
+        isCapturing.value = false;
+      }, 500);
+    };
+
     const capturePhoto = () => {
       if (!canvas.value || !video.value) return;
       const ctx = canvas.value.getContext("2d");
@@ -424,7 +459,7 @@ export default {
       photoUrl.value = null;
       isModalError.value = false;
       showFlag.value = false;
-      isDataFail = false;
+      isDataFail.value = false;
       startWebcam();
     };
 
@@ -485,7 +520,7 @@ export default {
             query: { fileUrl: photoUrl, documentType: "ktp" },
           });
         } else {
-          router.push({ name: "UploadDokumenPemindahbukuan" });
+          router.push({ name: "uploadDokumenPemindahbukuan" });
         }
       } catch (error) {
         // showErrorModal(error.response?.data?.message, error.response?.data?.Subtext, "Verifikasi Ulang", "Tutup");
@@ -535,6 +570,8 @@ export default {
     });
 
     return {
+      isCapturing,
+      delayedCapturePhoto,
       isModalErrorLiveness,
       livenessFailuresCount,
       maxLivenessFailures,
@@ -586,7 +623,7 @@ export default {
         this.$refs.fileInput.value = null;
       }
       this.$router.push({
-        name: "previewScreenPemindahbukuan",
+        name: "PreviewScreenPemindahbukuan",
         query: { documentType: this.documentType },
       });
     },
@@ -643,20 +680,8 @@ export default {
       setTimeout(() => {
         this.$refs.fileInput.click();
         this.isClicking = false;
-      }, 300);
+      }, 500);
     },
-
-    // handleFileUpload(event) {
-    //   const file = event.target.files[0];
-    //   if (!file) return;
-
-    //   console.log("File dipilih:", file.name);
-    //   const fileUrl = URL.createObjectURL(file);
-    //   this.$router.push({
-    //     name: "previewScreenPemindahbukuan",
-    //     query: { documentType: this.documentType, fileUrl },
-    //   });
-    // },
 
     handleFileUpload(event) {
       const file = event.target.files[0];
@@ -816,7 +841,7 @@ export default {
       setTimeout(() => {
         this.$refs.fileInput.click();
         this.isClicking = false;
-      }, 300);
+      }, 500);
     },
   },
   mounted() {

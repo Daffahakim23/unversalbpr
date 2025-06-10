@@ -750,36 +750,38 @@ export default {
     </div>
 
     <!-- Apakah Anda yakin dana yang digunakan milik Anda pribadi?* -->
-    <RadioButtonChoose label="Apakah Anda yakin dana yang digunakan milik Anda pribadi?*" :options="trueFalseOptions"
+    <RadioButtonChoose label="Apakah sumber dana yang Anda tempatkan milik Anda pribadi?*" :options="trueFalseOptions"
       v-model="form.sumberDanaMilikPribadi" name="sumberDana" />
 
     <!-- Form Detail Pekerjaan -->
     <div v-if="form.sumberDanaMilikPribadi === true" class="mt-4">
-      <FormField label="Nama Perusahaan*" id="namaPerusahaanDK" :isDropdown="false" v-model="form.namaPerusahaanDK"
-        placeholder="Masukkan Nama Perusahaan Anda" />
+      <FormField label="Nama Perusahaan/Instansi Tempat Bekerja*" id="namaPerusahaanDK" :isDropdown="false" v-model="form.namaPerusahaanDK"
+        placeholder="Masukan Nama Perusahaan/Instansi Tempat Bekerja" />
 
-      <FormField label="Bidang Pekerjaan*" id="bidangPekerjaanDK" :isDropdown="true" v-model="form.bidangPekerjaanDK"
-        placeholder="Pilih Bidang Pekerjaan Anda" :options="bidangPekerjaanOptions" />
+      <FormField label="Bidang Pekerjaan/Usaha*" id="bidangPekerjaanDK" :isDropdown="true" v-model="form.bidangPekerjaanDK"
+        placeholder="Pilih Bidang Pekerjaan/Usaha" :options="bidangPekerjaanOptions" />
 
       <div v-if="form.bidangPekerjaanDK === 'lainnya'" class="">
         <FormField label="Bidang Pekerjaan Lainnya" id="bidangPekerjaanLainnyaDK" type="text"
           v-model="form.bidangPekerjaanLainnyaDK" placeholder="Masukkan Bidang Pekerjaan Lainnya" />
+      </div>
 
-      </div>
-      <div v-if="form.pekerjaan !== '9999'" class="">
-        <FormField label="Jabatan*" id="jabatanDK" :isDropdown="true" v-model="form.jabatanDK" :options="jabatanOptions"
-          placeholder="Pilih Jabatan Anda" />
-      </div>
-      <div v-if="form.pekerjaan === '9999'" class="">
-        <FormField label="Jabatan*" id="jabatanLainnyaDK" type="text" v-model="form.jabatanLainnyaDK"
-          placeholder="Masukkan Jabatan" />
+      <div v-if="form.ubahPekerjaan === true">
+        <div v-if="form.pekerjaan !== '9999'" class="">
+          <FormField label="Jabatan/Posisi Pekerjaan*" id="jabatanDK" :isDropdown="true" v-model="form.jabatanDK"
+            :options="jabatanOptions" placeholder=" Pilih Jabatan Pekerjaan Anda" />
+        </div>
+        <div v-if="form.pekerjaan === '9999'" class="">
+          <FormField label="Jabatan*" id="jabatanLainnyaDK" type="text" v-model="form.jabatanLainnyaDK"
+            placeholder="Masukkan Jabatan" />
+        </div>
       </div>
 
       <FormField label="Alamat Perusahaan*" id="alamatDK" :isDropdown="false" v-model="form.alamatDK"
         placeholder="Masukkan Alamat Anda" />
 
       <div class="flex flex-row gap-4">
-        <FormField label="Kota Perusahaan*" id="kotaDK" v-model="form.kotaPerusahaanDK" :required="true"
+        <FormField label="Kota Perusahaan*" id="kotaDK" v-model="form.kotaPerusahaanDK" :required="true" variant="alpha"
           placeholder="Masukkan Kota Perusahaan" class="flex-1" />
 
         <FormField label="Kode Pos Perusahaan*" id="kodePosDK" v-model="form.kodePosPerusahaanDK" :required="true"
@@ -842,7 +844,7 @@ export default {
       <FormField label="Nama Lengkap*" id="namaLengkapBO" :isDropdown="false" v-model="form.namaLengkapBO"
         variant="alpha" placeholder="Masukkan Nama Lengkap Beneficial Owner Anda" :required="true" />
 
-        <div v-if="form.jenisIdentitasBO === '1'" class="">
+      <div v-if="form.jenisIdentitasBO === '1'" class="">
         <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
           v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
           :required="true" variant="numeric" :maxlength="20" />
@@ -881,8 +883,8 @@ export default {
       <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO" :required="true" variant="numeric"
         :maxlength="5" placeholder="Masukkan Kode Pos Beneficial Owner Anda" />
 
-      <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO" variant="alpha"
-        placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
+      <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
+        variant="alpha" placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
 
       <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"
         placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
@@ -909,7 +911,7 @@ export default {
         placeholder="Masukkan Alamat Perusahaan Beneficial Owner Anda" :required="true" />
 
       <div class="flex flex-row gap-4">
-        <FormField label="Kota*" id="kotaBO" v-model="form.kotaPerusahaanBO" :required="true"
+        <FormField label="Kota*" id="kotaBO" v-model="form.kotaPerusahaanBO" :required="true" variant="alpha"
           placeholder="Masukkan Kota Perusahaan" class="flex-1" />
 
         <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosPerusahaanBO" :required="true"
@@ -987,13 +989,13 @@ export default {
                 <li> Saya/kami menyalahgunakan rekening.</li>
               </ul>
             </li>
-            <li> Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening, saat ini saya,
+            <!-- <li> Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening, saat ini saya,
               <RadioButtonChoose class="text-xs sm:text-sm md:text-sm" label="" id="npwp" :options="npwpOptions"
                 v-model="form.npwp" name="npwp" required />
               Dan berkomitmen akan segera
               menyampaikan kepada bank setelah
               memiliki NPWP. (Tidak berlaku bagi nasabah yang telah menyerahkan dokumen NPWP)
-            </li>
+            </li> -->
             <li>Saya/Kami tidak memiliki kewajiban/domisili perpajakan di negara selain Indonesia.</li>
           </ul>
         </div>
@@ -1010,7 +1012,7 @@ export default {
       oleh pihak BANK <strong>(WAJIB DIISI)</strong>
     </p>
     <FormField label="Nama Lengkap Kontak Darurat*" id="namaLengkapKD" :isDropdown="false" v-model="form.namaLengkapKD"
-      placeholder="Masukkan Nama Lengkap Kontak Darurat" variant="alpha" />
+      placeholder="Masukkan Nama Lengkap Kontak Darurat Anda" variant="alpha" />
 
     <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD" variant="alpha"
       placeholder="Masukkan Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
@@ -1021,11 +1023,11 @@ export default {
         v-model="form.hubunganPemohonKDLainnya" placeholder="Masukkan Hubungan Pemohon Lainnya" />
     </div> -->
 
-    <FormField label="Alamat Terkini Kontak Darurat*" id="alamatKD" :isDropdown="false" v-model="form.alamatKD"
-      placeholder="Masukkan Alamat Kontak Darurat" />
+    <FormField label="Alamat Terkini*" id="alamatKD" :isDropdown="false" v-model="form.alamatKD"
+      placeholder="Masukkan Alamat Kontak Darurat Anda" />
 
-    <FormField label="Nomor Telepon Kontak Darurat*" id="nomorTeleponKD" v-model="form.nomorTeleponKD"
-      placeholder="Masukkan Nomor Telepon Kontak Darurat" variant="numeric" :maxlength="13" />
+    <FormField label="Nomor Telepon*" id="nomorTeleponKD" v-model="form.nomorTeleponKD"
+      placeholder="Masukkan Nomor Telepon Kontak Darurat Anda" variant="numeric" :maxlength="13" />
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -1089,74 +1091,153 @@ export default {
 
   computed: {
     isButtonDisabled() {
+      const isKodePosValidBO = this.form.kodePosBO && String(this.form.kodePosBO).length === 5;
+      const isKodePosPerusahaanValidBO = this.form.kodePosPerusahaanBO && String(this.form.kodePosPerusahaanBO).length === 5;
+      const isKodePosPerusahaanValidDK = this.form.kodePosPerusahaanDK && String(this.form.kodePosPerusahaanDK).length === 5;
+      const isJabatanDKValid = (this.form.jabatanDK || this.form.jabatanLainnyaDK?.trim());
       const isLainnyaEmpty = (
         (this.form.pekerjaan === "9999" && !this.form.pekerjaanLainnya?.trim()) ||
         (this.form.penghasilan === "0" && !this.form.penghasilanLainnya?.trim()) ||
-        (this.form.bidangPekerjaanDK === "lainnya" && !this.form.bidangPekerjaanLainnyaDK?.trim()) ||
+        (this.form.ubahPekerjaan === true && this.form.jabatanDK === "lainnya" && !this.form.jabatanLainnyaDK?.trim()) ||
         (this.form.jabatanDK === "lainnya" && !this.form.jabatanLainnyaDK?.trim()) ||
         (this.form.pekerjaanBO === "lainnya" && !this.form.pekerjaanLainnyaBO?.trim()) ||
         (this.form.penghasilanBO === "0" && !this.form.penghasilanLainnyaBO?.trim()) ||
         (this.form.jabatanBO === "lainnya" && !this.form.jabatanLainnyaBO?.trim())
       );
 
-      // Kondisi wajib untuk form kontak darurat
       const isKontakDaruratMandatory = !!this.form.namaLengkapKD?.trim() &&
         !!this.form.hubunganPemohonKD?.trim() &&
         !!this.form.alamatKD?.trim() &&
         !!this.form.nomorTeleponKD?.trim();
 
-      // Kondisi wajib untuk pertanyaan perubahan pekerjaan
       const isUbahPekerjaanAnswered = this.form.ubahPekerjaan !== null;
 
-      // Kondisi wajib untuk pertanyaan sumber dana pribadi
       const isSumberDanaAnswered = this.form.sumberDanaMilikPribadi !== null;
 
-      // Kondisi wajib jika "Apakah terdapat perubahan dalam pekerjaan Anda saat ini?" adalah true
       const isDetailPekerjaanMandatory = this.form.ubahPekerjaan === true
         ? !!this.form.pekerjaan && !!this.form.penghasilan && !!this.form.jumlahPenghasilan
         : true;
 
-      // Kondisi wajib jika "Apakah Anda yakin dana yang digunakan milik Anda pribadi?" adalah true
       const isDetailPekerjaanPribadiMandatory = this.form.sumberDanaMilikPribadi === true
         ? !!this.form.namaPerusahaanDK?.trim() && !!this.form.bidangPekerjaanDK &&
-        (!!this.form.jabatanDK || !!this.form.jabatanLainnyaDK?.trim()) &&
-        !!this.form.alamatDK?.trim() && !!this.form.kotaPerusahaanDK?.trim() && !!this.form.kodePosPerusahaanDK?.trim() &&
+        ((this.form.ubahPekerjaan === true || this.form.pekerjaan === "9999") ? (!!this.form.jabatanDK || !!this.form.jabatanLainnyaDK?.trim()) : true) &&
+        !!this.form.alamatDK?.trim() && !!this.form.kotaPerusahaanDK?.trim() && isKodePosPerusahaanValidDK &&
         (!!this.form.lamaBekerjaTahunDK > 0 || !!this.form.lamaBekerjaBulanDK > 0) && !!this.form.korespondensi
         : true;
 
-      // Kondisi wajib jika "Apakah Anda yakin dana yang digunakan milik Anda pribadi?" adalah false (Beneficial Owner)
+      // const isDetailPekerjaanPribadiMandatory = this.form.sumberDanaMilikPribadi === true ?
+      //   (() => { // Gunakan IIFE (Immediately Invoked Function Expression) untuk scope console.log
+      //     const check1 = !!this.form.namaPerusahaanDK?.trim();
+      //     const check2 = !!this.form.bidangPekerjaanDK;
+      //     const check3 = (this.form.ubahPekerjaan ? (!!this.form.jabatanDK || !!this.form.jabatanLainnyaDK?.trim()) : true);
+      //     const check4 = !!this.form.alamatDK?.trim();
+      //     const check5 = !!this.form.kotaPerusahaanDK?.trim();
+      //     const check6 = isKodePosPerusahaanValidDK;
+      //     const check7 = (!!this.form.lamaBekerjaTahunDK > 0 || !!this.form.lamaBekerjaBulanDK > 0);
+      //     const check8 = !!this.form.korespondensi;
+
+      //     console.groupCollapsed("Detail isDetailPekerjaanPribadiMandatory Checks"); // Gunakan groupCollapsed agar rapi
+      //     console.log("  namaPerusahaanDK:", check1, this.form.namaPerusahaanDK);
+      //     console.log("  bidangPekerjaanDK:", check2, this.form.bidangPekerjaanDK);
+      //     console.log("  jabatanDK/LainnyaDK (conditional):", check3, { jabatanDK: this.form.jabatanDK, jabatanLainnyaDK: this.form.jabatanLainnyaDK, isUbahPekerjaanAnswered: isUbahPekerjaanAnswered });
+      //     console.log("  alamatDK:", check4, this.form.alamatDK);
+      //     console.log("  kotaPerusahaanDK:", check5, this.form.kotaPerusahaanDK);
+      //     console.log("  isKodePosPerusahaanValidDK:", check6, this.form.kodePosPerusahaanDK);
+      //     console.log("  lamaBekerjaDK (Tahun/Bulan):", check7, { tahun: this.form.lamaBekerjaTahunDK, bulan: this.form.lamaBekerjaBulanDK });
+      //     console.log("  korespondensi:", check8, this.form.korespondensi);
+      //     console.groupEnd();
+
+      //     return check1 && check2 && check3 && check4 && check5 && check6 && check7 && check8;
+      //   })() :
+      //   true;
+
       const isBeneficialOwnerMandatory = this.form.sumberDanaMilikPribadi === false
-        ? !!this.form.hubunganNasabahBO &&
-        (this.form.hubunganNasabahBO === '0' ? !!this.form.hubunganNasabahLainnyaBO?.trim() : true) &&
+        // ? !!this.form.hubunganNasabahBO &&
+        // (this.form.hubunganNasabahBO === '0' ? !!this.form.hubunganNasabahLainnyaBO?.trim() : true) &&
+        // !!this.form.jenisIdentitasBO &&
+        // (this.form.jenisIdentitasBO === '0' ? !!this.form.jenisIdentitasLainnyaBO?.trim() : true) &&
+        // !!this.form.kewarganegaraanBO &&
+        // (this.form.kewarganegaraanBO === false ? !!this.form.kewarganegaraanLainnyaBO?.trim() : true) &&
+        // !!this.form.namaLengkapBO?.trim() && !!this.form.nomorDokumenIdentitasBO?.trim() &&
+        // !!this.form.alamatBO?.trim() && !!this.form.rtBO?.trim() && !!this.form.rwBO?.trim() &&
+        // !!this.form.provinsiBO && !!this.form.kabupatenBO && !!this.form.kecamatanBO &&
+        // !!this.form.kelurahanBO && isKodePosValidBO && !!this.form.tempatLahirBO?.trim() &&
+        // !!this.form.tanggalLahirBO && !!this.form.jenisKelaminBO && !!this.form.statusPerkawinanBO &&
+        // !!this.form.pekerjaanBO &&
+        // (this.form.pekerjaanBO === '9999' ? !!this.form.pekerjaanLainnyaBO?.trim() : true) &&
+        // !!this.form.namaPerusahaanBO?.trim() && !!this.form.alamatPerusahaanBO?.trim() &&
+        // !!this.form.kotaPerusahaanBO?.trim() && isKodePosPerusahaanValidBO &&
+        // (!!this.form.jabatanBO || !!this.form.jabatanLainnyaBO?.trim()) &&
+        // (!!this.form.lamaBekerjaTahunBO > 0 || !!this.form.lamaBekerjaBulanBO > 0) &&
+        // !!this.form.penghasilanBO &&
+        // (this.form.penghasilanBO === '0' ? !!this.form.penghasilanLainnyaBO?.trim() : true) &&
+        // !!this.form.jumlahPenghasilanBO && !!this.pernyataanChecked
+        ? this.pernyataanChecked === true &&
+        this.form.hubunganNasabahBO &&
+        (this.form.hubunganNasabahBO !== "0" || this.form.hubunganNasabahLainnyaBO) &&
+        this.form.jenisIdentitasBO &&
+        (this.form.jenisIdentitasBO !== "0" || this.form.jenisIdentitasLainnyaBO) &&
+        this.form.kewarganegaraanBO &&
+        this.form.namaLengkapBO &&
+        this.form.nomorDokumenIdentitasBO &&
+        this.form.alamatBO &&
+        this.form.rtBO &&
+        this.form.rwBO &&
+        this.form.provinsiBO &&
+        this.form.kabupatenBO &&
+        this.form.kecamatanBO &&
+        this.form.kelurahanBO &&
+        isKodePosValidBO &&
+        this.form.tempatLahirBO &&
+        this.form.tanggalLahirBO &&
+        (this.form.jenisKelaminBO !== null && this.form.jenisKelaminBO !== undefined) &&
+        this.form.statusPerkawinanBO &&
+        this.form.pekerjaanBO &&
+        (this.form.pekerjaanBO !== "9999" || this.form.pekerjaanLainnyaBO) &&
+        this.form.namaPerusahaanBO &&
+        this.form.alamatPerusahaanBO &&
+        this.form.kotaPerusahaanBO &&
+        isKodePosPerusahaanValidBO &&
+        // this.form.jabatanBO &&
+        (this.form.lamaBekerjaTahunBO > 0 || this.form.lamaBekerjaBulanBO > 0) &&
+        this.form.penghasilanBO &&
+        (this.form.penghasilanBO !== "0" || this.form.penghasilanLainnyaBO) &&
+        this.form.jumlahPenghasilanBO &&
+        (
+          (this.form.pekerjaanBO === '9999' && !!this.form.jabatanLainnyaBO?.trim()) ||
+          (['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013'].includes(this.form.pekerjaanBO) && !!this.form.jabatanBO) ||
+          (!['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013', '9999'].includes(this.form.pekerjaanBO))
 
-        // (!!this.form.hubunganNasabahBO ||
-        // (this.form.hubunganNasabahBO === '0' && !!this.form.hubunganNasabahLainnyaBO?.trim())) &&
-
-
-        !!this.form.jenisIdentitasBO &&
-        (this.form.jenisIdentitasBO === '0' ? !!this.form.jenisIdentitasLainnyaBO?.trim() : true) &&
-        !!this.form.kewarganegaraanBO &&
-        (this.form.kewarganegaraanBO === false ? !!this.form.kewarganegaraanLainnyaBO?.trim() : true) &&
-        !!this.form.namaLengkapBO?.trim() && !!this.form.nomorDokumenIdentitasBO?.trim() &&
-        !!this.form.alamatBO?.trim() && !!this.form.rtBO?.trim() && !!this.form.rwBO?.trim() &&
-        !!this.form.provinsiBO && !!this.form.kabupatenBO && !!this.form.kecamatanBO &&
-        !!this.form.kelurahanBO && !!this.form.kodePosBO?.trim() && !!this.form.tempatLahirBO?.trim() &&
-        !!this.form.tanggalLahirBO && !!this.form.jenisKelaminBO && !!this.form.statusPerkawinanBO &&
-        !!this.form.pekerjaanBO &&
-        (this.form.pekerjaanBO === '9999' ? !!this.form.pekerjaanLainnyaBO?.trim() : true) &&
-        !!this.form.namaPerusahaanBO?.trim() && !!this.form.alamatPerusahaanBO?.trim() &&
-        !!this.form.kotaPerusahaanBO?.trim() && !!this.form.kodePosPerusahaanBO?.trim() &&
-        (!!this.form.jabatanBO || !!this.form.jabatanLainnyaBO?.trim()) &&
-        (!!this.form.lamaBekerjaTahunBO > 0 || !!this.form.lamaBekerjaBulanBO > 0) &&
-        !!this.form.penghasilanBO &&
-        (this.form.penghasilanBO === '0' ? !!this.form.penghasilanLainnyaBO?.trim() : true) &&
-        !!this.form.jumlahPenghasilanBO && !!this.pernyataanChecked
+        )
         : true;
 
-      return !(isKontakDaruratMandatory && isUbahPekerjaanAnswered && isSumberDanaAnswered) ||
-        !isDetailPekerjaanMandatory || !isDetailPekerjaanPribadiMandatory ||
-        !isBeneficialOwnerMandatory || isLainnyaEmpty;
+      console.group("Button Disabled Debugging");
+      console.log("isLainnyaEmpty:", isLainnyaEmpty);
+      console.log("isKontakDaruratMandatory:", isKontakDaruratMandatory);
+      console.log("isUbahPekerjaanAnswered:", this.form.ubahPekerjaan, "->", isUbahPekerjaanAnswered);
+      console.log("isSumberDanaAnswered:", this.form.sumberDanaMilikPribadi, "->", isSumberDanaAnswered);
+      console.log("isDetailPekerjaanMandatory:", isDetailPekerjaanMandatory);
+      console.log("isDetailPekerjaanPribadiMandatory:", isDetailPekerjaanPribadiMandatory);
+      console.log("isBeneficialOwnerMandatory:", isBeneficialOwnerMandatory);
+
+      const finalResult = !(isKontakDaruratMandatory && isUbahPekerjaanAnswered && isSumberDanaAnswered) ||
+        !isDetailPekerjaanMandatory ||
+        !isDetailPekerjaanPribadiMandatory ||
+        !isBeneficialOwnerMandatory ||
+        isLainnyaEmpty;
+
+      console.log("Final `isButtonDisabled` result:", finalResult);
+      console.groupEnd();
+
+      return finalResult;
+
+      // return !(isKontakDaruratMandatory && isUbahPekerjaanAnswered && isSumberDanaAnswered) ||
+      //   !isDetailPekerjaanMandatory ||
+      //   !isDetailPekerjaanPribadiMandatory ||
+      //   !isBeneficialOwnerMandatory ||
+      //   isLainnyaEmpty;
     },
+
   },
 
   watch: {
@@ -1347,6 +1428,8 @@ export default {
       if (newVal !== 'lainnya') {
         this.form.jenisIdentitasLainnyaBO = '';
       }
+      this.form.nomorDokumenIdentitasBO = '';
+
     },
     'form.kewarganegaraanBO'(newVal) {
       if (newVal !== 'lainnya') {

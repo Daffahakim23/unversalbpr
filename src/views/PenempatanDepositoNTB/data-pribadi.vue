@@ -138,6 +138,7 @@ export default {
 
   computed: {
     isButtonDisabled() {
+      const isKodePosValid = this.form.kodePos && String(this.form.kodePos).length === 5;
       const isFormFilled =
         this.form.namaPanggilan &&
         this.form.tujuan &&
@@ -154,7 +155,7 @@ export default {
           this.form.kabupaten &&
           this.form.kecamatan &&
           this.form.kelurahan &&
-          this.form.kodePos);
+          isKodePosValid);
 
       const isOtherHobbyFilled = this.form.hobi === '0' ? this.form.hobiLainnya : true;
       const isOtherSimpananFilled = this.form.tujuan === '0' ? this.form.tujuanLainnya : true;

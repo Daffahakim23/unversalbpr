@@ -270,7 +270,7 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Ambil Foto Wajah';
+                return 'Verifikasi Wajah';
               default:
                 return 'Hasil Foto';
             }
@@ -395,7 +395,7 @@ const routes = [
               case 'ktp':
                 return 'Foto e-KTP';
               case 'fotoDiri':
-                return 'Ambil Foto Wajah';
+                return 'Verifikasi Wajah';
               default:
                 return 'Hasil Foto';
             }
@@ -539,7 +539,7 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Ambil Foto Wajah';
+                return 'Verifikasi Wajah';
               default:
                 return 'Hasil Foto';
             }
@@ -683,7 +683,7 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Ambil Foto Wajah';
+                return 'Verifikasi Wajah';
               default:
                 return 'Hasil Foto';
             }
@@ -793,7 +793,7 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Ambil Foto Wajah';
+                return 'Verifikasi Wajah';
               default:
                 return 'Hasil Foto';
             }
@@ -924,7 +924,7 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Ambil Foto Wajah';
+                return 'Verifikasi Wajah';
               default:
                 return 'Hasil Foto';
             }
@@ -1060,7 +1060,7 @@ const routes = [
         },
       }, {
         path: "previewPemindahbukuan",
-        name: "previewScreenPemindahbukuan",
+        name: "PreviewScreenPemindahbukuan",
         component: PreviewScreenPemindahbukuan,
         meta: {
           feature: "Transfer",
@@ -1077,13 +1077,13 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Ambil Foto Wajah';
+                return 'Verifikasi Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
-            const documentTypes = route.query.documentType; // Baca dari query parameters
+            const documentTypes = route.query.documentType;
             // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':

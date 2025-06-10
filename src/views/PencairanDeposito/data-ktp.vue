@@ -136,10 +136,9 @@ export default {
     isButtonDisabled() {
       const nikValue = this.form.nik;
       if (!nikValue || String(nikValue).length !== 16) {
-        return true; // NIK tidak valid atau kurang dari 16 digit
+        return true;
       }
 
-      // Daftar semua field yang wajib diisi
       const requiredFields = [
         'nik', 'namaLengkap', 'tanggalLahir', 'tempatLahir', 'jenisKelamin',
         'agama', 'alamat', 'rt', 'rw', 'provinsi', 'kabupaten',
@@ -148,10 +147,9 @@ export default {
       ];
 
       for (const field of requiredFields) {
-        // Khusus untuk 'kewarganegaraanLainnya', cek hanya jika kewarganegaraan adalah 'false'
         if (field === 'kewarganegaraanLainnya') {
           if (this.form.kewarganegaraan === false && !this.form.kewarganegaraanLainnya) {
-            return true; // Wajib diisi tapi kosong
+            return true;
           }
         }
 
@@ -160,21 +158,19 @@ export default {
             return true;
           }
           if (this.form.masaAktifKtp === '0' && !this.form.masaAktifKtpLainnya) {
-            return true; // Jika '0' dipilih tapi tanggal belum diisi
+            return true;
           }
         }
                 else if (field === 'kodePos') {
           if (!this.form.kodePos || String(this.form.kodePos).length !== 5) {
-            return true; // Kode Pos tidak valid atau panjangnya bukan 5
+            return true; 
           }
         }
         else if (this.form[field] === null || this.form[field] === undefined || this.form[field] === '') {
-          // Cek jika field wajib lainnya kosong/null/undefined
           return true;
         }
       }
 
-      // Jika semua validasi lolos, maka tombol tidak dinonaktifkan
       return false;
     },
   },
@@ -331,7 +327,7 @@ export default {
         console.log("Form filled:", this.form);
         this.isDataFromFilestore = false;
       } else if (data) {
-        const tanggalBerlakuSampai = data.masaAktifKtp; // Ambil dari data.masaAktifKtp
+        const tanggalBerlakuSampai = data.masaAktifKtp;
         this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
         Object.keys(this.form).forEach((key) => {
           if (data[key] !== undefined) {
@@ -344,16 +340,14 @@ export default {
         if (!this.form.masaAktifKtp && data.berlaku_seumur_hidup) {
           this.form.masaAktifKtp = "Seumur Hidup";
         } else if (!this.form.masaAktifKtp && data.masaAktifKtp) {
-          this.form.masaAktifKtp = data.masaAktifKtp; // Pastikan mengambil nilai tanggal jika ada
+          this.form.masaAktifKtp = data.masaAktifKtp;
         }
       }
     },
     goBack() {
       if (this.isDataFromFilestore == true) {
-        // Jika data KTP berasal dari fileStore, langsung ke UploadDokumenPenempatanDepositoNTB
         this.$router.push({ name: "UploadDokumenPencairanDeposito" });
       } else {
-        // Jika data KTP berasal dari OCR (atau tidak ada), kembali ke PreviewScreenPencairanDeposito
         this.$router.push({
           name: "PreviewScreenPencairanDeposito",
           query: {
@@ -388,12 +382,11 @@ export default {
           return;
         }
 
-        // Tentukan nilai berlaku_sampai berdasarkan pilihan masaAktifKtp
         let berlakuSampaiValue = "";
         if (this.form.masaAktifKtp === '0') {
-          berlakuSampaiValue = this.form.masaAktifKtpLainnya; // Ambil dari input tanggal lainnya
+          berlakuSampaiValue = this.form.masaAktifKtpLainnya; 
         } else {
-          berlakuSampaiValue = this.form.masaAktifKtp; // Ambil nilai langsung dari dropdown (contoh: "Seumur Hidup")
+          berlakuSampaiValue = this.form.masaAktifKtp; 
         }
 
         const requestData = {

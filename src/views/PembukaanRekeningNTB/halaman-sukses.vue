@@ -11,7 +11,6 @@
       Aplikasi Pembukaan Rekening Tabungan Anda Telah Berhasil Dikirimkan
     </p>
 
-    <!-- Informasi Penting -->
     <div class="py-4">
       <h3 class="text-md sm:text-md md:text-base font-semibold mb-3">Informasi Penting</h3>
       <ul class="list-disc pl-8 space-y-2 text-sm sm:text-sm md:text-sm">
@@ -26,7 +25,6 @@
       </ul>
     </div>
 
-    <!-- Dokumen Terkirim -->
     <div class="py-4">
       <h3 class="text-md sm:text-md md:text-base font-semibold mb-4">Dokumen Terkirim</h3>
       <button type="button"

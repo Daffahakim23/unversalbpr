@@ -51,7 +51,7 @@
               'border-gray-200 bg-neutral-100 text-neutral-300 cursor-not-allowed': readonly,
               'border-red-500': error,
               'border-neutral-200 focus:ring-1': !readonly && !error
-            }" class="w-full h-10 p-2 rounded-md" :required="required" :maxlength="20" />
+            }" class="w-full h-10 p-2 rounded-md" :required="required" :maxlength="35" />
         </div>
       </template>
       <template v-else>
@@ -194,17 +194,16 @@ export default {
 
   mounted() {
     document.addEventListener("click", this.handleClickOutside);
-    // Add event listener for country dropdown as well
-    document.addEventListener("click", this.handleClickOutsideCountryDropdown); // Added this line
+    document.addEventListener("click", this.handleClickOutsideCountryDropdown);
     if (this.type === "handphone") {
       this.phoneNumber = this.modelValue
         ? this.modelValue.replace(this.getCountryCallingCode(this.selectedCountryCode), "").trim()
-        : ""; // Added null check for modelValue
+        : "";
     }
   },
   beforeUnmount() {
     document.removeEventListener("click", this.handleClickOutside);
-    document.removeEventListener("click", this.handleClickOutsideCountryDropdown); // Added this line
+    document.removeEventListener("click", this.handleClickOutsideCountryDropdown);
   },
 
   methods: {
@@ -224,7 +223,7 @@ export default {
         const isDigit = /^\d$/.test(key);
         if (!isDigit) {
           event.preventDefault();
-        } else if (this.modelValue.length >= 16) {
+        } else if (this.modelValue.length >= 35) {
           event.preventDefault();
         } else if (this.modelValue.length === 0 && key === "0") {
           event.preventDefault();
@@ -236,13 +235,13 @@ export default {
       let value = event.target.value;
 
       if (this.variant === "alpha") {
-        value = value.replace(/[^a-zA-Z\s]/g, ""); // hanya huruf dan spasi
+        value = value.replace(/[^a-zA-Z\s]/g, "");
         // value = value.trimStart();
       } else if (this.variant === "numeric") {
-        value = value.replace(/[^0-9]/g, ""); // hanya angka
+        value = value.replace(/[^0-9]/g, "");
       }
       value = value.trimStart();
-      value = value.replace(/\s\s+/g, ' '); // Mengganti multiple spasi menjadi single spasi
+      value = value.replace(/\s\s+/g, ' ');
       this.$emit("update:modelValue", value);
       // this.$nextTick(() => {
       //   if (event.target.value !== value) {
@@ -279,8 +278,7 @@ export default {
     },
     selectOption(option) {
       this.$emit("update:modelValue", option.value);
-      // Tambahkan emit change event agar parent bisa merespon langsung
-      this.$emit("change", option.value); // Added this line
+      this.$emit("change", option.value);
       this.isOpen = false;
     },
 
@@ -289,7 +287,7 @@ export default {
         this.isOpen &&
         this.$refs.dropdown &&
         !this.$refs.dropdown.contains(event.target) &&
-        this.$refs.trigger && // Add null check for trigger
+        this.$refs.trigger &&
         !this.$refs.trigger.contains(event.target)
       ) {
         this.isOpen = false;
@@ -309,7 +307,7 @@ export default {
         this.isCountryDropdownOpen &&
         this.$refs.countryDropdown &&
         !this.$refs.countryDropdown.contains(event.target) &&
-        this.$refs.countryDropdownTrigger && // Add a ref to the button to prevent closing when clicking it
+        this.$refs.countryDropdownTrigger &&
         !this.$refs.countryDropdownTrigger.contains(event.target)
       ) {
         this.isCountryDropdownOpen = false;
@@ -345,7 +343,6 @@ export default {
 
 input::placeholder {
   color: #9ca3af;
-  /* Atau warna abu-abu Tailwind yang Anda inginkan */
 }
 
 /* Untuk kompatibilitas browser lain */

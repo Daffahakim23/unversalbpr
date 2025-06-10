@@ -26,17 +26,17 @@
       <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan"
         :options="kelurahanOptions" placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-      <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" placeholder="Masukkan Kode Pos Anda"
-        :required="false" variant="numeric" />
+      <FormField label="Kode Pos" id="kodePos" :maxlength="5" v-model="form.kodePos"
+        placeholder="Masukkan Kode Pos Anda" :required="false" variant="numeric" />
 
       <FormField label="Alamat Kantor (Opsional)" id="alamat_kantor" :isDropdown="false" v-model="form.alamat_kantor"
         placeholder="Masukkan Alamat Kantor Anda" :required="false" />
 
-      <FormField label="Nomor Telepon (Opsional)" id="nomor_telp" type="number" v-model="form.nomor_telp"
+      <FormField label="Nomor Telepon (Opsional)" id="nomor_telp" v-model="form.nomor_telp"
         placeholder="Masukkan Nomor Telepon" variant="numeric" :required="false" />
 
-      <FormField label="Nomor Fax (Opsional)" id="nomor_fax" type="number" v-model="form.nomor_fax"
-        placeholder="Masukkan Nomor Fax" :required="false" variant="numeric" :maxlength="10"  />
+      <FormField label="Nomor Fax (Opsional)" id="nomor_fax" v-model="form.nomor_fax" placeholder="Masukkan Nomor Fax"
+        :required="false" variant="numeric" :maxlength="10" />
 
       <FormField label="Alamat Email (Opsional)" id="email" type="email" v-model="form.email"
         placeholder="Masukkan email Anda" :required="false" />
@@ -124,6 +124,7 @@ export default {
         return false;
       }
       if (this.form.perubahanData === true) {
+        const isKodePosValid = this.form.kodePos && String(this.form.kodePos).length === 5;
         return !(
           this.form.alamat &&
           this.form.rt &&
@@ -132,7 +133,7 @@ export default {
           this.form.kabupaten &&
           this.form.kecamatan &&
           this.form.kelurahan &&
-          this.form.kodePos
+          isKodePosValid
         );
       }
       return true;

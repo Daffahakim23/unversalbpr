@@ -4,8 +4,8 @@
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" variant="alpha" required />
 
-    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric" :maxlength="10"
-      placeholder="Masukkan Nomor Rekening Anda" required
+    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric"
+      :maxlength="10" placeholder="Masukkan Nomor Rekening Anda" required
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
 
@@ -13,7 +13,7 @@
       :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       required :error="emailError" @blur="handleEmailBlur" />
 
-    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
         ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
         : form.phone?.startsWith('0')
@@ -187,60 +187,19 @@ export default {
       this.isModalError = false;
     },
 
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
+    async fetchData() {
+      try {
+        const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
+        console.log("Response data:", response.data);
+        const data = Array.isArray(response.data) ? response.data[0] : response.data;
+        if (data) {
+          Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
 
-    // async handleSubmitt() {
-    //   try {
-    //     const requestData = {
-    //       nama_lengkap: this.form.namaLengkap,
-    //       nomor_rekening: this.form.nomorRekening,
-    //       jenis_identitas: Number(this.form.tandaPengenal),
-    //       no_hp: this.form.phone,
-    //       alamat_email: this.form.email,
-    //       tanggal: new Date().toISOString().split("T")[0],
-    //     };
-
-    //     console.log("Request data:", requestData);
-
-    //     const response = await api.post("/pengkinian-data", requestData, {
-    //       headers: { 'Content-Type': 'application/json' }
-    //     });
-
-    //     console.log("Response code:", response.status);
-    //     console.log("Response data:", response.data);
-    //     console.log(requestData);
-
-    //     if (response.status === 200) {
-    //       const fileStore = useFileStore();
-    //       fileStore.setFormPengkinianData(this.form);
-    //       fileStore.setEmail(requestData.alamat_email);
-    //       fileStore.setUuid(response.data.uuid);
-    //       fileStore.setNoHP(requestData.no_hp);
-    //       window.scrollTo(0, 0);
-    //       console.log("Data berhasil dikirim:", response.data);
-    //       this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
-
-    //     } else {
-    //       console.error("Gagal mengirim data, status:", response.status);
-    //     }
-    //   } catch (error) {
-    //     if (error.response) {
-    //       console.error("Error response data:", error.response.data);
-    //     }
-    //     console.error("Error saat mengirim data:", error);
-    //   }
-    // },
     async handleSubmit() {
       if (this.emailError) {
         console.error("Email tidak valid.");
@@ -290,7 +249,7 @@ export default {
 
         console.log("Mengirim data:", finalData);
 
-        const response = await api.post("/pengkinian-data", finalData, { // Menggunakan finalData yang sudah dimodifikasi
+        const response = await api.post("/pengkinian-data", finalData, {
           headers: { 'Content-Type': 'application/json' }
         });
 
@@ -337,12 +296,12 @@ export default {
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg";
         } else {
-           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/,'') == "liveness") {
+        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        } else if (error.response.data.message.replace(/ .*/,'') == "fraud") {
+        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }
@@ -360,7 +319,7 @@ export default {
   },
 
   created() {
-    // this.fetchData();
+    this.fetchData();
   },
 };
 </script>

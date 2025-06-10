@@ -107,7 +107,8 @@
         variant="alpha" placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" :required="true" />
 
       <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"
-        placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" :maxdate="new Date().toJSON().split('T')[0].toString()"/>
+        placeholder="Pilih Tanggal Lahir Beneficial Owner Anda"
+        :maxdate="new Date().toJSON().split('T')[0].toString()" />
 
       <FormField label="Jenis Kelamin*" id="jenisKelamin" :isDropdown="true" v-model="form.jenisKelaminBO"
         :options="jenisKelaminOptions" placeholder="Pilih Jenis Kelamin Beneficial Owner Anda" />
@@ -357,6 +358,9 @@ export default {
 
   computed: {
     isButtonDisabled() {
+      const isKodePosValidBO = this.form.kodePosBO && String(this.form.kodePosBO).length === 5;
+      const isKodePosPerusahaanValidBO = this.form.kodePosPerusahaanBO && String(this.form.kodePosPerusahaanBO).length === 5;
+      const isKodePosPerusahaanValidDK = this.form.kodePosPerusahaanDK && String(this.form.kodePosPerusahaanDK).length === 5;
       // const isLamaBekerjaValidDK = this.form.lamaBekerjaTahunDK > 0 || this.form.lamaBekerjaBulanDK > 0;
       // const isLamaBekerjaValidBO = this.form.lamaBekerjaTahunBO > 0 || this.form.lamaBekerjaBulanBO > 0;
 
@@ -413,7 +417,7 @@ export default {
         this.form.kabupatenBO &&
         this.form.kecamatanBO &&
         this.form.kelurahanBO &&
-        this.form.kodePosBO &&
+        isKodePosValidBO &&
         this.form.tempatLahirBO &&
         this.form.tanggalLahirBO &&
         (this.form.jenisKelaminBO !== null && this.form.jenisKelaminBO !== undefined) &&
@@ -423,7 +427,7 @@ export default {
         this.form.namaPerusahaanBO &&
         this.form.alamatPerusahaanBO &&
         this.form.kotaPerusahaanBO &&
-        this.form.kodePosPerusahaanBO &&
+        isKodePosPerusahaanValidBO &&
         // this.form.jabatanBO &&
         (this.form.lamaBekerjaTahunBO > 0 || this.form.lamaBekerjaBulanBO > 0) &&
         this.form.penghasilanBO &&
@@ -446,7 +450,8 @@ export default {
           (!['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013', '9999'].includes(this.form.pekerjaan))
         ) &&
         (this.form.lamaBekerjaTahunDK > 0 || this.form.lamaBekerjaBulanDK > 0) &&
-        !!this.form.kodePosPerusahaanDK?.trim() &&
+        // !!this.form.kodePosPerusahaanDK?.trim() &&
+        isKodePosPerusahaanValidDK &&
         !!this.form.alamatDK?.trim() &&
         !!this.form.kotaPerusahaanDK?.trim();
 
@@ -675,6 +680,7 @@ export default {
       if (newVal !== 'lainnya') {
         this.form.jenisIdentitasLainnyaBO = '';
       }
+      this.form.nomorDokumenIdentitasBO = '';
     },
     'form.kewarganegaraanBO'(newVal) {
       if (newVal !== 'lainnya') {

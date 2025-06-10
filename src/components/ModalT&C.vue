@@ -27,7 +27,7 @@
 <script>
 import axios from 'axios';
 import ButtonComponent from "@/components/button.vue";
-import CustomCheckbox from "@/components/CustomCheckbox.vue"; // Pastikan pathnya benar
+import CustomCheckbox from "@/components/CustomCheckbox.vue";
 
 export default {
     components: {

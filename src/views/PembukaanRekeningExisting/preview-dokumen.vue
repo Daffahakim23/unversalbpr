@@ -3,7 +3,7 @@
     <div>
       <div class="flex items-center justify-between mb-4 gap-2">
         <button @click="openModal2" class="flex items-center text-primary gap-1">
-          <p class="text-base font-semibold">Panduan Foto {{ documentTypeText }}</p>
+          <p class="text-base font-semibold">Panduan {{ documentTypeText }}</p>
           <img src="@/assets/Question.png" alt="Panduan" class="h-5" />
         </button>
         <!-- <button v-if="(fileUrl || photoUrl) && documentType !== 'fotoDiri'" @click="changeFile"
@@ -66,7 +66,8 @@
             </div>
             <div v-else class="controls flex justify-between mt-4 w-full">
               <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-              <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">
+              <ButtonComponent @click.prevent="uploadPhoto"
+                :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">
                 {{ isSubmitting ? "Mengirim..." : "Simpan" }}
               </ButtonComponent>
             </div>
@@ -98,14 +99,18 @@
 
         <div class="controls item-center mt-6 w-full">
           <div v-if="!photoUrl" class="flex justify-center">
-            <ButtonComponent @click="capturePhoto">
+            <!-- <ButtonComponent @click="capturePhoto">
+              Gunakan Foto
+            </ButtonComponent> -->
+            <ButtonComponent @click="delayedCapturePhoto" :disabled="isCapturing">
               Gunakan Foto
             </ButtonComponent>
           </div>
           <div v-else class="controls flex justify-between mt-4 w-full">
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
-            <ButtonComponent @click.prevent="uploadPhoto" :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">{{
-              isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
+            <ButtonComponent @click.prevent="uploadPhoto"
+              :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">{{
+                isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
             </ButtonComponent>
           </div>
         </div>
@@ -219,10 +224,10 @@ export default {
   computed: {
     documentTypeText() {
       const textMap = {
-        ktp: "e-KTP",
-        npwp: "NPWP",
-        tandaTangan: "Tanda Tangan",
-        fotoDiri: "Liveness",
+        ktp: "Foto e-KTP",
+        npwp: "Foto NPWP",
+        tandaTangan: "Foto Tanda Tangan",
+        fotoDiri: "Verifikasi Wajah",
       };
       return textMap[this.documentType] || "Dokumen";
     },
@@ -244,8 +249,9 @@ export default {
   },
 
   setup() {
-    const livenessFailuresCount = ref(0); // Tambahkan ini
-    const maxLivenessFailures = 5; // Batas maksimal kegagalan
+    const isCapturing = ref(false);
+    const livenessFailuresCount = ref(0);
+    const maxLivenessFailures = 5;
     const showFlag = ref(false);
     const flagType = ref('info');
     const flagMessage = ref('');
@@ -365,6 +371,19 @@ export default {
 
         if (video.value) {
           video.value.srcObject = mediaStream;
+          // if (video.value) {
+          //   video.value.srcObject = mediaStream;
+
+          //   // KUNCI PERBAIKAN: Tunggu event loadedmetadata
+          //   await new Promise(resolve => {
+          //     video.value.onloadedmetadata = () => {
+          //       video.value.play(); // Pastikan video mulai diputar
+          //       resolve();
+          //     };
+          //   });
+
+          //   // Setelah ini, Anda bisa yakin video sudah mulai memutar stream
+          //   console.log("Webcam untuk Foto Diri berhasil dimulai dan siap.");
         } else {
           console.error("Video element not found!");
         }
@@ -409,6 +428,14 @@ export default {
       } else {
         startWebcamDokumen();
       }
+    };
+
+    const delayedCapturePhoto = () => {
+      isCapturing.value = true;
+      setTimeout(() => {
+        capturePhoto();
+        isCapturing.value = false;
+      }, 500);
     };
 
     const capturePhoto = () => {
@@ -543,6 +570,8 @@ export default {
     });
 
     return {
+      isCapturing,
+      delayedCapturePhoto,
       isModalErrorLiveness,
       livenessFailuresCount,
       maxLivenessFailures,
@@ -651,7 +680,7 @@ export default {
       setTimeout(() => {
         this.$refs.fileInput.click();
         this.isClicking = false;
-      }, 300);
+      }, 500);
     },
 
     handleFileUpload(event) {
@@ -812,7 +841,7 @@ export default {
       setTimeout(() => {
         this.$refs.fileInput.click();
         this.isClicking = false;
-      }, 300);
+      }, 500);
     },
   },
   mounted() {

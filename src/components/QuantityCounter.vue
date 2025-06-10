@@ -31,7 +31,7 @@ export default {
     props: {
         label: { type: String, required: true },
         id: { type: String, required: true },
-        modelValue: { // Menerima angka, tapi juga bisa menerima null/undefined dari parent
+        modelValue: {
             type: [Number, null],
             default: 0,
         },
@@ -43,38 +43,34 @@ export default {
             type: Number,
             default: 50,
         },
-        maxlength: { // Tambahkan prop maxlength
+        maxlength: {
             type: Number,
-            default: 2, // Default 2 digit
+            default: 2,
         },
     },
     emits: ['update:modelValue'],
     data() {
         return {
-            // Menggunakan string untuk input agar bisa handle input kosong sementara
             internalValue: String(this.modelValue === null || this.modelValue === undefined ? '' : this.modelValue),
         };
     },
     watch: {
         modelValue(newValue) {
-            // Perbarui internalValue ketika modelValue berubah dari parent
             this.internalValue = String(newValue === null || newValue === undefined ? '' : newValue);
         },
     },
     methods: {
         handleInput(event) {
             let value = event.target.value;
-            // Hapus karakter non-digit dan batasi panjangnya
             value = value.replace(/\D/g, '').slice(0, this.maxlength);
-            this.internalValue = value; // Update v-model
+            this.internalValue = value;
 
-            // Emit nilai sebagai angka atau 0 jika string kosong
             const numericValue = parseInt(value, 10);
             this.$emit('update:modelValue', isNaN(numericValue) ? 0 : numericValue);
         },
         increment() {
             let currentValue = parseInt(this.internalValue, 10);
-            if (isNaN(currentValue)) currentValue = this.min; // Jika kosong, mulai dari min
+            if (isNaN(currentValue)) currentValue = this.min;
 
             const newValue = Math.min(currentValue + 1, this.max);
             this.internalValue = String(newValue);
@@ -82,20 +78,19 @@ export default {
         },
         decrement() {
             let currentValue = parseInt(this.internalValue, 10);
-            if (isNaN(currentValue)) currentValue = this.min; // Jika kosong, mulai dari min
+            if (isNaN(currentValue)) currentValue = this.min;
 
             const newValue = Math.max(currentValue - 1, this.min);
             this.internalValue = String(newValue);
             this.$emit('update:modelValue', newValue);
         },
         validateAndEmit() {
-            // Fungsi ini dipanggil saat blur untuk memastikan nilai akhir sesuai min/max
             let parsedValue = parseInt(this.internalValue, 10);
             if (isNaN(parsedValue)) {
-                parsedValue = this.min; // Default ke min jika input kosong/invalid
+                parsedValue = this.min;
             }
             const validatedValue = Math.min(Math.max(parsedValue, this.min), this.max);
-            this.internalValue = String(validatedValue); // Pastikan input field menampilkan nilai yang divalidasi
+            this.internalValue = String(validatedValue);
             this.$emit('update:modelValue', validatedValue);
         },
     },

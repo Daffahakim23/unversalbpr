@@ -244,7 +244,7 @@ export default {
           this.temporaryBanMessage = error.response.data.message;
           subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
           modalTitle = "Alamat Email Dibatasi Sementara";
-          modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
+          modalIcon = "data-failed-illus.svg";
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
@@ -256,7 +256,7 @@ export default {
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }
         this.isModalError = false;
-        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }

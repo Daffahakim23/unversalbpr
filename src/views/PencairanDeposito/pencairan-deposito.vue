@@ -105,7 +105,7 @@ export default {
     const router = useRouter();
     const fileStore = useFileStore();
 
-    return { route, router, fileStore }; // <--- Ini seharusnya mengembalikan 'route'
+    return { route, router, fileStore }; 
   },
   computed: {
     isButtonDisabled() {
@@ -148,7 +148,7 @@ export default {
           buttonString2: btnString2,
         },
       ];
-      this.error = true; // Set error menjadi true agar modal ditampilkan.
+      this.error = true;
       this.loading = false;
     },
     handleCloseModal() {
@@ -241,15 +241,15 @@ export default {
           console.error("Gagal mengirim data, status:", response.status);
         }
       } catch (error) {
-        console.error("Terjadi error saat mengirim data:", error); // Log keseluruhan objek error
+        console.error("Terjadi error saat mengirim data:", error);
         if (error.response) {
-          console.error("Detail error response:", error.response.data); // Log detail response dari server (jika ada)
+          console.error("Detail error response:", error.response.data);
           console.error("Status error response:", error.response.status);
           console.error("Headers error response:", error.response.headers);
         } else if (error.request) {
-          console.error("Tidak ada response dari server:", error.request); // Log jika tidak ada response
+          console.error("Tidak ada response dari server:", error.request); 
         } else {
-          console.error("Error saat menyiapkan request:", error.message); // Log error saat menyiapkan request
+          console.error("Error saat menyiapkan request:", error.message);
         }
 
         let subtitle = "";

@@ -83,8 +83,6 @@ export default {
     position: relative;
     width: 100%;
     padding-bottom: 75%;
-    /* Contoh aspek rasio 4:3 (tinggi = 75% dari lebar) */
-    /* Anda perlu menyesuaikan persentase ini berdasarkan aspek rasio iframe yang sebenarnya */
     height: 0;
     overflow: hidden;
 }

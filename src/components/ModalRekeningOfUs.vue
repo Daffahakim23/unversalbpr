@@ -130,7 +130,7 @@ export default {
     },
     methods: {
         validateNomorRekening(nomorRekening) {
-            return /^\d+$/.test(nomorRekening) && nomorRekening.length >= 10; // Memastikan hanya angka dan minimal 10 digit
+            return /^\d+$/.test(nomorRekening) && nomorRekening.length >= 10;
         },
         handleNomorRekeningBlur() {
             this.touched.nomorRekening = true;

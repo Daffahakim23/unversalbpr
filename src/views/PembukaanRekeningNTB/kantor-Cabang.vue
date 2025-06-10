@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     isButtonDisabled() {
-      return !this.form.kantorCabang; // Memastikan input tidak hanya berupa spasi
+      return !this.form.kantorCabang; 
     },
   },
   methods: {

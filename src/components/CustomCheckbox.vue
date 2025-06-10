@@ -1,9 +1,10 @@
 <template>
     <div class="flex items-baseline">
-        <input type="checkbox" :id="inputId" :checked="modelValue" class="hidden-checkbox cursor-pointer"
+        <input type="checkbox" :id="inputId" :checked="modelValue" class="hidden-checkbox"
+            :class="{ 'cursor-not-allowed': readonly }" :disabled="readonly"
             @change="$emit('update:modelValue', $event.target.checked)" />
         <label :for="inputId" class="custom-checkbox-label cursor-pointer">
-            <span class="custom-checkbox-icon">
+            <span class="custom-checkbox-icon" :class="{ 'cursor-not-allowed': readonly, 'cursor-pointer': !readonly }">
                 <img v-if="modelValue" :src="checkedIcon" :alt="checkedAlt" :width=20 :height=20 />
                 <img v-else :src="uncheckedIcon" :alt="uncheckedAlt" :width=20 :height=20 />
             </span>
@@ -41,6 +42,10 @@ export default {
         labelText: {
             type: String,
             default: '',
+        },
+        readonly: { // <--- Ensure this prop is defined
+            type: Boolean,
+            default: false,
         },
     },
     emits: ['update:modelValue'],

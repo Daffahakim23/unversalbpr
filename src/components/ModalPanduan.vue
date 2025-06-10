@@ -4,10 +4,10 @@
             class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="text-left">
                 <h3 class="text-2xl font-semibold text-primary dark:text-white items-center">
-                    Panduan Upload {{ documentTypeText }}
+                    Panduan {{ documentTypeText }}
                 </h3>
                 <p class="text-neutral-800 dark:text-gray-300 mt-2">
-                    Pastikan hal berikut saat upload {{ documentTypeText }}:
+                    Pastikan hal berikut saat {{ documentTypeText }}:
                 </p>
             </div>
 
@@ -85,7 +85,7 @@ export default {
             isValid: false,
             captcha: this.generateCaptcha(),
             guides: [],
-            captchaVerified: false, // Tambahkan state untuk melacak verifikasi captcha
+            captchaVerified: false,
         };
     },
     computed: {
@@ -116,10 +116,10 @@ export default {
         },
         documentTypeText() {
             const textMap = {
-                ktp: "e-KTP",
-                npwp: "NPWP",
-                tandaTangan: "Tanda Tangan",
-                fotoDiri: "Foto Diri",
+                ktp: "Upload e-KTP",
+                npwp: "Upload NPWP",
+                tandaTangan: "Upload Tanda Tangan",
+                fotoDiri: "Ambil Foto Diri",
             };
             return textMap[this.documentType] || "Dokumen";
         },
@@ -154,16 +154,16 @@ export default {
             if (this.userInput) {
                 const generatedCaptcha = this.captcha.map((item) => item.char).join("");
                 if (this.userInput === generatedCaptcha) {
-                    this.isValid = false; // Hilangkan status error jika benar
+                    this.isValid = false;
                     this.message = "Captcha benar!";
-                    this.captchaVerified = true; // Set status verifikasi
+                    this.captchaVerified = true;
                 } else {
-                    this.isValid = true; // Set status error jika salah
+                    this.isValid = true;
                     this.message = "Captcha salah, coba lagi.";
-                    this.captchaVerified = false; // Reset status verifikasi jika salah
+                    this.captchaVerified = false;
                 }
             } else {
-                this.isValid = true; // Tampilkan error jika input kosong saat blur
+                this.isValid = true;
                 this.message = "Captcha harus diisi.";
                 this.captchaVerified = false;
             }
@@ -173,7 +173,7 @@ export default {
             this.userInput = "";
             this.message = "";
             this.isValid = false;
-            this.captchaVerified = false; // Reset status verifikasi saat refresh
+            this.captchaVerified = false;
         },
         handleSubmit() {
             if (this.requiresCaptcha && !this.captchaVerified) {

@@ -93,7 +93,7 @@
           <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.alamatKantorCabang">
-          <div class="form-label">Alamat Kantor cabang:</div>
+          <div class="form-label">Alamat Jaringan Kantor:</div>
           <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formGabungan.produk">
@@ -115,10 +115,33 @@
       </h1>
       <div v-if="formPenempatanDeposito" class="form-container">
         <div class="form-item" v-for="(value, key) in formPenempatanDeposito" :key="key">
-          <div class="form-label"> {{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
+          <template v-if="key !== 'setujuPenyetoran' && key !== 'isChecked'">
+            <div class="form-label"> {{ formatLabel(key) }}:</div>
+            <strong class="form-value">{{ value }}</strong>
+          </template>
         </div>
       </div>
+    </div>
+
+    <div class="form-item" v-if="formPenempatanDeposito.pembayaranBunga">
+      <div class=" form-label">Metode Pembayaran Bunga:</div>
+      <strong class="form-value">{{ formPenempatanDeposito.pembayaranBunga }}</strong>
+    </div>
+
+    <div class="mr-2 mb-4">
+      <CustomCheckbox :readonly="true" v-model="formPenempatanDeposito.isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
+          sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi PT
+          BPR Universal: notifikasi@universalbpr.co.id" />
+    </div>
+
+    <div class="form-item" v-if="formPenempatanDeposito.metodePenyetoran">
+      <div class=" form-label">Metode Pembayaran Bunga:</div>
+      <strong class="form-value">{{ formPenempatanDeposito.metodePenyetoran }}</strong>
+    </div>
+
+    <div class="mr-2 mb-6">
+      <CustomCheckbox :readonly="true" v-model="formPenempatanDeposito.setujuPenyetoran"
+        labelText="Saya Setuju bahwa penyetoran untuk pembukaan deposito akan dilakukan pendebetan melalui rekening Tabungan Universal atas nama saya sendiri yang akan dibuat oleh Petugas Bank dan diinformasikan kepada saya melalui email resmi PT BPR Universal: notifikasi@universalbpr.co.id." />
     </div>
 
     <div class="border-t border-neutral-200 my-4"></div>
@@ -166,6 +189,22 @@
               <li>Saya/kami menyalahgunakan rekening.</li>
             </ul>
           </li>
+          <li>Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,
+            <p class="mt-2"><b>Saat ini saya/kami (Pilih Salah Satu)</b></p>
+            <RadioButtonChoose class="text-xs sm:text-sm md:text-sm cursor-not-allowed" label="" id="npwpChoice1"
+              :options="npwpOptions" :readonly="true" v-model="formNPWP.npwp" name="npwpSelection" required />
+            <div class=" ml-4">
+              <Flagbox :type="info" class="mt-4 !font-normal">
+                Apabila di kemudian hari Pemberi Pernyataan telah memiliki NPWP/sesuai dengan ketentuan peraturan
+                perundang-undangan di bidang perpajakan diwajibkan mendaftarkan diri pada Kantor Direktorat Jenderal
+                Pajak, maka saya/kami akan segera menyerahkan NPWP kepada BPR Universal. (Tidak berlaku bagi nasabah
+                yang
+                telah menyerahkan dokumen NPWP).
+              </Flagbox>
+              <RadioButtonChoose class="text-xs sm:text-sm md:text-sm cursor-not-allowed" label="" id="npwpChoice2"
+                :options="npwp2Options" :readonly="true" v-model="formNPWP.npwp2" name="npwpSelection" required />
+            </div>
+          </li>
         </ul>
       </div>
     </div>
@@ -185,7 +224,7 @@
       </label>
     </div> -->
 
-    <div class="mt-2">
+    <div class="">
       <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
     </div>
 
@@ -209,6 +248,7 @@
 
 <script>
 import { computed } from 'vue';
+import Flagbox from '@/components/flagbox.vue';
 import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
@@ -217,7 +257,7 @@ import { alamatSesuaiEktpOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
 // import ModalOTP from "@/components/ModalOTP.vue";
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
-import { kewarganegaraanOptions, metodePencairanOptions, pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, hubunganNasabahOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, persetujuanOptions, produkOptions, sumberDataNasabahOptions, masaAktifKTPOptions } from '@/data/option.js';
+import { kewarganegaraanOptions, metodePencairanOptions, pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoGreenOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoUniversalOptions, pembayaranBungaOptions, metodePenyetoranNTBOptions, produkDepositoOptions, hubunganNasabahOptions, jenisIdentitasBOOptions, kewarganegaraanBOOptions, jenisKelaminOptions, persetujuanOptions, produkOptions, sumberDataNasabahOptions, masaAktifKTPOptions, npwpOptions, npwp2Options } from '@/data/option.js';
 import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
 import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
@@ -230,6 +270,7 @@ export default {
     // ModalOTP,
     ModalKonfirmasi,
     CustomCheckbox,
+    Flagbox
   },
   name: "DataPribadi",
   computed: {
@@ -346,11 +387,15 @@ export default {
       }
       return processedData;
     },
+
     formPekerjaan() {
       const fileStore = useFileStore();
       const data = fileStore.formPekerjaan || {};
       const processedData = {};
       for (const key in data) {
+        if (key === 'npwp') {
+          continue; // Lewati iterasi ini jika key adalah 'npwp'
+        }
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
@@ -413,6 +458,12 @@ export default {
       const data = fileStore.formPenempatanDeposito || {};
       const processedData = {};
       for (const key in data) {
+        //         if (key === 'isChecked') {
+        //   continue; // Lewati iterasi ini jika key adalah 'npwp'
+        // }
+        //         if (key === 'setujuPenyetoran') {
+        //   continue; // Lewati iterasi ini jika key adalah 'npwp'
+        // }
         if (data.hasOwnProperty(key) && data[key]) {
           let value = data[key];
 
@@ -459,6 +510,14 @@ export default {
           .filter(([key, value]) => value && key.endsWith('KD'))
       );
     },
+
+    formNPWP() {
+      const fileStore = useFileStore();
+      return Object.fromEntries(
+        Object.entries(fileStore.formNPWP || {})
+      );
+    },
+
     formBeneficialOwner() {
       const fileStore = useFileStore();
       const data = fileStore.formPekerjaan || {};
@@ -556,6 +615,8 @@ export default {
     return {
       form: new FormModelKonfirmasiData(),
       trueFalseOptions,
+      npwp2Options,
+      npwpOptions,
       RadioButtonChoose,
       masaAktifKTPOptions,
       agreement1: false,
@@ -817,7 +878,7 @@ export default {
     },
     formatFileLabel(key) {
       const labels = {
-        ktp: "KTP",
+        ktp: "e-KTP",
         npwp: "NPWP",
         fotoDiri: "Foto Diri",
         tandaTangan: "Tanda Tangan",

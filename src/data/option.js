@@ -350,8 +350,8 @@ export const memilikiRekeningOptions = [
 ];
 
 export const npwpOptions = [
-  { label: "Saya tidak memiliki NPWP", value: true },
-  { label: "Berdasarkan peraturan tidak diwajibkan memiliki NPWP", value: false },
+  { label: "Saya tidak memiliki NPWP", value: "1" },
+  { label: "Berdasarkan peraturan tidak diwajibkan memiliki NPWP", value: "2" },
 ];
 
 export const npwp2Options = [
@@ -366,7 +366,7 @@ export const npwp3Options = [
   { label: "Belum Memiliki NPWP", value: "1" },
   {
     label: "Berdasarkan peraturan tidak diwajibkan memiliki NPWP dan berkomitmen akan segera menyampaikan kepada bank setelah memiliki NPWP. (Tidak berlaku bagi nasabah yang telah menyerahkan dokumen NPWP ",
-    value: "PEMILIK_MANFAAT",
+    value: "2",
   },
 ];
 

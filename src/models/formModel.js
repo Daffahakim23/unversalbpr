@@ -121,6 +121,8 @@ export class FormModelPenempatanDeposito {
     this.namaRekeningPenyetoran = "";
     this.belumPunyaRekening = "";
     this.memilikiTabungan = "";
+    this.isChecked = "";
+    this.setujuPenyetoran = "";
   }
 }
 
@@ -152,6 +154,15 @@ export class FormModelRequestEmailVerification {
 export class FormModelKonfirmasiData {
   constructor() {
     this.persetujuan = "";
+    this.setujuPenyetoran = "";
+    this.isChecked = "";
+  }
+}
+
+export class FormModelNPWP {
+  constructor() {
+    this.npwp = "";
+    this.npwp2 = "";
   }
 }
 

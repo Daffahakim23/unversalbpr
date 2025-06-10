@@ -200,7 +200,7 @@ import {
   produkDepositoOptions,
   metodePenyetoranNTBOptions
 } from "@/data/option.js";
-import { FormModelPenempatanDeposito } from "@/models/formModel"; // Asumsi FormEmailRequestDepositoNTB juga ada di sini
+import { FormModelPenempatanDeposito } from "@/models/formModel"; 
 import {
   hitungBungaUniversal,
   hitungBungaPeduli,
@@ -227,21 +227,13 @@ export default {
     CustomCheckbox,
     FlagBox,
   },
-  emits: ['updateProgress', 'setNavbarConfig', 'setCancelRoute'], // Declare the custom events
+  emits: ['updateProgress', 'setNavbarConfig', 'setCancelRoute'], // 
 
   setup() {
     const fileStore = useFileStore();
     return { fileStore };
   },
   data() {
-    // Asumsi formEmailRequestDepositoNTB diinisialisasi di suatu tempat
-    // atau dilewatkan sebagai prop, atau diakses dari store.
-    // Misal: Anda punya prop `initialEmailForm` atau diakses dari store seperti `this.fileStore.emailForm`
-    // const initialEmailForm = this.fileStore.emailForm || new FormModelRequestEmailVerification(); // Sesuaikan dengan cara Anda mendapatkannya
-
-    // const form = new FormModelPenempatanDeposito();
-    // // Ambil hanya nilai memilikiTabungan dari initialEmailForm
-    // form.memilikiTabungan = initialEmailForm.memilikiTabungan;
     return {
       form: new FormModelPenempatanDeposito(),
       // form: form,
@@ -578,7 +570,6 @@ export default {
             options = jangkaWaktuDepositoUniversalOptionsTier2;
           }
           break;
-        // ... tambahkan case untuk produk lainnya
         default:
           options = [];
       }

@@ -112,8 +112,8 @@ export default {
     isButtonDisabled() {
       const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
       const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
-      const produkTerisi = !!this.form.produk; // Memastikan produk dipilih
-      const sumberTerisi = !!this.form.sumber; // Memastikan sumber dipilih
+      const produkTerisi = !!this.form.produk;
+      const sumberTerisi = !!this.form.sumber;
 
       if (this.form.sumber === "0") {
         return !(emailValid && phoneValid && produkTerisi && sumberTerisi && this.form.sumberLainnya.trim());
@@ -296,7 +296,7 @@ export default {
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }
         this.isModalError = false;
-        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }

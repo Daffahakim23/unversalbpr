@@ -81,14 +81,14 @@ export async function fetchJabatan(kodePekerjaan) {
                 }));
 
             console.log("Jabatan options:", jabatanOptions);
-            return jabatanOptions; // Mengembalikan jabatanOptions
+            return jabatanOptions;
         } else {
             console.error("Format data jabatan tidak sesuai:", response.data);
-            return []; // Mengembalikan array kosong jika format tidak sesuai
+            return [];
         }
     } catch (error) {
         console.error("Gagal mengambil data jabatan:", error.response ? error.response.data : error.message);
-        return []; // Mengembalikan array kosong jika terjadi kesalahan
+        return [];
     }
 }
 
@@ -104,13 +104,13 @@ export async function fetchJabatanKonfirmasi() {
             }));
 
             console.log("Jabatan options:", jabatanOptions);
-            return jabatanOptions; // Mengembalikan jabatanOptions
+            return jabatanOptions;
         } else {
             console.error("Format data jabatan tidak sesuai:", response.data);
-            return []; // Mengembalikan array kosong jika format tidak sesuai
+            return [];
         }
     } catch (error) {
         console.error("Gagal mengambil data jabatan:", error.response ? error.response.data : error.message);
-        return []; // Mengembalikan array kosong jika terjadi kesalahan
+        return [];
     }
 }

@@ -37,7 +37,6 @@ export default {
                     responseType: 'blob'
                 });
 
-                // Membuat Object URL dari blob yang diterima
                 const blob = response.data;
                 this.pdfUrl = URL.createObjectURL(blob);
                 this.pdfData = blob;
@@ -55,7 +54,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-/* Tambahkan styling khusus komponen di sini jika diperlukan */
-</style>

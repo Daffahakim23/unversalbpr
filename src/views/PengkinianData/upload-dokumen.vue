@@ -132,6 +132,8 @@ export default {
         },
       ];
       this.isModalError = true;
+      this.fileStore.setFileUploaded('ktp', false);
+      this.fileStore.setFileUploaded('fotoDiri', false);
     },
 
     handleCloseModal() {

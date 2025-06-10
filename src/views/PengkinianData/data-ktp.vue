@@ -136,7 +136,7 @@ export default {
     isButtonDisabled() {
       const nikValue = this.form.nik;
       if (!nikValue || String(nikValue).length !== 16) {
-        return true; // NIK tidak valid atau kurang dari 16 digit
+        return true;
       }
 
       // Daftar semua field yang wajib diisi
