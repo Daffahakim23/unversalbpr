@@ -15,7 +15,7 @@
 
       <div class="text-center text-neutral-600 text-xs sm:text-sm">
         <p>
-          Bank BPR Universal berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan Bank Indonesia (BI) serta
+          Bank Universal BPR berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan Bank Indonesia (BI) serta
           merupakan peserta penjaminan Lembaga Penjamin Simpanan (LPS)
         </p>
       </div>

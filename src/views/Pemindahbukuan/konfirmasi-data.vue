@@ -195,24 +195,24 @@
           <li>Saya menyatakan bahwa sumber dana dan tujuan penggunaan dana bukan untuk kegiatan pencucian uang, dan
             pendanaan terorisme, serta yang dilarang oleh peraturan perundang-undangan yang berlaku.</li>
           <li>Saya menyatakan bahwa data, informasi, dan/atau dokumen yang telah saya isi maupun berikan melalui layanan
-            E-Form BPR Universal ini adalah benar dan merupakan data terbaru.</li>
+            E-Form Universal BPR ini adalah benar dan merupakan data terbaru.</li>
           <li>Saya setuju bahwa PT BPR Universal berhak melakukan pemeriksaan terhadap kebenaran data yang saya
             berikan.</li>
           <li>Saya telah membaca dan menyatakan tunduk, serta terikat dengan semua Ketentuan dan Persyaratan
-            Transfer melalui Layanan E-Form BPR Universal, dan telah memahami biaya, manfaat, risiko, dan
+            Transfer melalui Layanan E-Form Universal BPR, dan telah memahami biaya, manfaat, risiko, dan
             konsekuensi terhadap penggunaan layanan tersebut.</li>
           <li>Saya setuju memberikan hak dan wewenang kepada PT BPR Universal dalam memproses data pribadi saya dan
             melakukan pendebetan rekening saya sesuai nomor rekening yang telah saya isi pada formulir ini untuk tujuan
-            menindaklanjuti Transfer yang saya ajukan pada layanan E-Form BPR Universal ini.</li>
+            menindaklanjuti Transfer yang saya ajukan pada layanan E-Form Universal BPR ini.</li>
           <li>Saya setuju atas pemotongan biaya administrasi atas Transfer ke rekening Bank lain sesuai dengan
             ketentuan PT BPR Universal.</li>
           <li>Saya setuju data pribadi saya digunakan, dan dibagikan kepada pihak lain yang bekerja sama atau
             terafiliasi dengan PT BPR Universal sehubungan dengan pengajuan Transfer melalui layanan E-Form
-            BPR Universal berdasarkan ketentuan Peraturan Perundang-Undangan yang berlaku.</li>
+            Universal BPR berdasarkan ketentuan Peraturan Perundang-Undangan yang berlaku.</li>
           <li>Saya setuju bahwa PT BPR Universal dapat memperoleh, menggunakan, mengelola, dan menyimpan data biometrik
             saya, termasuk namun tidak terbatas pada pemanfaatan dokumen identitas diri saya, face recognition,
             teknologi digital signature, rekaman suara, untuk tujuan verifikasi identitas saya dalam memproses transaksi
-            Transfer yang diajukan melalui layanan E-Form BPR Universal berdasarkan Ketentuan Peraturan
+            Transfer yang diajukan melalui layanan E-Form Universal BPR berdasarkan Ketentuan Peraturan
             Perundang-Undangan yang berlaku.</li>
           <li>Saya bertanggung jawab penuh atas pengajuan transaksi Transfer, termasuk namun tidak terbatas pada
             kebenaran identitas saya sebagai nasabah, jumlah nominal Transfer, serta nama dan nomor rekening

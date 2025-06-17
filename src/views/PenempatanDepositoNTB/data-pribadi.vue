@@ -3,9 +3,9 @@
     <FormField label="Nama Alias/Panggilan" id="namaPanggilan" :isDropdown="false" v-model="form.namaPanggilan"
       placeholder="Masukkan Nama Alias/Panggilan Anda" :required="true" variant="alpha" />
 
-    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
+    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
     <div v-if="form.tujuan === '0'">
-      <FormField label="Tujuan Simapanan Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
+      <FormField label="Tujuan Pembukaan Rekening Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
         placeholder="Masukkan Hobi Lainnya" :required="true" />
     </div>
     <!-- <div v-if="form.tujuan === '0'">

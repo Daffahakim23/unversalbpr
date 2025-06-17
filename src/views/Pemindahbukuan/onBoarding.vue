@@ -101,7 +101,7 @@
                 <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
                     <div class="max-w-7xl mx-auto text-center">
                         <h2 class="text-lg md:text-xl font-semibold text-neutral-900 mb-10 mx-8 md:mx-14">
-                            Tahapan Transfer Online BPR Universal
+                            Tahapan Transfer Online Universal BPR
                         </h2>
 
                         <div class="flex flex-col sm:flex-row justify-center gap-4 md:gap-8 lg:gap-12">

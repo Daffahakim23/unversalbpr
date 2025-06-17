@@ -32,8 +32,8 @@
 
         <!-- Form Benefial Owner -->
         <div v-if="form.sumberDana === true" class="mt-4">
-            <FormField label="Nama Perusahaan*" id="namaPerusahaanDK" :isDropdown="false"
-                v-model="form.namaPerusahaanDK" placeholder="Masukkan Nama Perusahaan Anda" />
+            <FormField label="Nama Perusahaan/Instansi Tempat Bekerja*" id="namaPerusahaanDK" :isDropdown="false"
+                v-model="form.namaPerusahaanDK" placeholder="Masukkan Nama Perusahaan/Instansi Tempat Bekerja Anda" />
 
             <FormField label="Bidang Pekerjaan*" id="bidangPekerjaanDK" :isDropdown="true"
                 v-model="form.bidangPekerjaanDK" placeholder="Pilih Bidang Pekerjaan Anda"

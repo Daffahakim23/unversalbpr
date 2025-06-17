@@ -22,12 +22,12 @@
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
           : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
 
-    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan"
+    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan"
       name="tujuan" />
 
     <div v-if="form.tujuan === '0'" class="">
-      <FormField label="Tujuan Pembukaan Rekening Lainnya*" id="tujuanLainnya" variant="alpha"
-        v-model="form.tujuanLainnya" placeholder="Masukkan Tujuan Pembukaan Rekening" />
+      <FormField label="Tujuan Simpanan Lainnya*" id="tujuanLainnya" variant="alpha"
+        v-model="form.tujuanLainnya" placeholder="Masukkan Tujuan Simpanan" />
     </div>
 
     <FormField label="Sumber Dana*" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"

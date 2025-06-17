@@ -76,7 +76,7 @@
       </p>
 
       <p class="text-sm my-4">
-        Terima kasih telah memilih BPR Universal. Kami senang menjadi bagian dari perjalanan finansial Anda.
+        Terima kasih telah memilih Universal BPR. Kami senang menjadi bagian dari perjalanan finansial Anda.
       </p>
 
       <div class="bg-primary-50 flex items-center justify-between flex-row gap-4 py-2 px-4 rounded-xl w-full">

@@ -189,7 +189,7 @@
         <div class="flex flex-col items-start pt-0">
           <ul class="list-decimal list-outside text-neutral-900 text-xs sm:text-sm md:text-sm space-y-2 ml-10 mt-1">
             <li>Data Beneficial Owner yang diisikan dalam Formulir Beneficial Owner ini adalah data yang
-              sebenar-benarnya dan sebagai ketentuan untuk melakukan transaksi/pembukaan rekening di PT BPR Universal
+              sebenar-benarnya dan sebagai ketentuan untuk melakukan transaksi/pembukaan rekening di PT Universal BPR
               (selanjutnya disebut “Bank”).</li>
             <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang saya/kami berikan dalam Formulir
               Beneficial Owner ini.</li>

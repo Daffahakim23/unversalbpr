@@ -135,7 +135,7 @@
           <strong class="form-value">{{ formGabungan.alamat }}</strong>
         </div>
         <div class="form-item">
-          <div class="form-label">Tujuan Simpanan</div>
+          <div class="form-label">Tujuan Pembukaan Rekening</div>
           <strong class="form-value">{{ formGabungan.tujuan }}</strong>
         </div>
         <div class="form-item">
@@ -248,7 +248,7 @@
           <strong class="form-value">{{ formPekerjaan.kodePosPerusahaanDK }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.tujuan">
-          <div class="form-label">Tujuan Simpanan</div>
+          <div class="form-label">Tujuan Pembukaan Rekening</div>
           <strong class="form-value">{{ formPribadi.tujuan }}</strong>
         </div>
         <div class="form-item" v-if="formPekerjaan.nomorTeleponFaxDK">
@@ -426,6 +426,10 @@
           <div class="form-label">Produk yang Diinginkan:</div>
           <strong class="form-value">{{ formGabungan.produk }}</strong>
         </div>
+        <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
+          <div class=" form-label">Produk Deposito</div>
+          <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
+        </div>
         <!-- <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
           <div class=" form-label">Produk Deposito</div>
           <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
@@ -499,10 +503,6 @@
         <div class="form-item" v-if="formPenempatanDeposito.namaBank">
           <div class=" form-label">Nama Bank</div>
           <strong class="form-value">{{ formPenempatanDeposito.namaBank }}</strong>
-        </div>
-        <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
-          <div class=" form-label">Produk Deposito</div>
-          <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
         </div>
       </div>
     </div>
@@ -596,7 +596,7 @@
               <Flagbox :type="info" class="mt-4 !font-normal">
                 Apabila di kemudian hari Pemberi Pernyataan telah memiliki NPWP/sesuai dengan ketentuan peraturan
                 perundang-undangan di bidang perpajakan diwajibkan mendaftarkan diri pada Kantor Direktorat Jenderal
-                Pajak, maka saya/kami akan segera menyerahkan NPWP kepada BPR Universal. (Tidak berlaku bagi nasabah
+                Pajak, maka saya/kami akan segera menyerahkan NPWP kepada Universal BPR. (Tidak berlaku bagi nasabah
                 yang
                 telah menyerahkan dokumen NPWP).
               </Flagbox>

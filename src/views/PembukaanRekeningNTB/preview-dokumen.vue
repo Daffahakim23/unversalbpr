@@ -107,7 +107,7 @@
             <ButtonComponent variant="outline" @click="retakePhoto">Foto Ulang</ButtonComponent>
             <ButtonComponent @click.prevent="uploadPhoto"
               :disabled="isDataFail || isSubmitting || isButtonDisabled || isUploading">{{
-                isSubmitting ? "Mengirim..." : "Gunakan Foto" }}
+                isSubmitting ? "Mengirim..." : "Simpan" }}
             </ButtonComponent>
           </div>
         </div>

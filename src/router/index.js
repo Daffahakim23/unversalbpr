@@ -1025,7 +1025,7 @@ const routes = [
         component: DataPencairanDepositoOnUs,
         meta: {
           feature: "Penutupan Deposito",
-          title: "Penutupan Deposito ke Sesama Bank BPR Universal",
+          title: "Penutupan Deposito ke Sesama Bank Universal BPR",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
         },

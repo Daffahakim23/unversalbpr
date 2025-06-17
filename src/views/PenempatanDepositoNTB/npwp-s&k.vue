@@ -6,7 +6,7 @@
         <FlagBox type="info" class="mb-4">
             <p class="text-sm font-normal">Apabila di kemudian hari Pemberi Pernyataan telah memiliki NPWP/sesuai dengan
                 ketentuan peraturan perundang-undangan di bidang perpajakan diwajibkan mendaftarkan diri pada Kantor
-                Direktorat Jenderal Pajak, maka saya/kami akan segera menyerahkan NPWP kepada BPR Universal. (Tidak
+                Direktorat Jenderal Pajak, maka saya/kami akan segera menyerahkan NPWP kepada Universal BPR. (Tidak
                 berlaku bagi nasabah yang telah menyerahkan dokumen NPWP).</p>
         </FlagBox>
 

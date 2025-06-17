@@ -196,6 +196,10 @@
           <div class="form-label">Produk yang Diinginkan</div>
           <strong class="form-value">{{ formPribadi.produk }}</strong>
         </div>
+        <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
+          <div class=" form-label">Produk Deposito</div>
+          <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
+        </div>
         <div class="form-item" v-if="formPribadi.kantorCabang">
           <div class="form-label">Jaringan Kantor</div>
           <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
@@ -265,10 +269,6 @@
         <div class="form-item" v-if="formPenempatanDeposito.namaBank">
           <div class=" form-label">Nama Bank</div>
           <strong class="form-value">{{ formPenempatanDeposito.namaBank }}</strong>
-        </div>
-        <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
-          <div class=" form-label">Produk Deposito</div>
-          <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
         </div>
         <div class="form-item" v-if="formPenempatanDeposito.metodePenyetoran">
           <div class=" form-label">Cara Penyetoran</div>

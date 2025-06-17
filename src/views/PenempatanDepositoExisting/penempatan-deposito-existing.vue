@@ -2,7 +2,7 @@
   <form @submit.prevent="handleSubmit">
     <label class="block text-xs sm:text-sm md:text-sm font-regular text-neutral-900 text-justify mb-4">Untuk melakukan
       pembukaan
-      Deposito sebagai Nasabah BPR Universal, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
+      Deposito sebagai Nasabah Universal BPR, Anda diwajibkan memiliki rekening Tabungan Universal yang akan
       dipergunakan sebagai tempat penyetoran nominal Deposito Anda.</label>
 
     <RadioButtonChoose label="Apakah Anda sudah memiliki Tabungan Universal?" id="memilikiTabungan"

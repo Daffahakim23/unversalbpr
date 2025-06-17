@@ -18,7 +18,7 @@
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
 
-    <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui BPR Universal?*"
+    <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui Universal BPR?*"
       :options="sumberDataNasabahOptions" v-model="form.sumber" name="sumber" />
     <div v-if="form.sumber === '0'">
       <FormField label="Lainnya*" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder="Masukkan Sumber Informasi Lainnya"
