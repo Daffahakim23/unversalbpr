@@ -12,16 +12,15 @@
     </FlagBox>
 
     <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       required :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'" :error="phoneError"
-      @blur="handlePhoneBlur" />
+          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
@@ -30,7 +29,7 @@
     <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui BPR Universal?*"
       :options="sumberDataNasabahOptions" v-model="form.sumber" name="sumber" />
     <div v-if="form.sumber === '0'">
-      <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder=" " required />
+      <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder="Masukkan Sumber Informasi Lainnya" required />
     </div>
 
     <div class="text-right">
@@ -86,6 +85,7 @@ export default {
       emailError: false,
       phoneError: false,
       isModalErrorEmail: false,
+      isWhatsAppOpenCoolingDown: false,
       temporaryBanMessage: "",
       modalContentEmail: [
         {
@@ -121,7 +121,7 @@ export default {
   },
 
   methods: {
-    getWhatsAppLink(number) {
+    getWhatsAppLink(number = 622122213993) {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
         return `https://wa.me/${number}`;
@@ -129,9 +129,27 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
+    // openWhatsApp() {
+    //   if (this.whatsappContact.whatsapp) {
+    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+    //   }
+    // },
     openWhatsApp() {
-      if (this.whatsappContact.whatsapp) {
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
         window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
       }
     },
     showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
@@ -258,7 +276,7 @@ export default {
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }
         this.isModalError = false;
-        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }

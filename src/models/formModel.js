@@ -145,6 +145,7 @@ export class FormModelRequestEmailVerification {
     this.tandaPengenal = "";
     this.nomorRekeningDeposito = "";
     this.tujuan = "";
+    this.tujuanLainnya = "";
     this.sumberDana = "";
     this.sumberDanaLainnya = "";
     this.tanggalPengajuan = "";

@@ -100,7 +100,7 @@
               Gunakan Foto
             </ButtonComponent> -->
             <ButtonComponent @click="delayedCapturePhoto" :disabled="isCapturing">
-              Gunakan Foto
+              Ambil Foto
             </ButtonComponent>
           </div>
           <div v-else class="controls flex justify-between mt-4 w-full">
@@ -120,8 +120,7 @@
         </div>
         <img :src="fileUrl" alt="Preview Dokumen" class="w-full rounded-lg" @error="handleFileNotFound" />
         <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
-          Verifikasi E-KTP Anda tidak berhasil, silahkan ulangi proses verifikasi E-KTP. Pastikan Anda mengikuti
-          petunjuk verifikasi
+          {{ flagMessage }}
         </Flagbox>
         <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
           <div class="mt-2">
@@ -219,7 +218,7 @@ export default {
         ktp: "Foto e-KTP",
         npwp: "Foto NPWP",
         tandaTangan: "Foto Tanda Tangan",
-        fotoDiri: "Verifikasi Wajah",
+        fotoDiri: "Upload Foto Diri",
       };
       return textMap[this.documentType] || "Dokumen";
     },
@@ -338,7 +337,7 @@ export default {
       }
     };
 
-    const getWhatsAppLink = (number) => {
+    const getWhatsAppLink = (number = 622122213993) => {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
         return `https://wa.me/${number}`;
@@ -347,9 +346,30 @@ export default {
       }
     };
 
+    // const openWhatsApp = () => {
+    //   if (whatsappContact.value.whatsapp) {
+    //     window.open(getWhatsAppLink(whatsappContact.value.whatsapp), '_blank');
+    //   }
+    // };
+
+    let isWhatsAppOpenCoolingDown = false;
+
     const openWhatsApp = () => {
-      if (whatsappContact.value.whatsapp) {
+      if (whatsappContact.value.whatsapp && !isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
         window.open(getWhatsAppLink(whatsappContact.value.whatsapp), '_blank');
+
+        isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
       }
     };
 
@@ -456,6 +476,7 @@ export default {
           showFlag.value = true;
           flagType.value = 'warning';
           flagMessage.value = "User ID tidak ditemukan silahkan ulangi pengisian data dari awal.";
+          isDataFail.value = true
           return;
         }
 
@@ -509,15 +530,15 @@ export default {
           livenessFailuresCount.value++;
           console.log("Liveness Failures Count:", livenessFailuresCount.value);
           let message = error.response?.data?.message || "Terjadi kesalahan saat verifikasi wajah.";
-          let subtext = error.response?.data?.Subtext || "Pastikan wajah Anda terlihat jelas dan ikuti petunjuk.";
-          flagMessage.value = `${message}, ${subtext}`;
+          let subtext = error.response?.data?.subtext;
+          flagMessage.value = `${message} ${subtext}`;
           isDataFail.value = true;
           let title = "Terjadi Kesalahan";
           let subtitle = "Periksa kembali koneksi internet Anda";
           let buttons = ["Coba Lagi", "Hubungi Universal Care"];
           if (livenessFailuresCount.value >= maxLivenessFailures) {
             title = "Akun Anda dibatasi";
-            subtitle = "Anda telah gagal melakukan verifikasi wajah sebanyak 5 kali. Untuk alasan keamanan, Anda bisa mencoba kembali verifikasi wajah 24 jam ke depan. Jika Anda membutuhkan bantuan segera, silakan hubungi Universal Care.";
+            subtitle = "Verifikasi tidak dapat dilanjutkan karena telah melewati batas percobaan harian. Silakan coba kembali besok atau hubungi Universal Care untuk bantuan lebih lanjut.";
             buttons = ["Hubungi Universal Care"];
             livenessFailuresCount.value = 0;
             showErrorModalLiveness(title, subtitle, buttons);
@@ -680,7 +701,7 @@ export default {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
       if (!allowedTypes.includes(file.type)) {
-        this.showModalError("Format Gambar Salah", "Hanya format gambar JPG/JPEG atau PNG yang diizinkan. Harap periksa kembali format file yang Anda coba unggah.", null, "Tutup", "data-failed-illus.svg");
+        this.showModalError("Format Gambar Tidak Didukung", "Hanya format JPG, JPEG, atau PNG yang dapat diproses. Mohon periksa kembali format file yang Anda unggah.", null, "Tutup", "data-failed-illus.svg");
         // this.showError();
         if (this.$refs.fileInput) {
           this.$refs.fileInput.value = null;
@@ -728,6 +749,7 @@ export default {
           this.showFlag = true;
           this.flagType = "warning";
           this.flagMessage = "User ID tidak ditemukan silahkan ulangi pengisian data dari awal.";
+          // this.isDataFail = true;
           return;
         }
         console.log(`📤 Mengunggah file untuk: ${this.documentType}`);

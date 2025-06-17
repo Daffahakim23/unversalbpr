@@ -2,10 +2,10 @@
     <div class="iframe-container">
         <iframe :src="signLink" frameborder="0" allowfullscreen></iframe>
     </div>
-    <div class="flex justify-between mt-6">
-        <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-        <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
-            {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+    <div class="text-center mt-6">
+        <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled || showCountdown"
+            @click="handleSubmit">
+            {{ buttonText }}
         </ButtonComponent>
     </div>
 </template>
@@ -22,21 +22,54 @@ export default {
     emits: ["update-progress"],
     mounted() {
         this.$emit("update-progress", 75);
+        this.startCountdown();
+    },
+    beforeUnmount() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
     },
     data() {
         return {
             isSubmitting: false,
+            countdown: 30,
+            showCountdown: true,
+            countdownInterval: null,
         };
     },
     computed: {
+        buttonText() {
+            if (this.isSubmitting) {
+                return "Mengirim...";
+            } else if (this.showCountdown) {
+                return `Lanjutkan (${this.countdown}s)`;
+            } else {
+                return "Lanjutkan";
+            }
+        },
         signLink() {
             const fileStore = useFileStore();
             return fileStore.sign_url;
         },
     },
     methods: {
-        goBack() {
-            this.$router.push({ path: "/dashboard/konfirmasiDataPenempatanDepositoNTB" });
+        startCountdown() {
+            if (this.countdownInterval) {
+                clearInterval(this.countdownInterval);
+            }
+
+            this.countdown = 30;
+            this.showCountdown = true;
+
+            this.countdownInterval = setInterval(() => {
+                if (this.countdown > 0) {
+                    this.countdown--;
+                } else {
+                    clearInterval(this.countdownInterval);
+                    this.showCountdown = false;
+                    this.countdownInterval = null;
+                }
+            }, 1000);
         },
         async handleSubmit() {
             const fileStore = useFileStore();

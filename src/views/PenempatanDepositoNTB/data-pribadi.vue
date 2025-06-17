@@ -3,7 +3,11 @@
     <FormField label="Nama Alias/Panggilan" id="namaPanggilan" :isDropdown="false" v-model="form.namaPanggilan"
       placeholder="Masukkan Nama Alias/Panggilan Anda" :required="true" variant="alpha" />
 
-    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
+    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
+    <div v-if="form.tujuan === '0'">
+      <FormField label="Tujuan Simapanan Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
+        placeholder="Masukkan Hobi Lainnya" :required="true" />
+    </div>
     <!-- <div v-if="form.tujuan === '0'">
       <FormField label="Tujuan Simpanan Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
         placeholder="Masukkan Simpananan Lainnya" :required="true" />
@@ -36,7 +40,7 @@
       v-model="form.alamatSesuaiEktp" name="alamatSesuaiEktp" />
 
     <div v-if="form.alamatSesuaiEktp === false" class="mt-4">
-      <FormField label="Alamat Tempat Tinggal*" id="alamat" v-model="form.alamat" :required="true"
+      <FormField label="Detail Alamat Tempat Tinggal Terikini*" id="alamat" v-model="form.alamat" :required="true"
         placeholder="Masukkan Alamat Anda" />
 
       <div class="flex flex-row gap-4 w-full">
@@ -50,8 +54,8 @@
       <FormField label="Provinsi*" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
         placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
 
-      <FormField label="Kabupaten/Kota*" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
-        :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota" @change="fetchKecamatan"
+      <FormField label="Kota/Kabupaten*" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
+        :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten" @change="fetchKecamatan"
         :disabled="!form.provinsi" required />
 
       <FormField label="Kecamatan*" id="kecamatan" :isDropdown="true" v-model="form.kecamatan"

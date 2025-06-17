@@ -148,8 +148,8 @@
                 :options="provinsiOptions" placeholder="Pilih Provinsi Beneficial Owner Anda"
                 @change="fetchKabupaten" />
 
-            <FormField label="Kabupaten/Kota*" id="kabupatenBO" :isDropdown="true" v-model="form.kabupatenBO"
-                :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota Beneficial Owner Anda"
+            <FormField label="Kota/Kabupaten*" id="kabupatenBO" :isDropdown="true" v-model="form.kabupatenBO"
+                :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten Beneficial Owner Anda"
                 @change="fetchKecamatan" :disabled="!form.provinsiBO" />
 
             <FormField label="Kecamatan*" id="kecamatanBO" :isDropdown="true" v-model="form.kecamatanBO"

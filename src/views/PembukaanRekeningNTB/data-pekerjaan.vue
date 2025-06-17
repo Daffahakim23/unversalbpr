@@ -65,9 +65,13 @@
         placeholder="Masukkan Nama Lengkap Beneficial Owner Anda" :required="true" variant="alpha" />
 
       <div v-if="form.jenisIdentitasBO === '1'" class="">
-        <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
+        <!-- <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
           v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
-          :required="true" variant="numeric" :maxlength="20" />
+          :required="true" variant="numeric" :maxlength="20" /> -->
+        <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" v-model="form.nomorDokumenIdentitasBO"
+          variant="numeric" :maxlength="20" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
+          required @blur="handlenomorDokumenIdentitasBOBlur" :error="nomorDokumenIdentitasBOError"
+          :hint="nomorDokumenIdentitasBOError ? 'NIK tidak valid (harus antara 16 sampai 20 digit angka).' : ''" />
       </div>
 
       <div v-if="form.jenisIdentitasBO === '2'" class="">
@@ -90,8 +94,8 @@
       <FormField label="Provinsi*" id="provinsiBO" :isDropdown="true" v-model="form.provinsiBO"
         :options="provinsiOptions" placeholder="Pilih Provinsi Beneficial Owner Anda" @change="fetchKabupaten" />
 
-      <FormField label="Kabupaten/Kota*" id="kabupatenBO" :isDropdown="true" v-model="form.kabupatenBO"
-        :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota Beneficial Owner Anda" @change="fetchKecamatan"
+      <FormField label="Kota/Kabupaten*" id="kabupatenBO" :isDropdown="true" v-model="form.kabupatenBO"
+        :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten Beneficial Owner Anda" @change="fetchKecamatan"
         :disabled="!form.provinsiBO" />
 
       <FormField label="Kecamatan*" id="kecamatanBO" :isDropdown="true" v-model="form.kecamatanBO"
@@ -232,7 +236,7 @@
 
       <div v-if="form.pekerjaan === '9999'" class="">
         <FormField label="Jabatan*" id="jabatanLainnyaDK" type="text" v-model="form.jabatanLainnyaDK"
-          placeholder="Masukkan Jabatan" />
+          placeholder="Masukkan Jabatan Anda" />
       </div>
 
       <FormField label="Alamat Perusahaan*" id="alamatDK" :isDropdown="false" v-model="form.alamatDK"
@@ -328,6 +332,7 @@ export default {
   data() {
     return {
       form: new FormModelDataPekerjaan(),
+      nomorDokumenIdentitasBOError: false,
       pernyataanChecked: false,
       isFirstFetch: true,
       penghasilanOptions,
@@ -435,7 +440,7 @@ export default {
           (['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013'].includes(this.form.pekerjaanBO) && !!this.form.jabatanBO) ||
           (!['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0010', '0012', '0013', '9999'].includes(this.form.pekerjaanBO))
           // Pastikan logika untuk pekerjaan di luar daftar sudah sesuai
-        )
+        ) && !this.nomorDokumenIdentitasBOError
       );
 
       const isDetailPekerjaanFilled =
@@ -485,6 +490,19 @@ export default {
   },
 
   watch: {
+    'form.nomorDokumenIdentitasBO'(newValue) {
+      const cleanedValue = String(newValue).replace(/\D/g, '').slice(0, 20);
+      if (newValue !== cleanedValue) {
+        this.form.nomorDokumenIdentitasBO = cleanedValue;
+        return;
+      }
+
+      if (cleanedValue.length > 0) {
+        this.nomorDokumenIdentitasBOError = !this.validatenomorDokumenIdentitasBO(cleanedValue);
+      } else {
+        this.nomorDokumenIdentitasBOError = false;
+      }
+    },
     'form.pekerjaan': function (newVal) {
       console.log('Pekerjaan berubah menjadi:', newVal);
       if (newVal !== '9999') {
@@ -707,6 +725,17 @@ export default {
   },
 
   methods: {
+    validatenomorDokumenIdentitasBO(nomorDokumenIdentitasBO) {
+      const cleanedJenisIdentitasBO = String(nomorDokumenIdentitasBO).replace(/\D/g, '');
+      return cleanedJenisIdentitasBO.length >= 16 && cleanedJenisIdentitasBO.length <= 20;
+    },
+    handlenomorDokumenIdentitasBOBlur() {
+      if (this.form.nomorDokumenIdentitasBO.length > 0) {
+        this.nomorDokumenIdentitasBOError = !this.validatenomorDokumenIdentitasBO(this.form.nomorDokumenIdentitasBO);
+      } else {
+        this.nomorDokumenIdentitasBOError = false;
+      }
+    },
     resetFormKecualiPekerjaan() {
       const pekerjaanSebelumReset = this.form.pekerjaan;
       this.form = new FormModelDataPekerjaan();

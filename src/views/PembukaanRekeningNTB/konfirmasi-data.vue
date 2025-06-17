@@ -6,7 +6,7 @@
       </h1>
       <div v-if="formKTP" class="form-container">
         <div class="form-item" v-for="(value, key) in formKTP" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
+          <div class="form-label">{{ formatLabel(key) }}</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
       </div>
@@ -19,22 +19,94 @@
         Dokumen
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
+        <div :class="[
           'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
-          file
-            ? 'bg-semantic/success-100 border-semantic/success-600'
-            : 'bg-neutral-100 border-primary-100',
+          fileStore.isKtpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]">
+          <div class=" flex items-center">
+            <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">E-KTP</span>
+              <div v-if="fileStore.isKtpUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">{{ nik }}</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto E-KTP Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isKtpUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md  relative',
+          fileStore.isFotoDiriUploaded
+            ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]" :aria-disabled="fileStore.isFotoDiriUploaded ? 'true' : null">
+          <div class="flex items-center">
+            <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
+              <div v-if="fileStore.isFotoDiriUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto Diri Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isFotoDiriUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
+          fileStore.isNpwpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
         ]">
           <div class="flex items-center">
-            <img :src="getFileIcon(key)" :alt="formatFileLabel(key)" class="h-12 mr-4" />
-            <span class="text-sm font-medium" :class="file ? 'text-semantic/success-700' : 'text-neutral-900'">
-              {{ formatFileLabel(key) }}
-            </span>
+            <img src="/src/assets/npwp.svg" alt="NPWP" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">NPWP (jika ada)</span>
+              <div v-if="fileStore.isNpwpUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">{{ npwp }}</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto NPWP Anda</p>
+              </div>
+            </div>
           </div>
-
           <div>
-            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
-            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
+            <img v-if="fileStore.isNpwpUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
+          fileStore.isTandaTanganUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]">
+          <div class="flex items-center">
+            <img src="/src/assets/tanda-tangan.svg" alt="Tanda Tangan" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">Tanda Tangan</span>
+              <!-- <p class="text-xs text-neutral-600">Foto Tanda Tangan Anda</p> -->
+              <div v-if="fileStore.isTandaTanganUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto Tanda Tangan Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isTandaTanganUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
           </div>
         </div>
       </div>
@@ -46,10 +118,69 @@
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Data Pribadi
       </h1>
-      <div v-if="formGabungan" class="form-container">
+      <!-- <div v-if="formGabungan" class="form-container">
         <div class="form-item" v-for="(value, key) in formGabungan" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div> -->
+
+      <div class="form-container">
+        <div class="form-item" v-if="formGabungan.namaPanggilan">
+          <div class="form-label">Nama Alias/Panggilan</div>
+          <strong class="form-value">{{ formGabungan.namaPanggilan }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Alamat Tempat Tinggal Terkini</div>
+          <strong class="form-value">{{ formGabungan.alamat }}</strong>
+        </div>
+        <div class="form-item" v-if="formPribadi.tujuan">
+          <div class="form-label">Tujuan Pembukaan Rekening</div>
+          <strong class="form-value">{{ formPribadi.tujuan }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">RT/RW</div>
+          <strong class="form-value">{{ formGabungan.rt }}/{{ formGabungan.rw }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formGabungan.provinsi }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Email</div>
+          <strong class="form-value">{{ formGabungan.email }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formGabungan.kabupaten }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Nomor Fax</div>
+          <strong class="form-value">{{ formGabungan.nomorFax }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formGabungan.kodePos }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Pendidikan Terakhir</div>
+          <strong class="form-value">{{ formGabungan.pendidikanTerakhir }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Nomor Telepon</div>
+          <strong class="form-value">{{ formGabungan.nomorTelepon }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Nomor Handphone</div>
+          <strong class="form-value">0{{ formGabungan.phone }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Hobi</div>
+          <strong class="form-value">{{ formGabungan.hobi }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.korespondensi">
+          <div class="form-label">Alamat Korespondensi Surat Menyurat</div>
+          <strong class="form-value">{{ formPekerjaan.korespondensi }}</strong>
         </div>
       </div>
     </div>
@@ -60,10 +191,73 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Data Pekerjaan & Finansial
       </h1>
-      <div v-if="formPekerjaan" class="form-container">
+      <!-- <div v-if="formPekerjaan" class="form-container">
         <div class="form-item" v-for="(value, key) in formPekerjaan" :key="key">
           <div class="form-label"> {{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div> -->
+      <div class="form-container">
+        <div class="form-item" v-if="formPekerjaan.pekerjaan">
+          <div class="form-label">Pekerjaan</div>
+          <strong class="form-value">{{ formPekerjaan.pekerjaan }}</strong>
+        </div>
+
+        <div class="form-item" v-if="formPekerjaan.pekerjaanLainnya">
+          <div class="form-label">Pekerjaan Lainnya</div>
+          <strong class="form-value">{{ formPekerjaan.pekerjaanLainnya }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.alamatDK">
+          <div class="form-label">Alamat Perusahaan/Instansi</div>
+          <strong class="form-value">{{ formPekerjaan.alamatDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.namaPerusahaanDK">
+          <div class="form-label">Nama Perusahaan/ Instansi</div>
+          <strong class="form-value">{{ formPekerjaan.namaPerusahaanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.lamaBekerjaTahunDK">
+          <div class="form-label">Lama Bekerja (Tahun)</div>
+          <strong class="form-value">{{ formPekerjaan.lamaBekerjaTahunDK }} Tahun</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.bidangPekerjaanDK">
+          <div class="form-label">Bidang Pekerjaan/Usaha</div>
+          <strong class="form-value">{{ formPekerjaan.bidangPekerjaanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.lamaBekerjaBulanDK">
+          <div class="form-label">Lama Bekerja (Bulan)</div>
+          <strong class="form-value">{{ formPekerjaan.lamaBekerjaBulanDK }} Bulan</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.jabatanDK">
+          <div class="form-label">Jabatan/Posisi Pekerjaan</div>
+          <strong class="form-value">{{ formPekerjaan.jabatanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.nomorTeleponKantorDK">
+          <div class="form-label">Nomor Telepon Kantor</div>
+          <strong class="form-value">{{ formPekerjaan.nomorTeleponKantorDK }}</strong>
+        </div>
+        <!-- <div class="form-item" v-if="formPekerjaan.kotaPerusahaanDK">
+          <div class="form-label">Kota Perusahaan</div>
+          <strong class="form-value">{{ formPekerjaan.kotaPerusahaanDK }}</strong>
+        </div> -->
+        <div class="form-item" v-if="formPekerjaan.kodePosPerusahaanDK">
+          <div class="form-label">Kode Pos Perusahaan</div>
+          <strong class="form-value">{{ formPekerjaan.kodePosPerusahaanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPribadi.tujuan">
+          <div class="form-label">Tujuan Pembukaan Rekening</div>
+          <strong class="form-value">{{ formPribadi.tujuan }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.nomorTeleponFaxDK">
+          <div class="form-label">Nomor Fax Kantor</div>
+          <strong class="form-value">{{ formPekerjaan.nomorTeleponFaxDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.penghasilan">
+          <div class="form-label">Sumber Dana</div>
+          <strong class="form-value">{{ formPekerjaan.penghasilan }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.jumlahPenghasilan">
+          <div class="form-label">Penghasilan Perbulan</div>
+          <strong class="form-value">{{ formPekerjaan.jumlahPenghasilan }}</strong>
         </div>
       </div>
     </div>
@@ -73,11 +267,147 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pemilik Manfaat
       </h1>
-      <div v-if="formBeneficialOwner" class="form-container">
+      <!-- <div v-if="formBeneficialOwner" class="form-container">
         <div class="form-item" v-for="(value, key) in formBeneficialOwner" :key="key">
           <div class="form-label"> {{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
+      </div> -->
+      <div class="form-container">
+        <div class="form-item" v-if="formBeneficialOwner.hubunganNasabahBO">
+          <div class="form-label">Hubungan dengan Nasabah</div>
+          <strong class="form-value">{{ formBeneficialOwner.hubunganNasabahBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.alamatBO">
+          <div class="form-label">Alamat</div>
+          <strong class="form-value">{{ formBeneficialOwner.alamatBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.namaLengkapBO">
+          <div class="form-label">Nama Lengkap</div>
+          <strong class="form-value">{{ formBeneficialOwner.namaLengkapBO }}</strong>
+        </div>
+
+        <div class="form-item" v-if="formBeneficialOwner.rtBO">
+          <div class="form-label">RT/RW</div>
+          <strong class="form-value">{{ formBeneficialOwner.rtBO }}/{{ formBeneficialOwner.rwBO }}</strong>
+        </div>
+        <!-- <div class="form-item" v-if="formBeneficialOwner.jenisIdentitasBO">
+          <div class="form-label">Jenis Identitas</div>
+          <strong class="form-value">{{ formBeneficialOwner.jenisIdentitasBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jenisIdentitasLainnyaBO">
+          <div class="form-label">Jenis Identitas Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.jenisIdentitasLainnyaBO }}</strong>
+        </div> -->
+        <div class="form-item" v-if="formBeneficialOwner.nomorDokumenIdentitasBO">
+          <div class="form-label">Nomor Dokumentasi Identitas</div>
+          <strong class="form-value">{{ formBeneficialOwner.nomorDokumenIdentitasBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.provinsiBO">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formBeneficialOwner.provinsiBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.tempatLahirBO">
+          <div class="form-label">Tempat Lahir dan tanggal lahir</div>
+          <strong class="form-value">{{ formBeneficialOwner.tempatLahirBO }} {{ formBeneficialOwner.tanggalLahirBO
+          }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kabupatenBO">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formBeneficialOwner.kabupatenBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kewarganegaraanBO">
+          <div class="form-label">Kewarganegaraan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kewarganegaraanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kelurahanBO">
+          <div class="form-label">Desa/Kelurahan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kelurahanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.pekerjaanBO">
+          <div class="form-label">Pekerjaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.pekerjaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kodePosBO">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formBeneficialOwner.kodePosBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jenisKelaminBO">
+          <div class="form-label">Jenis Kelamin</div>
+          <strong class="form-value">{{ formBeneficialOwner.jenisKelaminBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.statusPerkawinanBO">
+          <div class="form-label">Status Perkawinan</div>
+          <strong class="form-value">{{ formBeneficialOwner.statusPerkawinanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jumlahPenghasilanBO">
+          <div class="form-label">Penghasilan Perbulan</div>
+          <strong class="form-value">{{ formBeneficialOwner.jumlahPenghasilanBO }}</strong>
+        </div>
+        <!-- <div class="form-item" v-if="formBeneficialOwner.kecamatanBO">
+          <div class="form-label">Kecamatan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kecamatanBO }}</strong>
+        </div> -->
+        <!-- <div class="form-item" v-if="formBeneficialOwner.hubunganNasabahLainnyaBO">
+          <div class="form-label">Hubungan Nasabah Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.hubunganNasabahLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.pekerjaanLainnyaBO">
+          <div class="form-label">Pekerjaan Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.pekerjaanLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.namaPerusahaanBO">
+          <div class="form-label">Nama Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.namaPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.alamatPerusahaanBO">
+          <div class="form-label">Alamat Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.alamatPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jabatanBO">
+          <div class="form-label">Jabatan</div>
+          <strong class="form-value">{{ formBeneficialOwner.jabatanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jabatanLainnyaBO">
+          <div class="form-label">Jabatan Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.jabatanLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.lamaBekerjaTahunBO">
+          <div class="form-label">Lama Bekerja (Tahun)</div>
+          <strong class="form-value">{{ formBeneficialOwner.lamaBekerjaTahunBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.lamaBekerjaBulanBO">
+          <div class="form-label">Lama Bekerja (Bulan)</div>
+          <strong class="form-value">{{ formBeneficialOwner.lamaBekerjaBulanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.penghasilanBO">
+          <div class="form-label">Penghasilan BO</div>
+          <strong class="form-value">{{ formBeneficialOwner.penghasilanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jumlahPenghasilanBO">
+          <div class="form-label">Penghasilan Perbulan BO</div>
+          <strong class="form-value">{{ formBeneficialOwner.jumlahPenghasilanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.penghasilanLainnyaBO">
+          <div class="form-label">Penghasilan Lainnya BO</div>
+          <strong class="form-value">{{ formBeneficialOwner.penghasilanLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kotaPerusahaanBO">
+          <div class="form-label">Kota Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kotaPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kodePosPerusahaanBO">
+          <div class="form-label">Kode Pos Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kodePosPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kodePosPerushaanBO">
+          <div class="form-label">Kode Pos Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kodePosPerushaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.pernyataanChecked">
+          <div class="form-label">Pernyataan</div>
+          <strong class="form-value">{{ formBeneficialOwner.pernyataanChecked }}</strong>
+        </div> -->
       </div>
     </div>
 
@@ -89,19 +419,19 @@
       </h1>
       <div class="form-container">
         <div class="form-item" v-if="formPribadi.kantorCabang">
-          <div class="form-label">Kantor cabang:</div>
+          <div class="form-label">Jaringan Kantor</div>
           <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.alamatKantorCabang">
-          <div class="form-label">Alamat Jaringan Kantor:</div>
+          <div class="form-label">Alamat Jaringan Kantor</div>
           <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formGabungan.produk">
-          <div class="form-label">Produk yang Diinginkan:</div>
+          <div class="form-label">Produk yang Diinginkan</div>
           <strong class="form-value">{{ formGabungan.produk }}</strong>
         </div>
         <div class="form-item" v-if="formGabungan.namaFundingOfficer">
-          <div class="form-label">Nama Funding Officer:</div>
+          <div class="form-label">Nama Funding Officer</div>
           <strong class="form-value">{{ formGabungan.namaFundingOfficer }}</strong>
         </div>
       </div>
@@ -115,7 +445,7 @@
       </h1>
       <div v-if="formKontakDarurat" class="form-container">
         <div class="form-item" v-for="(value, key) in formKontakDarurat" :key="key">
-          <div class="form-label"> {{ formatLabel(key) }}:</div>
+          <div class="form-label"> {{ formatLabel(key) }}</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
       </div>
@@ -209,6 +539,13 @@ import { pendidikanOptions, tujuanOptions, hobiOptions, agamaOptions, statusPerk
 import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
 import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
+import ektpIcon from "@/assets/ektp.svg";
+import npwpIcon from "@/assets/npwp.svg";
+import livenessIcon from "@/assets/liveness.svg";
+import tandaTanganIcon from "@/assets/tanda-tangan.svg";
+import defaultIcon from "@/assets/default.svg";
+
+
 
 
 export default {
@@ -270,6 +607,8 @@ export default {
           let value = data[key];
           if (key === "produk") {
             value = this.getLabelFromOptions(value, produkOptions);
+          } else if (key === "tujuan") {
+            value = this.getLabelFromOptions(value, tujuanOptions);
           }
           if (key === "kantorCabang") {
             if (this.kantorCabangOptions) {
@@ -289,31 +628,30 @@ export default {
       const fileStore = useFileStore();
       const pribadiData = fileStore.formPribadi || {};
       const emailData = fileStore.formEmailRequestPembukaanRekening || {};
-      const gabunganData = { ...pribadiData, ...emailData };
-      const processedData = {};
-      for (const key in gabunganData) {
-        if (gabunganData.hasOwnProperty(key) && gabunganData[key]) {
-          let value = gabunganData[key];
 
+      const gabunganData = {
+        ...pribadiData,
+        ...emailData,
+      };
+
+      const processedData = {};
+
+      for (const key in gabunganData) {
+        if (gabunganData.hasOwnProperty(key)) {
+          let value = gabunganData[key];
           if (key === "pendidikanTerakhir") {
             value = this.getLabelFromOptions(value, pendidikanOptions);
-          }
-          if (key === "tujuan") {
+          } else if (key === "tujuan") {
             value = this.getLabelFromOptions(value, tujuanOptions);
-          }
-          if (key === "hobi") {
+          } else if (key === "hobi") {
             value = this.getLabelFromOptions(value, hobiOptions);
-          }
-          if (key === "produk") {
+          } else if (key === "produk") {
             value = this.getLabelFromOptions(value, produkOptions);
-          }
-          if (key === "sumber") {
+          } else if (key === "sumber") {
             value = this.getLabelFromOptions(value, sumberDataNasabahOptions);
-          }
-          if (key === "alamatSesuaiEktp") {
+          } else if (key === "alamatSesuaiEktp") {
             value = this.getLabelFromOptions(value, trueFalseOptions);
-          }
-          if (key === "kantorCabang") {
+          } else if (key === "kantorCabang") {
             if (this.kantorCabangOptions) {
               const selectedBranch = this.kantorCabangOptions.find(
                 (option) => option.value === value
@@ -321,6 +659,10 @@ export default {
               value = selectedBranch ? selectedBranch.label : value;
             }
           }
+          if (value === null || value === undefined || value === '') {
+            value = "-";
+          }
+
           processedData[key] = value;
         }
       }
@@ -479,7 +821,9 @@ export default {
   setup() {
     const fileStore = useFileStore();
     const no_hp = computed(() => fileStore.no_hp || "user@example.com");
-    return { no_hp }
+    const nik = computed(() => fileStore.nik || "123123123");
+    const npwp = computed(() => fileStore.no_npwp || "Telah Dilengkapi");
+    return { fileStore, nik, no_hp, npwp }
   },
 
   data() {
@@ -575,7 +919,7 @@ export default {
         kodePos: "Kode Pos",
         statusPerkawinan: "Status Perkawinan",
         masaAktifKtp: "Masa Aktif e-KTP",
-        namaIbuKandung: "Nama Ibu Kandung",
+        namaIbuKandung: "Nama Gadis Ibu Kandung",
         kewarganegaraan: "Kewarganegaraan",
 
         // Data Pribadi
@@ -606,7 +950,7 @@ export default {
         pekerjaan: "Pekerjaan",
         pekerjaanLainnya: "Pekerjaan Lainnya",
         penghasilan: "Sumber Dana",
-        jumlahPenghasilan: "Jumlah Penghasilan",
+        jumlahPenghasilan: "Penghasilan Perbulan",
         hubunganNasabah: "Hubungan Nasabah",
         jenisIdentitasBO: "Jenis Identitas",
         hubunganNasabahBO: "Hubungan dengan Nasabah",
@@ -638,19 +982,19 @@ export default {
         jumlahPenghasilanBO: "Jumlah Penghasilan",
 
         // Data Pekerjaan (Detail Pekerjaan)
-        namaPerusahaanDK: "Nama Perusahaan",
-        bidangPekerjaanDK: "Bidang Pekerjaan",
-        jabatanDK: "Jabatan",
-        jabatanLainnyaDK: "Jabatan Lainnya",
+        namaPerusahaanDK: "Nama Perusahaan/ Instansi",
+        pekerjaanLainnya: "Pekerjaan Lainnya",
+        bidangPekerjaanDK: "Bidang Pekerjaan/ Usaha",
+        jabatanDK: "Jabatan/ Posisi Pekerjaan",
         kotaPerusahaanDK: "Kota Perusahaan",
         kodePosPerusahaanDK: "Kode Pos Perusahaan",
         hubunganPemohonKD: "Hubungan Pemohon",
-        lamaBekerjaTahunDK: "Lama Bekerja Tahun",
-        lamaBekerjaBulanDK: "Lama Bekerja Bulan",
+        lamaBekerjaTahunDK: "Lama Bekerja (Tahun)",
+        lamaBekerjaBulanDK: "Lama Bekerja (Bulan)",
         nomorTeleponKantorDK: "Nomor Telepon Kantor",
-        nomorTeleponFaxDK: "Nomor Telepon Fax",
-        alamatDK: "Alamat Kantor",
-        korespondensi: "Korespondensi",
+        nomorTeleponFaxDK: "Nomor Fax Kantor",
+        alamatDK: "Alamat Perusahaan/ Instansi",
+        korespondensi: "Alamat Korespondensi Surat Menyurat",
         pernyataanChecked: "Pernyataan & Persetujuan Nasabah",
 
         // kontak Darurat
@@ -672,12 +1016,12 @@ export default {
     },
     getFileIcon(key) {
       const icons = {
-        ktp: "/src/assets/ektp.svg",
-        npwp: "/src/assets/npwp.svg",
-        fotoDiri: "/src/assets/liveness.svg",
-        tandaTangan: "/src/assets/tanda-tangan.svg",
+        ktp: ektpIcon,
+        npwp: npwpIcon,
+        fotoDiri: livenessIcon,
+        tandaTangan: tandaTanganIcon
       };
-      return icons[key] || "/src/assets/default.svg";
+      return icons[key] || defaultIcon;
     },
 
     handleSubmit(event) {
@@ -731,7 +1075,7 @@ export default {
           // console.log("Envelope ID:", response.data.envelope_id);
           // console.log("Sign Url:", response.data.sign_url);
 
-          this.$router.push({ path: "/dashboard/tandaTanganDigitalPembukaanRekeningNTB" });
+          this.$router.push({ path: "/dashboard/panduanKameraPembukaanRekeningNTB" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }

@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     handleClick(event) {
+      console.log("Click!");
       if (!this.disabled) {
         this.$emit("click", event);
       }

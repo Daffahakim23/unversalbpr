@@ -1,9 +1,11 @@
 <template>
-    <iframe :src="signLink" width="600" height="400"></iframe>
-    <div class="flex justify-between mt-6">
-        <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-        <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
-            {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+    <div class="iframe-container">
+        <iframe :src="signLink" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="text-center mt-6">
+        <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled || showCountdown"
+            @click="handleSubmit">
+            {{ buttonText }}
         </ButtonComponent>
     </div>
 </template>
@@ -20,13 +22,31 @@ export default {
     emits: ["update-progress"],
     mounted() {
         this.$emit("update-progress", 75);
+        this.startCountdown();
+    },
+    beforeUnmount() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
     },
     data() {
         return {
             isSubmitting: false,
+            countdown: 30,
+            showCountdown: true,
+            countdownInterval: null,
         };
     },
     computed: {
+        buttonText() {
+            if (this.isSubmitting) {
+                return "Mengirim...";
+            } else if (this.showCountdown) {
+                return `Lanjutkan (${this.countdown}s)`;
+            } else {
+                return "Lanjutkan";
+            }
+        },
         signLink() {
             const fileStore = useFileStore();
             return fileStore.sign_url;
@@ -34,7 +54,25 @@ export default {
     },
     methods: {
         goBack() {
-            this.$router.push({ path: "/dashboard/konfirmasiDataPengkinianData" });
+            this.$router.push({ path: "/dashboard/konfirmasiDataPembukaanRekeningExisting" });
+        },
+        startCountdown() {
+            if (this.countdownInterval) {
+                clearInterval(this.countdownInterval);
+            }
+
+            this.countdown = 30;
+            this.showCountdown = true;
+
+            this.countdownInterval = setInterval(() => {
+                if (this.countdown > 0) {
+                    this.countdown--;
+                } else {
+                    clearInterval(this.countdownInterval);
+                    this.showCountdown = false;
+                    this.countdownInterval = null;
+                }
+            }, 1000);
         },
         async handleSubmit() {
             const fileStore = useFileStore();
@@ -75,3 +113,21 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.iframe-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%;
+    height: 0;
+    overflow: hidden;
+}
+
+.iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+</style>

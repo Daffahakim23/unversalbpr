@@ -15,6 +15,11 @@
         <div id="main-dropdown"
           class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
           <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="mainDropdownButton">
+            <!-- <li>
+                <a @click="downloadProductDetails" download="info-produk.pdf"
+                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
+                  Produk</a>
+              </li> -->
             <li>
               <button id="nestedDropdownButton" data-dropdown-toggle="nested-dropdown"
                 data-dropdown-placement="right-start" type="button"
@@ -116,8 +121,9 @@
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningExisting')"
-                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
+              ]" icon="illus-pembukaan-rekening.svg"
+                :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningExisting')" @cardClick="handleCardClick"
+                buttonString="Ajukan Pembukaan Rekening Tabungan" />
               <Card type="1" :features="[
                 {
                   label: 'Pembukaan Deposito',
@@ -129,7 +135,7 @@
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoExisting')"
+              ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoExisting')"
                 @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Deposito" />
             </div>
 
@@ -145,7 +151,7 @@
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => openCSModal({
+              ]" icon="illus-penutupan-deposito.svg" :onBtnClick="() => openCSModal({
                 label: 'Penutupan Deposito',
                 description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
               })" @cardClick="handleCardClick" buttonString="Ajukan Penutupan Deposito" />
@@ -161,7 +167,7 @@
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="icon-deposito.svg" :onBtnClick="() => openCSModal({
+              ]" icon="illus-transfer.svg" :onBtnClick="() => openCSModal({
                 label: 'Transfer',
                 description: 'Layanan transfer ke bank lain atau transfer ke rekening sesama Universal BPR hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
                 dokumen: 'Foto/Scan KTP Elektronik',
@@ -178,7 +184,7 @@
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/pengkinianData')"
+              ]" icon="illus-pengkinian.svg" :onBtnClick="() => navigateTo('/dashboard/pengkinianData')"
                 @cardClick="handleCardClick" buttonString="Ajukan Pengkinian Data" />
             </div>
           </div>
@@ -200,7 +206,7 @@
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningNTB')"
+              ]" icon="illus-pembukaan-rekening.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningNTB')"
                 @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
               <Card type="1" :features="[
                 {
@@ -255,6 +261,8 @@ export default {
     console.log('User Type:', this.$route.query.userType);
     userType = this.$route.query.userType;
     document.addEventListener('click', this.handleClickOutside);
+    import('flowbite').then(() => {
+    });
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
@@ -269,6 +277,27 @@ export default {
     };
   },
   methods: {
+    getWhatsAppLink(number = 622122213993) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    openWhatsApp() {
+      if (this.whatsappContact.whatsapp) {
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+      }
+    },
+    toggleInfoProductDropdown() {
+      this.isInfoProductDropdownOpen = !this.isInfoProductDropdownOpen;
+    },
+    handleClickOutside(event) {
+      if (this.isInfoProductDropdownOpen && !this.$el.contains(event.target)) {
+        this.isInfoProductDropdownOpen = false;
+      }
+    },
     downloadProductDetails() {
       const fileUrl = infoProdukPdf;
       const link = document.createElement("a");
@@ -339,6 +368,7 @@ export default {
     Footer,
     CSModal,
   },
+
 };
 </script>
 

@@ -26,13 +26,24 @@
           resendCount})` }}
       </p> -->
 
-      <p v-if="resendCount >= 3" class="text-semantic/error-400 mt-3">
+      <!-- <p v-if="resendCount >= 3" class="text-semantic/error-400 mt-3">
         Hubungi Universal Care untuk bantuan.
       </p>
       <p v-else class="text-primary mt-4 cursor-pointer" @click="resendOTP"
         :class="{ 'opacity-50 pointer-events-none': isResending || countdown > 0 }">
         {{ isResending ? "Mengirim..." : `Belum dapat kode? Kirim Ulang Kode (${resendCount}/3)` }}
+      </p> -->
+
+      <p class="text-primary mt-4 cursor-pointer" @click="resendOTP"
+        :class="{ 'opacity-50 pointer-events-none': isResending || countdown > 0 }">
+        {{ isResending ? "Mengirim..." : `Belum dapat kode? Kirim Ulang Kode (${resendCount}/3)` }}
       </p>
+
+      <!-- <ButtonComponent
+        @click="showErrorModal('Test Modal Title', 'This is a test message for Universal Care.', ['Tutup', 'Hubungi Universal Care'])"
+        class="mt-6">
+        Test Modal
+      </ButtonComponent> -->
 
       <ButtonComponent type="submit" class="mt-6" :disabled="isButtonDisabled">
         Verifikasi
@@ -40,6 +51,10 @@
       <ModalError :isOpen="isModalError" :features="modalContent" icon="otp-error-illus.svg"
         @close="isModalError = false" @buttonClick1="handleButtonClick1(modalContent[0])"
         @buttonClick2="handleButtonClick2(modalContent[0])" />
+
+      <!-- <ModalError :isOpen="isModalError" :features="modalContent" icon="otp-error-illus.svg"
+        @close="isModalError = false" @buttonClick1="handleButtonClick1($event[0], $event[1])"
+        @buttonClick2="handleButtonClick2($event[0], $event[1])" /> -->
     </div>
   </form>
 </template>
@@ -104,7 +119,7 @@ export default {
       whatsapp: '+622122213993',
     });
 
-    const getWhatsAppLink = (number) => {
+    const getWhatsAppLink = (number = 622122213993) => {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
         return `https://wa.me/${number}`;
@@ -113,9 +128,31 @@ export default {
       }
     };
 
+    // const openWhatsApp = () => {
+    //   if (whatsappContact.value.whatsapp) {
+    //     console.log("openWhatsApp dipanggil!");
+    //     window.open(getWhatsAppLink(whatsappContact.value.whatsapp), '_blank');
+    //   }
+    // };
+
+    let isWhatsAppOpenCoolingDown = false;
+
     const openWhatsApp = () => {
-      if (whatsappContact.value.whatsapp) {
+      if (whatsappContact.value.whatsapp && !isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
         window.open(getWhatsAppLink(whatsappContact.value.whatsapp), '_blank');
+
+        isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
       }
     };
 
@@ -135,13 +172,15 @@ export default {
     };
 
     const showErrorModal = (title, message, buttons = []) => {
+      const buttonArray = Array.isArray(buttons) ? buttons : [buttons].filter(Boolean);
+
       modalContent.value = [
         {
           label: title,
           description: message,
           icon: new URL(`/src/assets/otp-error-illus.svg`, import.meta.url).href,
-          buttonString1: buttons[0] || "Tutup",
-          buttonString2: buttons[1],
+          buttonString1: buttonArray[0] || "Tutup",
+          buttonString2: buttonArray.length > 1 ? buttonArray[1] : null,
         },
       ];
       isModalError.value = true;
@@ -150,7 +189,7 @@ export default {
     const handleButtonClick1 = (feature) => {
       isModalError.value = false;
       if (feature.buttonString1 === "Hubungi Universal Care") {
-        event.stopPropagation();
+        // event.stopPropagation();
         openWhatsApp();
         router.push({ path: "/" });
         // window.location.reload();
@@ -160,13 +199,15 @@ export default {
         isOtpError.value = false;
         otp.value = ["", "", "", ""];
         otpInputs.value[0]?.focus();
+      } else if (feature.buttonString1 === "Beranda") {
+        router.push({ path: "/" });
       }
     };
 
     const handleButtonClick2 = (feature) => {
       isModalError.value = false;
       if (feature.buttonString2 === "Hubungi Universal Care") {
-        event.stopPropagation();
+        // event.stopPropagation();
         openWhatsApp();
         otp.value = ["", "", "", ""];
       } else if (feature.buttonString2 === "Batal" || feature.buttonString2 === "Tutup") {
@@ -203,6 +244,8 @@ export default {
 
     const handleSubmit = async () => {
       const kodeOtp = otp.value.join("");
+      errorMessage.value = "";
+      isOtpError.value = false;
       if (kodeOtp.length !== 4) {
         errorMessage.value = "OTP harus terdiri dari 4 digit.";
         isOtpError.value = true;
@@ -210,7 +253,7 @@ export default {
       }
 
       if (!fileStore.uuid) {
-        showErrorModal("Terjadi Kesalahan", "Mohon untuk mengulangi proses verifikasi dari awal");
+        showErrorModal("Terjadi Kesalahan", "Mohon untuk mengulangi proses verifikasi dari awal", ["Hubungi Universal Care", "Beranda"]);
         errorMessage.value = "Hubungi Universal Care Untuk Bantuan";
         isOtpError.value = true;
         throw new Error("documentType atau UUID tidak valid.");
@@ -244,10 +287,10 @@ export default {
             let buttons = ["Coba Lagi", "Hubungi Universal Care"];
 
             if (otpErrorCount.value === 3) {
-              subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Untuk alasan keamanan, alamat email Anda akan dibatasi untuk pengiriman kode OTP selama 30 menit kedepan jika salah sebanyak 5 kali, Periksa kembali kode OTP Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+              subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
               buttons = ["Coba Lagi", "Hubungi Universal Care"];
             } else if (otpErrorCount.value === 4) {
-              subtitle = "Anda telah salah memasukkan kode OTP sebanyak 4 kali. Untuk alasan keamanan, alamat email Anda akan dibatasi untuk pengiriman kode OTP selama 30 menit kedepan jika salah sebanyak 5 kali, Periksa kembali kode OTP Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+              subtitle = "Anda telah salah memasukkan kode OTP sebanyak 4 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan.";
               buttons = ["Coba Lagi", "Hubungi Universal Care"];
             } else if (otpErrorCount.value >= 5) {
               title = "Alamat Email Dibatasi Sementara";
@@ -277,10 +320,10 @@ export default {
           let buttons = ["Coba Lagi", "Hubungi Universal Care"];
 
           if (otpErrorCount.value === 3) {
-            subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Untuk alasan keamanan, alamat email Anda akan dibatasi untuk pengiriman kode OTP selama 30 menit kedepan jika salah sebanyak 5 kali, Periksa kembali kode OTP Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
-            buttons = ["Coba Lagi", "Hubungi Universal Care"];
+              subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+              buttons = ["Coba Lagi", "Hubungi Universal Care"];
           } else if (otpErrorCount.value === 4) {
-            subtitle = "Anda telah salah memasukkan kode OTP sebanyak 4 kali. Untuk alasan keamanan, alamat email Anda akan dibatasi untuk pengiriman kode OTP selama 30 menit kedepan jika salah sebanyak 5 kali, Periksa kembali kode OTP Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+            subtitle = "Anda telah salah memasukkan kode OTP sebanyak 4 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan.";
             buttons = ["Coba Lagi", "Hubungi Universal Care"];
           } else if (otpErrorCount.value >= 5) {
             title = "Alamat Email Dibatasi Sementara";
@@ -313,7 +356,19 @@ export default {
     };
 
     const resendOTP = async () => {
-      if (resendCount.value >= 3 || countdown.value > 0) return;
+      if (resendCount.value >= 3) {
+        showErrorModal(
+          "Kuota Kirim Ulang Habis",
+          "Anda telah menggunakan semua kesempatan request OTP. Silakan coba lagi setelah (10:00) menit.",
+          ["Hubungi Universal Care", "Tutup"],
+        );
+        errorMessage.value = "Hubungi Universal Care Untuk Bantuan";
+        return;
+      }
+
+      if (countdown.value > 0) {
+        return;
+      }
       isResending.value = true;
       try {
         const response = await api.post("/request-otp-email", {
@@ -322,7 +377,9 @@ export default {
         });
 
         console.log("Resend OTP sukses:", response.data);
-        resendCount.value += 1;
+        if (resendCount.value < 3) {
+          resendCount.value += 1;
+        }
         startCountdown();
       } catch (error) {
         console.error("Gagal mengirim ulang OTP:", error.response?.data || error.message);

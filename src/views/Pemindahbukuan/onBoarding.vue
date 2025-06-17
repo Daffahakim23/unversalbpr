@@ -257,7 +257,7 @@ export default {
             this.loading = false;
             this.router.push("/");
         },
-        getWhatsAppLink(number) {
+        getWhatsAppLink(number = 622122213993) {
             const isMobile =
                 /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
                     navigator.userAgent

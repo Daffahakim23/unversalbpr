@@ -119,7 +119,7 @@ export default {
                 ktp: "Upload e-KTP",
                 npwp: "Upload NPWP",
                 tandaTangan: "Upload Tanda Tangan",
-                fotoDiri: "Ambil Foto Diri",
+                fotoDiri: "Upload Foto Diri",
             };
             return textMap[this.documentType] || "Dokumen";
         },

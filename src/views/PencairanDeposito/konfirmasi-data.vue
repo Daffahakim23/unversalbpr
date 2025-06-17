@@ -19,6 +19,53 @@
         Dokumen
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
+          fileStore.isKtpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]">
+          <div class=" flex items-center">
+            <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">E-KTP</span>
+              <div v-if="fileStore.isKtpUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">{{ nik }}</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto E-KTP Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isKtpUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md  relative',
+          fileStore.isFotoDiriUploaded
+            ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]" :aria-disabled="fileStore.isFotoDiriUploaded ? 'true' : null">
+          <div class="flex items-center">
+            <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
+              <div v-if="fileStore.isFotoDiriUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto Diri Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isFotoDiriUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+      </div>
+      <!-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
           'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
           file
@@ -37,7 +84,7 @@
             <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="border-t border-neutral-200 my-4"></div>
@@ -202,6 +249,13 @@ import { fetchBranches } from '@/services/service.js';
 import CustomCheckbox from '@/components/CustomCheckbox.vue';
 import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
 
+import ektpIcon from "@/assets/ektp.svg";
+import npwpIcon from "@/assets/npwp.svg";
+import livenessIcon from "@/assets/liveness.svg";
+import tandaTanganIcon from "@/assets/tanda-tangan.svg";
+import defaultIcon from "@/assets/default.svg";
+
+
 
 export default {
   emits: ['updateProgress'],
@@ -300,7 +354,8 @@ export default {
   setup() {
     const fileStore = useFileStore();
     const no_hp = computed(() => fileStore.no_hp || "user@example.com");
-    return { no_hp }
+    const nik = computed(() => fileStore.nik || "123123123");
+    return { fileStore, nik, no_hp }
   },
 
   data() {
@@ -425,12 +480,12 @@ export default {
     },
     getFileIcon(key) {
       const icons = {
-        ktp: "/src/assets/ektp.svg",
-        npwp: "/src/assets/npwp.svg",
-        fotoDiri: "/src/assets/liveness.svg",
-        tandaTangan: "/src/assets/tanda-tangan.svg",
+        ktp: ektpIcon,
+        npwp: npwpIcon,
+        fotoDiri: livenessIcon,
+        tandaTangan: tandaTanganIcon
       };
-      return icons[key] || "/src/assets/default.svg";
+      return icons[key] || defaultIcon;
     },
     handleSubmit(event) {
       event.preventDefault();
@@ -482,7 +537,7 @@ export default {
           fileStore.setEnvelopeId(response.data.envelope_id);
           fileStore.setSignUrl(response.data.sign_url);
 
-          this.$router.push({ path: "/dashboard/tandaTanganDigitalPencairanDeposito" });
+          this.$router.push({ path: "/dashboard/panduanKameraPencairanDeposito" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }

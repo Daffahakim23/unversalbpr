@@ -14,14 +14,14 @@
 
       <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
         v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-          ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+          ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
           : form.phone?.startsWith('0')
             ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-            : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'
+            : 'Nomor handphone tidak valid.Silakan periksa kembali.'
           " :error="phoneError" @blur="handlePhoneBlur" />
 
       <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-        :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+        :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
         :error="emailError" @blur="handleEmailBlur" />
 
       <div class="text-right">
@@ -74,6 +74,7 @@ export default {
       emailError: false,
       phoneError: false,
       isModalErrorEmail: false,
+      isWhatsAppOpenCoolingDown: false,
       modalContentEmail: [
         {
           label: "",
@@ -105,7 +106,7 @@ export default {
     const router = useRouter();
     const fileStore = useFileStore();
 
-    return { route, router, fileStore }; 
+    return { route, router, fileStore };
   },
   computed: {
     isButtonDisabled() {
@@ -119,7 +120,7 @@ export default {
     },
   },
   methods: {
-    getWhatsAppLink(number) {
+    getWhatsAppLink(number = 622122213993) {
       const isMobile =
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent
@@ -130,12 +131,30 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
+    // openWhatsApp() {
+    //   if (this.whatsappContact.whatsapp) {
+    //     window.open(
+    //       this.getWhatsAppLink(this.whatsappContact.whatsapp),
+    //       "_blank"
+    //     );
+    //   }
+    // },
     openWhatsApp() {
-      if (this.whatsappContact.whatsapp) {
-        window.open(
-          this.getWhatsAppLink(this.whatsappContact.whatsapp),
-          "_blank"
-        );
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
       }
     },
     showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
@@ -247,7 +266,7 @@ export default {
           console.error("Status error response:", error.response.status);
           console.error("Headers error response:", error.response.headers);
         } else if (error.request) {
-          console.error("Tidak ada response dari server:", error.request); 
+          console.error("Tidak ada response dari server:", error.request);
         } else {
           console.error("Error saat menyiapkan request:", error.message);
         }
@@ -266,10 +285,10 @@ export default {
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/,'') == "liveness") {
+        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        } else if (error.response.data.message.replace(/ .*/,'') == "fraud") {
+        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }

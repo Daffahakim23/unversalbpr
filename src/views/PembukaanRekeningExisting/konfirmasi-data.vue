@@ -6,7 +6,7 @@
       </h1>
       <div v-if="formKTP" class="form-container">
         <div class="form-item" v-for="(value, key) in formKTP" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
+          <div class="form-label">{{ formatLabel(key) }}</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
       </div>
@@ -19,6 +19,53 @@
         Dokumen
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
+          fileStore.isKtpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]">
+          <div class=" flex items-center">
+            <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">E-KTP</span>
+              <div v-if="fileStore.isKtpUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">{{ nik }}</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto E-KTP Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isKtpUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md  relative',
+          fileStore.isFotoDiriUploaded
+            ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]" :aria-disabled="fileStore.isFotoDiriUploaded ? 'true' : null">
+          <div class="flex items-center">
+            <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
+              <div v-if="fileStore.isFotoDiriUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto Diri Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isFotoDiriUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+      </div>
+      <!-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
           'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
           file
@@ -37,7 +84,7 @@
             <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="border-t border-neutral-200 my-4"></div>
@@ -48,19 +95,19 @@
       </h1>
       <div v-if="formPribadi.email || formPribadi.phone || formPribadi.tujuan" class="form-container">
         <div class="form-item" v-if="formPribadi.email">
-          <div class="form-label">Email:</div>
+          <div class="form-label">Email</div>
           <strong class="form-value">{{ formPribadi.email }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.phone">
-          <div class="form-label">Nomor Telepon:</div>
-          <strong class="form-value">{{ formPribadi.phone }}</strong>
+          <div class="form-label">Nomor Handphone</div>
+          <strong class="form-value">0{{ formPribadi.phone }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.tujuan">
-          <div class="form-label">Tujuan Simpanan:</div>
+          <div class="form-label">Tujuan Simpanan</div>
           <strong class="form-value">{{ formPribadi.tujuan }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.sumberDana">
-          <div class="form-label">Sumber Dana:</div>
+          <div class="form-label">Sumber Dana</div>
           <strong class="form-value">{{ formPribadi.sumberDana }}</strong>
         </div>
       </div>
@@ -72,10 +119,66 @@
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Pembaharuan Data
       </h1>
-      <div v-if="formPembaruanData" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPembaruanData" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
+      <div v class="form-container">
+        <!-- <div class="form-item" v-for="(value, key) in formPembaruanData" :key="key">
+          <div class="form-label">{{ formatLabel(key) }}</div>
           <strong class="form-value">{{ value }}</strong>
+        </div> -->
+        <div class="form-item">
+          <div class="form-label">Perubahan Data</div>
+          <strong class="form-value">{{ formPembaruanData.perubahanData }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Alamat Terkini</div>
+          <strong class="form-value">{{ formPembaruanData.alamat }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">RT</div>
+          <strong class="form-value">{{ formPembaruanData.rt }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">RW</div>
+          <strong class="form-value">{{ formPembaruanData.rw }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formPembaruanData.provinsi }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formPembaruanData.kabupaten }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kecamatan</div>
+          <strong class="form-value">{{ formPembaruanData.kecamatan }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kelurahan</div>
+          <strong class="form-value">{{ formPembaruanData.kelurahan }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formPembaruanData.kodePos }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Alamat Kantor</div>
+          <strong class="form-value">{{ formPembaruanData.alamat_kantor }}</strong>
+        </div>
+        <!-- <div class="form-item" v-if="fileStore.no_hp">
+          <div class="form-label">Nomor Handphone</div>
+          <strong class="form-value">0{{ fileStore.no_hp }}</strong>
+        </div> -->
+        <div class="form-item">
+          <div class="form-label">Nomor Telepon</div>
+          <strong class="form-value">{{ formPembaruanData.nomor_telp }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Nomor Fax</div>
+          <strong class="form-value">{{ formPembaruanData.nomor_fax }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Email</div>
+          <strong class="form-value">{{ formPembaruanData.email }}</strong>
         </div>
       </div>
     </div>
@@ -90,19 +193,19 @@
         v-if="formPribadi.produk || formPribadi.kantorCabang || formPribadi.alamatKantorCabang || formPribadi.namaFundingOfficer"
         class="form-container">
         <div class="form-item" v-if="formPribadi.produk">
-          <div class="form-label">Produk yang Diinginkan:</div>
+          <div class="form-label">Produk yang Diinginkan</div>
           <strong class="form-value">{{ formPribadi.produk }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.kantorCabang">
-          <div class="form-label">Kantor cabang:</div>
+          <div class="form-label">Jaringan Kantor</div>
           <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.alamatKantorCabang">
-          <div class="form-label">Alamat Jaringan Kantor:</div>
+          <div class="form-label">Alamat Jaringan Kantor</div>
           <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
         </div>
         <div class="form-item" v-if="formPribadi.namaFundingOfficer">
-          <div class="form-label">Nama Funding Officer:</div>
+          <div class="form-label">Nama Funding Officer</div>
           <strong class="form-value">{{ formPribadi.namaFundingOfficer }}</strong>
         </div>
       </div>
@@ -194,6 +297,12 @@ import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
 import { jenisKelaminOptions, tujuanOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, produkOptions, masaAktifKTPOptions } from '@/data/option.js';
 import { fetchBranches } from '@/services/service.js';
 import CustomCheckbox from '@/components/CustomCheckbox.vue';
+
+import ektpIcon from "@/assets/ektp.svg";
+import npwpIcon from "@/assets/npwp.svg";
+import livenessIcon from "@/assets/liveness.svg";
+import tandaTanganIcon from "@/assets/tanda-tangan.svg";
+import defaultIcon from "@/assets/default.svg";
 
 
 export default {
@@ -306,7 +415,8 @@ export default {
   setup() {
     const fileStore = useFileStore();
     const no_hp = computed(() => fileStore.no_hp || "user@example.com");
-    return { no_hp }
+    const nik = computed(() => fileStore.nik || "123123123");
+    return { fileStore, nik, no_hp }
   },
 
   data() {
@@ -367,7 +477,7 @@ export default {
         rt: "RT",
         rw: "RW",
         provinsi: "Provinsi",
-        kabupaten: "Kota / Kabupaten",
+        kabupaten: "Kota/Kabupaten",
         kecamatan: "Kecamatan",
         kelurahan: "Kelurahan",
         kodePos: "Kode Pos",
@@ -382,6 +492,7 @@ export default {
         noHp: "Nomor Handphone",
         nomor_telp: "Nomor Telepon",
         nomor_fax: "Nomor Fax",
+        alamat: "Alamat",
         email: "Email",
         alamat_kantor: "Alamat Kantor",
         namaPanggilan: "Nama Alias / Panggilan",
@@ -408,12 +519,12 @@ export default {
     },
     getFileIcon(key) {
       const icons = {
-        ktp: "/src/assets/ektp.svg",
-        npwp: "/src/assets/npwp.svg",
-        fotoDiri: "/src/assets/liveness.svg",
-        tandaTangan: "/src/assets/tanda-tangan.svg",
+        ktp: ektpIcon,
+        npwp: npwpIcon,
+        fotoDiri: livenessIcon,
+        tandaTangan: tandaTanganIcon
       };
-      return icons[key] || "/src/assets/default.svg";
+      return icons[key] || defaultIcon;
     },
     handleSubmit(event) {
       event.preventDefault();
@@ -464,7 +575,7 @@ export default {
           fileStore.setEnvelopeId(response.data.envelope_id);
           fileStore.setSignUrl(response.data.sign_url);
 
-          this.$router.push({ path: "/dashboard/tandaTanganDigitalPembukaanRekeningExisting" });
+          this.$router.push({ path: "/dashboard/panduanKameraPembukaanRekeningExisting" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
@@ -509,27 +620,16 @@ h2 {
   cursor: pointer;
 }
 
-/* Kontainer Flexbox untuk membuat baris */
 .form-container {
   display: flex;
   flex-wrap: wrap;
-  /* Membungkus elemen ke baris berikutnya */
   gap: 16px;
-  /* Jarak antar elemen */
 }
 
-/* Setiap item menjadi 50% dari lebar kontainer */
 .form-item {
   flex: 1 1 calc(40% - 16px);
-  /* Membuat elemen mengambil 50% lebar */
   display: flex flex-col;
-  /* Mengatur label dan value dalam satu baris */
   justify-content: space-between;
-  /* Memberikan spasi antara label dan value */
-  /* padding: 4px; */
-  /* border: 1px solid #ddd; */
-  /* border-radius: 8px; */
-  /* background-color: #f9f9f9; */
 }
 
 .form-label {

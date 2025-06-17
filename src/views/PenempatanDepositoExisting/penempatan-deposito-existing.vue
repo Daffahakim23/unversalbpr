@@ -22,10 +22,17 @@
       :isDropdown="true" v-model="form.produkDeposito" placeholder="Pilih Produk Deposito yang Anda Inginkan"
       :options="produkDepositoOptions" required />
 
-    <FormField v-if="form.memilikiTabungan == 2" class="mb-2" label="Nomor Rekening Tabungan Universal*"
+    <!-- <FormField v-if="form.memilikiTabungan == 2" class="mb-2" label="Nomor Rekening Tabungan Universal*"
       id="nomorRekening" v-model="form.nomorRekeningPemilik" variant="numeric" maxlength="10"
       placeholder="Masukkan Nomor Rekening" required
-      @input="form.nomorRekeningPemilik = form.nomorRekeningPemilik.replace(/\D/g, '')" />
+      @input="form.nomorRekeningPemilik = form.nomorRekeningPemilik.replace(/\D/g, '')" /> -->
+
+    <FormField v-if="form.memilikiTabungan == 2" class="mb-2" label="Nomor Rekening Tabungan Universal*"
+      id="nomorRekening" v-model="form.nomorRekeningPemilik" variant="numeric" :maxlength="10"
+      placeholder="Masukkan Nomor Rekening" required
+      @input="form.nomorRekeningPemilik = form.nomorRekeningPemilik.replace(/\D/g, '')" @blur="handleNomorRekeningBlur"
+      :error="nomorRekeningError"
+      :hint="nomorRekeningError ? 'Nomor rekening tidak valid. Silakan periksa kembali' : ''" />
 
     <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
       placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
@@ -70,16 +77,15 @@
     </div> -->
 
     <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       required :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'" :error="phoneError"
-      @blur="handlePhoneBlur" />
+          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
 
     <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
 
@@ -150,6 +156,7 @@ export default {
         email: false,
         phone: false,
       },
+      nomorRekeningError: false,
       tujuanOptions,
       penghasilanOptions,
       produkDepositoOptions,
@@ -164,6 +171,7 @@ export default {
       phoneError: false,
       belumPunyaRekening: false,
       isModalErrorEmail: false,
+      isWhatsAppOpenCoolingDown: false,
       temporaryBanMessage: "",
       kantorCabangOptions: [],
       kantorCabangAlamat: {},
@@ -216,7 +224,8 @@ export default {
       } else if (this.form.memilikiTabungan == 2) {
         basicFieldsFilled = basicFieldsFilled &&
           this.form.nomorRekeningPemilik &&
-          this.form.produkDeposito;
+          this.form.produkDeposito &&
+          !this.nomorRekeningError;
       }
 
       if (this.form.tujuan === '0') {
@@ -232,7 +241,7 @@ export default {
   },
 
   methods: {
-    getWhatsAppLink(number) {
+    getWhatsAppLink(number = 622122213993) {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
         return `https://wa.me/${number}`;
@@ -240,9 +249,27 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
+    // openWhatsApp() {
+    //   if (this.whatsappContact.whatsapp) {
+    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+    //   }
+    // },
     openWhatsApp() {
-      if (this.whatsappContact.whatsapp) {
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
         window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
       }
     },
     showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
@@ -287,6 +314,20 @@ export default {
       this.touched.phone = true;
       if (this.form.phone) {
         this.phoneError = !this.validatePhone(this.form.phone);
+      }
+    },
+    validateNomorRekening(nomorRekening) {
+      // Validasi jika nomor rekening harus 10 digit dan hanya angka
+      return /^\d{10}$/.test(nomorRekening);
+    },
+
+    handleNomorRekeningBlur() {
+      if (this.form.nomorRekeningPemilik) {
+        this.nomorRekeningError = !this.validateNomorRekening(this.form.nomorRekeningPemilik);
+      } else {
+        // Jika field kosong tapi required, ini akan ditangani oleh `required` bawaan browser/komponen
+        // Atau Anda bisa set error di sini jika kosong
+        this.nomorRekeningError = false; // Biarkan `required` yang menangani jika kosong
       }
     },
     handleNomorRekeningInput() {
@@ -395,10 +436,10 @@ export default {
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/,'') == "liveness") {
+        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        } else if (error.response.data.message.replace(/ .*/,'') == "fraud") {
+        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }

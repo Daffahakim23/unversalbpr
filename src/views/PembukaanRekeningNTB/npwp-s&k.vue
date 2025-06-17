@@ -10,7 +10,7 @@
                 berlaku bagi nasabah yang telah menyerahkan dokumen NPWP).</p>
         </FlagBox>
 
-        <div v-if="form.npwp === false" class="ml-4">
+        <div v-if="form.npwp == 2" class="ml-4">
             <RadioButtonChoose label="Pilih salah satu" id="npwp2" :options="npwp2Options" v-model="form.npwp2"
                 name="npwp2" required />
         </div>
@@ -49,15 +49,15 @@ export default {
     },
     computed: {
         isButtonDisabled() {
-            if (this.form.npwp === true) {
+            if (this.form.npwp == 1) {
                 return false;
             }
-            return !(this.form.npwp === false && this.form.npwp2);
+            return !(this.form.npwp == 2 && this.form.npwp2);
         }
     },
     watch: {
         'form.npwp': function (newVal) {
-            if (newVal === true) {
+            if (newVal == 1) {
                 this.form.npwp2 = null;
             }
         }
@@ -68,7 +68,7 @@ export default {
             const requestData = {
                 // uuid: "abc8dc93-b21c-4644-9c26-c9cfdb57f1ab",
                 uuid: fileStore.uuid || "",
-                s_k_nasabah_npwp: this.form.npwp === true,
+                s_k_nasabah_npwp: this.form.npwp == 1,
                 s_k_nasabah_npwp_suami: this.form.npwp2 === "SUAMI",
                 s_k_nasabah_npwp_penerima_manfaat: this.form.npwp2 === "PEMILIK_MANFAAT",
             };

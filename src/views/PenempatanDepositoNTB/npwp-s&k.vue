@@ -3,6 +3,13 @@
         <RadioButtonChoose label="Saat ini saya/kami (Pilih salah satu)" id="npwp" :options="npwpOptions"
             v-model="form.npwp" name="npwp" required />
 
+        <FlagBox type="info" class="mb-4">
+            <p class="text-sm font-normal">Apabila di kemudian hari Pemberi Pernyataan telah memiliki NPWP/sesuai dengan
+                ketentuan peraturan perundang-undangan di bidang perpajakan diwajibkan mendaftarkan diri pada Kantor
+                Direktorat Jenderal Pajak, maka saya/kami akan segera menyerahkan NPWP kepada BPR Universal. (Tidak
+                berlaku bagi nasabah yang telah menyerahkan dokumen NPWP).</p>
+        </FlagBox>
+
         <div v-if="form.npwp == 2">
             <RadioButtonChoose label="Pilih salah satu" id="npwp2" :options="npwp2Options" v-model="form.npwp2"
                 name="npwp2" required />
@@ -20,6 +27,7 @@
 import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
+import FlagBox from "@/components/flagbox.vue";
 import { npwpOptions, npwp2Options } from "@/data/option.js";
 import { useFileStore } from "@/stores/filestore";
 import { FormModelNPWP } from "@/models/formModel";
@@ -27,7 +35,8 @@ import { FormModelNPWP } from "@/models/formModel";
 export default {
     components: {
         RadioButtonChoose,
-        ButtonComponent
+        ButtonComponent,
+        FlagBox
     },
     data() {
         return {
@@ -50,7 +59,7 @@ export default {
     },
     watch: {
         'form.npwp': function (newVal) {
-            if (newVal === true) {
+            if (newVal == 1) {
                 this.form.npwp2 = null;
             }
         }

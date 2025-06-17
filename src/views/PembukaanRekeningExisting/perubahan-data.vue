@@ -4,7 +4,7 @@
       v-model="form.perubahanData" name="perubahaData" />
 
     <div v-if="form.perubahanData === true" class="mt-4">
-      <FormField label="Alamat Tempat Tinggal" id="alamat" :isDropdown="false" v-model="form.alamat"
+      <FormField label="Alamat Tempat Tinggal Terkini" id="alamat" :isDropdown="false" v-model="form.alamat"
         placeholder="Masukkan Alamat Tempat Tinggal Anda" :required="false" />
 
       <FormField label="RT" id="rt" :isDropdown="false" v-model="form.rt" placeholder="Masukkan RT Anda"
@@ -16,8 +16,8 @@
       <FormField label="Provinsi" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
         placeholder="Pilih Provinsi" @change="fetchKabupaten" :required="false" />
 
-      <FormField label="Kabupaten/Kota" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
-        :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota" @change="fetchKecamatan"
+      <FormField label="Kota/Kabupaten" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
+        :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten" @change="fetchKecamatan"
         :disabled="!form.provinsi" :required="false" />
 
       <FormField label="Kecamatan" id="kecamatan" :isDropdown="true" v-model="form.kecamatan"

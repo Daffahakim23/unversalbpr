@@ -2,7 +2,7 @@
   <div v-if="type == 1" class="w-full flex flex-col bg-white rounded-3xl p-6 border-1 border-neutral-200">
     <div class="flex justify-between items-center mb-2">
       <div>
-        <img :src="iconPath" class="h-16 sm:h-18 md:h-20" />
+        <img :src="iconPath" class="h-16 sm:h-18 md:h-24" />
       </div>
     </div>
 

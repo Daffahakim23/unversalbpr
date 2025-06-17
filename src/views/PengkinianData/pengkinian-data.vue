@@ -10,16 +10,15 @@
 
 
     <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       required :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'" :error="phoneError"
-      @blur="handlePhoneBlur" />
+          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
 
     <RadioButtonChoose label="Tanda Pengenal*" name="tandaPengenal" id="tandaPengenal" :isDropdown="true"
       v-model="form.tandaPengenal" placeholder="Pilih Tanda Pengenal Anda" :options="tandaPengenalOptions" required />
@@ -78,6 +77,7 @@ export default {
       isModalOpen: false,
       isModalError: false,
       isModalErrorEmail: false,
+      isWhatsAppOpenCoolingDown: false,
       modalContent: [
         {
           label: "Konfirmasi Pembukaan Deposito",
@@ -123,7 +123,7 @@ export default {
     //     console.error("Navigation error:", error);
     //   }
     // },    
-    getWhatsAppLink(number) {
+    getWhatsAppLink(number = 622122213993) {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
         return `https://wa.me/${number}`;
@@ -131,9 +131,27 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
+    // openWhatsApp() {
+    //   if (this.whatsappContact.whatsapp) {
+    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+    //   }
+    // },
     openWhatsApp() {
-      if (this.whatsappContact.whatsapp) {
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
         window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
       }
     },
     showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
@@ -187,18 +205,18 @@ export default {
       this.isModalError = false;
     },
 
-    async fetchData() {
-      try {
-        const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-        console.log("Response data:", response.data);
-        const data = Array.isArray(response.data) ? response.data[0] : response.data;
-        if (data) {
-          Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    },
+    // async fetchData() {
+    //   try {
+    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
+    //     console.log("Response data:", response.data);
+    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
+    //     if (data) {
+    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // },
 
     async handleSubmit() {
       if (this.emailError) {
@@ -319,7 +337,7 @@ export default {
   },
 
   created() {
-    this.fetchData();
+    // this.fetchData();
   },
 };
 </script>

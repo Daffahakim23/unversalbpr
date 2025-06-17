@@ -1,31 +1,39 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="NIK" id="nik" v-model="form.nik" required :maxlength="16" variant="numeric" />
+    <FormField label="NIK*" id="nik" v-model="form.nik" variant="numeric" :maxlength="20"
+      placeholder="Masukkan NIK Anda" required @blur="handleNikBlur" :error="nikError"
+      :hint="nikError ? 'NIK tidak valid (harus antara 16 sampai 20 digit angka).' : ''" />
 
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
-      @blur="handleNamaLengkapBlur" required variant="alpha" />
-    <!-- <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required /> -->
+      @blur="handleNamaLengkapBlur" required variant="alpha" placeholder="Masukkan Nama Lengkap Anda" />
 
-    <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required />
+    <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required
+      placeholder="Pilih Tanggal Lahir Anda" />
 
-    <FormField label="Tempat Lahir" id="tempatLahir" v-model="form.tempatLahir" variant="alpha" required />
+    <FormField label="Tempat Lahir" id="tempatLahir" v-model="form.tempatLahir" variant="alpha" required
+      placeholder="Masukkan Tempat Lahir Anda" />
 
     <FormField label="Jenis Kelamin" id="jenisKelamin" :isDropdown="true" v-model="form.jenisKelamin"
-      :options="jenisKelaminOptions" required />
+      :options="jenisKelaminOptions" required placeholder="Pilih Jenis Kelamin" />
 
-    <FormField label="Agama" id="agama" :isDropdown="true" v-model="form.agama" :options="agamaOptions" required />
+    <FormField label="Agama" id="agama" :isDropdown="true" v-model="form.agama" :options="agamaOptions" required
+      placeholder="Pilih Agama" />
 
-    <FormField label="Alamat" id="alamat" v-model="form.alamat" required />
-    <FormField label="RT" id="rt" v-model="form.rt" required variant="numeric" :maxlength="3" />
+    <FormField label="Alamat" id="alamat" v-model="form.alamat" required
+      placeholder="Masukkan Alamat Lengkap Anda (sesuai KTP)" />
 
-    <FormField label="RW" id="rw" v-model="form.rw" required variant="numeric" :maxlength="3" />
+    <FormField label="RT" id="rt" v-model="form.rt" required variant="numeric" :maxlength="3"
+      placeholder="Masukkan RT" />
+
+    <FormField label="RW" id="rw" v-model="form.rw" required variant="numeric" :maxlength="3"
+      placeholder="Masukkan RW" />
 
     <FormField label="Provinsi" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
       placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
 
-    <FormField label="Kabupaten/Kota" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
-      :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota" @change="fetchKecamatan" :disabled="!form.provinsi"
+    <FormField label="Kota/Kabupaten" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
+      :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten" @change="fetchKecamatan" :disabled="!form.provinsi"
       required />
 
     <FormField label="Kecamatan" id="kecamatan" :isDropdown="true" v-model="form.kecamatan" :options="kecamatanOptions"
@@ -34,26 +42,27 @@
     <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan" :options="kelurahanOptions"
       placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-    <FormField label="Kode Pos" id="kodePos" v-model="form.kodePos" placeholder="Masukkan Kode Pos Anda" required
-      variant="numeric" :maxlength="5" />
+    <FormField label="Kode Pos" id="kodePos" variant="numeric" v-model="form.kodePos" :maxlength="5"
+      placeholder="Masukkan Kode Pos Anda" required :error="kodePosError"
+      :hint="kodePosError ? 'Kode pos tidak valid. Silakan periksa kembali' : ''" />
 
     <FormField label="Status Perkawinan" id="statusPerkawinan" :isDropdown="true" v-model="form.statusPerkawinan"
-      :options="statusPerkawinanOptions" required />
+      :options="statusPerkawinanOptions" required placeholder="Pilih Status Perkawinan" />
 
     <FormField label="Kewarganegaraan" id="kewarganegaraan" :isDropdown="true" v-model="form.kewarganegaraan"
-      :options="kewarganegaraanOptions" required />
+      :options="kewarganegaraanOptions" required placeholder="Pilih Kewarganegaraan" />
 
     <div v-if="form.kewarganegaraan === false" class="">
       <FormField label="Kewarganegaraan Lainnya *" id="kewarganegaraanLainnya" type="text"
-        v-model="form.kewarganegaraanLainnya" placeholder=" " required />
+        v-model="form.kewarganegaraanLainnya" placeholder="Masukkan Kewarganegaraan Lainnya" required />
     </div>
 
     <FormField label="Masa Aktif e-KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
-      :options="masaAktifKTPOptions" required />
+      :options="masaAktifKTPOptions" required placeholder="Pilih Masa Aktif e-KTP" />
 
     <div v-if="form.masaAktifKtp === '0'" class="mt-4">
       <FormField label="Tanggal Masa Aktif e-KTP" id="masaAktifKtpLainnyaDate" type="date"
-        v-model="form.masaAktifKtpLainnya" required />
+        v-model="form.masaAktifKtpLainnya" required placeholder="Pilih Tanggal Masa Aktif" />
     </div>
 
     <FormField label="Nama Gadis Ibu Kandung*" id="ibuKandung" v-model="form.namaIbuKandung" :required="true"
@@ -89,6 +98,7 @@ export default {
         namaLengkap: false,
       },
       form: new FormModelDataKTP(),
+      nikError: false,
       statusPerkawinanOptions,
       jenisKelaminOptions,
       agamaOptions,
@@ -102,9 +112,32 @@ export default {
       kelurahanOptions: [],
       namaLengkapError: false,
       isDataFromFilestore: false,
+      kodePosError: false
     };
   },
   watch: {
+    'form.nik'(newValue) {
+      const cleanedValue = String(newValue).replace(/\D/g, '').slice(0, 20);
+      if (newValue !== cleanedValue) {
+        this.form.nik = cleanedValue;
+        return;
+      }
+
+      if (cleanedValue.length > 0) {
+        this.nikError = !this.validateNik(cleanedValue);
+      } else {
+        this.nikError = false;
+      }
+    },
+    "form.kodePos": function (newVal) {
+      const cleanedValue = String(newVal).replace(/\D/g, '').slice(0, 5);
+      this.form.kodePos = cleanedValue;
+      if (cleanedValue.length > 0 && cleanedValue.length < 5) {
+        this.kodePosError = true;
+      } else {
+        this.kodePosError = false;
+      }
+    },
     "form.provinsi": function (newProvinsi) {
       if (!newProvinsi) {
         this.kabupatenOptions = [];
@@ -137,8 +170,11 @@ export default {
   },
   computed: {
     isButtonDisabled() {
+      if (this.nikError) {
+        return true;
+      }
       const nikValue = this.form.nik;
-      if (!nikValue || String(nikValue).length !== 16) {
+      if (!nikValue || !this.validateNik(nikValue)) {
         return true;
       }
 
@@ -166,7 +202,7 @@ export default {
         }
 
         else if (field === 'kodePos') {
-          if (!this.form.kodePos || String(this.form.kodePos).length !== 5) {
+          if (!this.form.kodePos || String(this.form.kodePos).length !== 5 || this.kodePosError) {
             return true;
           }
         }
@@ -181,9 +217,21 @@ export default {
   },
 
   methods: {
+    validateNik(nik) {
+      const cleanedNik = String(nik).replace(/\D/g, '');
+      return cleanedNik.length >= 16 && cleanedNik.length <= 20;
+    },
+    handleNikBlur() {
+      if (this.form.nik.length > 0) {
+        this.nikError = !this.validateNik(this.form.nik);
+      } else {
+        this.nikError = false;
+      }
+    },
     validateNamaLengkap(namaLengkap) {
       return /^[^\d]+$/.test(namaLengkap);
     },
+
     handleNamaLengkapBlur() {
       this.touched.namaLengkap = true;
       if (this.form.namaLengkap) {
@@ -400,7 +448,7 @@ export default {
         if (this.form.masaAktifKtp === '0') {
           berlakuSampaiValue = this.form.masaAktifKtpLainnya;
         } else {
-          berlakuSampaiValue = this.form.masaAktifKtp; 
+          berlakuSampaiValue = this.form.masaAktifKtp;
         }
 
         const requestData = {

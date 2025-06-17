@@ -13,6 +13,7 @@ import DataPribadiPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-
 import DataKTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-ktp.vue";
 import DataPekerjaanPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-pekerjaan.vue";
 import KonfirmasiDataPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/konfirmasi-data.vue";
+import PanduanKameraPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/panduan-kamera.vue";
 import TandaTanganDigitalPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/tanda-tangan-digital.vue";
 import HalamanSuksesPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/halaman-sukses.vue";
 
@@ -24,6 +25,7 @@ import PreviewScreenPembukaanRekeningExisting from "../views/PembukaanRekeningEx
 import PerubahanDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/perubahan-data.vue";
 import DataKTPPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/data-ktp.vue";
 import KonfirmasiDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/konfirmasi-data.vue";
+import PanduanKameraPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/panduan-kamera.vue";
 import HalamanSuksesPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/halaman-sukses.vue";
 import TandaTanganDigitalPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/tanda-tangan-digital.vue";
 
@@ -40,6 +42,7 @@ import DataPekerjaanPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/d
 import KonfirmasiDataPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/konfirmasi-data.vue";
 import HalamanSuksesPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/halaman-sukses.vue";
 import HomePage from "../views/HomePage.vue";
+import PanduanKameraPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/panduan-kamera.vue";
 import TandaTanganDigitalPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/tanda-tangan-digital.vue";
 
 // Pembukaan Rekening Existing
@@ -51,6 +54,7 @@ import PreviewScreenPenempatanDepositoExisting from "../views/PenempatanDeposito
 import PerubahanDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/perubahan-data.vue";
 import DataKTPPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/data-ktp.vue";
 import KonfirmasiDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/konfirmasi-data.vue";
+import PanduanKameraPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/panduan-kamera.vue";
 import HalamanSuksesPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/halaman-sukses.vue";
 import TandaTanganDigitalPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/tanda-tangan-digital.vue";
 
@@ -62,6 +66,7 @@ import DataPribadiPengkinianData from "../views/PengkinianData/data-pribadi.vue"
 import DataKTPPengkinianData from "../views/PengkinianData/data-ktp.vue";
 import DataPekerjaanPengkinianData from "../views/PengkinianData/data-pekerjaan.vue";
 import KonfirmasiDataPengkinianData from "../views/PengkinianData/konfirmasi-data.vue";
+import PanduanKameraPengkinianData from "../views/PengkinianData/panduan-kamera.vue";
 import HalamanSuksesPengkinianData from "../views/PengkinianData/halaman-sukses.vue";
 import TandaTanganDigitalPengkinianData from "../views/PengkinianData/tanda-tangan-digital.vue";
 
@@ -77,6 +82,7 @@ import DataInstruksiPencairanDeposito from "../views/PencairanDeposito/instruksi
 import DataPencairanDepositoOnUs from "../views/PencairanDeposito/data-pencairan-onUs.vue";
 import DataPencairanDepositoOfUs from "../views/PencairanDeposito/data-pencairan-ofUs.vue";
 import KonfirmasiDataPencairanDeposito from "../views/PencairanDeposito/konfirmasi-data.vue";
+import PanduanKameraPencairanDeposito from "../views/PencairanDeposito/panduan-kamera.vue";
 import EmailOTPPencairanDeposito from "../views/PencairanDeposito/otp-no-hp.vue";
 import HalamanSuksesPencairanDeposito from "../views/PencairanDeposito/halaman-sukses.vue";
 import TandaTanganDigitalPencairanDeposito from "../views/PencairanDeposito/tanda-tangan-digital.vue";
@@ -92,6 +98,7 @@ import DataPengirimPemindahbukuan from "../views/Pemindahbukuan/data-pengirim.vu
 import DataPenerimaPemindahbukuan from "../views/Pemindahbukuan/data-penerima.vue";
 import KonfirmasiDataPemindahbukuan from "../views/Pemindahbukuan/konfirmasi-data.vue";
 import EmailOTPPemindahbukuan from "../views/Pemindahbukuan/otp-no-hp.vue";
+import PanduanKameraPemindahbukuan from "../views/Pemindahbukuan/panduan-kamera.vue";
 import HalamanSuksesPemindahbukuan from "../views/Pemindahbukuan/halaman-sukses.vue";
 import TandaTanganDigitalPemindahbukuan from "../views/Pemindahbukuan/tanda-tangan-digital.vue";
 
@@ -270,14 +277,13 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Verifikasi Wajah';
+                return 'Ambil Foto Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
-            // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
@@ -286,7 +292,7 @@ const routes = [
               case 'tandaTangan':
                 return 'Pastikan foto tanda tangan Anda terlihat jelas. Jika sudah, foto tanda tangan Anda bisa digunakan.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
               default:
                 return 'Hasil Foto';
             }
@@ -330,6 +336,16 @@ const routes = [
           title: "Data Pekerjaan & Finansial",
           subtitle:
             "Untuk melanjutkan proses, kami memerlukan informasi tambahan mengenai pekerjaan Anda.",
+        },
+      },
+      {
+        path: "panduanKameraPembukaanRekeningNTB",
+        name: "panduanKameraPembukaanRekeningNTB",
+        component: PanduanKameraPembukaanRekeningNTB,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
         },
       },
       {
@@ -395,19 +411,18 @@ const routes = [
               case 'ktp':
                 return 'Foto e-KTP';
               case 'fotoDiri':
-                return 'Verifikasi Wajah';
+                return 'Ambil Foto Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
-            // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
               default:
                 return 'Hasil Foto';
             }
@@ -449,6 +464,16 @@ const routes = [
         meta: {
           feature: "Pembukaan Rekening Baru",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi"
+        },
+      },
+      {
+        path: "panduanKameraPembukaanRekeningExisting",
+        name: "panduanKameraPembukaanRekeningExisting",
+        component: PanduanKameraPembukaanRekeningExisting,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
         },
       },
       {
@@ -539,14 +564,13 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Verifikasi Wajah';
+                return 'Ambil Foto Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
-            // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
@@ -555,7 +579,7 @@ const routes = [
               case 'tandaTangan':
                 return 'Pastikan foto tanda tangan Anda terlihat jelas. Jika sudah, foto tanda tangan Anda bisa digunakan.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
               default:
                 return 'Hasil Foto';
             }
@@ -606,6 +630,16 @@ const routes = [
         },
       },
       {
+        path: "panduanKameraPenempatanDepositoNTB",
+        name: "panduanKameraPenempatanDepositoNTB",
+        component: PanduanKameraPenempatanDepositoNTB,
+        meta: {
+          feature: "Pembukaan Deposito",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
+        },
+      },
+      {
         path: "tandaTanganDigitalPenempatanDepositoNTB",
         name: "tandaTanganDigitalPenempatanDepositoNTB",
         component: TandaTanganDigitalPenempatanDepositoNTB,
@@ -650,7 +684,7 @@ const routes = [
         component: DataPenempatanDepositoExisting,
         meta: {
           feature: "Pembukaan Deposito",
-          title: "Pembukaan Deposito",
+          title: "Atur Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },
@@ -683,19 +717,18 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Verifikasi Wajah';
+                return 'Ambil Foto Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
-            // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
               default:
                 return 'Hasil Foto';
             }
@@ -734,6 +767,16 @@ const routes = [
         meta: {
           feature: "Pembukaan Deposito",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
+        },
+      },
+      {
+        path: "panduanKameraPenempatanDepositoExisting",
+        name: "panduanKameraPenempatanDepositoExisting",
+        component: PanduanKameraPenempatanDepositoExisting,
+        meta: {
+          feature: "Pembukaan Deposito",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
         },
       },
       {
@@ -793,19 +836,18 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Verifikasi Wajah';
+                return 'Ambil Foto Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
-            // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
               default:
                 return 'Hasil Foto';
             }
@@ -853,6 +895,16 @@ const routes = [
         meta: {
           feature: "Pengkinian Data",
           title: "Data Pekerjaan & Finansial"
+        },
+      },
+      {
+        path: "panduanKameraPengkinianData",
+        name: "panduanKameraPengkinianData",
+        component: PanduanKameraPengkinianData,
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
         },
       },
       {
@@ -924,19 +976,18 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Verifikasi Wajah';
+                return 'Ambil Foto Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
             const documentTypes = route.query.documentType; // Baca dari query parameters
-            // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
               default:
                 return 'Hasil Foto';
             }
@@ -998,6 +1049,16 @@ const routes = [
           feature: "Penutupan Deposito",
           title: "Konfirmasi Semua Data Anda",
           subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
+        },
+      },
+      {
+        path: "panduanKameraPencairanDeposito",
+        name: "panduanKameraPencairanDeposito",
+        component: PanduanKameraPencairanDeposito,
+        meta: {
+          feature: "Penutupan Deposito",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
         },
       },
       {
@@ -1077,19 +1138,18 @@ const routes = [
               case 'tandaTangan':
                 return 'Foto Tanda Tangan';
               case 'fotoDiri':
-                return 'Verifikasi Wajah';
+                return 'Ambil Foto Wajah';
               default:
                 return 'Hasil Foto';
             }
           },
           subtitle: (route) => {
             const documentTypes = route.query.documentType;
-            // console.log('Nilai documentType di meta.title:', documentTypes);
             switch (documentTypes) {
               case 'ktp':
                 return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
               case 'fotoDiri':
-                return 'Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto Anda bisa digunakan.';
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
               default:
                 return 'Hasil Foto';
             }
@@ -1148,6 +1208,16 @@ const routes = [
         meta: {
           feature: "Transfer",
           title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "panduanKameraPemindahbukuan",
+        name: "panduanKameraPemindahbukuan",
+        component: PanduanKameraPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
         },
       },
       {

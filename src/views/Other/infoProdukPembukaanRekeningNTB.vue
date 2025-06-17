@@ -2,9 +2,9 @@
   <div>
     <div v-if="pdfUrl" style="width: 100%; height: 1000px;">
       <iframe :src="pdfUrl" width="100%" height="100%" frameborder="0">
-        <p>Browser Anda tidak mendukung iframe. Silakan unduh PDF dari link berikut:
+        <div> Browser Anda tidak mendukung iframe. Silakan unduh PDF dari link berikut:
           <a :href="pdfUrl" target="_blank">Unduh PDF</a>
-        </p>
+        </div>
       </iframe>
     </div>
     <div v-else>

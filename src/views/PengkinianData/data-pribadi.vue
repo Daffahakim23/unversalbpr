@@ -39,8 +39,8 @@
       <FormField label="Provinsi*" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
         placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
 
-      <FormField label="Kabupaten/Kota*" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
-        :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota" @change="fetchKecamatan"
+      <FormField label="Kota/Kabupaten*" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
+        :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten" @change="fetchKecamatan"
         :disabled="!form.provinsi" required />
 
       <FormField label="Kecamatan*" id="kecamatan" :isDropdown="true" v-model="form.kecamatan"

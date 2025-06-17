@@ -12,28 +12,33 @@
     </div>
 
     <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan Nomor Handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid, silahkan periksa kembali ( Contoh : 821xxxxxx )'
+        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Pastikan Anda mengisi nomor handphone yang aktif ( Contoh : 821xxxxxx )'" :error="phoneError"
-      @blur="handlePhoneBlur" />
+          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
 
-    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
+    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan"
+      name="tujuan" />
+
+    <div v-if="form.tujuan === '0'" class="">
+      <FormField label="Tujuan Pembukaan Rekening Lainnya*" id="tujuanLainnya" variant="alpha"
+        v-model="form.tujuanLainnya" placeholder="Masukkan Tujuan Pembukaan Rekening" />
+    </div>
 
     <FormField label="Sumber Dana*" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
       :options="penghasilanOptions" placeholder="Pilih Sumber Dana Anda" />
 
-    <div v-if="form.sumberDana === 'lainnya'" class="">
-      <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" type="text" v-model="form.sumberDanaLainnya"
+    <div v-if="form.sumberDana === '0'" class="">
+      <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" variant="alpha" v-model="form.sumberDanaLainnya"
         placeholder="Masukkan Sumber Penghasilan Lainnya" />
     </div>
 
-    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
+    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
 
@@ -102,6 +107,7 @@ export default {
       phoneError: false,
       isModalError: false,
       isModalErrorEmail: false,
+      isWhatsAppOpenCoolingDown: false,
       temporaryBanMessage: "",
       modalContent: [
         {
@@ -164,7 +170,7 @@ export default {
   },
 
   methods: {
-    getWhatsAppLink(number) {
+    getWhatsAppLink(number = 622122213993) {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
         return `https://wa.me/${number}`;
@@ -172,11 +178,31 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
+    // openWhatsApp() {
+    //   if (this.whatsappContact.whatsapp) {
+    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+    //   }
+    // },
+
     openWhatsApp() {
-      if (this.whatsappContact.whatsapp) {
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
         window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
       }
     },
+
     showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
       this.modalContentEmail = [
         {
@@ -227,19 +253,6 @@ export default {
         console.error('Gagal mengambil data kantor cabang:', error);
       }
     },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
-
     async handleSubmit() {
       if (this.emailError) {
         console.error("Email tidak valid.");
@@ -332,15 +345,15 @@ export default {
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/,'') == "liveness") {
+        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        } else if (error.response.data.message.replace(/ .*/,'') == "fraud") {
+        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
         }
         this.isModalError = false;
-        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon); // Pastikan argumen benar
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }

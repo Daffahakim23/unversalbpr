@@ -80,7 +80,7 @@
     </ButtonComponent>
   </div>
   <ModalError :isOpen="isModalError" :features="modalContent" icon="otp-error-illus.svg" @close="isModalError = false"
-    @buttonClick1="handleCloseModal" />
+    @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
 </template>
 
 <script>
@@ -100,6 +100,12 @@ export default {
       isSubmitting: false,
       isModalError: false,
       modalContent: [],
+      whatsappContact: {
+        label: "WhatsApp",
+        number: "(+62) 21 2221 3993",
+        icon: "whatsapp-icon.svg",
+        whatsapp: "+622122213993",
+      },
     };
   },
   emits: ["update-progress"],
@@ -136,6 +142,38 @@ export default {
       this.fileStore.setFileUploaded('fotoDiri', false);
     },
 
+    getWhatsAppLink(number = 622122213993) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    // openWhatsApp() {
+    //   if (this.whatsappContact.whatsapp) {
+    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+    //   }
+    // },
+    openWhatsApp() {
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
+      }
+    },
+
     handleCloseModal() {
       this.isModalError = false;
     },
@@ -169,7 +207,7 @@ export default {
     handleFileUpload(event, documentType) {
       console.log(`Dokumen yang akan diunggah: ${documentType}`);
       if (documentType === 'ktp' && this.fileStore.isKtpUploaded) {
-        this.$router.push({ path: "/dashboard/dataKTPPencairanDeposito" }); 
+        this.$router.push({ path: "/dashboard/dataKTPPencairanDeposito" });
       } else {
         this.$router.push({
           name: "PreviewScreenPencairanDeposito",

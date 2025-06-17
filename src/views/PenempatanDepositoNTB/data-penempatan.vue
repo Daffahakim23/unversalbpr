@@ -69,8 +69,10 @@
 
       <!-- Jika opsi value = 2 -->
       <div v-if="form.pembayaranBunga == 2" class="mt-4">
-        <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" variant="numeric" :maxlength="10"
-          v-model="form.nomorRekening" placeholder="Masukkan Nomor Rekening Tabungan Universal" required />
+        <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening"
+          v-model="form.nomorRekening" variant="numeric" :maxlength="10" placeholder="Masukkan Nomor Rekening" required
+          @input="handleNomorRekeningInput" @blur="handleNomorRekeningBlur" :error="nomorRekeningError"
+          :hint="nomorRekeningError ? 'Nomor rekening tidak valid. Silakan periksa kembali' : ''" />
 
         <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaLengkap" v-model="form.namaLengkap"
           placeholder="Masukkan Nama Pemilik Rekening Tabungan Universal" variant="alpha" required />
@@ -168,9 +170,9 @@
         </div>
 
         <label class="flex items-baseline space-x-2 mt-4">
-          <!-- <input type="checkbox" v-model="setujuBiayaTransfer" required /> -->
+          <!-- <input type="checkbox" v-model="form.setujuBiayaTransfer" required /> -->
           <div class="mr-2 mb-6">
-            <CustomCheckbox v-model="setujuBiayaTransfer" labelText="Saya menyetujui pemotongan biaya administrasi transfer pembayaran bunga deposito ke Rekening Bank Lain,
+            <CustomCheckbox v-model="form.setujuBiayaTransfer" labelText="Saya menyetujui pemotongan biaya administrasi transfer pembayaran bunga deposito ke Rekening Bank Lain,
           sesuai dengan ketentuan PT BPR Universal." />
           </div>
           <!-- <p class="ms-2 text-sm text-gray-900 dark:text-gray-300 mb-4">
@@ -270,9 +272,10 @@ export default {
   data() {
     return {
       form: new FormModelPenempatanDeposito(),
+      nomorRekeningError: false,
       // form.isChecked: false,
       // form.setujuPenyetoran: false,
-      setujuBiayaTransfer: false,
+      // form.setujuBiayaTransfer: false,
       metodePencairanOptions,
       produkDepositoOptions,
       // jangkaWaktuDepositoUniversalOptions,
@@ -434,27 +437,36 @@ export default {
         !this.form.metodePenyetoran ||
         !this.form.metodePencairan ||
         !this.form.pembayaranBunga ||
-        (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaLengkap)) ||
+        (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaLengkap || this.nomorRekeningError)
+        ) ||
         (this.form.pembayaranBunga == 3 && (!this.form.isChecked)) ||
-        // (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.form.setujuBiayaTransfer)) ||
-        (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.setujuBiayaTransfer)) ||
+        // (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.form.form.setujuBiayaTransfer)) ||
+        (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.form.setujuBiayaTransfer)) ||
         !!this.nominalError
       );
     },
   },
   watch: {
+    nomorRekeningError(newValue, oldValue) {
+      console.log(`nomorRekeningError changed from ${oldValue} to ${newValue}`);
+      if (newValue) {
+        console.log("Nomor Rekening is now in an error state.");
+      } else {
+        console.log("Nomor Rekening is no longer in an error state.");
+      }
+    },
     "form.pembayaranBunga": function (newValue) {
       if (newValue === 1) {
         this.form.namaLengkap = "";
         this.form.nomorRekening = "";
         this.form.namaBank = "";
-        this.setujuBiayaTransfer = false;
+        this.form.setujuBiayaTransfer = false;
         this.form.isChecked = false;
       } else if (newValue !== 2 && newValue !== 4) {
         this.form.namaLengkap = "";
         this.form.nomorRekening = "";
         this.form.namaBank = "";
-        this.setujuBiayaTransfer = false;
+        this.form.setujuBiayaTransfer = false;
       }
       if (newValue !== 3) {
         this.form.isChecked = false;
@@ -586,6 +598,32 @@ export default {
         this.nominalError = `Minimal nominal untuk produk ini adalah Rp ${minimalNominal.toLocaleString()}`;
       } else {
         this.nominalError = false;
+      }
+    },
+    validateNomorRekening(nomorRekening) {
+      return /^\d{10}$/.test(nomorRekening);
+    },
+
+    handleNomorRekeningInput() {
+      this.form.nomorRekening = this.form.nomorRekening.replace(/\D/g, "").slice(0, 10);
+
+      if (this.form.nomorRekening.length > 0) {
+        this.nomorRekeningError = this.form.nomorRekening.length !== 10;
+      } else {
+        this.nomorRekeningError = false;
+      }
+
+      if (this.form.nomorRekening.length > 0) {
+        this.form.belumPunyaRekening = false;
+        this.form.kantorCabang = "";
+      }
+    },
+
+    handleNomorRekeningBlur() {
+      if (this.form.nomorRekening) {
+        this.nomorRekeningError = !this.validateNomorRekening(this.form.nomorRekening);
+      } else {
+        this.nomorRekeningError = false;
       }
     },
     getMinimalNominal(produkDeposito) {

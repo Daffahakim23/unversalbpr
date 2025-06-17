@@ -19,22 +19,94 @@
         Dokumen
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
+        <div :class="[
           'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
-          file
-            ? 'bg-semantic/success-100 border-semantic/success-600'
-            : 'bg-neutral-100 border-primary-100',
+          fileStore.isKtpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]">
+          <div class=" flex items-center">
+            <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">E-KTP</span>
+              <div v-if="fileStore.isKtpUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">{{ nik }}</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto E-KTP Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isKtpUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md  relative',
+          fileStore.isFotoDiriUploaded
+            ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]" :aria-disabled="fileStore.isFotoDiriUploaded ? 'true' : null">
+          <div class="flex items-center">
+            <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
+              <div v-if="fileStore.isFotoDiriUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto Diri Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isFotoDiriUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
+          fileStore.isNpwpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
         ]">
           <div class="flex items-center">
-            <img :src="getFileIcon(key)" :alt="formatFileLabel(key)" class="h-12 mr-4" />
-            <span class="text-sm font-medium" :class="file ? 'text-semantic/success-700' : 'text-neutral-900'">
-              {{ formatFileLabel(key) }}
-            </span>
+            <img src="/src/assets/npwp.svg" alt="NPWP" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">NPWP (jika ada)</span>
+              <div v-if="fileStore.isNpwpUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">{{ npwp }}</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto NPWP Anda</p>
+              </div>
+            </div>
           </div>
-
           <div>
-            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
-            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
+            <img v-if="fileStore.isNpwpUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
+          fileStore.isTandaTanganUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]">
+          <div class="flex items-center">
+            <img src="/src/assets/tanda-tangan.svg" alt="Tanda Tangan" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">Tanda Tangan</span>
+              <!-- <p class="text-xs text-neutral-600">Foto Tanda Tangan Anda</p> -->
+              <div v-if="fileStore.isTandaTanganUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto Tanda Tangan Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isTandaTanganUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
           </div>
         </div>
       </div>
@@ -46,10 +118,73 @@
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
         Data Pribadi
       </h1>
-      <div v-if="formGabungan" class="form-container">
+      <!-- <div v-if="formGabungan" class="form-container">
         <div class="form-item" v-for="(value, key) in formGabungan" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div> -->
+
+      <div class="form-container">
+        <div class="form-item" v-if="formGabungan.namaPanggilan">
+          <div class="form-label">Nama Alias/Panggilan</div>
+          <strong class="form-value">{{ formGabungan.namaPanggilan }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Alamat Tempat Tinggal Terkini</div>
+          <strong class="form-value">{{ formGabungan.alamat }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Tujuan Simpanan</div>
+          <strong class="form-value">{{ formGabungan.tujuan }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">RT/RW</div>
+          <strong class="form-value">{{ formGabungan.rt }}/{{ formGabungan.rw }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formGabungan.provinsi }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Email</div>
+          <strong class="form-value">{{ formGabungan.email }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formGabungan.kabupaten }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Nomor Fax</div>
+          <strong class="form-value">{{ formGabungan.nomorFax }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formGabungan.kodePos }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Pendidikan Terakhir</div>
+          <strong class="form-value">{{ formGabungan.pendidikanTerakhir }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Nomor Telepon</div>
+          <strong class="form-value">{{ formGabungan.nomorTelepon }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Nomor Handphone</div>
+          <strong class="form-value">0{{ formGabungan.phone }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Hobi</div>
+          <strong class="form-value">{{ formGabungan.hobi }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Sumber Informasi Nasabah</div>
+          <strong class="form-value">{{ formGabungan.sumber }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.korespondensi">
+          <div class="form-label">Alamat Korespondensi Surat Menyurat</div>
+          <strong class="form-value">{{ formPekerjaan.korespondensi }}</strong>
         </div>
       </div>
     </div>
@@ -60,10 +195,73 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Data Pekerjaan & Finansial
       </h1>
-      <div v-if="formPekerjaan" class="form-container">
+      <!-- <div v-if="formPekerjaan" class="form-container">
         <div class="form-item" v-for="(value, key) in formPekerjaan" :key="key">
           <div class="form-label"> {{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
+        </div>
+      </div> -->
+      <div class="form-container">
+        <div class="form-item" v-if="formPekerjaan.pekerjaan">
+          <div class="form-label">Pekerjaan</div>
+          <strong class="form-value">{{ formPekerjaan.pekerjaan }}</strong>
+        </div>
+
+        <div class="form-item" v-if="formPekerjaan.pekerjaanLainnya">
+          <div class="form-label">Pekerjaan Lainnya</div>
+          <strong class="form-value">{{ formPekerjaan.pekerjaanLainnya }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.alamatDK">
+          <div class="form-label">Alamat Perusahaan/Instansi</div>
+          <strong class="form-value">{{ formPekerjaan.alamatDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.namaPerusahaanDK">
+          <div class="form-label">Nama Perusahaan/Instansi</div>
+          <strong class="form-value">{{ formPekerjaan.namaPerusahaanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.lamaBekerjaTahunDK">
+          <div class="form-label">Lama Bekerja (Tahun)</div>
+          <strong class="form-value">{{ formPekerjaan.lamaBekerjaTahunDK }} Tahun</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.bidangPekerjaanDK">
+          <div class="form-label">Bidang Pekerjaan/Usaha</div>
+          <strong class="form-value">{{ formPekerjaan.bidangPekerjaanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.lamaBekerjaBulanDK">
+          <div class="form-label">Lama Bekerja (Bulan)</div>
+          <strong class="form-value">{{ formPekerjaan.lamaBekerjaBulanDK }} Bulan</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.jabatanDK">
+          <div class="form-label">Jabatan/Posisi Pekerjaan</div>
+          <strong class="form-value">{{ formPekerjaan.jabatanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.nomorTeleponKantorDK">
+          <div class="form-label">Nomor Telepon Kantor</div>
+          <strong class="form-value">{{ formPekerjaan.nomorTeleponKantorDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.kotaPerusahaanDK">
+          <div class="form-label">Kota Perusahaan</div>
+          <strong class="form-value">{{ formPekerjaan.kotaPerusahaanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.kodePosPerusahaanDK">
+          <div class="form-label">Kode Pos Perusahaan</div>
+          <strong class="form-value">{{ formPekerjaan.kodePosPerusahaanDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPribadi.tujuan">
+          <div class="form-label">Tujuan Simpanan</div>
+          <strong class="form-value">{{ formPribadi.tujuan }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.nomorTeleponFaxDK">
+          <div class="form-label">Nomor Fax Kantor</div>
+          <strong class="form-value">{{ formPekerjaan.nomorTeleponFaxDK }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.penghasilan">
+          <div class="form-label">Sumber Dana</div>
+          <strong class="form-value">{{ formPekerjaan.penghasilan }}</strong>
+        </div>
+        <div class="form-item" v-if="formPekerjaan.jumlahPenghasilan">
+          <div class="form-label">Penghasilan Perbulan</div>
+          <strong class="form-value">{{ formPekerjaan.jumlahPenghasilan }}</strong>
         </div>
       </div>
     </div>
@@ -73,11 +271,147 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pemilik Manfaat
       </h1>
-      <div v-if="formBeneficialOwner" class="form-container">
+      <!-- <div v-if="formBeneficialOwner" class="form-container">
         <div class="form-item" v-for="(value, key) in formBeneficialOwner" :key="key">
           <div class="form-label"> {{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
+      </div> -->
+      <div class="form-container">
+        <div class="form-item" v-if="formBeneficialOwner.hubunganNasabahBO">
+          <div class="form-label">Hubungan dengan Nasabah</div>
+          <strong class="form-value">{{ formBeneficialOwner.hubunganNasabahBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.alamatBO">
+          <div class="form-label">Alamat</div>
+          <strong class="form-value">{{ formBeneficialOwner.alamatBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.namaLengkapBO">
+          <div class="form-label">Nama Lengkap</div>
+          <strong class="form-value">{{ formBeneficialOwner.namaLengkapBO }}</strong>
+        </div>
+
+        <div class="form-item" v-if="formBeneficialOwner.rtBO">
+          <div class="form-label">RT/RW</div>
+          <strong class="form-value">{{ formBeneficialOwner.rtBO }}/{{ formBeneficialOwner.rwBO }}</strong>
+        </div>
+        <!-- <div class="form-item" v-if="formBeneficialOwner.jenisIdentitasBO">
+          <div class="form-label">Jenis Identitas</div>
+          <strong class="form-value">{{ formBeneficialOwner.jenisIdentitasBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jenisIdentitasLainnyaBO">
+          <div class="form-label">Jenis Identitas Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.jenisIdentitasLainnyaBO }}</strong>
+        </div> -->
+        <div class="form-item" v-if="formBeneficialOwner.nomorDokumenIdentitasBO">
+          <div class="form-label">Nomor Dokumentasi Identitas</div>
+          <strong class="form-value">{{ formBeneficialOwner.nomorDokumenIdentitasBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.provinsiBO">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formBeneficialOwner.provinsiBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.tempatLahirBO">
+          <div class="form-label">Tempat Lahir dan tanggal lahir</div>
+          <strong class="form-value">{{ formBeneficialOwner.tempatLahirBO }} {{ formBeneficialOwner.tanggalLahirBO
+          }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kabupatenBO">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formBeneficialOwner.kabupatenBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kewarganegaraanBO">
+          <div class="form-label">Kewarganegaraan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kewarganegaraanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kelurahanBO">
+          <div class="form-label">Desa/Kelurahan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kelurahanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.pekerjaanBO">
+          <div class="form-label">Pekerjaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.pekerjaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kodePosBO">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formBeneficialOwner.kodePosBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jenisKelaminBO">
+          <div class="form-label">Jenis Kelamin</div>
+          <strong class="form-value">{{ formBeneficialOwner.jenisKelaminBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.statusPerkawinanBO">
+          <div class="form-label">Status Perkawinan</div>
+          <strong class="form-value">{{ formBeneficialOwner.statusPerkawinanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jumlahPenghasilanBO">
+          <div class="form-label">Penghasilan Perbulan</div>
+          <strong class="form-value">{{ formBeneficialOwner.jumlahPenghasilanBO }}</strong>
+        </div>
+        <!-- <div class="form-item" v-if="formBeneficialOwner.kecamatanBO">
+          <div class="form-label">Kecamatan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kecamatanBO }}</strong>
+        </div> -->
+        <!-- <div class="form-item" v-if="formBeneficialOwner.hubunganNasabahLainnyaBO">
+          <div class="form-label">Hubungan Nasabah Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.hubunganNasabahLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.pekerjaanLainnyaBO">
+          <div class="form-label">Pekerjaan Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.pekerjaanLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.namaPerusahaanBO">
+          <div class="form-label">Nama Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.namaPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.alamatPerusahaanBO">
+          <div class="form-label">Alamat Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.alamatPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jabatanBO">
+          <div class="form-label">Jabatan</div>
+          <strong class="form-value">{{ formBeneficialOwner.jabatanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jabatanLainnyaBO">
+          <div class="form-label">Jabatan Lainnya</div>
+          <strong class="form-value">{{ formBeneficialOwner.jabatanLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.lamaBekerjaTahunBO">
+          <div class="form-label">Lama Bekerja (Tahun)</div>
+          <strong class="form-value">{{ formBeneficialOwner.lamaBekerjaTahunBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.lamaBekerjaBulanBO">
+          <div class="form-label">Lama Bekerja (Bulan)</div>
+          <strong class="form-value">{{ formBeneficialOwner.lamaBekerjaBulanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.penghasilanBO">
+          <div class="form-label">Penghasilan BO</div>
+          <strong class="form-value">{{ formBeneficialOwner.penghasilanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.jumlahPenghasilanBO">
+          <div class="form-label">Penghasilan Perbulan BO</div>
+          <strong class="form-value">{{ formBeneficialOwner.jumlahPenghasilanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.penghasilanLainnyaBO">
+          <div class="form-label">Penghasilan Lainnya BO</div>
+          <strong class="form-value">{{ formBeneficialOwner.penghasilanLainnyaBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kotaPerusahaanBO">
+          <div class="form-label">Kota Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kotaPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kodePosPerusahaanBO">
+          <div class="form-label">Kode Pos Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kodePosPerusahaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.kodePosPerushaanBO">
+          <div class="form-label">Kode Pos Perusahaan</div>
+          <strong class="form-value">{{ formBeneficialOwner.kodePosPerushaanBO }}</strong>
+        </div>
+        <div class="form-item" v-if="formBeneficialOwner.pernyataanChecked">
+          <div class="form-label">Pernyataan</div>
+          <strong class="form-value">{{ formBeneficialOwner.pernyataanChecked }}</strong>
+        </div> -->
       </div>
     </div>
 
@@ -88,20 +422,24 @@
         Produk yang Diinginkan
       </h1>
       <div class="form-container">
-        <div class="form-item" v-if="formPribadi.kantorCabang">
-          <div class="form-label">Kantor cabang:</div>
-          <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
-        </div>
-        <div class="form-item" v-if="formPribadi.alamatKantorCabang">
-          <div class="form-label">Alamat Jaringan Kantor:</div>
-          <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
-        </div>
         <div class="form-item" v-if="formGabungan.produk">
           <div class="form-label">Produk yang Diinginkan:</div>
           <strong class="form-value">{{ formGabungan.produk }}</strong>
         </div>
+        <!-- <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
+          <div class=" form-label">Produk Deposito</div>
+          <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
+        </div> -->
+        <div class="form-item" v-if="formPribadi.kantorCabang">
+          <div class="form-label">Jaringan Kantor</div>
+          <strong class="form-value">{{ formPribadi.kantorCabang }}</strong>
+        </div>
+        <div class="form-item" v-if="formPribadi.alamatKantorCabang">
+          <div class="form-label">Alamat Jaringan Kantor</div>
+          <strong class="form-value">{{ formPribadi.alamatKantorCabang }}</strong>
+        </div>
         <div class="form-item" v-if="formGabungan.namaFundingOfficer">
-          <div class="form-label">Nama Funding Officer:</div>
+          <div class="form-label">Nama Funding Officer</div>
           <strong class="form-value">{{ formGabungan.namaFundingOfficer }}</strong>
         </div>
       </div>
@@ -114,28 +452,89 @@
         Instruksi Pembukaan Deposito
       </h1>
       <div v-if="formPenempatanDeposito" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPenempatanDeposito" :key="key">
-          <template v-if="key !== 'setujuPenyetoran' && key !== 'isChecked'">
-            <div class="form-label"> {{ formatLabel(key) }}:</div>
-            <strong class="form-value">{{ value }}</strong>
-          </template>
+        <!-- <div class="form-item" v-for="(value, key) in formPenempatanDeposito" :key="key">
+          <div class="form-label"> {{ formatLabel(key) }}</div>
+          <strong class="form-value">{{ value }}</strong>
+        </div> -->
+        <div class="form-item" v-if="formPenempatanDeposito.nominal">
+          <div class=" form-label">Nominal Deposito</div>
+          <strong class="form-value">{{ formPenempatanDeposito.nominal }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.terbilang">
+          <div class=" form-label">Terbilang</div>
+          <strong class="form-value">{{ formPenempatanDeposito.terbilang }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.metodePencairan">
+          <div class=" form-label">Saat Jatuh Tempo Nominal</div>
+          <strong class="form-value">{{ formPenempatanDeposito.metodePencairan }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.jangkaWaktu">
+          <div class=" form-label">Jangka Waktu & Suku Bunga</div>
+          <strong class="form-value">{{ formPenempatanDeposito.jangkaWaktu }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.nomorRekeningPenyetoran">
+          <div class=" form-label">Nomor Rekening Penyetoran Deposito</div>
+          <strong class="form-value">{{ formPenempatanDeposito.nomorRekeningPenyetoran }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.nomorRekeningPemilik">
+          <div class=" form-label">Nomor Rekening Pembayaran Bunga</div>
+          <strong class="form-value">{{ formPenempatanDeposito.nomorRekeningPemilik }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.nomorRekening">
+          <div class=" form-label">Nomor Rekening Pembayaran Bunga</div>
+          <strong class="form-value">{{ formPenempatanDeposito.nomorRekening }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.namaRekeningPenyetoran">
+          <div class=" form-label">Nama Pemilik Rekening Penyetoran Deposito</div>
+          <strong class="form-value">{{ formPenempatanDeposito.namaRekeningPenyetoran }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.namaLengkap">
+          <div class=" form-label">Nama Pemilik Rekening Pembayaran Bunga</div>
+          <strong class="form-value">{{ formPenempatanDeposito.namaLengkap }}</strong>
+        </div>
+        <div class="form-item">
+          <div class=" form-label">Nama Bank</div>
+          <strong class="form-value">Universal BPR</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.namaBank">
+          <div class=" form-label">Nama Bank</div>
+          <strong class="form-value">{{ formPenempatanDeposito.namaBank }}</strong>
+        </div>
+        <div class="form-item" v-if="formPenempatanDeposito.produkDeposito">
+          <div class=" form-label">Produk Deposito</div>
+          <strong class="form-value">{{ formPenempatanDeposito.produkDeposito }}</strong>
         </div>
       </div>
     </div>
 
+
     <div class="form-item" v-if="formPenempatanDeposito.pembayaranBunga">
-      <div class=" form-label">Metode Pembayaran Bunga:</div>
+      <div class=" form-label">Metode Pembayaran Bunga</div>
       <strong class="form-value">{{ formPenempatanDeposito.pembayaranBunga }}</strong>
     </div>
 
-    <div class="mr-2 mb-4">
+    <!-- <div class="mr-2 mb-4" v-if="formPenempatanDeposito.pembayaranBunga == 3">
       <CustomCheckbox :readonly="true" v-model="formPenempatanDeposito.isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
           sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi PT
           BPR Universal: notifikasi@universalbpr.co.id" />
     </div>
 
+    <div class="mr-2 mb-4" v-if="formPenempatanDeposito.pembayaranBunga == 4">
+      <CustomCheckbox :readonly="true" v-model="formPenempatanDeposito.isChecked" labelText="4" />
+    </div> -->
+
+    <div v-if="formPenempatanDeposito.isChecked === true" class="mr-2 mb-4">
+      <CustomCheckbox :readonly="true" v-model="formPenempatanDeposito.isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
+          sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi PT
+          BPR Universal: notifikasi@universalbpr.co.id" />
+    </div>
+    <div v-if="formPenempatanDeposito.setujuBiayaTransfer === true" class="mr-2 mb-4">
+      <CustomCheckbox :readonly="true" v-model="formPenempatanDeposito.setujuBiayaTransfer" labelText="Saya menyetujui pemotongan biaya administrasi transfer pembayaran bunga deposito ke Rekening Bank Lain,
+          sesuai dengan ketentuan PT BPR Universal." />
+    </div>
+
     <div class="form-item" v-if="formPenempatanDeposito.metodePenyetoran">
-      <div class=" form-label">Metode Pembayaran Bunga:</div>
+      <div class=" form-label">Cara Penyetoran</div>
       <strong class="form-value">{{ formPenempatanDeposito.metodePenyetoran }}</strong>
     </div>
 
@@ -152,7 +551,7 @@
       </h1>
       <div v-if="formKontakDarurat" class="form-container">
         <div class="form-item" v-for="(value, key) in formKontakDarurat" :key="key">
-          <div class="form-label"> {{ formatLabel(key) }}:</div>
+          <div class="form-label"> {{ formatLabel(key) }}</div>
           <strong class="form-value">{{ value }}</strong>
         </div>
       </div>
@@ -261,6 +660,14 @@ import { kewarganegaraanOptions, metodePencairanOptions, pendidikanOptions, tuju
 import { fetchBidangPekerjaan, fetchBranches, fetchJabatanKonfirmasi, fetchPekerjaan } from '@/services/service.js';
 import CustomCheckbox from '@/components/CustomCheckbox.vue';
 
+import ektpIcon from "@/assets/ektp.svg";
+import npwpIcon from "@/assets/npwp.svg";
+import livenessIcon from "@/assets/liveness.svg";
+import tandaTanganIcon from "@/assets/tanda-tangan.svg";
+import defaultIcon from "@/assets/default.svg";
+
+
+
 
 export default {
   emits: ['updateProgress'],
@@ -313,10 +720,10 @@ export default {
       }
       return processedData;
     },
-    // formPribadi() {
+    // formPenempatanDeposito() {
     //   const fileStore = useFileStore();
     //   return Object.fromEntries(
-    //     Object.entries(fileStore.formPribadi || {}).filter(([_, value]) => value)
+    //     Object.entries(fileStore.formPenempatanDeposito || {}).filter(([_, value]) => value)
     //   );
     // },
     formPribadi() {
@@ -328,6 +735,8 @@ export default {
           let value = data[key];
           if (key === "produk") {
             value = this.getLabelFromOptions(value, produkOptions);
+          } else if (key === "tujuan") {
+            value = this.getLabelFromOptions(value, tujuanOptions);
           }
           if (key === "kantorCabang") {
             if (this.kantorCabangOptions) {
@@ -347,34 +756,32 @@ export default {
       const fileStore = useFileStore();
       const pribadiData = fileStore.formPribadi || {};
       const emailData = fileStore.formEmailRequestDepositoNTB || {};
-      const gabunganData = { ...pribadiData, ...emailData };
-      const processedData = {};
-      for (const key in gabunganData) {
-        if (gabunganData.hasOwnProperty(key) && gabunganData[key]) {
-          let value = gabunganData[key];
 
+      const gabunganData = {
+        ...pribadiData,
+        ...emailData,
+      };
+
+      const processedData = {};
+
+      for (const key in gabunganData) {
+        if (gabunganData.hasOwnProperty(key)) {
+          let value = gabunganData[key];
           if (key === "pendidikanTerakhir") {
             value = this.getLabelFromOptions(value, pendidikanOptions);
-          }
-          if (key === "tujuan") {
+          } else if (key === "tujuan") {
             value = this.getLabelFromOptions(value, tujuanOptions);
-          }
-          if (key === "hobi") {
+          } else if (key === "hobi") {
             value = this.getLabelFromOptions(value, hobiOptions);
-          }
-          if (key === "produk") {
+          } else if (key === "produk") {
             value = this.getLabelFromOptions(value, produkOptions);
-          }
-          if (key === "produkDeposito") {
+          } else if (key === "produkDeposito") {
             value = this.getLabelFromOptions(value, produkDepositoOptions);
-          }
-          if (key === "sumber") {
+          } else if (key === "sumber") {
             value = this.getLabelFromOptions(value, sumberDataNasabahOptions);
-          }
-          if (key === "alamatSesuaiEktp") {
+          } else if (key === "alamatSesuaiEktp") {
             value = this.getLabelFromOptions(value, trueFalseOptions);
-          }
-          if (key === "kantorCabang") {
+          } else if (key === "kantorCabang") {
             if (this.kantorCabangOptions) {
               const selectedBranch = this.kantorCabangOptions.find(
                 (option) => option.value === value
@@ -382,6 +789,10 @@ export default {
               value = selectedBranch ? selectedBranch.label : value;
             }
           }
+          if (value === null || value === undefined || value === '') {
+            value = "-";
+          }
+
           processedData[key] = value;
         }
       }
@@ -503,6 +914,8 @@ export default {
       }
       return processedData;
     },
+
+
     formKontakDarurat() {
       const fileStore = useFileStore();
       return Object.fromEntries(
@@ -608,7 +1021,9 @@ export default {
   setup() {
     const fileStore = useFileStore();
     const no_hp = computed(() => fileStore.no_hp || "user@example.com");
-    return { no_hp }
+    const nik = computed(() => fileStore.nik || "123123123");
+    const npwp = computed(() => fileStore.no_npwp || "Telah Dilengkapi");
+    return { fileStore, nik, no_hp, npwp }
   },
 
   data() {
@@ -619,6 +1034,8 @@ export default {
       npwpOptions,
       RadioButtonChoose,
       masaAktifKTPOptions,
+      isCheckedCondition3: true,
+      isCheckedCondition4: true,
       agreement1: false,
       agreement2: false,
       isSubmitting: false,
@@ -805,7 +1222,7 @@ export default {
         penghasilanLainnyaBO: "Penghasilan Lainnya",
         pekerjaan: "Pekerjaan",
         penghasilan: "Penghasilan",
-        jumlahPenghasilan: "Jumlah Penghasilan",
+        jumlahPenghasilan: "Penghasilan Perbulan",
         hubunganNasabah: "Hubungan Nasabah",
         jenisIdentitasBO: "Jenis Identitas",
         hubunganNasabahBO: "Hubungan dengan Nasabah",
@@ -830,26 +1247,26 @@ export default {
         namaPerusahaanBO: "Nama Perusahaan",
         alamatPerusahaanBO: "Alamat Perusahaan",
         jabatanBO: "Jabatan",
-        lamaBekerjaTahunBO: "Lama Bekerja Tahun",
-        lamaBekerjaBulanBO: "Lama Bekerja Bulan",
+        lamaBekerjaTahunBO: "Lama Bekerja (Tahun)",
+        lamaBekerjaBulanBO: "Lama Bekerja (Bulan)",
         penghasilanBO: "Penghasilan",
-        jumlahPenghasilanBO: "Jumlah Penghasilan",
+        jumlahPenghasilanBO: "Penghasilan Perbulan",
         kodePosPerushaanBO: "Kode Pos Perusahaan",
         pernyataanChecked: "Pernyataan",
 
         // Data Pekerjaan (Detail Pekerjaan)
-        namaPerusahaanDK: "Nama Perusahaan",
+        namaPerusahaanDK: "Nama Perusahaan/ Instansi",
         pekerjaanLainnya: "Pekerjaan Lainnya",
-        bidangPekerjaanDK: "Bidang Pekerjaan",
-        jabatanDK: "Jabatan",
+        bidangPekerjaanDK: "Bidang Pekerjaan/ Usaha",
+        jabatanDK: "Jabatan/ Posisi Pekerjaan",
         kotaPerusahaanDK: "Kota Perusahaan",
         kodePosPerusahaanDK: "Kode Pos Perusahaan",
         hubunganPemohonKD: "Hubungan Pemohon",
-        lamaBekerjaTahunDK: "Lama Bekerja Tahun",
-        lamaBekerjaBulanDK: "Lama Bekerja Bulan",
+        lamaBekerjaTahunDK: "Lama Bekerja (Tahun)",
+        lamaBekerjaBulanDK: "Lama Bekerja (Bulan)",
         nomorTeleponKantorDK: "Nomor Telepon Kantor",
-        nomorTeleponFaxDK: "Nomor Telepon Fax",
-        alamatDK: "Alamat Kantor",
+        nomorTeleponFaxDK: "Nomor Fax Kantor",
+        alamatDK: "Alamat Perusahaan/ Instansi",
         korespondensi: "Alamat Korespondensi Surat Menyurat",
 
         // Data Penempatan
@@ -861,9 +1278,9 @@ export default {
         pembayaranBunga: "Pembayaran Bunga",
         metodePenyetoran: "Metode Penyetoran",
         namaBank: "Nama Bank",
-        nomorRekening: "Nomor Rekening",
+        nomorRekening: "Nomor Rekening Penyetoran Deposito",
         produkDeposito: "Produk Deposito",
-        namaPemilikRekening: "Nama Pemilik Rekening",
+        namaPemilikRekening: "Nama Pemilik Rekening Penyetoran Deposito",
         setujuBiayaTransfer: " Setuju Biaya Transfer",
         biayaTransfer: "Biaya Transfer",
         metodeTransfer: "Metode Transfer",
@@ -887,12 +1304,12 @@ export default {
     },
     getFileIcon(key) {
       const icons = {
-        ktp: "/src/assets/ektp.svg",
-        npwp: "/src/assets/npwp.svg",
-        fotoDiri: "/src/assets/liveness.svg",
-        tandaTangan: "/src/assets/tanda-tangan.svg",
+        ktp: ektpIcon,
+        npwp: npwpIcon,
+        fotoDiri: livenessIcon,
+        tandaTangan: tandaTanganIcon
       };
-      return icons[key] || "/src/assets/default.svg";
+      return icons[key] || defaultIcon;
     },
     handleSubmit(event) {
       event.preventDefault();
@@ -942,7 +1359,7 @@ export default {
           fileStore.setSignUrl(response.data.sign_url);
           // console.log("Envelope ID:", response.data.envelope_id);
 
-          this.$router.push({ path: "/dashboard/tandaTanganDigitalPenempatanDepositoNTB" });
+          this.$router.push({ path: "/dashboard/panduanKameraPenempatanDepositoNTB" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
@@ -990,30 +1407,18 @@ h2 {
   cursor: pointer;
 }
 
-/* Kontainer Flexbox untuk membuat baris */
 .form-container {
   display: flex;
   flex-wrap: wrap;
-  /* Membungkus elemen ke baris berikutnya */
   gap: 16px;
-  /* Jarak antar elemen */
 }
 
-/* Setiap item menjadi 50% dari lebar kontainer */
 .form-item {
   flex: 1 1 calc(40% - 16px);
-  /* Membuat elemen mengambil 50% lebar */
   display: flex flex-col;
-  /* Mengatur label dan value dalam satu baris */
   justify-content: space-between;
-  /* Memberikan spasi antara label dan value */
-  /* padding: 4px; */
-  /* border: 1px solid #ddd; */
-  /* border-radius: 8px; */
-  /* background-color: #f9f9f9; */
 }
 
-/* Gaya untuk label dan value */
 .form-label {
   font-weight: 400;
   font-size: 14px;

@@ -140,10 +140,10 @@ export default {
   data() {
     return {
       isInfoProductDropdownOpen: false,
-      isInfoDropdownOpen: false, // Mungkin tidak lagi diperlukan jika info product dropdown adalah satu-satunya
+      isInfoDropdownOpen: false, 
       pageTitle: "",
       pageSubtitle: "",
-      featureTitle: "", // Ini mungkin tidak lagi diperlukan jika selalu Home
+      featureTitle: "", 
       progress: 0,
       isModalError: false,
       modalContent: [
