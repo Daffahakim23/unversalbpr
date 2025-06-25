@@ -799,8 +799,8 @@ export default {
       <FormField label="Nomor Telepon Kantor (Opsional)" id="nomorTeleponKantorDK" v-model="form.nomorTeleponKantorDK"
         variant="numeric" placeholder="Masukkan Nomor Telepon Kantor Anda" />
 
-      <FormField label="Nomor Telepon Fax (Opsional)" id="nomorTeleponFaxDK" v-model="form.nomorTeleponFaxDK"
-        variant="numeric" placeholder="Masukkan Nomor Telepon Fax Anda" />
+      <FormField label="Nomor Fax (Opsional)" id="nomorTeleponFaxDK" v-model="form.nomorTeleponFaxDK"
+        variant="numeric" placeholder="Masukkan Nomor Fax Anda" />
 
       <RadioButtonChoose label="Alamat korespondensi/Pengiriman Surat Menyurat*" :options="korespondensiOptions"
         v-model="form.korespondensi" name="korespondensi" />

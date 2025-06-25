@@ -82,10 +82,10 @@
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
+        ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
     <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
 
@@ -136,8 +136,10 @@ import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/icon-deposito.svg";
 import { fetchBranches } from '@/services/service.js';
 import CustomCheckbox from '@/components/CustomCheckbox.vue';
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -205,38 +207,43 @@ export default {
 
   computed: {
     isButtonDisabled() {
-      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
+      let allFieldsAreValid = true;
 
-      let basicFieldsFilled =
-        this.form.memilikiTabungan &&
-        this.form.kantorCabang &&
-        this.form.email && emailValid &&
-        this.form.phone && phoneValid &&
-        this.form.tujuan &&
-        this.form.sumberDana;
-
+      if (!this.form.memilikiTabungan ||
+        !this.form.kantorCabang ||
+        !this.form.email || this.emailError ||
+        !this.form.phone || this.phoneError ||
+        !this.form.tujuan ||
+        !this.form.sumberDana) {
+        allFieldsAreValid = false;
+      }
       if (this.form.memilikiTabungan == 1) {
-        basicFieldsFilled = basicFieldsFilled &&
-          this.form.belumPunyaRekening === true &&
-          // this.form.produk &&
-          this.form.produkDeposito;
+        if (this.form.belumPunyaRekening !== true || !this.form.produkDeposito) {
+          allFieldsAreValid = false;
+        }
       } else if (this.form.memilikiTabungan == 2) {
-        basicFieldsFilled = basicFieldsFilled &&
-          this.form.nomorRekeningPemilik &&
-          this.form.produkDeposito &&
-          !this.nomorRekeningError;
+        if (!this.form.nomorRekeningPemilik ||
+          this.nomorRekeningError ||
+          !this.form.produkDeposito) {
+          allFieldsAreValid = false;
+        }
+      } else {
+        allFieldsAreValid = false;
       }
 
       if (this.form.tujuan === '0') {
-        basicFieldsFilled = basicFieldsFilled && !!this.form.tujuanLainnya;
+        if (!this.form.tujuanLainnya || this.form.tujuanLainnya.trim() === '') {
+          allFieldsAreValid = false;
+        }
       }
 
       if (this.form.sumberDana === '0') {
-        basicFieldsFilled = basicFieldsFilled && !!this.form.sumberDanaLainnya;
+        if (!this.form.sumberDanaLainnya || this.form.sumberDanaLainnya.trim() === '') {
+          allFieldsAreValid = false;
+        }
       }
 
-      return !basicFieldsFilled;
+      return !allFieldsAreValid;
     }
   },
 
@@ -295,29 +302,8 @@ export default {
     handleCloseModal() {
       this.isModalErrorEmail = false;
     },
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    // validatePhone(phone) {
-    //   return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
-    // },    
-    validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
-      }
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
-    },
+
     validateNomorRekening(nomorRekening) {
-      // Validasi jika nomor rekening harus 10 digit dan hanya angka
       return /^\d{10}$/.test(nomorRekening);
     },
 
@@ -452,6 +438,18 @@ export default {
   },
 
   watch: {
+    'form.nomorRekeningPemilik'(newValue) {
+      const cleanedValue = String(newValue).replace(/\D/g, '').slice(0, 10);
+      if (newValue !== cleanedValue) {
+        this.form.nomorRekeningPemilik = cleanedValue;
+      }
+
+      if (cleanedValue.length > 0) {
+        this.nomorRekeningError = !this.validateNomorRekening(cleanedValue);
+      } else {
+        this.nomorRekeningError = false;
+      }
+    },
     "form.kantorCabang"(newVal) {
       if (!newVal) {
         this.form.alamatKantorCabang = "";

@@ -255,7 +255,7 @@ const routes = [
         component: NpwpNTB,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Pernyatan berkaitan NPWP",
+          title: "Pernyataan dan Persetujuan Nasabah Berkaitan NPWP",
           subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,"
         },
       },
@@ -531,7 +531,7 @@ const routes = [
         component: NpwpDepositoNTB,
         meta: {
           feature: "Pembukaan Deposito",
-          title: "Pernyatan berkaitan NPWP",
+          title: "Pernyataan dan Persetujuan Nasabah Berkaitan NPWP",
           subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,"
         },
       },

@@ -4,9 +4,13 @@
       :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" variant="alpha" required />
 
-    <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric"
+    <!-- <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric"
       :maxlength="10" placeholder="Masukkan Nomor Rekening Anda" required
-      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
+      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" /> -->
+    <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
+      variant="numeric" :maxlength="10" placeholder="Masukkan Nomor Rekening" required @blur="handleNomorRekeningBlur"
+      :error="nomorRekeningError"
+      :hint="nomorRekeningError ? 'Nomor rekening yang Anda masukkan tidak valid. Silakan periksa kembali.' : ''" />
 
 
     <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
@@ -15,10 +19,10 @@
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
+        ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
     <RadioButtonChoose label="Tanda Pengenal*" name="tandaPengenal" id="tandaPengenal" :isDropdown="true"
       v-model="form.tandaPengenal" placeholder="Pilih Tanda Pengenal Anda" :options="tandaPengenalOptions" required />
@@ -49,8 +53,10 @@ import errorIcon from "@/assets/icon-deposito.svg";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { tandaPengenalOptions } from "@/data/option.js";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -72,6 +78,7 @@ export default {
       isSubmitting: false,
       emailError: false,
       phoneError: false,
+      nomorRekeningError: false,
       selectedCountryCode: "ID",
       namaLengkapError: false,
       isModalOpen: false,
@@ -108,21 +115,39 @@ export default {
 
   computed: {
     isButtonDisabled() {
-      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
       const namaLengkapValid = this.form.namaLengkap && /^[^\d]+$/.test(this.form.namaLengkap);
-      return !(namaLengkapValid && emailValid && phoneValid && this.form.tandaPengenal && this.form.nomorRekening);
+      return !(namaLengkapValid && !this.emailError && !this.phoneError && this.form.tandaPengenal && this.form.nomorRekening && !this.nomorRekeningError);
+    },
+  },
+
+  watch: {
+    'form.nomorRekening'(newValue) {
+      const cleanedValue = String(newValue).replace(/\D/g, '').slice(0, 10);
+      if (newValue !== cleanedValue) {
+        this.form.nomorRekening = cleanedValue;
+      }
+
+      if (cleanedValue.length > 0) {
+        this.nomorRekeningError = !this.validateNomorRekening(cleanedValue);
+      } else {
+        this.nomorRekeningError = false;
+      }
     },
   },
 
   methods: {
-    // async handleSubmit() {
-    //   try {
-    //     this.$router.push({ path: "/dashboard/uploadDokumenPengkinianData" });
-    //   } catch (error) {
-    //     console.error("Navigation error:", error);
-    //   }
-    // },    
+    validateNomorRekening(nomorRekening) {
+      const cleanedNomor = String(nomorRekening).replace(/\D/g, '');
+      return /^\d{10}$/.test(cleanedNomor);
+    },
+
+    handleNomorRekeningBlur() {
+      if (this.form.nomorRekening) {
+        this.nomorRekeningError = !this.validateNomorRekening(this.form.nomorRekening);
+      } else {
+        this.nomorRekeningError = false;
+      }
+    },
     getWhatsAppLink(number = 622122213993) {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
@@ -131,11 +156,6 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
-    // openWhatsApp() {
-    //   if (this.whatsappContact.whatsapp) {
-    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
-    //   }
-    // },
     openWhatsApp() {
       if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
         console.log("openWhatsApp dipanggil!");
@@ -176,27 +196,7 @@ export default {
         this.namaLengkapError = !this.validateNamaLengkap(this.form.namaLengkap);
       }
     },
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    // validatePhone(phone) {
-    //   return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
-    // },
-    validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
-      }
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
-    },
+
     handleCloseModal() {
       this.isModalErrorEmail = false;
     },

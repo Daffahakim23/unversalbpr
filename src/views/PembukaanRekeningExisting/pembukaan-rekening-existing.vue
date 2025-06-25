@@ -16,18 +16,17 @@
       :error="emailError" @blur="handleEmailBlur" />
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
-      placeholder="Masukkan Nomor Handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+        ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
-    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan"
-      name="tujuan" />
+    <RadioButtonChoose label="Tujuan Simpanan*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
 
     <div v-if="form.tujuan === '0'" class="">
-      <FormField label="Tujuan Simpanan Lainnya*" id="tujuanLainnya" variant="alpha"
-        v-model="form.tujuanLainnya" placeholder="Masukkan Tujuan Simpanan" />
+      <FormField label="Tujuan Simpanan Lainnya*" id="tujuanLainnya" variant="alpha" v-model="form.tujuanLainnya"
+        placeholder="Masukkan Tujuan Simpanan" />
     </div>
 
     <FormField label="Sumber Dana*" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
@@ -75,8 +74,10 @@ import { sumberDataNasabahOptions, produkOptions, tujuanOptions, penghasilanOpti
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/icon-deposito.svg";
 import { fetchBranches } from '@/services/service.js';
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -138,18 +139,37 @@ export default {
   },
   computed: {
     isButtonDisabled() {
-      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
-      const produkTerisi = !!this.form.produk;
-      const kantorCabangTerisi = !!this.form.kantorCabang;
-      const tujuanTerisi = !!this.form.tujuan;
-      const sumberDanaTerisi = !!this.form.sumberDana;
+      const isProdukFilled = !!this.form.produk;
+      const isKantorCabangFilled = !!this.form.kantorCabang;
+      const isEmailFilled = !!this.form.email;
+      const isPhoneFilled = !!this.form.phone;
+      const isTujuanFilled = !!this.form.tujuan;
+      const isSumberDanaFilled = !!this.form.sumberDana;
 
-      if (!produkTerisi || !kantorCabangTerisi || !emailValid || !phoneValid || !tujuanTerisi || !sumberDanaTerisi) {
-        return true;
+      let isTujuanLainnyaFilled = true;
+      if (this.form.tujuan === '0') {
+        isTujuanLainnyaFilled = !!this.form.tujuanLainnya?.trim();
       }
-      return false;
-    }
+
+      let isSumberDanaLainnyaFilled = true;
+      if (this.form.sumberDana === '0') {
+        isSumberDanaLainnya = !!this.form.sumberDanaLainnya?.trim();
+      }
+
+      const areAllRequiredFieldsFilled =
+        isProdukFilled &&
+        isKantorCabangFilled &&
+        isEmailFilled &&
+        isPhoneFilled &&
+        isTujuanFilled &&
+        isTujuanLainnyaFilled &&
+        isSumberDanaFilled &&
+        isSumberDanaLainnyaFilled;
+
+      const isAnyValidationError = this.emailError || this.phoneError;
+
+      return !areAllRequiredFieldsFilled || isAnyValidationError;
+    },
   },
   watch: {
     "form.kantorCabang"(newVal) {
@@ -161,12 +181,6 @@ export default {
         this.form.produk = '';
       }
     },
-
-    // isModalErrorEmail(newValue) {
-    //   if (newValue === true) {
-    //     this.isModalError = false;
-    //   }
-    // },
   },
 
   methods: {
@@ -178,11 +192,6 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
-    // openWhatsApp() {
-    //   if (this.whatsappContact.whatsapp) {
-    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
-    //   }
-    // },
 
     openWhatsApp() {
       if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
@@ -226,24 +235,7 @@ export default {
     handleModalClose() {
       this.isModalError = false;
     },
-    validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
-    },
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
-      }
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
-    },
+
     async fetchBranches() {
       try {
         const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();

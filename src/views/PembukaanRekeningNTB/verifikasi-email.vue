@@ -328,8 +328,8 @@ export default {
           let buttons = ["Coba Lagi", "Hubungi Universal Care"];
 
           if (otpErrorCount.value === 3) {
-              subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
-              buttons = ["Coba Lagi", "Hubungi Universal Care"];
+            subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+            buttons = ["Coba Lagi", "Hubungi Universal Care"];
           } else if (otpErrorCount.value === 4) {
             subtitle = "Anda telah salah memasukkan kode OTP sebanyak 4 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan.";
             buttons = ["Coba Lagi", "Hubungi Universal Care"];
@@ -396,6 +396,11 @@ export default {
         isResending.value = false;
       }
     };
+
+    onMounted(() => {
+      otpInputs.value = document.querySelectorAll('.otp-input');
+      startCountdown();
+    });
 
     return {
       isOtpError,

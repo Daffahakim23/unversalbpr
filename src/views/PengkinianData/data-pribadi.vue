@@ -186,7 +186,7 @@ export default {
 
   methods: {
    normalizeKabupaten(kabupaten) {
-      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+      return kabupaten.replace(/^KOTA\s*|^KABUPATEN\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
     },
     async fetchProvinsi() {
       this.provinsiOptions = [];
@@ -229,7 +229,7 @@ export default {
               initiallySelectedValue = k.kabupaten;
             }
             return {
-              label: normalizedKabupatenFromApi,
+              label: k.kabupaten,
               value: k.kabupaten,
             };
           });

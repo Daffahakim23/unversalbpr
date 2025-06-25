@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="NIK*" id="nik" v-model="form.nik" variant="numeric" :maxlength="20"
+    <FormField label="NIK*" id="nik" v-model="form.nik" variant="numeric" :maxlength="16"
       placeholder="Masukkan NIK Anda" required @blur="handleNikBlur" :error="nikError"
       :hint="nikError ? 'NIK tidak valid (harus antara 16 sampai 20 digit angka).' : ''" />
 
@@ -83,8 +83,10 @@ import ButtonComponent from "@/components/button.vue";
 import { FormModelDataKTP } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { agamaOptions, jenisKelaminOptions, kewarganegaraanOptions, statusPerkawinanOptions, getMasaAktifKTPOptions } from "@/data/option.js";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   components: {
     FormField,
     ButtonComponent,
@@ -113,19 +115,6 @@ export default {
     };
   },
   watch: {
-    'form.nik'(newValue) {
-      const cleanedValue = String(newValue).replace(/\D/g, '').slice(0, 20);
-      if (newValue !== cleanedValue) {
-        this.form.nik = cleanedValue;
-        return;
-      }
-
-      if (cleanedValue.length > 0) {
-        this.nikError = !this.validateNik(cleanedValue);
-      } else {
-        this.nikError = false;
-      }
-    },
     "form.kodePos": function (newVal) {
       const cleanedValue = String(newVal).replace(/\D/g, '').slice(0, 5);
       this.form.kodePos = cleanedValue;
@@ -213,17 +202,6 @@ export default {
   },
 
   methods: {
-    validateNik(nik) {
-      const cleanedNik = String(nik).replace(/\D/g, '');
-      return cleanedNik.length >= 16 && cleanedNik.length <= 20;
-    },
-    handleNikBlur() {
-      if (this.form.nik.length > 0) {
-        this.nikError = !this.validateNik(this.form.nik);
-      } else {
-        this.nikError = false;
-      }
-    },
     validateNamaLengkap(namaLengkap) {
       return /^[^\d]+$/.test(namaLengkap);
     },
@@ -234,7 +212,7 @@ export default {
       }
     },
     normalizeKabupaten(kabupaten) {
-      return kabupaten.replace(/^KOTA\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+      return kabupaten.replace(/^KOTA\s*|^KABUPATEN\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
     },
     async fetchProvinsi() {
       this.provinsiOptions = [];
@@ -277,7 +255,7 @@ export default {
               initiallySelectedValue = k.kabupaten;
             }
             return {
-              label: normalizedKabupatenFromApi,
+              label: k.kabupaten,
               value: k.kabupaten,
             };
           });

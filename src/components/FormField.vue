@@ -217,6 +217,7 @@ export default {
       if (this.variant === "numeric" && !/^\d$/.test(key)) {
         event.preventDefault();
       }
+      // Di sini perubahan untuk alphanumeric: izinkan huruf dan angka
       if (this.variant === "alphanumeric" && !/^[a-zA-Z0-9]$/.test(key)) {
         event.preventDefault();
       }
@@ -237,18 +238,17 @@ export default {
 
       if (this.variant === "alpha") {
         value = value.replace(/[^a-zA-Z\s]/g, "");
-        // value = value.trimStart();
       } else if (this.variant === "numeric") {
         value = value.replace(/[^0-9]/g, "");
       }
-      value = value.trimStart();
-      value = value.replace(/\s\s+/g, ' ');
+      // Di sini perubahan untuk alphanumeric: hapus karakter selain huruf dan angka
+      else if (this.variant === "alphanumeric") {
+        value = value.replace(/[^a-zA-Z0-9]/g, "");
+      }
+
+      value = value.trimStart(); // Menghapus spasi di awal
+      value = value.replace(/\s\s+/g, ' '); // Mengganti spasi berlebih dengan satu spasi
       this.$emit("update:modelValue", value);
-      // this.$nextTick(() => {
-      //   if (event.target.value !== value) {
-      //     event.target.value = value;
-      //   }
-      // });
     },
 
     // handleInput(event) {

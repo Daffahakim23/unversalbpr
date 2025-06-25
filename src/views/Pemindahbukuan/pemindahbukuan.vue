@@ -12,7 +12,8 @@
         ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
         : form.phonePengirim?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
+          
 
     <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
       :options="sumberDanaOptions" placeholder="Pilih Sumber Dana Anda" />
@@ -26,7 +27,7 @@
       v-model="form.nomorRekeningPengirim" placeholder="Masukkan Nomor Rekening Anda" required
       @input="form.nomorRekeningPengirim = form.nomorRekeningPengirim.replace(/\D/g, '')" />
 
-    <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" variant="alpha" v-model="form.namaLengkapPengirim"
+    <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" variant="alpha" v-model="form.namaLengkapPengirim" :maxlength="50"
       placeholder="Masukkan Nama Pemilik Sumber Dana" />
 
     <div class="text-right">

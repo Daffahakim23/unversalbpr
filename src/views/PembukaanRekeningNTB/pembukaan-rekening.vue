@@ -9,10 +9,10 @@
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
+        ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
@@ -51,8 +51,10 @@ import { useFileStore } from "@/stores/filestore";
 import { sumberDataNasabahOptions, produkOptions, } from "@/data/option.js";
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/icon-deposito.svg";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -110,24 +112,30 @@ export default {
 
   computed: {
     isButtonDisabled() {
-      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
-      const produkTerisi = !!this.form.produk;
-      const sumberTerisi = !!this.form.sumber;
+      const isProdukFilled = !!this.form.produk;
+      const isEmailFilled = !!this.form.email;
+      const isPhoneFilled = !!this.form.phone;
+      const isSumberFilled = !!this.form.sumber;
 
-      if (this.form.sumber === "0") {
-        return !(emailValid && phoneValid && produkTerisi && sumberTerisi && this.form.sumberLainnya.trim());
+      let isAllBasicFieldsFilled =
+        isProdukFilled &&
+        isEmailFilled &&
+        isPhoneFilled &&
+        isSumberFilled;
+
+      if (this.form.sumber === '0') {
+        isAllBasicFieldsFilled = isAllBasicFieldsFilled && !!this.form.sumberLainnya?.trim();
       }
-      return !(emailValid && phoneValid && produkTerisi && sumberTerisi);
+
+      const isAnyValidationError =
+        this.emailError ||
+        this.phoneError;
+
+      return !isAllBasicFieldsFilled || isAnyValidationError;
     },
   },
 
   watch: {
-    // "form.email"(newEmail) {
-    //   if (this.touched.email) {
-    //     this.emailError = newEmail && !this.validateEmail(newEmail);
-    //   }
-    // },
     'form.produk'(newVal) {
       if (Number(newVal) === 2) {
         this.isModalError = true;
@@ -145,11 +153,6 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
-    // openWhatsApp() {
-    //   if (this.whatsappContact.whatsapp) {
-    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
-    //   }
-    // },
     openWhatsApp() {
       if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
         console.log("openWhatsApp dipanggil!");
@@ -190,36 +193,6 @@ export default {
     handleCloseModal() {
       this.isModalErrorEmail = false;
     },
-    validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
-    },
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
-      }
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
-    },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
 
     async handleSubmit() {
       if (this.emailError) {
@@ -324,7 +297,6 @@ export default {
     this.$emit("update-progress", 15);
   },
   created() {
-    // this.fetchData();
   },
 };
 </script>

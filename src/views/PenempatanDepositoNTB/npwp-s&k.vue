@@ -15,8 +15,8 @@
                 name="npwp2" required />
         </div>
 
-        <div>
-            <ButtonComponent type="submit" :disabled="isButtonDisabled">
+        <div class="text-right mt-6">
+            <ButtonComponent type="button" :disabled="isButtonDisabled" @click="handleSubmit">
                 Lanjutkan
             </ButtonComponent>
         </div>

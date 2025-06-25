@@ -355,9 +355,9 @@ export const npwpOptions = [
 ];
 
 export const npwp2Options = [
-  { label: "Menggunakan NPWP Suami (untuk istri bekerja)", value: "SUAMI" },
+  { label: "Menggunakan NPWP Suami (untuk istri bekerja)**", value: "SUAMI" },
   {
-    label: "Menggunakan NPWP Pemilik Manfaat (termasuk orang tua)",
+    label: "Menggunakan NPWP Pemilik Manfaat (termasuk orang tua)**",
     value: "PEMILIK_MANFAAT",
   },
 ];

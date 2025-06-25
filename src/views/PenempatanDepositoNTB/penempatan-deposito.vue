@@ -17,10 +17,10 @@
 
     <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
       placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-        ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
+        ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
         : form.phone?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-          : 'Nomor handphone tidak valid.Silakan periksa kembali.'" :error="phoneError" @blur="handlePhoneBlur" />
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
@@ -56,8 +56,10 @@ import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { sumberDataNasabahOptions, produkDepositoOptions, produkTabunganOptions } from "@/data/option.js";
 import ModalError from "@/components/ModalError.vue";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -107,16 +109,16 @@ export default {
 
   computed: {
     isButtonDisabled() {
-      const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid = this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone);
+      // const emailValid = this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
+      // const phoneValid = this.form.phone && /^(8)\d{8,12}$/.test(this.form.phone);
       const produkTabunganTerisi = !!this.form.produk;
       const produkDepositoTerisi = !!this.form.produkDeposito;
       const sumberTerisi = !!this.form.sumber;
 
       if (this.form.sumber === "0") {
-        return !(emailValid && phoneValid && produkTabunganTerisi && produkDepositoTerisi && sumberTerisi && this.form.sumberLainnya?.trim());
+        return !(!this.emailError && !this.phoneError && produkTabunganTerisi && produkDepositoTerisi && sumberTerisi && this.form.sumberLainnya?.trim());
       }
-      return !(emailValid && phoneValid && produkTabunganTerisi && produkDepositoTerisi && sumberTerisi);
+      return !(!this.emailError && !this.phoneError && produkTabunganTerisi && produkDepositoTerisi && sumberTerisi);
     },
   },
 
@@ -167,27 +169,6 @@ export default {
     },
     handleCloseModal() {
       this.isModalErrorEmail = false;
-    },
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
-      }
-    },
-    // validatePhone(phone) {
-    //   return /^((08|8)(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,12}$/.test(phone);
-    // },
-    validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
     },
 
     async handleSubmit() {

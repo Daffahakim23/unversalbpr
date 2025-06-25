@@ -9,16 +9,15 @@
     <!-- <div v-else> -->
     <form @submit.prevent="handleSubmit">
       <FormField label="Nomor Deposito*" id="nomorRekeningDeposito" v-model="form.nomorRekeningDeposito"
-        placeholder="Masukkan Nomor Rekening Deposito Anda" required
+        placeholder="Masukkan Nomor Rekening Deposito Anda" required :maxlength="12"
         @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
       <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
-        v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
-          ? 'Nomor handphone tidak valid.Silakan periksa kembali.'
+        placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+          ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
           : form.phone?.startsWith('0')
             ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
-            : 'Nomor handphone tidak valid.Silakan periksa kembali.'
-          " :error="phoneError" @blur="handlePhoneBlur" />
+            : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
       <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
         :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
@@ -50,8 +49,10 @@ import ReusableModal from "@/components/ModalT&C.vue";
 import ModalError from "@/components/ModalError.vue";
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -110,13 +111,16 @@ export default {
   },
   computed: {
     isButtonDisabled() {
-      const emailValid =
-        this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid =
-        this.form.phone && /^(8)\d{6,12}$/.test(this.form.phone) && !this.form.phone.startsWith("0");
-      const nomorDepositoFilled = !!this.form.nomorRekeningDeposito;
+      const isAllRequiredFieldsFilled =
+        !!this.form.nomorRekeningDeposito &&
+        !!this.form.phone &&
+        !!this.form.email;
 
-      return !(nomorDepositoFilled && phoneValid && emailValid);
+      const isAnyValidationError =
+        this.nomorRekeningDepositoError ||
+        this.phoneError ||
+        this.emailError;
+      return !isAllRequiredFieldsFilled || isAnyValidationError;
     },
   },
   methods: {
@@ -176,24 +180,7 @@ export default {
       this.loading = false;
       this.router.push("/");
     },
-    validatePhone(phone) {
-      return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith("0");
-    },
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
-      }
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
-    },
+
     async handleSubmit() {
       if (this.emailError) {
         console.error("Email tidak valid.");
