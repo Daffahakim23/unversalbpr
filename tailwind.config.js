@@ -1,8 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}", "./node_modules/flowbite/**/*.js"],
   theme: {
     extend: {
+      borderWidth: {
+        '1': '1px', // Tambahkan ini
+        '2': '2px',
+        '3': '3px',
+        '4': '4px',
+        '8': '8px',
+      },
       colors: {
         // neutral
         "neutral-white": "#FFFFFF",
@@ -98,5 +105,7 @@ export default {
       center: true,
     },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 };

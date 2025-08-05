@@ -1,36 +1,25 @@
 <template>
   <div class="otp-container flex justify-center">
-    <input
-      v-for="(_, index) in otpArray"
-      :key="index"
-      type="text"
-      maxlength="1"
-      class="otp-box w-14 h-16 text-center border-2 border-gray-300 rounded-md text-2xl"
-      :class="{
-        'border-primary-700': otpArray[index],
+    <input v-for="(_, index) in otpArray" :key="index" type="text" maxlength="1"
+      class="otp-box w-14 h-16 text-center border-2 border-gray-300 rounded-md text-2xl" :class="{
+        'border-primary-400': otpArray[index],
         'border-gray-300': !otpArray[index],
-      }"
-      :value="otpArray[index]"
-      @input="onInput($event, index)"
-      @keydown="onKeyDown(index, $event)"
-      ref="otpInputs"
-    />
+      }" :value="otpArray[index]" @input="onInput($event, index)" @keydown="onKeyDown(index, $event)"
+      ref="otpInputs" />
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    modelValue: String, // Menggunakan v-model agar parent bisa menerima OTP
+    modelValue: String,
   },
   computed: {
     otpArray: {
       get() {
-        // Emit the OTP string as an array of characters
         return this.modelValue ? this.modelValue.split("") : ["", "", "", ""];
       },
       set(value) {
-        // Join the OTP array into a string and emit it back to the parent
         this.$emit("update:modelValue", value.join(""));
       },
     },
@@ -39,19 +28,17 @@ export default {
     onInput(event, index) {
       const value = event.target.value;
 
-      // Hanya menerima angka
       if (!/^\d$/.test(value)) {
         this.$nextTick(() => {
-          this.otpArray.splice(index, 1, ""); // Clear the value
+          this.otpArray.splice(index, 1, ""); 
         });
         return;
       }
 
       this.$nextTick(() => {
-        this.otpArray.splice(index, 1, value); // Simpan nilai OTP
+        this.otpArray.splice(index, 1, value); 
       });
 
-      // Fokus ke input berikutnya jika masih dalam batas
       if (index < this.otpArray.length - 1) {
         this.$nextTick(() => this.$refs.otpInputs[index + 1].focus());
       }

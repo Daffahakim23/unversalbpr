@@ -1,29 +1,39 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="NIK" id="nik" v-model="form.nik" required />
+    <FormField label="NIK*" id="nik" v-model="form.nik" variant="numeric" :maxlength="16"
+      placeholder="Masukkan NIK Anda" required @blur="handleNikBlur" :error="nikError"
+      :hint="nikError ? 'NIK tidak valid (harus antara 16 sampai 20 digit angka).' : ''" />
 
-    <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" required />
+    <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
+      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silakan periksa kembali' : ''" :error="namaLengkapError"
+      @blur="handleNamaLengkapBlur" required variant="alpha" placeholder="Masukkan Nama Lengkap Anda" />
 
-    <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required />
+    <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required
+      placeholder="Pilih Tanggal Lahir Anda" />
 
-    <FormField label="Tempat Lahir" id="tempatLahir" v-model="form.tempatLahir" required />
+    <FormField label="Tempat Lahir" id="tempatLahir" v-model="form.tempatLahir" variant="alpha" required
+      placeholder="Masukkan Tempat Lahir Anda" />
 
     <FormField label="Jenis Kelamin" id="jenisKelamin" :isDropdown="true" v-model="form.jenisKelamin"
-      :options="jenisKelaminOptions" required />
+      :options="jenisKelaminOptions" required placeholder="Pilih Jenis Kelamin" />
 
-    <FormField label="Agama" id="agama" :isDropdown="true" v-model="form.agama" :options="agamaOptions" required />
+    <FormField label="Agama" id="agama" :isDropdown="true" v-model="form.agama" :options="agamaOptions" required
+      placeholder="Pilih Agama" />
 
-    <FormField label="Alamat" id="alamat" v-model="form.alamat" required />
+    <FormField label="Alamat" id="alamat" v-model="form.alamat" required
+      placeholder="Masukkan Alamat Lengkap Anda (sesuai KTP)" />
 
-    <FormField label="RT" id="rt" v-model="form.rt" required />
+    <FormField label="RT" id="rt" v-model="form.rt" required variant="numeric" :maxlength="3"
+      placeholder="Masukkan RT" />
 
-    <FormField label="RW" id="rw" v-model="form.rw" required />
+    <FormField label="RW" id="rw" v-model="form.rw" required variant="numeric" :maxlength="3"
+      placeholder="Masukkan RW" />
 
     <FormField label="Provinsi" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
       placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
 
-    <FormField label="Kabupaten/Kota" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
-      :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota" @change="fetchKecamatan" :disabled="!form.provinsi"
+    <FormField label="Kota/Kabupaten" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
+      :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten" @change="fetchKecamatan" :disabled="!form.provinsi"
       required />
 
     <FormField label="Kecamatan" id="kecamatan" :isDropdown="true" v-model="form.kecamatan" :options="kecamatanOptions"
@@ -32,29 +42,38 @@
     <FormField label="Kelurahan" id="kelurahan" :isDropdown="true" v-model="form.kelurahan" :options="kelurahanOptions"
       placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-    <FormField label="Kode Pos" id="kodePos" type="number" v-model="form.kodePos" required />
+    <FormField label="Kode Pos" id="kodePos" variant="numeric" v-model="form.kodePos" :maxlength="5"
+      placeholder="Masukkan Kode Pos Anda" required :error="kodePosError"
+      :hint="kodePosError ? 'Kode pos tidak valid. Silakan periksa kembali' : ''" />
 
     <FormField label="Status Perkawinan" id="statusPerkawinan" :isDropdown="true" v-model="form.statusPerkawinan"
-      :options="statusPerkawinanOptions" required />
+      :options="statusPerkawinanOptions" required placeholder="Pilih Status Perkawinan" />
 
     <FormField label="Kewarganegaraan" id="kewarganegaraan" :isDropdown="true" v-model="form.kewarganegaraan"
-      :options="kewarganegaraanOptions" required />
+      :options="kewarganegaraanOptions" required placeholder="Pilih Kewarganegaraan" />
 
     <div v-if="form.kewarganegaraan === false" class="">
       <FormField label="Kewarganegaraan Lainnya *" id="kewarganegaraanLainnya" type="text"
-        v-model="form.kewarganegaraanLainnya" placeholder=" " required />
+        v-model="form.kewarganegaraanLainnya" placeholder="Masukkan Kewarganegaraan Lainnya" required />
     </div>
 
-    <FormField label="Masa Aktif KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
-      :options="masaAktifKTPOptions" required />
+    <FormField label="Masa Aktif e-KTP" id="masaAktifKtp" :isDropdown="true" v-model="form.masaAktifKtp"
+      :options="masaAktifKTPOptions" required placeholder="Pilih Masa Aktif e-KTP" />
+
+    <div v-if="form.masaAktifKtp === '0'" class="mt-4">
+      <FormField label="Tanggal Masa Aktif e-KTP" id="masaAktifKtpLainnyaDate" type="date"
+        v-model="form.masaAktifKtpLainnya" required placeholder="Pilih Tanggal Masa Aktif" />
+    </div>
 
     <FormField label="Nama Gadis Ibu Kandung*" id="ibuKandung" v-model="form.namaIbuKandung" :required="true"
-      placeholder="Masukan Nama Gadis Ibu Kandung" />
-
+      placeholder="Masukkan Nama Gadis Ibu Kandung" variant="alpha" />
 
     <div class="flex justify-between mt-4">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent>
+      <!-- <ButtonComponent type="submit" :disabled="isButtonDisabled">Lanjutkan</ButtonComponent> -->
+      <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
+        {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+      </ButtonComponent>
     </div>
   </form>
 </template>
@@ -66,29 +85,48 @@ import FormField from "@/components/FormField.vue";
 import ButtonComponent from "@/components/button.vue";
 import { FormModelDataKTP } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
-import { agamaOptions, jenisKelaminOptions, kewarganegaraanOptions, statusPerkawinanOptions, getMasaAktifKTPOptions } from "@/data/option.js";
+import { agamaOptions, jenisKelaminOptions, kewarganegaraanOptions, statusPerkawinanOptions, getMasaAktifKTPOptions, masaAktifKTPOptions } from "@/data/option.js";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   components: {
     FormField,
     ButtonComponent,
   },
   data() {
     return {
+      touched: {
+        namaLengkap: false,
+      },
       form: new FormModelDataKTP(),
+      nikError: false,
       statusPerkawinanOptions,
       jenisKelaminOptions,
       agamaOptions,
       kewarganegaraanOptions,
+      isSubmitting: false,
       masaAktifKTPOptions: getMasaAktifKTPOptions(),
       fileStore: useFileStore(),
       provinsiOptions: [],
       kabupatenOptions: [],
       kecamatanOptions: [],
       kelurahanOptions: [],
+      namaLengkapError: false,
+      isDataFromFilestore: false,
+      kodePosError: false
     };
   },
   watch: {
+    "form.kodePos": function (newVal) {
+      const cleanedValue = String(newVal).replace(/\D/g, '').slice(0, 5);
+      this.form.kodePos = cleanedValue;
+      if (cleanedValue.length > 0 && cleanedValue.length < 5) {
+        this.kodePosError = true;
+      } else {
+        this.kodePosError = false;
+      }
+    },
     "form.provinsi": function (newProvinsi) {
       if (!newProvinsi) {
         this.kabupatenOptions = [];
@@ -113,35 +151,85 @@ export default {
         this.fetchKelurahan();
       }
     },
+    "form.masaAktifKtp": function (newValue) {
+      if (newValue !== '0') {
+        this.form.masaAktifKtpLainnya = '';
+      }
+    },
   },
   computed: {
     isButtonDisabled() {
-      return Object.entries(this.form).some(([key, value]) => {
-        if (key === "jenisKelamin") {
-          return false;
+      if (this.nikError) {
+        return true;
+      }
+      const nikValue = this.form.nik;
+      if (!nikValue || !this.validateNik(nikValue)) {
+        return true;
+      }
+
+      const requiredFields = [
+        'nik', 'namaLengkap', 'tanggalLahir', 'tempatLahir', 'jenisKelamin',
+        'agama', 'alamat', 'rt', 'rw', 'provinsi', 'kabupaten',
+        'kecamatan', 'kelurahan', 'kodePos', 'statusPerkawinan',
+        'kewarganegaraan', 'masaAktifKtp', 'namaIbuKandung'
+      ];
+
+      for (const field of requiredFields) {
+        if (field === 'kewarganegaraanLainnya') {
+          if (this.form.kewarganegaraan === false && !this.form.kewarganegaraanLainnya) {
+            return true;
+          }
         }
-        if (key === "kewarganegaraanLainnya" && this.form.kewarganegaraan) {
-          return false;
+
+        else if (field === 'masaAktifKtp') {
+          if (this.form.masaAktifKtp === null || this.form.masaAktifKtp === undefined || this.form.masaAktifKtp === '') {
+            return true;
+          }
+          if (this.form.masaAktifKtp === '0' && !this.form.masaAktifKtpLainnya) {
+            return true;
+          }
         }
-        return !value;
-      });
+
+        else if (field === 'kodePos') {
+          if (!this.form.kodePos || String(this.form.kodePos).length !== 5 || this.kodePosError) {
+            return true;
+          }
+        }
+
+        else if (this.form[field] === null || this.form[field] === undefined || this.form[field] === '') {
+          return true;
+        }
+      }
+
+      return false;
     },
   },
 
   methods: {
+    validateNamaLengkap(namaLengkap) {
+      return /^[^\d]+$/.test(namaLengkap);
+    },
+
+    handleNamaLengkapBlur() {
+      this.touched.namaLengkap = true;
+      if (this.form.namaLengkap) {
+        this.namaLengkapError = !this.validateNamaLengkap(this.form.namaLengkap);
+      }
+    },
+    normalizeKabupaten(kabupaten) {
+      return kabupaten.replace(/^KOTA\s*|^KABUPATEN\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
+    },
     async fetchProvinsi() {
       this.provinsiOptions = [];
       this.kabupatenOptions = [];
       try {
         const response = await api.get("/provinsi");
-        console.log("Data provinsi diterima:", response.data);
 
         if (response.data && response.data.provinsi) {
           this.provinsiOptions = response.data.provinsi.map(p => ({
             label: p.provinsi,
             value: p.provinsi
           }));
-          console.log("Provinsi options:", this.provinsiOptions);
           this.fetchKabupaten();
         }
       } catch (error) {
@@ -153,18 +241,36 @@ export default {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
 
-      if (!this.form.provinsi) return;
+      if (!this.form.provinsi || !this.form.kabupaten) return;
 
       try {
-        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
-        console.log("Data kabupaten diterima:", response.data);
+        const response = await api.get(
+          `/provinsi?provinsi=${this.form.provinsi}`
+        );
 
         if (response.data && response.data.kabupaten) {
-          this.kabupatenOptions = response.data.kabupaten.map(k => ({
-            label: k.kabupaten,
-            value: k.kabupaten
-          }));
-          console.log("Kabupaten options:", this.kabupatenOptions);
+          const normalizedKotaFromForm = this.normalizeKabupaten(this.form.kabupaten);
+          let initiallySelectedValue = null;
+
+          this.kabupatenOptions = response.data.kabupaten.map((k) => {
+            const normalizedKabupatenFromApi = this.normalizeKabupaten(k.kabupaten);
+            const isMatching = normalizedKabupatenFromApi.includes(normalizedKotaFromForm);
+
+            if (isMatching && initiallySelectedValue === null) {
+              initiallySelectedValue = k.kabupaten;
+            }
+            return {
+              label: k.kabupaten,
+              value: k.kabupaten,
+            };
+          });
+
+          if (initiallySelectedValue) {
+            this.form.kabupaten = initiallySelectedValue;
+          } else if (this.kabupatenOptions.length > 0) {
+            this.form.kabupaten = this.kabupatenOptions[0].value;
+          }
+
           this.fetchKecamatan();
         }
       } catch (error) {
@@ -182,15 +288,13 @@ export default {
         const response = await api.get(
           `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}`
         );
-        console.log("Data kecamatan diterima:", response.data);
 
         if (response.data && response.data.kecamatan) {
           this.kecamatanOptions = response.data.kecamatan.map(kec => ({
             label: kec.kecamatan,
             value: kec.kecamatan
           }));
-          console.log("Kecamatan options:", this.kecamatanOptions);
-          this.fetchKelurahan(); // Panggil fetchKelurahan setelah kecamatan dipilih
+          this.fetchKelurahan();
         }
       } catch (error) {
         console.error("Gagal mengambil data kecamatan:", error);
@@ -204,14 +308,12 @@ export default {
         const response = await api.get(
           `/provinsi?provinsi=${this.form.provinsi}&kabupaten=${this.form.kabupaten}&kecamatan=${this.form.kecamatan}`
         );
-        console.log("Data kelurahan diterima:", response.data);
 
         if (response.data && response.data.kelurahan) {
           this.kelurahanOptions = response.data.kelurahan.map(kel => ({
             label: kel.kelurahan,
             value: kel.kelurahan
           }));
-          console.log("kelurahan options:", this.kelurahanOptions);
         }
       } catch (error) {
         console.error("Gagal mengambil data kelurahan:", error);
@@ -219,6 +321,8 @@ export default {
     },
 
     async fetchData() {
+      const fileStore = useFileStore();
+      const data = fileStore.formKTP;
       console.log("Checking fileStore:", this.fileStore.formKTP);
       if (this.fileStore.formKTP?.message && Object.keys(this.fileStore.formKTP.message).length > 0) {
         const message = this.fileStore.formKTP.message;
@@ -227,6 +331,7 @@ export default {
 
         const tanggalBerlakuSampai = message.berlaku_sampai;
         this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
+
 
         this.form = {
           nik: message.nik || "",
@@ -240,29 +345,54 @@ export default {
           rt: message.rt || "",
           rw: message.rw || "",
           provinsi: message.provinsi || "",
-          kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          // kabupaten: (message.kota || "").replace(/^KOTA\s*|^KAB\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, ""),
+          kabupaten: message.kota || "",
           kecamatan: message.kecamatan || "",
           kelurahan: message.desa_kelurahan || "",
           kodePos: Number(message.kode_pos) || "",
           statusPerkawinan: message.status_pernikahan,
-          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "1" : ""),
+          masaAktifKtp: tanggalBerlakuSampai || (message.berlaku_seumur_hidup ? "Seumur Hidup" : ""),
           kewarganegaraanLainnya: message.kewarganegaraan_lainya || "",
           // nama_gadis_ibu_kandung: "ini ibu",
         };
         console.log("Form filled:", this.form);
+        this.isDataFromFilestore = false;
+      } else if (data) {
+        const tanggalBerlakuSampai = data.masaAktifKtp; // Ambil dari data.masaAktifKtp
+        this.masaAktifKTPOptions = getMasaAktifKTPOptions(tanggalBerlakuSampai);
+        Object.keys(this.form).forEach((key) => {
+          if (data[key] !== undefined) {
+            this.form[key] = data[key];
+          }
+          if (key === 'masaAktifKtp') {
+            this.form[key] = this.tanggalBerlakuSampai || (data.berlaku_seumur_hidup ? "Seumur Hidup" : "");
+          }
+        });
+        if (!this.form.masaAktifKtp && data.berlaku_seumur_hidup) {
+          this.form.masaAktifKtp = "Seumur Hidup";
+        } else if (!this.form.masaAktifKtp && data.masaAktifKtp) {
+          this.form.masaAktifKtp = data.masaAktifKtp; // Pastikan mengambil nilai tanggal jika ada
+        }
       }
     },
-
     goBack() {
-      this.$router.push({
-        name: "PreviewScreenPembukaanRekeningNTB",
-        query: {
-          documentType: "ktp",
-          fileUrl: this.$route.query.fileUrl,
-        },
-      });
+      if (this.isDataFromFilestore == true) {
+        this.$router.push({ name: "UploadDokumenPembukaanRekeningNTB" });
+      } else {
+        this.$router.push({
+          name: "PreviewScreenPembukaanRekeningNTB",
+          query: {
+            documentType: "ktp",
+            fileUrl: this.$route.query.fileUrl,
+          },
+        });
+      }
     },
     async handleSubmit() {
+      if (this.isSubmitting) {
+        return;
+      }
+      this.isSubmitting = true;
       try {
         let formattedDate = this.form.tanggalLahir;
         if (/^\d{2}-\d{2}-\d{4}$/.test(formattedDate)) {
@@ -283,6 +413,13 @@ export default {
           return;
         }
 
+        let berlakuSampaiValue = "";
+        if (this.form.masaAktifKtp === '0') {
+          berlakuSampaiValue = this.form.masaAktifKtpLainnya;
+        } else {
+          berlakuSampaiValue = this.form.masaAktifKtp;
+        }
+
         const requestData = {
           id: uuid,
           nik: this.form.nik,
@@ -300,16 +437,13 @@ export default {
           desa_kelurahan: this.form.kelurahan,
           kode_pos: Number(this.form.kodePos),
           status_pernikahan: Number(this.form.statusPerkawinan),
-          berlaku_sampai: this.form.masaAktifKtp,
+          // berlaku_sampai: this.form.masaAktifKtp,
+          berlaku_sampai: berlakuSampaiValue,
           kewarganegaraan: Boolean(this.form.kewarganegaraan),
           kewarganegaraanLainnya: this.form.kewarganegaraanLainnya,
-          nama_gadis_ibu_kandung: this.form.namaIbuKandung,
           is_ekstrak_ktp_ocr: true,
+          nama_gadis_ibu_kandung: this.form.namaIbuKandung
         };
-
-        console.log("Request data:", requestData);
-
-        console.log("Formatted Request Data:", JSON.stringify(requestData, null, 2));
         const response = await api.post("/save-ktp", requestData, {
           headers: { "Content-Type": "application/json" },
         });
@@ -317,8 +451,10 @@ export default {
         if (response.status === 200 || response.status === 201) {
           console.log("Data berhasil dikirim:", response.data);
           this.fileStore.setFormDataKTP(this.form);
+          this.fileStore.setNamaLengkap(requestData.nama_lengkap);
+          this.fileStore.setNik(requestData.nik);
           this.fileStore.isKtpUploaded = true;
-          this.fileStore.uploadedFiles["ktp"] = "Foto KTP";
+          this.fileStore.uploadedFiles["ktp"] = "Foto e-KTP";
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningNTB" });
         } else {
@@ -326,6 +462,8 @@ export default {
         }
       } catch (error) {
         console.error("Error submitting data:", error);
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },
@@ -336,6 +474,13 @@ export default {
     this.fetchKabupaten();
     this.fetchKecamatan();
     this.fetchKelurahan();
+    this.$emit("set-navbar-config", {
+      showBackButton: true,
+      showInfoButton: true,
+      showLogoBPR: true,
+      centerTitle: true,
+    });
+    this.$emit("set-cancel-route", { name: 'UploadDokumenPembukaanRekeningNTB' });
   },
 };
 </script>

@@ -1,26 +1,28 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Produk yang diinginkan" id="produk" :isDropdown="true" v-model="form.produk"
+    <FormField label="Produk yang diinginkan*" id="produk" :isDropdown="true" v-model="form.produk"
       placeholder="Pilih Produk yang Anda Inginkan" :options="produkOptions" />
 
-    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+    <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+      :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
       :error="emailError" @blur="handleEmailBlur" />
 
-    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
-      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
-      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
-      :error="phoneError" @blur="handlePhoneBlur" />
+    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+        ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
+        : form.phone?.startsWith('0')
+          ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
-    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text"
+    <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
       v-model="form.namaFundingOfficer" placeholder="Masukkan Nama Funding Officer"
       hint="Funding Officer adalah petugas bank yang membantu pengelolaan simpanan Anda. Masukkan namanya jika ada, atau kosongkan jika tidak tahu atau belum pernah dilayani." />
 
-    <RadioButtonChoose label="Dari mana Anda mengetahui tentang kami" :options="sumberDataNasabahOptions"
-      v-model="form.sumber" name="sumber" />
-    <div v-if="form.sumber === 'lainnya'">
-      <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder=" "
-        :required="true" />
+    <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui Universal BPR?*"
+      :options="sumberDataNasabahOptions" v-model="form.sumber" name="sumber" />
+    <div v-if="form.sumber === '0'">
+      <FormField label="Lainnya*" id="otherSource" type="text" v-model="form.sumberLainnya"
+        placeholder="Masukkan Sumber Informasi Lainnya" :required="true" />
     </div>
 
     <div class="text-right">
@@ -33,6 +35,8 @@
     @confirm="handleModalConfirm" />
   <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg" @close="isModalError = false"
     @buttonClick1="handleModalClose" @buttonClick2="handleToDeposito" />
+  <ModalError :isOpen="isModalErrorEmail" :features="modalContentEmail" icon="otp-error-illus.svg"
+    @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
 </template>
 
 <script>
@@ -47,8 +51,10 @@ import { useFileStore } from "@/stores/filestore";
 import { sumberDataNasabahOptions, produkOptions, } from "@/data/option.js";
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/icon-deposito.svg";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -73,38 +79,63 @@ export default {
       emailError: false,
       phoneError: false,
       isModalError: false,
+      isModalErrorEmail: false,
+      isWhatsAppOpenCoolingDown: false,
+      temporaryBanMessage: "",
       modalContent: [
         {
-          label: "Konfirmasi Penempatan Deposito",
+          label: "Konfirmasi Pembukaan Deposito",
           icon: errorIcon,
           description:
-            "Apakah Anda yakin ingin melanjutkan penempatan deposito?",
-          buttonString1: "Tetap Dihalaman Ini",
-          buttonString2: "Penempatan Deposito",
+            "Apakah Anda yakin ingin melanjutkan Pembukaan Rekening Deposito Baru?",
+          buttonString1: "Tetap di Halaman ini",
+          buttonString2: "Lanjutkan Pembukaan Deposito Berjangka",
         },
       ],
+      modalContentEmail: [
+        {
+          label: "",
+          icon: "",
+          description: "",
+          buttonString1: "",
+          buttonString2: "",
+        },
+      ],
+      whatsappContact: {
+        label: "WhatsApp",
+        number: "(+62) 21 2221 3993",
+        icon: "whatsapp-icon.svg",
+        whatsapp: "+622122213993",
+      },
     };
   },
 
   computed: {
     isButtonDisabled() {
-      const emailValid =
-        this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
-      const phoneValid =
-        this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
-      if (this.form.sumber === "lainnya") {
-        return !this.form.sumberLainnya.trim();
+      const isProdukFilled = !!this.form.produk;
+      const isEmailFilled = !!this.form.email;
+      const isPhoneFilled = !!this.form.phone;
+      const isSumberFilled = !!this.form.sumber;
+
+      let isAllBasicFieldsFilled =
+        isProdukFilled &&
+        isEmailFilled &&
+        isPhoneFilled &&
+        isSumberFilled;
+
+      if (this.form.sumber === '0') {
+        isAllBasicFieldsFilled = isAllBasicFieldsFilled && !!this.form.sumberLainnya?.trim();
       }
-      return !(emailValid && phoneValid && this.form.sumber);
+
+      const isAnyValidationError =
+        this.emailError ||
+        this.phoneError;
+
+      return !isAllBasicFieldsFilled || isAnyValidationError;
     },
   },
 
   watch: {
-    // "form.email"(newEmail) {
-    //   if (this.touched.email) {
-    //     this.emailError = newEmail && !this.validateEmail(newEmail);
-    //   }
-    // },
     'form.produk'(newVal) {
       if (Number(newVal) === 2) {
         this.isModalError = true;
@@ -114,42 +145,55 @@ export default {
   },
 
   methods: {
+    getWhatsAppLink(number = 622122213993) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    openWhatsApp() {
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
+      }
+    },
+    showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "otp-error-illus.svg") {
+      this.modalContentEmail = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      this.isModalOpen = false;
+      this.isModalErrorEmail = true;
+    },
     handleToDeposito() {
       this.$router.push({ path: "/dashboard/penempatanDepositoNTB" });
     },
     handleModalClose() {
       this.isModalError = false;
     },
-    validatePhone(phone) {
-      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
+    handleCloseModal() {
+      // this.isModalErrorEmail = false;
+      this.$router.push("/");
     },
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
-      }
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
-    },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
 
     async handleSubmit() {
       if (this.emailError) {
@@ -171,6 +215,7 @@ export default {
           sumber_data_nasabah_lainnya: this.form.sumberLainnya,
           tanggal: new Date().toISOString().split("T")[0],
           produk_yang_diinginkan: Number(this.form.produk),
+          tanggal: new Date().toISOString().split("T")[0],
         };
         console.log("Data sementara disimpan:", this.requestData);
         this.isModalOpen = true;
@@ -213,9 +258,6 @@ export default {
           fileStore.setUuid(response.data.uuid);
           fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setNoHP(this.requestData.no_hp);
-          console.log("UUID :", response.data.uuid);
-          console.log("Email :", this.requestData.alamat_email);
-          console.log("Nomor Handphone :", this.requestData.no_hp);
 
           this.$router.push({ path: "/dashboard/verifikasiEmailPembukaanRekeningNTB" });
 
@@ -224,10 +266,29 @@ export default {
         }
 
       } catch (error) {
-        if (error.response) {
-          console.error("Error response data:", error.response.data);
+        let subtitle = "";
+        let modalTitle = "Terjadi Kesalahan";
+        let modalIcon = "otp-error-illus.svg";
+        let button1 = "Tutup";
+        let button2 = "Hubungi Universal Care";
+
+        if (error.response && error.response.data && error.response.data.message) {
+          this.temporaryBanMessage = error.response.data.message;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
+          modalIcon = "data-failed-illus.svg";
+        } else {
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        console.error("Error saat mengirim data:", error);
+        if (error.response.data.message.replace(/ .*/, '') === "Verifikasi") {
+          subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
+        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
+          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        }
+        this.isModalError = false;
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }
@@ -237,7 +298,6 @@ export default {
     this.$emit("update-progress", 15);
   },
   created() {
-    // this.fetchData();
   },
 };
 </script>

@@ -1,14 +1,11 @@
 <template>
     <div v-if="isVisible" :class="['flag-box', boxClass, 'flex items-start relative']">
-        <!-- Icon tetap di atas -->
         <img :src="iconSrc" alt="icon" class="flag-icon self-start" />
 
-        <!-- Konten utama -->
         <div class="flag-content">
             <slot></slot>
         </div>
 
-        <!-- Tombol close di pojok kanan -->
         <button v-if="closable" @click="isVisible = false" class="close-btn ml-auto">
             <img :src="closeIcon" alt="close" class="close-icon" />
         </button>
@@ -36,7 +33,7 @@ export default {
         },
         closeIcon: {
             type: String,
-            default: closeIcon, // Default ikon close
+            default: closeIcon,
         },
     },
     data() {
@@ -76,16 +73,13 @@ export default {
     gap: 8px;
     font-weight: 300;
     position: relative;
-    /* Untuk memastikan tombol close tetap dalam box */
 }
 
-/* Ukuran ikon */
 .flag-icon {
     width: 20px;
     height: 20px;
 }
 
-/* Tombol close di pojok kanan atas */
 .close-btn {
     background: none;
     border: none;
@@ -97,31 +91,27 @@ export default {
     height: 32px;
 }
 
-/* Info */
 .flag-info {
     border: 1px solid #B2D5FF;
     background-color: #E5F1FF;
-    color: #003B70;
+    color: #001B3D;
 }
 
-/* Error */
 .flag-error {
-    border: 1px solid #FFB5B2;
-    background-color: #FFE1E0;
-    color: #BA0803;
-}
-
-/* Warning */
-.flag-warning {
     border: 1px solid #FFE1E0;
-    background-color: #FFF5F5;
+    background-color: #FFB5B2;
     color: #540401;
 }
 
-/* Success */
+.flag-warning {
+    border: 1px solid #FFFDBD;
+    background-color: #FFFEE0;
+    color: #424000;
+}
+
 .flag-success {
     border: 1px solid #C6F0D1;
     background-color: #E7F9EB;
-    color: #22863B;
+    color: #0C3115;
 }
 </style>

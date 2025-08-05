@@ -18,6 +18,7 @@ export class FormModelDataKTP {
     this.kodePos = "";
     this.statusPerkawinan = "";
     this.masaAktifKtp = "";
+    this.masaAktifKtpLainnya = "";
     this.namaIbuKandung = "";
   }
 }
@@ -26,12 +27,15 @@ export class FormModelDataPribadi {
   constructor() {
     this.namaPanggilan = "";
     this.tujuan = "";
+    this.tujuanLainnya = "";
     this.kantorCabang = "";
     this.alamatKantorCabang = "";
     this.pendidikanTerakhir = "";
     this.email = "";
     this.hobi = "";
+    this.hobiLainnya = "";
     this.nomorTelepon = "";
+    this.phone = "";
     this.nomorFax = "";
     this.alamatSesuaiEktp = "";
     this.ubahNoTelepon = "";
@@ -46,6 +50,45 @@ export class FormModelDataPribadi {
   }
 }
 
+
+export class FormModelPengirimPemindahbukuan {
+  constructor(namaBankBPR = "") {
+    this.namaPemilikRekening = "";
+    this.namaLengkapPengirim = "";
+    this.tanggalPengajuan = "";
+    this.nomorRekeningPengirim = "";
+    this.sumberDana = "";
+    this.phonePengirim = "";
+    this.email = "";
+    this.tujuanTransfer = "";
+    this.namaLengkap = "";
+    this.phone = "";
+    this.alamat = "";
+    this.nomorRekening = "";
+    this.namaBank = "";
+    this.namaBankBPR = namaBankBPR;
+    this.keteranganTransaksi = "";
+    this.nominal = "";
+    this.metodeTransfer = "";
+    this.biayaTransfer = "";
+  }
+}
+
+export class FormModelPenerimaPemindahbukuan {
+  constructor() {
+    this.namaLengkap = "";
+    this.phone = "";
+    this.alamat = "";
+    this.nomorRekening = "";
+    this.namaBank = "";
+    this.keteranganTransaksi = "";
+    this.nominal = "";
+    this.metodeTransfer = "";
+    this.biayaTransfer = "";
+    this.tujuanTransfer = "";
+  }
+}
+
 export class FormModelPerubahanData {
   constructor() {
     this.perubahanData = "";
@@ -53,7 +96,7 @@ export class FormModelPerubahanData {
     this.rt = "";
     this.rw = "";
     this.provinsi = "";
-    this.kota = "";
+    this.kabupaten = "";
     this.kecamatan = "";
     this.kelurahan = "";
     this.kodePos = "";
@@ -73,7 +116,10 @@ export class FormModelPenempatanDeposito {
     this.metodePencairan = "";
     this.namaBank = namaBank;
     this.nomorRekening = "";
-    this.namaPemilik = "";
+    this.nomorRekeningPemilik = "";
+    this.namaLengkap = "";
+    this.kantorCabang = "";
+    this.alamatKantorCabang = "";
     this.produkDeposito = "";
     this.pembayaranBunga = "";
     this.metodePenyetoran = "";
@@ -81,7 +127,15 @@ export class FormModelPenempatanDeposito {
     this.tanggalInstruksiPencairanDeposito = "";
     this.tanggalJatuhTempoDeposito = "";
     this.alasanPencairan = "";
-
+    this.biayaTransfer = "";
+    this.metodeTransfer = "";
+    this.setujuBiayaTransfer = "";
+    this.nomorRekeningPenyetoran = "";
+    this.namaRekeningPenyetoran = "";
+    this.belumPunyaRekening = "";
+    this.memilikiTabungan = "";
+    this.isChecked = "";
+    this.setujuPenyetoran = false;
   }
 }
 
@@ -95,6 +149,7 @@ export class FormModelRequestEmailVerification {
     this.sumber = "";
     this.sumberLainnya = "";
     this.nomorRekening = "";
+    this.nomorRekeningPemilik = "";
     this.kantorCabang = "";
     this.belumPunyaRekening = false;
     this.alamatKantorCabang = "";
@@ -103,14 +158,25 @@ export class FormModelRequestEmailVerification {
     this.tandaPengenal = "";
     this.nomorRekeningDeposito = "";
     this.tujuan = "";
+    this.tujuanLainnya = "";
     this.sumberDana = "";
     this.sumberDanaLainnya = "";
+    this.tanggalPengajuan = "";
   }
 }
 
 export class FormModelKonfirmasiData {
   constructor() {
     this.persetujuan = "";
+    this.setujuPenyetoran = "";
+    this.isChecked = "";
+  }
+}
+
+export class FormModelNPWP {
+  constructor() {
+    this.npwp = "";
+    this.npwp2 = "";
   }
 }
 
@@ -121,6 +187,7 @@ export class FormModelDataPekerjaan {
     this.penghasilan = "";
     this.penghasilanLainnya = "";
     this.jumlahPenghasilan = "";
+    this.sumberDanaMilikPribadi = "";
     this.hubunganNasabahBO = "";
     this.hubunganNasabahLainnyaBO = "";
     this.jenisIdentitasBO = "";

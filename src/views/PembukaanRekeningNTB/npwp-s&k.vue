@@ -6,17 +6,16 @@
         <FlagBox type="info" class="mb-4">
             <p class="text-sm font-normal">Apabila di kemudian hari Pemberi Pernyataan telah memiliki NPWP/sesuai dengan
                 ketentuan peraturan perundang-undangan di bidang perpajakan diwajibkan mendaftarkan diri pada Kantor
-                Direktorat Jenderal Pajak, maka saya/kami akan segera menyerahkan NPWP kepada BPR Universal. (Tidak
+                Direktorat Jenderal Pajak, maka saya/kami akan segera menyerahkan NPWP kepada Universal BPR. (Tidak
                 berlaku bagi nasabah yang telah menyerahkan dokumen NPWP).</p>
         </FlagBox>
 
-        <div v-if="form.npwp === false" class="ml-4">
+        <div v-if="form.npwp == 2" class="ml-4">
             <RadioButtonChoose label="Pilih salah satu" id="npwp2" :options="npwp2Options" v-model="form.npwp2"
                 name="npwp2" required />
         </div>
-
-        <div>
-            <ButtonComponent type="submit" :disabled="isButtonDisabled">
+        <div class="text-right mt-6">
+            <ButtonComponent type="button" :disabled="isButtonDisabled" @click="handleSubmit">
                 Lanjutkan
             </ButtonComponent>
         </div>
@@ -30,6 +29,7 @@ import ButtonComponent from "@/components/button.vue";
 import { npwpOptions, npwp2Options } from "@/data/option.js";
 import { useFileStore } from "@/stores/filestore";
 import FlagBox from "@/components/flagbox.vue";
+import { FormModelNPWP } from "@/models/formModel";
 
 export default {
     components: {
@@ -39,25 +39,26 @@ export default {
     },
     data() {
         return {
-            form: {
-                npwp: null,
-                npwp2: null,
-            },
+            form: new FormModelNPWP(),
+            // form: {
+            //     npwp: null,
+            //     npwp2: null,
+            // },
             npwpOptions,
             npwp2Options,
         };
     },
     computed: {
         isButtonDisabled() {
-            if (this.form.npwp === true) {
+            if (this.form.npwp == 1) {
                 return false;
             }
-            return !(this.form.npwp === false && this.form.npwp2);
+            return !(this.form.npwp == 2 && this.form.npwp2);
         }
     },
     watch: {
         'form.npwp': function (newVal) {
-            if (newVal === true) {
+            if (newVal == 1) {
                 this.form.npwp2 = null;
             }
         }
@@ -68,7 +69,7 @@ export default {
             const requestData = {
                 // uuid: "abc8dc93-b21c-4644-9c26-c9cfdb57f1ab",
                 uuid: fileStore.uuid || "",
-                s_k_nasabah_npwp: this.form.npwp === true,
+                s_k_nasabah_npwp: this.form.npwp == 2,
                 s_k_nasabah_npwp_suami: this.form.npwp2 === "SUAMI",
                 s_k_nasabah_npwp_penerima_manfaat: this.form.npwp2 === "PEMILIK_MANFAAT",
             };
@@ -80,9 +81,10 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 });
                 console.log("Response:", response.data);
-                fileStore.setFormDataNPWP(response.data);
+                fileStore.setFormDataNPWP(this.form);
                 fileStore.isNpwpUploaded = true;
                 this.$router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningNTB" });
+                fileStore.setNpwp(this.form);
             } catch (error) {
                 console.error("Error mengirim data:", error.response ? error.response.data : error.message);
             }

@@ -1,47 +1,50 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div class="bg-white rounded-2xl shadow-lg dark:bg-gray-700 max-w-sm w-full p-8">
+        <div
+            class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="text-left">
-                <h3 class="text-xl font-semibold text-primary dark:text-white items-center">
-                    Panduan Upload {{ documentTypeText }}
+                <h3 class="text-2xl font-semibold text-primary  items-center">
+                    Panduan {{ documentTypeText }}
                 </h3>
-                <p class="text-neutral-800 dark:text-gray-300 mt-2">Pastikan hal berikut saat upload {{ documentTypeText
-                }}:</p>
+                <p class="text-neutral-800  mt-2">
+                    Pastikan hal berikut saat {{ documentTypeTextSub }}:
+                </p>
             </div>
 
             <div class="mt-4 space-y-4">
                 <div v-for="(guide, index) in guideList" :key="index"
-                    class="flex items-center bg-gray-100 p-3 rounded-lg dark:bg-gray-800">
-                    <img :src="guide.icon" :alt="guide.text" class="w-8 h-8 mr-3">
-                    <p class="text-gray-800 dark:text-gray-300 text-sm">{{ guide.text }}</p>
+                    class="flex items-center bg-gray-100 p-3 rounded-lg">
+                    <img :src="guide.icon" :alt="guide.text" class="w-6 h-6 mr-3" />
+                    <p class="text-gray-800 text-sm">{{ guide.text }}</p>
                 </div>
             </div>
 
-            <div v-if="requiresCaptcha" class="mt-4">
+            <div v-if="requiresCaptcha && !captchaVerified" class="mt-4">
                 <p class="justify-center text-sm font-medium text-neutral-900">Masukkan kode berikut:</p>
-                <div class="captcha-box bg-neutral-100 flex justify-center items-center p-2 rounded-md mt-2 w-full">
-                    <span class="font-bold text-2xl flex">
-                        <span v-for="(item, index) in captcha" :key="index" :style="{ color: item.color }">
+                <div
+                    class="captcha-box bg-neutral-50 border-dashed border-1 flex justify-center items-center p-12 rounded-md mt-2 w-full">
+                    <span class="font-bold text-3xl flex">
+                        <span v-for="(item, index) in captcha" :key="index">
                             {{ item.char }}
                         </span>
                     </span>
-                    <button @click="refreshCaptcha" class="text-blue-500 ml-2">🔄</button>
+                    <button @click="refreshCaptcha" class="ml-2">
+                        <img :src="reloadIcon" alt="Refresh Captcha" class="h-4 w-4 align-text-bottom">
+                    </button>
                 </div>
 
-                <div class="input-group mt-4">
-                    <input v-model="userInput" type="text"
-                        class="captcha-input w-full p-4 border border-neutral-300 rounded-md focus:outline-none"
-                        placeholder="Masukkan Captcha" />
-                    <div class="flex justify-center">
-                        <p v-if="message" :class="{ 'text-red-500': !isValid, 'text-green-500': isValid }">
-                            {{ message }}
-                        </p>
-                    </div>
+                <div>
+                    <FormField v-model="userInput" placeholder="Masukkan Captcha" label="" id=""
+                        :hint="isValid ? 'Captcha tidak valid, silakan periksa kembali' : ''" :error="isValid"
+                        class="mb--4" />
                 </div>
             </div>
 
-            <div class="flex justify-center mt-4">
-                <ButtonComponent @click="handleSubmit" :disabled="isButtonDisabled">Verifikasi</ButtonComponent>
+            <div class="flex justify-between mt-4">
+                <ButtonComponent variant="ghost" @click="closeModal">Batalkan</ButtonComponent>
+                <ButtonComponent @click="handleSubmit" :disabled="isButtonDisabled">
+                    {{ submitButtonText }}
+                </ButtonComponent>
             </div>
         </div>
     </div>
@@ -61,31 +64,36 @@ import tandaTangan1 from "../assets/PanduanTandaTangan1.svg";
 import tandaTangan2 from "../assets/PanduanTandaTangan2.svg";
 import tandaTangan3 from "../assets/PanduanTandaTangan3.svg";
 import ButtonComponent from "@/components/button.vue";
+import reloadIcon from '@/assets/reload-icon.svg';
+import FormField from "@/components/FormField.vue";
 
 export default {
+    emits: ["close", "back"],
     components: {
         ButtonComponent,
+        FormField,
     },
     props: {
         isOpen: Boolean,
         documentType: String,
-
     },
     data() {
         return {
+            reloadIcon,
             userInput: "",
             message: "",
             isValid: false,
             captcha: this.generateCaptcha(),
             guides: [],
+            captchaVerified: false,
         };
     },
     computed: {
         guideList() {
             const guides = {
                 ktp: [
-                    { icon: ektpIcon1, text: "Gunakan eKTP asli, dengan kondisi baik dan tidak rusak" },
-                    { icon: ektpIcon2, text: "Pastikan semua sisi dan informasi eKTP Anda terlihat jelas" },
+                    { icon: ektpIcon1, text: "Gunakan e-KTP asli, dengan kondisi baik dan tidak rusak" },
+                    { icon: ektpIcon2, text: "Pastikan semua sisi dan informasi e-KTP Anda terlihat jelas" },
                     { icon: ektpIcon3, text: "Hindari pantulan cahaya dan pastikan gambar tidak blur" },
                 ],
                 npwp: [
@@ -108,81 +116,103 @@ export default {
         },
         documentTypeText() {
             const textMap = {
-                ktp: "e-KTP",
-                npwp: "NPWP",
-                tandaTangan: "Tanda Tangan",
-                fotoDiri: "Liveness",
+                ktp: "Upload e-KTP",
+                npwp: "Upload NPWP",
+                tandaTangan: "Upload Tanda Tangan",
+                // fotoDiri: "Upload Foto Diri",
+                fotoDiri: "Ambil Foto Wajah",
+            };
+            return textMap[this.documentType] || "Dokumen";
+        },
+        documentTypeTextSub() {
+            const textMap = {
+                ktp: "Upload e-KTP",
+                npwp: "Upload NPWP",
+                tandaTangan: "Upload Tanda Tangan",
+                // fotoDiri: "Upload Foto Diri",
+                fotoDiri: "ambil foto wajah Anda",
             };
             return textMap[this.documentType] || "Dokumen";
         },
         requiresCaptcha() {
             return ["ktp", "fotoDiri"].includes(this.documentType);
         },
-        modalTitle() {
-            const titles = {
-                ktp: "Panduan Upload e-KTP",
-                fotoDiri: "Panduan Liveness Check",
-                npwp: "Panduan Upload NPWP",
-                tandaTangan: "Panduan Upload Tanda Tangan",
-            };
-            return titles[this.documentType] || "Panduan Upload";
-        },
-        modalDescription() {
-            const descriptions = {
-                ktp: "Pastikan hal berikut saat upload e-KTP:",
-                fotoDiri: "Ikuti instruksi berikut untuk liveness check:",
-                npwp: "Pastikan NPWP yang diunggah dapat terbaca dengan jelas:",
-                tandaTangan: "Pastikan tanda tangan jelas dan sesuai dengan KTP Anda:",
-            };
-            return descriptions[this.documentType] || "";
+        submitButtonText() {
+            if (this.captchaVerified) {
+                return "Mengerti";
+            }
+            return ["tandaTangan", "npwp"].includes(this.documentType) ? "Mengerti" : "Mengerti";
         },
         isButtonDisabled() {
-            return this.requiresCaptcha && (this.userInput.length !== 6);
+            return this.requiresCaptcha && !this.captchaVerified && (this.userInput.length !== 6);
         },
     },
     methods: {
         generateCaptcha() {
-            const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#FFD700", "#8A2BE2", "#00CED1"];
-            return Math.random().toString(36).substring(2, 8).split("").map(char => {
-                return {
-                    char: Math.random() > 0.5 ? char.toUpperCase() : char.toLowerCase(),
-                    color: colors[Math.floor(Math.random() * colors.length)]
-                };
-            });
+            const spacing = '20px'
+            return Math.random()
+                .toString(36)
+                .substring(2, 8)
+                .split("")
+                .map((char) => {
+                    return {
+                        char: char.toUpperCase(),
+                        style: { letterSpacing: spacing }
+                    };
+                });
+        },
+        handleCaptchaBlur() {
+            if (this.userInput) {
+                const generatedCaptcha = this.captcha.map((item) => item.char).join("");
+                if (this.userInput === generatedCaptcha) {
+                    this.isValid = false;
+                    this.message = "Captcha benar!";
+                    this.captchaVerified = true;
+                } else {
+                    this.isValid = true;
+                    this.message = "Captcha salah, coba lagi.";
+                    this.captchaVerified = false;
+                }
+            } else {
+                this.isValid = true;
+                this.message = "Captcha harus diisi.";
+                this.captchaVerified = false;
+            }
         },
         refreshCaptcha() {
             this.captcha = this.generateCaptcha();
             this.userInput = "";
             this.message = "";
             this.isValid = false;
+            this.captchaVerified = false;
         },
         handleSubmit() {
-            if (this.requiresCaptcha) {
-                const generatedCaptcha = this.captcha.map(item => item.char).join("");
-                if (this.userInput.toLowerCase() === generatedCaptcha.toLowerCase()) {
-                    this.isValid = true;
-                    this.message = "Captcha benar!";
-                    setTimeout(() => {
-                        this.$emit("close");
-                    }, 1000);
-                } else {
+            if (this.requiresCaptcha && !this.captchaVerified) {
+                const generatedCaptcha = this.captcha.map((item) => item.char).join("");
+                if (this.userInput === generatedCaptcha) {
                     this.isValid = false;
+                    this.message = "Captcha benar!";
+                    this.captchaVerified = true;
+                } else {
+                    this.isValid = true;
                     this.message = "Captcha salah, coba lagi.";
                 }
             } else {
                 this.$emit("close");
             }
-        }
-    }
+        },
+        closeModal() {
+            this.$emit("back");
+        },
+    },
 };
 </script>
-
 
 <style scoped>
 .captcha-box {
     display: flex;
     align-items: center;
-    padding: 8px;
+    padding: 16px;
     border-radius: 5px;
     margin: 16px auto;
 }
@@ -190,7 +220,7 @@ export default {
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    /* gap: 10px; */
 }
 
 .captcha-input {

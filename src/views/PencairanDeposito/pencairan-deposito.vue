@@ -1,110 +1,185 @@
 <template>
-  <form @submit.prevent="handleSubmit">
-    <FormField label="Nomor Rekening Deposito*" id="nomorRekeningDeposito" type="number"
-      v-model="form.nomorRekeningDeposito" placeholder="Masukkan Nomor Rekening Deposito Anda" required
-      @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
-    <!-- 
-    <FormField label="Nama Lengkap*" id="namaLengkap" type="text" v-model="form.namaLengkap"
-      placeholder="Masukkan Nama Lengkap Anda" /> -->
+  <!-- <div v-if="loading">
+    <p>Loading...</p>
+  /div> --> <!-- <div v-else-if="error">
+    <ModalError :isOpen="true" :features="modalContent" icon="otp-error-illus.svg" @close="handleCloseModal"
+      @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
+  </div> -->
+  <div>
+    <!-- <div v-else> -->
+    <form @submit.prevent="handleSubmit">
+      <FormField label="Nomor Deposito*" id="nomorRekeningDeposito" v-model="form.nomorRekeningDeposito"
+        variant="alphanumeric" placeholder="Masukkan Nomor Rekening Deposito Anda" required :maxlength="12"
+        @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
-    <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone"
-      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode"
-      :hint="phoneError ? 'Nomor handphone tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi nomor handphone yang aktif'"
-      :error="phoneError" @blur="handlePhoneBlur" />
+      <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
+        placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+          ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
+          : form.phone?.startsWith('0')
+            ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
+            : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
 
-    <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
-      :hint="emailError ? 'Email tidak valid, silahkan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
-      :error="emailError" @blur="handleEmailBlur" />
+      <FormField label="Email*" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+        :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+        :error="emailError" @blur="handleEmailBlur" />
 
-    <div class="text-right">
-      <ButtonComponent type="submit" :disabled="isButtonDisabled">
-        Konfirmasi Email
-      </ButtonComponent>
-    </div>
-  </form>
-  <ReusableModal :title="'Syarat dan Ketentuan'" :isOpen="isModalOpen" :apiUrl="apiUrl" @close="isModalOpen = false"
-    @confirm="handleModalConfirm" />
+      <div class="text-right">
+        <ButtonComponent type="submit" :disabled="isButtonDisabled">
+          Lanjutkan
+        </ButtonComponent>
+      </div>
+    </form>
+    <ReusableModal :title="'Syarat dan Ketentuan'" :isOpen="isModalOpen" :apiUrl="apiUrl" @close="isModalOpen = false"
+      @confirm="handleModalConfirm" />
+
+    <ModalError :isOpen="isModalErrorEmail" :features="modalContentEmail" icon="otp-error-illus.svg"
+      @close="isModalErrorEmail = false" @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-import api from "@/API/api"
+import api from "@/API/api";
 import FormField from "@/components/FormField.vue";
 import ButtonComponent from "@/components/button.vue";
 import { FormModelRequestEmailVerification } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { tandaPengenalOptions } from "@/data/option.js";
 import ReusableModal from "@/components/ModalT&C.vue";
+import ModalError from "@/components/ModalError.vue";
+import { onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
     ButtonComponent,
     ReusableModal,
+    ModalError,
   },
   data() {
     return {
-      apiUrl: "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_CLOSE_DEPOSIT",
+      apiUrl:
+        "https://universaldev.coreinitiative.id/api/v1/content/detail/TERM_CLOSE_DEPOSIT",
       form: new FormModelRequestEmailVerification(),
       touched: {
         email: false,
         phone: false,
       },
-      tandaPengenalOptions,
       isModalOpen: false,
       selectedCountryCode: "ID",
       isSubmitting: false,
       emailError: false,
       phoneError: false,
+      isModalErrorEmail: false,
+      isWhatsAppOpenCoolingDown: false,
+      modalContentEmail: [
+        {
+          label: "",
+          icon: "",
+          description: "",
+          buttonString1: "",
+          buttonString2: "",
+        },
+      ],
+      whatsappContact: {
+        whatsapp: "+622122213993",
+      },
+      loading: true,
+      error: false,
+      modalContent: [
+        {
+          label: "Gagal",
+          description: "Gagal memproses permintaan.",
+          icon: "data-failed-illus.svg",
+          buttonString1: "Tutup",
+          buttonString2: "Hubungi Universal Care",
+        },
+      ],
+      token: null,
     };
   },
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    const fileStore = useFileStore();
 
+    return { route, router, fileStore };
+  },
   computed: {
     isButtonDisabled() {
-      const emailValid =
-        this.form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email);
+      const isAllRequiredFieldsFilled =
+        !!this.form.nomorRekeningDeposito &&
+        !!this.form.phone &&
+        !!this.form.email;
 
-      const phoneValid =
-        this.form.phone && /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(this.form.phone);
-      if (this.form.sumber === "lainnya") {
-        return !this.form.sumberLainnya.trim();
-      }
-      return !(emailValid && phoneValid);
+      const isAnyValidationError =
+        this.nomorRekeningDepositoError ||
+        this.phoneError ||
+        this.emailError;
+      return !isAllRequiredFieldsFilled || isAnyValidationError;
     },
   },
-
   methods: {
-    validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    handleEmailBlur() {
-      this.touched.email = true;
-      if (this.form.email) {
-        this.emailError = !this.validateEmail(this.form.email);
+    getWhatsAppLink(number = 622122213993) {
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
-    validatePhone(phone) {
-      return /^(08(1[1-3]|2[1-3]|3[1-3]|5[2-3]|7[7-8]|8[1-3]|9[5-9]))\d{6,9}$/.test(phone);
-    },
-    handlePhoneBlur() {
-      this.touched.phone = true;
-      if (this.form.phone) {
-        this.phoneError = !this.validatePhone(this.form.phone);
-      }
-    },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
+    // openWhatsApp() {
+    //   if (this.whatsappContact.whatsapp) {
+    //     window.open(
+    //       this.getWhatsAppLink(this.whatsappContact.whatsapp),
+    //       "_blank"
+    //     );
     //   }
     // },
+    openWhatsApp() {
+      if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
+        console.log("openWhatsApp dipanggil!");
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+
+        this.isWhatsAppOpenCoolingDown = true;
+
+        setTimeout(() => {
+          this.isWhatsAppOpenCoolingDown = false;
+          console.log("Cooldown WhatsApp selesai. Bisa dipanggil lagi.");
+        }, 2000);
+
+      } else if (this.isWhatsAppOpenCoolingDown) {
+        console.log("WhatsApp sedang dalam masa cooldown. Coba lagi nanti.");
+      } else {
+        console.log("Kontak WhatsApp tidak tersedia.");
+      }
+    },
+    showErrorModal(title, message, btnString1 = "OK", btnString2 = "Batal", icon = "data-failed-illus.svg") {
+      this.modalContentEmail = [
+        {
+          label: title,
+          description: message,
+          icon: new URL(`/src/assets/${icon}`, import.meta.url).href,
+          buttonString1: btnString1,
+          buttonString2: btnString2,
+        },
+      ];
+      this.error = true;
+      this.loading = false;
+    },
+    handleCloseModal() {
+      this.isModalErrorEmail = false;
+      this.error = false;
+      this.loading = false;
+      this.router.push("/");
+    },
 
     async handleSubmit() {
       if (this.emailError) {
@@ -120,7 +195,6 @@ export default {
         this.requestData = {
           alamat_email: this.form.email,
           no_hp: this.form.phone,
-          // nama_lengkap: this.form.namaLengkap,
           nomor_deposito: this.form.nomorRekeningDeposito,
           tanggal: new Date().toISOString().split("T")[0],
         };
@@ -144,6 +218,7 @@ export default {
 
         const finalData = {
           ...this.requestData,
+          uuid: this.fileStore.uuid,
           syarat_ketentuan: true,
           dek_pajak_indo: true,
           dek_pajak_amerika: true,
@@ -162,37 +237,100 @@ export default {
         if (response.status === 200) {
           const fileStore = useFileStore();
           fileStore.setFormEmailRequestPencairanDeposito(this.form);
-          fileStore.setUuid(response.data.uuid);
+          // fileStore.setUuid(response.data.uuid);
           fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setNoHP(this.requestData.no_hp);
-          console.log("UUID :", response.data.uuid);
-          console.log("Email :", this.requestData.alamat_email);
-          console.log("Nomor Handphone :", this.requestData.no_hp);
 
-          this.$router.push({ path: "/dashboard/verifikasiEmailPencairanDeposito" });
+          this.$router.push({ path: "/dashboard/verifikasiEmailPencairanDeposito", });
+          // this.$router.push({path: "/dashboard/uploadDokumenPencairanDeposito"});
 
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
-
       } catch (error) {
-        if (error.response) {
-          console.error("Error response data:", error.response.data);
+        let subtitle = "";
+        let modalTitle = "Terjadi Kesalahan";
+        let modalIcon = "otp-error-illus.svg";
+        let button1 = "Tutup";
+        let button2 = "Hubungi Universal Care";
+
+        if (error.response && error.response.data && error.response.data.message) {
+          this.temporaryBanMessage = error.response.data.message;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
+          modalIcon = "data-failed-illus.svg";
+        } else {
+          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        console.error("Error saat mengirim data:", error);
+        if (error.response.data.message.replace(/ .*/, '') === "liveness" || error.response.data.message.replace(/ .*/, '') === "Verifikasi") {
+          subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
+        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
+          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        }
+        this.isModalError = false;
+        this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }
-    }
+    },
+    // async validateOtl() {
+    //   try {
+    //     const response = await api.get(`/check-otl?token=${this.token}`);
+    //     if (response.status === 200) {
+    //       this.loading = false;
+    //     } else {
+    //       this.loading = false;
+    //       this.error = true;
+    //       this.modalContent = [
+    //         {
+    //           label: "Terjadi Kesalahan",
+    //           description: "Tautan tidak valid atau sudah kadaluarsa.",
+    //           icon: "data-failed-illus.svg",
+    //           buttonString1: "Tutup",
+    //           buttonString2: "Hubungi Universal Care",
+    //         },
+    //       ];
+    //     }
+    //   } catch (error) {
+    //     this.loading = false;
+    //     this.error = true;
+    //     this.modalContent = [
+    //       {
+    //         label: "Terjadi Kesalahan",
+    //         description: "Tautan tidak valid atau sudah kadaluarsa.",
+    //         icon: "/src/assets/data-failed-illus.svg",
+    //         buttonString1: "Tutup",
+    //         buttonString2: "Hubungi Universal Care",
+    //       },
+    //     ];
+    //     console.error("Error validating OTL:", error);
+    //   }
+    // },
   },
 
   mounted() {
     this.$emit("update-progress", 15);
-    // this.fetchBranches();
   },
 
-  created() {
-    // this.fetchData();
-  },
+  // created() {
+  //   this.token = this.route.query.token;
+  //   if (this.token) {
+  //     this.validateOtl();
+  //   } else {
+  //     this.loading = false;
+  //     this.error = true;
+  //     this.modalContent = [
+  //       {
+  //         label: "Terjadi Kesalahan",
+  //         description: "Tautan tidak valid.",
+  //         icon: "data-failed-illus.svg",
+  //         buttonString1: "Tutup",
+  //         buttonString2: "Hubungi Universal Care",
+  //       },
+  //     ];
+  //   }
+  // },
 };
 </script>

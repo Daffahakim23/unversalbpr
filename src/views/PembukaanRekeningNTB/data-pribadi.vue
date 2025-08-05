@@ -1,49 +1,59 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <FormField label="Nama Alias/Panggilan" id="namaPanggilan" :isDropdown="false" v-model="form.namaPanggilan"
-      placeholder="Masukan Nama Alias/Panggilan" :required="true" />
+      placeholder="Masukkan Nama Alias/Panggilan Anda" :required="true" variant="alpha" />
 
+    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan"
+      name="tujuan" />
+    <div v-if="form.tujuan === '0'">
+      <FormField label="Tujuan Pembukaan Rekening Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
+        placeholder="Masukkan Simpananan Lainnya" :required="true" />
+    </div>
 
-    <RadioButtonChoose label="Tujuan Membuka Rekening*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
-
-    <FormField label="Pilih Kantor Cabang Pembukaan Rekening*" id="kantorCabang" :isDropdown="true"
-      v-model="form.kantorCabang" placeholder="Pilih Kantor Cabang" :options="kantorCabangOptions" required />
+    <FormField label="Pilih Jaringan Kantor*" id="kantorCabang" :isDropdown="true" v-model="form.kantorCabang"
+      placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
 
     <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Kantor Cabang Pembukaan Rekening" id="alamatKantorCabang"
-        v-model="form.alamatKantorCabang" :readonly="true" />
+      <FormField label="Alamat Jaringan Kantor" id="alamatKantorCabang" v-model="form.alamatKantorCabang"
+        :readonly="true" />
 
     </div>
     <FormField label="Pendidikan Terakhir*" id="pendidikanTerakhir" :isDropdown="true" v-model="form.pendidikanTerakhir"
-      :options="pendidikanOptions" :required="true" placeholder="Pilih Pendidikan Terakhir Anda" />
+      :options="pendidikanOptions" :required="true" placeholder="Pilih Pendidikan Terakhir" />
 
     <FormField label="Hobi*" id="hobi" :isDropdown="true" v-model="form.hobi" :options="hobiOptions"
       placeholder="Pilih Hobi Anda" />
+    <div v-if="form.hobi === '0'">
+      <FormField label="Hobi Lainnya*" id="otherSource" type="text" v-model="form.hobiLainnya"
+        placeholder="Masukkan Hobi Lainnya" :required="true" />
+    </div>
 
-    <FormField label="Nomor Telepon (Opsional)" id="nomorTelepon" type="Number" v-model="form.nomorTelepon"
-      placeholder="Masukkan Nomor Telepon" />
+    <FormField label="Nomor Telepon (Opsional)" id="nomorTelepon" v-model="form.nomorTelepon"
+      placeholder="Masukkan Nomor Telepon" variant="numeric" />
 
-    <FormField label="Nomor Fax (opsional)" id="nomorFax" type="Number" v-model="form.nomorFax"
-      placeholder="Masukkan Nomor Fax" />
+    <FormField label="Nomor Fax (opsional)" id="nomorFax" v-model="form.nomorFax" placeholder="Masukkan Nomor Fax"
+      variant="numeric" :maxlength="10" />
 
     <RadioButtonChoose label="Apakah alamat domisili sesuai dengan alamat E-KTP?*" :options="alamatSesuaiEktpOptions"
       v-model="form.alamatSesuaiEktp" name="alamatSesuaiEktp" />
 
     <div v-if="form.alamatSesuaiEktp === false" class="mt-4">
-      <FormField label="Alamat Tempat Tinggal*" id="alamat" v-model="form.alamat" :required="true"
+      <FormField label="Detail Alamat Tempat Tinggal Terikini*" id="alamat" v-model="form.alamat" :required="true"
         placeholder="Masukkan Alamat Anda" />
 
       <div class="flex flex-row gap-4 w-full">
-        <FormField label="RT*" id="rt" v-model="form.rt" :required="true" placeholder="Masukkan RT" class="flex-1" />
+        <FormField label="RT*" id="rt" v-model="form.rt" :required="true" placeholder="Masukkan RT" variant="numeric"
+          :maxlength="3" class="flex-1" />
 
-        <FormField label="RW*" id="rw" v-model="form.rw" :required="true" placeholder="Masukkan RW" class="flex-1" />
+        <FormField label="RW*" id="rw" v-model="form.rw" :required="true" placeholder="Masukkan RW" variant="numeric"
+          :maxlength="3" class="flex-1" />
       </div>
 
       <FormField label="Provinsi*" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
         placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
 
-      <FormField label="Kabupaten/Kota*" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
-        :options="kabupatenOptions" placeholder="Pilih Kabupaten/Kota" @change="fetchKecamatan"
+      <FormField label="Kota/Kabupaten*" id="kabupaten" :isDropdown="true" v-model="form.kabupaten"
+        :options="kabupatenOptions" placeholder="Pilih Kota/Kabupaten" @change="fetchKecamatan"
         :disabled="!form.provinsi" required />
 
       <FormField label="Kecamatan*" id="kecamatan" :isDropdown="true" v-model="form.kecamatan"
@@ -53,9 +63,8 @@
       <FormField label="Kelurahan*" id="kelurahan" :isDropdown="true" v-model="form.kelurahan"
         :options="kelurahanOptions" placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-      <FormField label="Kode Pos*" id="kodePos" v-model="form.kodePos" :required="true"
-        placeholder="Masukan Kode Pos" />
-
+      <FormField label="Kode Pos*" id="kodePos" v-model="form.kodePos" :required="true" variant="numeric"
+        placeholder="Masukkan Kode Pos" :maxlength="5" />
     </div>
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -130,15 +139,16 @@ export default {
 
   computed: {
     isButtonDisabled() {
+      const isKodePosValid = this.form.kodePos && String(this.form.kodePos).length === 5;
       const isFormFilled =
         this.form.namaPanggilan &&
         this.form.tujuan &&
         this.form.kantorCabang &&
         this.form.pendidikanTerakhir &&
-        this.form.alamatSesuaiEktp !== undefined; // Pastikan alamatSesuaiEktp memiliki nilai boolean
+        this.form.alamatSesuaiEktp !== undefined;
 
       const isAddressFilled = this.form.alamatSesuaiEktp
-        ? true // Jika alamat sesuai KTP, maka alamat tambahan tidak perlu diisi
+        ? true
         : (this.form.alamat &&
           this.form.rt &&
           this.form.rw &&
@@ -146,9 +156,12 @@ export default {
           this.form.kabupaten &&
           this.form.kecamatan &&
           this.form.kelurahan &&
-          this.form.kodePos);
+          isKodePosValid);
 
-      return !(isFormFilled && isAddressFilled);
+      const isOtherHobbyFilled = this.form.hobi === '0' ? this.form.hobiLainnya : true;
+      const isOtherSimpananFilled = this.form.tujuan === '0' ? this.form.tujuanLainnya : true;
+
+      return !(isFormFilled && isAddressFilled && isOtherHobbyFilled && isOtherSimpananFilled);
     }
   },
 
@@ -159,7 +172,7 @@ export default {
 
         if (response.data && response.data.branch) {
           this.kantorCabangOptions = response.data.branch.map(branch => {
-            const label = branch.branch_name.replace(/\s*\(\d+\)$/, ''); // Regex untuk menghapus (kode) di akhir string
+            const label = branch.branch_name.replace(/\s*\(\d+\)$/, '');
 
             return {
               label: label.trim(),
@@ -316,13 +329,14 @@ export default {
 
         const requestData = {
           uuid: uuid,
-          // uuid: "4d0083ea-1509-4a6a-a8e0-89a218ddf366",
           nama_alias_panggilan: this.form.namaPanggilan,
           tujuan_buka_rekening: Number(this.form.tujuan),
+          tujuan_buka_rekening_lainnya: this.form.tujuanLainnya,
           kantor_cabang: selectedBranch ? selectedBranch.label : "",
           kode_kantor_cabang: this.form.kantorCabang,
           pendidikan_terakhir: Number(this.form.pendidikanTerakhir),
           hobi: Number(this.form.hobi),
+          hobi_lainnya: this.form.hobiLainnya,
           nomor_telp: this.form.nomorTelepon,
           nomor_fax: this.form.nomorFax,
           detail_alamat: this.form.alamat,

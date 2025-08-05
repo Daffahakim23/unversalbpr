@@ -3,11 +3,13 @@
     <FormField label="Nama Bank*" id="namaBank" v-model="form.namaBank" placeholder="Masukkan Nama Bank"
       :readonly="true" required />
 
-    <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
-      placeholder="Masukkan Nomor Rekening" hint="*Nomor rekening harus terdiri dari 10 digit angka" required />
+    <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
+      variant="numeric" :maxlength="10" placeholder="Masukkan Nomor Rekening" required @input="handleNomorRekeningInput"
+      @blur="handleNomorRekeningBlur" :error="nomorRekeningError"
+      :hint="nomorRekeningError ? 'Nomor rekening tidak valid. Silakan periksa kembali' : ''" />
 
     <FormField label="Nama Pemilik Rekening*" id="namaPemilikRekening" v-model="form.namaPemilikRekening"
-      placeholder="Masukkan Nama Pemilik Rekening" required />
+      :maxlength="25" placeholder="Masukkan Nama Pemilik Rekening" required />
 
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
@@ -25,10 +27,12 @@ import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
-import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoGreenOptions, metodePencairanOptions, pembayaranBungaOptions, produkDepositoOptions, } from "@/data/option.js";
+// import {  } from "@/data/option.js";
 import { FormModelPenempatanDeposito } from "@/models/formModel";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   components: {
     FormField,
     RadioButtonChoose,
@@ -42,14 +46,8 @@ export default {
     return {
       form: new FormModelPenempatanDeposito("Universal BPR",),
       isChecked: false,
-      metodePencairanOptions,
-      produkDepositoOptions,
-      jangkaWaktuDepositoUniversalOptions,
-      jangkaWaktuDepositoDEBUTMatiusOptions,
-      jangkaWaktuDepositoDEBUTSanmereOptions,
-      jangkaWaktuDepositoPeduliOptions,
-      jangkaWaktuDepositoGreenOptions,
-      pembayaranBungaOptions
+      nomorRekeningError: false,
+      validBranchCodes: [],
     };
   },
   computed: {
@@ -72,7 +70,61 @@ export default {
       );
     },
   },
+  watch: {
+    'form.nomorRekening'(newValue) {
+      const cleanedValue = String(newValue).replace(/\D/g, '').slice(0, 10);
+      if (newValue !== cleanedValue) {
+        this.form.nomorRekening = cleanedValue;
+      }
+
+      if (cleanedValue.length > 0) {
+        this.nomorRekeningError = !this.validateNomorRekening(cleanedValue);
+      } else {
+        this.nomorRekeningError = false;
+      }
+    },
+  },
   methods: {
+    async fetchBranchCodes() {
+      this.isFetchingBranches = true;
+      try {
+        const response = await api.get("/list-branch", {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.status === 200 && response.data && response.data.branch) {
+          this.validBranchCodes = response.data.branch.map(branch => branch.branch_code);
+          console.log("Valid Branch Codes:", this.validBranchCodes);
+        } else {
+          console.error("Gagal mengambil daftar cabang, status:", response.status, "data:", response.data);
+          // Handle error, maybe show an alert to the user
+        }
+      } catch (error) {
+        console.error("Error fetching branch codes:", error);
+        // Handle network/server error
+      } finally {
+        this.isFetchingBranches = false;
+      }
+    },
+
+    validateNomorRekening(nomorRekening) {
+      // Pastikan panjang 10 digit
+      if (!/^\d{10}$/.test(nomorRekening)) {
+        return false;
+      }
+
+      // Ambil 3 digit pertama
+      const branchCode = nomorRekening.substring(0, 3);
+
+      // Periksa apakah branchCode ada di daftar validBranchCodes
+      const isValidBranchCode = this.validBranchCodes.includes(branchCode);
+
+      if (!isValidBranchCode) {
+        console.warn(`Branch code '${branchCode}' from rekening number is not valid.`);
+      }
+
+      return isValidBranchCode; // Mengembalikan true hanya jika panjang dan branch code valid
+    },
     goBack() {
       this.$router.push({ path: "/dashboard/dataInstruksiPencairanDeposito" });
     },
@@ -117,76 +169,10 @@ export default {
         console.error("Error saat mengirim data:", error);
       }
     },
-    toTerbilang(angka) {
-      const satuan = [
-        "",
-        "Satu",
-        "Dua",
-        "Tiga",
-        "Empat",
-        "Lima",
-        "Enam",
-        "Tujuh",
-        "Delapan",
-        "Sembilan",
-      ];
-      const belasan = [
-        "Sepuluh",
-        "Sebelas",
-        "Dua Belas",
-        "Tiga Belas",
-        "Empat Belas",
-        "Lima Belas",
-        "Enam Belas",
-        "Tujuh Belas",
-        "Delapan Belas",
-        "Sembilan Belas",
-      ];
-      const puluhan = [
-        "",
-        "",
-        "Dua Puluh",
-        "Tiga Puluh",
-        "Empat Puluh",
-        "Lima Puluh",
-        "Enam Puluh",
-        "Tujuh Puluh",
-        "Delapan Puluh",
-        "Sembilan Puluh",
-      ];
-      const ribuan = ["", "Ribu", "Juta", "Miliar", "Triliun"];
-
-      if (angka === 0) return "Masukkan Nominal Penempatan Deposito";
-
-      let hasil = "";
-      let i = 0;
-      while (angka > 0) {
-        let tigaDigit = angka % 1000;
-        if (tigaDigit !== 0) {
-          let ratus = Math.floor(tigaDigit / 100);
-          let puluh = Math.floor((tigaDigit % 100) / 10);
-          let satu = tigaDigit % 10;
-          let bagian = "";
-
-          if (ratus > 0) {
-            bagian += ratus === 1 ? "Seratus " : satuan[ratus] + " Ratus ";
-          }
-          if (puluh === 1) {
-            bagian += belasan[satu] + " ";
-          } else {
-            if (puluh > 1) bagian += puluhan[puluh] + " ";
-            if (satu > 0) bagian += satuan[satu] + " ";
-          }
-          hasil = bagian + ribuan[i] + " " + hasil;
-        }
-        angka = Math.floor(angka / 1000);
-        i++;
-      }
-      return hasil.trim() + " Rupiah";
-    },
   },
   mounted() {
     this.$emit("update-progress", 60);
+    this.fetchBranchCodes();
   },
   // created() {
   //   // this.form.namaBank = "Universal BPR";

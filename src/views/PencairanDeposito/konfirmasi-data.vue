@@ -2,13 +2,73 @@
   <div>
     <div class="">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Data KTP
+        Data e-KTP
       </h1>
       <div v-if="formKTP" class="form-container">
-        <div class="form-item" v-for="(value, key) in formKTP" :key="key">
+        <div class="form-item" v-if="formKTP.namaLengkap">
+          <div class="form-label">Nama Lengkap</div>
+          <strong class="form-value">{{ formKTP.namaLengkap }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.nik">
+          <div class="form-label">NIK</div>
+          <strong class="form-value">{{ formKTP.nik }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.tanggalLahir">
+          <div class="form-label">Tanggal Lahir</div>
+          <strong class="form-value">{{ formKTP.tanggalLahir }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.tempatLahir">
+          <div class="form-label">Tempat Lahir</div>
+          <strong class="form-value">{{ formKTP.tempatLahir }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.jenisKelamin">
+          <div class="form-label">Jenis Kelamin</div>
+          <strong class="form-value">{{ formKTP.jenisKelamin }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.agama">
+          <div class="form-label">Agama</div>
+          <strong class="form-value">{{ formKTP.agama }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.statusPerkawinan">
+          <div class="form-label">Status Perkawinan</div>
+          <strong class="form-value">{{ formKTP.statusPerkawinan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.namaGadisIbuKandung">
+          <div class="form-label">Nama Gadis Ibu Kandung</div>
+          <strong class="form-value">{{ formKTP.namaGadisIbuKandung }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.alamat">
+          <div class="form-label">Alamat</div>
+          <strong class="form-value">{{ formKTP.alamat }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.rtRw">
+          <div class="form-label">RT/RW</div>
+          <strong class="form-value">{{ formKTP.rtRw }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.provinsi">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formKTP.provinsi }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kabupaten">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formKTP.kabupaten }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kecamatan">
+          <div class="form-label">Kecamatan</div>
+          <strong class="form-value">{{ formKTP.kecamatan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kelurahan">
+          <div class="form-label">Desa/Kelurahan</div>
+          <strong class="form-value">{{ formKTP.kelurahan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kodePos">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formKTP.kodePos }}</strong>
+        </div>
+        <!-- <div class="form-item" v-for="(value, key) in formKTP" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -19,22 +79,49 @@
         Dokumen
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
+        <div :class="[
           'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
-          file
-            ? 'bg-semantic/success-100 border-semantic/success-600'
-            : 'bg-neutral-100 border-primary-100',
+          fileStore.isKtpUploaded ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
         ]">
-          <div class="flex items-center">
-            <img :src="getFileIcon(key)" :alt="formatFileLabel(key)" class="h-12 mr-4" />
-            <span class="text-sm font-medium" :class="file ? 'text-semantic/success-700' : 'text-neutral-900'">
-              {{ formatFileLabel(key) }}
-            </span>
+          <div class=" flex items-center">
+            <img src="/src/assets/ektp.svg" alt="KTP" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">E-KTP</span>
+              <div v-if="fileStore.isKtpUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">{{ nik }}</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto E-KTP Anda</p>
+              </div>
+            </div>
           </div>
-
           <div>
-            <img :src="file ? '/src/assets/success.svg' : '/src/assets/download.svg'
-              " alt="Status Upload" class="h-6" />
+            <img v-if="fileStore.isKtpUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
+          </div>
+        </div>
+        <div :class="[
+          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md  relative',
+          fileStore.isFotoDiriUploaded
+            ? 'bg-semantic/success-100 border-semantic/success-600' : 'border-primary-100',
+        ]" :aria-disabled="fileStore.isFotoDiriUploaded ? 'true' : null">
+          <div class="flex items-center">
+            <img src="/src/assets/liveness.svg" alt="Liveness" class="h-12 mr-4" />
+            <div>
+              <span class="text-sm font-medium text-neutral-900">Foto Diri</span>
+              <div v-if="fileStore.isFotoDiriUploaded" class="flex flex-row items-center gap-1">
+                <img src="/src/assets/success.svg" class="h-4" />
+                <p class="text-xs text-neutral-600">Telah Dilengkapi</p>
+              </div>
+              <div v-else>
+                <p class="text-xs text-neutral-600">Foto Diri Anda</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img v-if="fileStore.isFotoDiriUploaded" src="/src/assets/success.svg" alt="Download" class="h-6" />
+            <img v-else src="/src/assets/upload-icon.svg" alt="Download" class="h-6" />
           </div>
         </div>
       </div>
@@ -44,32 +131,61 @@
 
     <div class="py-4">
       <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
-        Instruksi Pencairan Deposito
+        Instruksi Penutupan Deposito
       </h1>
-      <div v-if="formInstruksiPencairan" class="form-container">
-        <div class="form-item" v-for="(value, key) in formInstruksiPencairan" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
+      <div class="form-container">
+        <div class="form-item" v-if="formInstruksiPencairan.nomorRekeningDeposito">
+          <div class="form-label">Nomor Deposito:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.nomorRekeningDeposito }}</strong>
         </div>
-      </div>
-      <div v-if="formDataPencairan" class="form-container">
-        <div class="form-item" v-for="(value, key) in formDataPencairan" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
+        <div class="form-item" v-if="formInstruksiPencairan.terbilang">
+          <div class="form-label">Terbilang:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.terbilang }}</strong>
         </div>
-      </div>
-    </div>
-
-    <div class="border-t border-neutral-200 my-4"></div>
-
-    <!-- <div class="py-4">
-      <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
-        Data Pekerjaan
-      </h1>
-      <div v-if="formPekerjaan" class="form-container">
-        <div class="form-item" v-for="(value, key) in formPekerjaan" :key="key">
-          <div class="form-label"> {{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
+        <div class="form-item" v-if="formInstruksiPencairan.nominal">
+          <div class="form-label">Nominal Deposito:</div>
+          <strong class="form-value">{{ formatCurrency(formInstruksiPencairan.nominal) }}</strong>
+        </div>
+        <div class="form-item" v-if="formInstruksiPencairan.jangkaWaktu">
+          <div class="form-label">Jangka Waktu:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.jangkaWaktu }}</strong>
+        </div>
+        <div class="form-item" v-if="formInstruksiPencairan.tanggalInstruksiPencairanDeposito">
+          <div class="form-label">Tanggal Instruksi Penutupan:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.tanggalInstruksiPencairanDeposito }}</strong>
+        </div>
+        <div class="form-item" v-if="formInstruksiPencairan.tanggalJatuhTempoDeposito">
+          <div class="form-label">Tanggal Jatuh Tempo:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.tanggalJatuhTempoDeposito }}</strong>
+        </div>
+        <div class="form-item" v-if="formDataPencairanDeposito.nomorRekening">
+          <div class="form-label">Nomor Rekening Penutupan Deposito:</div>
+          <strong class="form-value">{{ formDataPencairanDeposito.nomorRekening }}</strong>
+        </div>
+        <div class="form-item" v-if="formDataPencairanDeposito.metodeTransfer">
+          <div class="form-label">Metode Transfer:</div>
+          <strong class="form-value">{{ formDataPencairanDeposito.metodeTransfer }} ({{
+            formatCurrency(parseInt(formDataPencairanDeposito.biayaTransfer)) }})</strong>
+        </div>
+        <div class="form-item" v-if="formDataPencairanDeposito.namaLengkap">
+          <div class="form-label">Nama Pemilik Rekening Penutupan Deposito:</div>
+          <strong class="form-value">{{ formDataPencairanDeposito.namaLengkap }}</strong>
+        </div>
+        <div class="form-item" v-if="formDataPencairanDeposito.namaBank">
+          <div class="form-label">Nama Bank:</div>
+          <strong class="form-value">{{ formDataPencairanDeposito.namaBank }}</strong>
+        </div>
+        <div class="form-item" v-if="formInstruksiPencairan.alasanPencairan">
+          <div class="form-label">Alasan Penutupan Deposito:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.alasanPencairan }}</strong>
+        </div>
+        <div class="form-item" v-if="formInstruksiPencairan.sukuBunga">
+          <div class="form-label">Suku Bunga:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.sukuBunga }}</strong>
+        </div>
+        <div class="form-item" v-if="formInstruksiPencairan.kantorCabang">
+          <div class="form-label">Pilihan Jaringan Kantor:</div>
+          <strong class="form-value">{{ formInstruksiPencairan.kantorCabang }}</strong>
         </div>
       </div>
     </div>
@@ -77,37 +193,51 @@
     <div class="border-t border-neutral-200 my-4"></div>
 
     <div class="py-4">
-      <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
-        Kontak Darurat
+      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
+        Biaya Pinalti
       </h1>
-      <div v-if="formKontakDarurat" class="form-container">
-        <div class="form-item" v-for="(value, key) in formKontakDarurat" :key="key">
-          <div class="form-label"> {{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
+      <div class="form-container">
+        <div class="form-item">
+          <div class="form-label">Biaya Pinalti:</div>
+          <strong class="form-value">{{ displayedPenalty }}</strong>
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <!-- <div class="border-t border-neutral-200 my-4"></div> -->
+    <div class="border-t border-neutral-200 my-4"></div>
 
     <div class="py-4">
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
       <p>
-        Dengan ini, saya/kami menyatakan bahwa: Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening pada
-        <span class="font-semibold">PT. BPR Universal</span> (selanjutnya disebut "Bank") ini adalah data yang
-        sebenar-benarnya.
+        Sehubungan dengan pengajuan aplikasi ini, maka saya menyatakan bahwa:
       </p>
-      <ul class="list-decimal list-inside text-neutral-700 space-y-2">
-        <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
-          ini.</li>
-        <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik Produk Bank yang akan saya/kami
-          manfaatkan.</li>
-        <li>Saya/kami telah menerima, membaca, mengerti, dan menyetujui isi Ketentuan Umum dan Persyaratan Pembukaan
-          Rekening.</li>
-        <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening.
-          <ul class="list-disc list-inside ml-2 mt-2 space-y-1">
+      <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2 text-justify">
+        <li>Deposito dan rekening tujuan Penutupan deposito sebagaimana tersebut di atas adalah benar merupakan atas
+          nama saya.</li>
+        <li>Saya menyatakan bahwa instruksi Penutupan dan rekening tujuan Penutupan deposito sebagaimana tersebut diatas
+          telah benar dan sesuai dengan instruksi saya, dan bertanggung jawab, serta menjamin kewenangan bertindak saya
+          penuh atas pemberian instruksi yang tercantum dalam pernyataan.</li>
+        <li>Saya menyetujui pemotongan biaya administrasi atas biaya transfer pokok dan  bunga deposito ke rekening bank
+          lain sesuai dengan ketentuan PT BPR Universal (selanjutnya disebut "Bank").</li>
+        <li>Apabila Deposito Berjangka dicairkan sebelum jatuh tempo, Bank berhak untuk membebankan biaya pinalti yang
+          berlaku sesuai kebijakan Bank dan dikenakan dari dana Penutupan Deposito Berjangka. </li>
+        <li>Saya telah menerima, membaca, mengerti, menyetujui isi Ketentuan dan Persyaratan Penutupan Deposito melalui
+          Layanan E-Form Universal BPR yang telah dicantumkan. Untuk itu dengan ini saya menyatakan tunduk dan terikat
+          dengen ketentuan-ketentuan tersebut, serta ketentuan lain terkait produk/fasilitas yang berlaku di Bank,
+          beserta segala bentuk perubahannya yang akan diberitahukan dengan sarana yang ditetapkan Bank.</li>
+        <li>Saya setuju data pribadi saya digunakan dan dibagikan kepada pihak lain yang bekerja sama atau terafiliasi
+          dengan Bank sehubungan dengan pengajuan transaksi melalui layanan E-Form Universal BPR berdasarkan ketentuan
+          peraturan perundang-undangan yang berlaku.</li>
+        <li>Saya setuju verifikasi atas pengajuan transaksi Penutupan deposito melalui layanan E-Form Universal BPR
+          menggunakan alat verifikasi yang memanfaatkan dokumen identitas diri saya, face recognition, serta teknologi
+          digital signature. Proses ini telah sesuai dengan regulasi yang berlaku, baik dari kebijakan internal Bank
+          maupun peraturan perundang-undangan.</li>
+        <li>Saya setuju bahwa Bank dapat memperoleh, menggunakan, mengelola, dan menyimpan data biometrik saya, termasuk
+          namun tidak terbatas pada gambar wajah, rekaman suara, untuk tujuan verifikasi identitas saya dalam memproses
+          transaksi Penutupan deposito yang diajukan berdasarkan ketentuan peraturan perundang-undangan yang berlaku.
+          <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
             <li>Saya/kami tidak mematuhi ketentuan <span class="italic">Prinsip Mengenal Nasabah (Knowing Your
                 Customer)</span>.</li>
             <li>Data yang saya/kami berikan kepada Bank tidak benar atau diragukan kebenarannya.</li>
@@ -117,31 +247,26 @@
       </ul>
     </div>
   </div>
-
-  <!-- Checkbox Persetujuan -->
-  <div class="flex items-center">
-    <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />
-    <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
-      Saya menyetujui syarat dan ketentuan serta bersedia memberikan informasi tambahan
-    </label>
+  <div class="mt-2">
+    <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
   </div>
 
-  <div class="flex items-center mt-4">
-    <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer items-baseline" />
-    <label for="agreement" class="text-sm text-gray-700 cursor-pointer">
-      Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
-    </label>
+  <div class="mt-2">
+    <CustomCheckbox v-model="agreement2"
+      labelText="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*" />
   </div>
+
 
   <div class="flex justify-between mt-6">
     <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
     <ButtonComponent type="button" :disabled="isSubmitting || isButtonDisabled" @click="handleSubmit">
-      {{ isSubmitting ? "Mengirim..." : "Lanjutkan" }}
+      {{ isSubmitting ? "Mengirim..." : "Simpan" }}
     </ButtonComponent>
   </div>
 
-  <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
-    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" />
+  <!-- <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
+    :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" /> -->
+  <ModalKonfirmasi :isOpen="isModalOpen" @close="closeModalKonfirmasi" @yes="handleKonfirmasi" />
 </template>s
 
 <script>
@@ -150,10 +275,20 @@ import api from "@/API/api";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
-import { rekeningTujuanOptions, trueFalseOptions } from "@/data/option";
+import { kewarganegaraanOptions, rekeningTujuanOptions, trueFalseOptions } from "@/data/option";
 import { FormModelKonfirmasiData } from "@/models/formModel";
 import ModalOTP from "@/components/ModalOTP.vue";
-import { alasanPencairanOptions, sukuBungaDepositoOptions, jangkaWaktuDepositoOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, } from '@/data/option.js';
+import { alasanPencairanOptions, sukuBungaDepositoOptions, jangkaWaktuDepositoOptions, agamaOptions, statusPerkawinanOptions, penghasilanOptions, jumlahPenghasilanOptions, bidangPekerjaanDKOptions, korespondensiOptions, masaAktifKTPOptions, } from '@/data/option.js';
+import { fetchBranches } from '@/services/service.js';
+import CustomCheckbox from '@/components/CustomCheckbox.vue';
+import ModalKonfirmasi from "@/components/ModalKonfirmasi.vue";
+
+import ektpIcon from "@/assets/ektp.svg";
+import npwpIcon from "@/assets/npwp.svg";
+import livenessIcon from "@/assets/liveness.svg";
+import tandaTanganIcon from "@/assets/tanda-tangan.svg";
+import defaultIcon from "@/assets/default.svg";
+
 
 
 export default {
@@ -161,21 +296,58 @@ export default {
   components: {
     ButtonComponent,
     RadioButtonChoose,
-    ModalOTP,
+    // ModalOTP,
+    ModalKonfirmasi,
+    CustomCheckbox
   },
   name: "DataPribadi",
   computed: {
+    displayedPenalty() {
+      const penaltyValue = this.penalty;
+      const nominal = parseFloat(this.formInstruksiPencairan.nominal) || 0;
+
+      if (penaltyValue === null || penaltyValue === undefined || penaltyValue === "") {
+        return "-";
+      }
+
+      const parsedPenalty = parseFloat(penaltyValue);
+
+      if (!isNaN(parsedPenalty) && parsedPenalty < 1 && parsedPenalty > 0) {
+        const calculatedPenalty = nominal * parsedPenalty * 0.01;
+        return this.formatCurrency(calculatedPenalty);
+      }
+      else if (!isNaN(parsedPenalty) && parsedPenalty >= 1) {
+        return this.formatCurrency(parsedPenalty);
+      }
+      else {
+        return String(penaltyValue);
+      }
+    },
     isButtonDisabled() {
-      return !this.agreement; // Tombol dinonaktifkan jika agreement belum dicentang
+      return !this.agreement1 || !this.agreement2;
     },
     formKTP() {
       const fileStore = useFileStore();
       const data = fileStore.formKTP || {};
       const processedData = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key) && data[key]) {
+        if (data.hasOwnProperty(key)) {
           let value = data[key];
-
+          if (key === "jenisKelamin") {
+            value = this.getLabelFromOptions(value, [
+              { value: true, label: "Laki-laki" },
+              { value: false, label: "Perempuan" },
+            ]);
+          }
+          if (value === null || value === undefined || value === "") {
+            continue;
+          }
+          if (key === "kewarganegaraan") {
+            value = this.getLabelFromOptions(value, kewarganegaraanOptions);
+          }
+          if (key === "masaAktifKtp") {
+            value = this.getLabelFromOptions(value, masaAktifKTPOptions);
+          }
           if (key === "agama") {
             value = this.getLabelFromOptions(value, agamaOptions);
           }
@@ -208,12 +380,20 @@ export default {
           if (key === "rekeningTujuan") {
             value = this.getLabelFromOptions(value, rekeningTujuanOptions);
           }
+          if (key === "kantorCabang") {
+            if (this.kantorCabangOptions) {
+              const selectedBranch = this.kantorCabangOptions.find(
+                (option) => option.value === value
+              );
+              value = selectedBranch ? selectedBranch.label : value;
+            }
+          }
           processedData[key] = value;
         }
       }
       return processedData;
     },
-    formDataPencairan() {
+    formDataPencairanDeposito() {
       const fileStore = useFileStore();
       return Object.fromEntries(
         Object.entries(fileStore.formDataPencairanDeposito || {}).filter(([key, value]) => value && key));
@@ -229,7 +409,10 @@ export default {
   setup() {
     const fileStore = useFileStore();
     const no_hp = computed(() => fileStore.no_hp || "user@example.com");
-    return { no_hp }
+    const nik = computed(() => fileStore.nik || "123123123");
+    const penalty = computed(() => fileStore.penalty);
+
+    return { fileStore, nik, no_hp, penalty };
   },
 
   data() {
@@ -237,9 +420,13 @@ export default {
       form: new FormModelKonfirmasiData(),
       trueFalseOptions,
       RadioButtonChoose,
-      agreement: false,
+      agreement1: false,
+      agreement2: false,
       isSubmitting: false,
-      isModalOTPOpen: false,
+      // isModalOTPOpen: false,
+      isModalOpen: false,
+      kantorCabangOptions: [],
+      kantorCabangAlamat: {},
       features: [
         {
           label: 'Pilih Metode Konfirmasi OTP',
@@ -256,9 +443,36 @@ export default {
   },
 
   methods: {
+    parseCurrency(currencyString) {
+      if (typeof currencyString === 'string') {
+        return parseFloat(currencyString.replace(/[^\d,-]/g, '').replace(',', '.'));
+      }
+      return isNaN(currencyString) ? 0 : parseFloat(currencyString);
+    },
+
+    formatCurrency(amount) {
+      if (typeof amount !== 'number') return amount;
+
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 2,
+      }).format(amount);
+    },
+    async fetchBranches() {
+      try {
+        const { kantorCabangOptions, kantorCabangAlamat } = await fetchBranches();
+        this.kantorCabangOptions = kantorCabangOptions;
+        this.kantorCabangAlamat = kantorCabangAlamat;
+      } catch (error) {
+        console.error("Gagal mengambil data kantor cabang:", error);
+      }
+    },
     getLabelFromOptions(value, options) {
-      const option = options.find((opt) => opt.value === value);
-      return option ? option.label : value;
+      if (!options || options.length === 0) return value;
+
+      const found = options.find((option) => option.value === value);
+      return found ? found.label : value;
     },
     goBack() {
       this.$router.push({ path: "/dashboard/dataInstruksiPencairanDeposito" });
@@ -280,20 +494,20 @@ export default {
         kelurahan: "Kelurahan",
         kodePos: "Kode Pos",
         statusPerkawinan: "Status Perkawinan",
-        masaAktifKtp: "Masa Aktif KTP",
+        masaAktifKtp: "Masa Aktif e-KTP",
         namaIbuKandung: "Nama Ibu Kandung",
         kewarganegaraan: "Kewarganegaraan",
 
         // Data Pribadi
         namaPanggilan: "Nama Alias / Panggilan",
         tujuan: "Tujuan Menabung",
-        KantorCabang: "Kantor Cabang",
+        KantorCabang: "Jaringan Kantor",
         pendidikanTerakhir: "Pendidikan Terakhir",
         hobi: "Hobi",
         nomorTelepon: "Nomor Telepon",
         nomorFax: "Nomor Fax",
-        kantorCabang: "Kantor Cabang",
-        alamatKantorCabang: "Alamat Kantor Cabang",
+        kantorCabang: "Jaringan Kantor",
+        alamatKantorCabang: "Alamat Jaringan Kantor",
         alamatSesuaiEktp: "Alamat Sesuai EKTP",
 
         // Instruksi Pencairan Deposito
@@ -302,15 +516,19 @@ export default {
         jangkaWaktu: "Jangka Waktu",
         sukuBunga: "Suku Bunga",
         nomorRekeningDeposito: "Nomor Rekening Deposito",
-        tanggalInstruksiPencairanDeposito: "Tanggal Instruksi Pencairan Deposito",
+        tanggalInstruksiPencairanDeposito: "Tanggal Instruksi Penutupan Deposito",
         tanggalJatuhTempoDeposito: "Tanggal Jatuh Tempo Deposito",
         alasanPencairan: "Suku Bunga",
+        rekeningTujuan: "Rekening Tujuan",
+        namaBank: "Nama Bank",
+        nomorRekening: "Nomor Rekening",
+        namaPemilikRekening: "Nama Pemilik Rekening",
       };
       return labels[key] || key;
     },
     formatFileLabel(key) {
       const labels = {
-        ktp: "KTP",
+        ktp: "e-KTP",
         npwp: "NPWP",
         fotoDiri: "Foto Diri",
         tandaTangan: "Tanda Tangan",
@@ -319,58 +537,67 @@ export default {
     },
     getFileIcon(key) {
       const icons = {
-        ktp: "/src/assets/ektp.svg",
-        npwp: "/src/assets/npwp.svg",
-        fotoDiri: "/src/assets/liveness.svg",
-        tandaTangan: "/src/assets/tanda-tangan.svg",
+        ktp: ektpIcon,
+        npwp: npwpIcon,
+        fotoDiri: livenessIcon,
+        tandaTangan: tandaTanganIcon
       };
-      return icons[key] || "/src/assets/default.svg";
+      return icons[key] || defaultIcon;
     },
-    async handleSubmit() {
-      if (!this.agreement) {
+    handleSubmit(event) {
+      event.preventDefault();
+      if (!this.agreement1) {
         alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
         return;
       }
+      if (!this.agreement2) {
+        alert("Harap menyetujui syarat dan ketentuan terlebih dahulu.");
+        return;
+      }
+      this.isModalOpen = true;
+    },
+    closeModalKonfirmasi() {
+      this.isModalOpen = false;
+    },
+    handleKonfirmasi(confirm) {
+      this.isModalOpen = false;
+
+      if (confirm) {
+        this.lanjutkanPengiriman();
+      } else {
+        console.log("Pengiriman data dibatalkan oleh pengguna.");
+      }
+    },
+    async lanjutkanPengiriman() {
+      if (this.isSubmitting) {
+        return;
+      }
       const fileStore = useFileStore();
+      this.isSubmitting = true;
+
       try {
         this.requestData = {
           uuid: fileStore.uuid || "",
           s_k_nasabah_bersedia_info_tambahan: true,
-          s_k_data_benar_dipertanggungjawabkan: true
-        };
-        console.log("Data sementara disimpan:", this.requestData);
-        this.isModalOTPOpen = true;
-      } catch (error) {
-        console.error("Error saat membuka modal:", error);
-      }
-    },
-    async handleOTPMethodSelected(method) {
-      console.log('Metode OTP yang dipilih:', method);
-
-      try {
-        if (!this.requestData) {
-          console.error("Error: Data request tidak ditemukan.");
-          this.isSubmitting = false;
-          return;
-        }
-
-        const finalData = {
-          ...this.requestData,
-          otp_wa: method === 'whatsapp'
+          s_k_data_benar_dipertanggungjawabkan: true,
         };
 
-        console.log("Mengirim data:", finalData);
+        console.log("Mengirim data:", this.requestData);
 
-        const response = await api.post("/konfirmasi-pencairan", finalData, {
+        const response = await api.post("/konfirmasi-pencairan", this.requestData, {
           headers: { "Content-Type": "application/json" },
         });
 
+        console.log("Respons dari API:", response);
+
         if (response.status === 200) {
-          this.$router.push({ path: "/dashboard/emailOTPPencairanDeposito" });
+          fileStore.setEnvelopeId(response.data.envelope_id);
+          fileStore.setSignUrl(response.data.sign_url);
+
+          this.$router.push({ path: "/dashboard/panduanKameraPencairanDeposito" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
-
       } catch (error) {
         if (error.response) {
           console.error("Error response data:", error.response.data);
@@ -378,13 +605,13 @@ export default {
         console.error("Error saat mengirim data:", error);
       } finally {
         this.isSubmitting = false;
-        this.isModalOTPOpen = false; // Tutup modal setelah request selesai
       }
     },
   },
   mounted() {
     console.log("Component mounted!");
     this.$emit("update-progress", 90);
+    this.fetchBranches();
   },
 };
 </script>
@@ -438,12 +665,26 @@ h2 {
 
 /* Gaya untuk label dan value */
 .form-label {
-  font-weight: 500;
-  color: #555;
+  font-weight: 400;
+  font-size: 14px;
+  color: #7D7D78;
 }
 
 .form-value {
-  font-weight: bold;
-  color: #333;
+  font-weight: 500;
+  font-size: 16px;
+  color: #1C1C17;
+}
+
+@media screen and (max-width: 768px) {
+  .form-value {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .form-value {
+    font-size: 14px;
+  }
 }
 </style>

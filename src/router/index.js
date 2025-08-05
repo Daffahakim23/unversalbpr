@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import MainLayout from "../views/MainLayout.vue";
+import MainLayoutInfo from "../views/MainLayoutInfo.vue";
 
 // Pembukaan Rekening NTB
 import PembukaanRekeningNTB from "../views/PembukaanRekeningNTB/pembukaan-rekening.vue";
@@ -8,12 +9,12 @@ import verifikasiEmailPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/v
 import UploadFilePembukaanRekeningNTB from "../views/PembukaanRekeningNTB/upload-dokumen.vue";
 import NpwpNTB from "../views/PembukaanRekeningNTB/npwp-s&k.vue";
 import PreviewScreenPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/preview-dokumen.vue";
-import FotoDiriPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/foto-diri.vue";
 import DataPribadiPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-pribadi.vue";
 import DataKTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-ktp.vue";
 import DataPekerjaanPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/data-pekerjaan.vue";
 import KonfirmasiDataPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/konfirmasi-data.vue";
-import EmailOTPPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/otp-no-hp.vue";
+import PanduanKameraPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/panduan-kamera.vue";
+import TandaTanganDigitalPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/tanda-tangan-digital.vue";
 import HalamanSuksesPembukaanRekeningNTB from "../views/PembukaanRekeningNTB/halaman-sukses.vue";
 
 // Pembukaan Rekening Existing
@@ -24,11 +25,11 @@ import PreviewScreenPembukaanRekeningExisting from "../views/PembukaanRekeningEx
 import PerubahanDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/perubahan-data.vue";
 import DataKTPPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/data-ktp.vue";
 import KonfirmasiDataPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/konfirmasi-data.vue";
-import EmailOTPPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/otp-no-hp.vue";
+import PanduanKameraPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/panduan-kamera.vue";
 import HalamanSuksesPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/halaman-sukses.vue";
-import FotoDiriPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/foto-diri.vue";
+import TandaTanganDigitalPembukaanRekeningExisting from "../views/PembukaanRekeningExisting/tanda-tangan-digital.vue";
 
-// Penempatan Deposito NTB
+// Pembukaan Deposito NTB
 import PenempatanDepositoNTB from "../views/PenempatanDepositoNTB/penempatan-deposito.vue";
 import VerifikasiEmailPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/verifikasi-email.vue";
 import DataPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-penempatan.vue";
@@ -39,10 +40,10 @@ import DataPribadiPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/dat
 import DataKTPPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-ktp.vue";
 import DataPekerjaanPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/data-pekerjaan.vue";
 import KonfirmasiDataPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/konfirmasi-data.vue";
-import EmailOTPPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/otp-no-hp.vue";
 import HalamanSuksesPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/halaman-sukses.vue";
 import HomePage from "../views/HomePage.vue";
-import FotoDiriPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/foto-diri.vue";
+import PanduanKameraPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/panduan-kamera.vue";
+import TandaTanganDigitalPenempatanDepositoNTB from "../views/PenempatanDepositoNTB/tanda-tangan-digital.vue";
 
 // Pembukaan Rekening Existing
 import PenempatanDepositoExisting from "../views/PenempatanDepositoExisting/penempatan-deposito-existing.vue";
@@ -53,11 +54,11 @@ import PreviewScreenPenempatanDepositoExisting from "../views/PenempatanDeposito
 import PerubahanDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/perubahan-data.vue";
 import DataKTPPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/data-ktp.vue";
 import KonfirmasiDataPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/konfirmasi-data.vue";
-import EmailOTPPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/email-otp.vue";
+import PanduanKameraPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/panduan-kamera.vue";
 import HalamanSuksesPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/halaman-sukses.vue";
-import FotoDiriPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/foto-diri.vue";
+import TandaTanganDigitalPenempatanDepositoExisting from "../views/PenempatanDepositoExisting/tanda-tangan-digital.vue";
 
-// Pembukaan Rekening Existing
+// Pengkinian Data
 import PengkinianData from "../views/PengkinianData/pengkinian-data.vue";
 import UploadDokumenPengkinianData from "../views/PengkinianData/upload-dokumen.vue";
 import PreviewScreenPengkinianData from "../views/PengkinianData/preview-dokumen.vue";
@@ -65,11 +66,14 @@ import DataPribadiPengkinianData from "../views/PengkinianData/data-pribadi.vue"
 import DataKTPPengkinianData from "../views/PengkinianData/data-ktp.vue";
 import DataPekerjaanPengkinianData from "../views/PengkinianData/data-pekerjaan.vue";
 import KonfirmasiDataPengkinianData from "../views/PengkinianData/konfirmasi-data.vue";
-import EmailOTPPengkinianData from "../views/PengkinianData/otp-no-hp.vue";
+import PanduanKameraPengkinianData from "../views/PengkinianData/panduan-kamera.vue";
 import HalamanSuksesPengkinianData from "../views/PengkinianData/halaman-sukses.vue";
+import TandaTanganDigitalPengkinianData from "../views/PengkinianData/tanda-tangan-digital.vue";
 
-// Pencairan Deposito
-import PencairanDeposito from "../views/PencairanDeposito/pencairan-deposito.vue";
+
+// Penutupan Deposito
+import PencairanDeposito from "../views/PencairanDeposito/onBoarding.vue";
+import FormPencairanDeposito from "../views/PencairanDeposito/pencairan-deposito.vue";
 import verifikasiEmailPencairanDeposito from "../views/PencairanDeposito/verifikasi-email.vue";
 import UploadDokumenPencairanDeposito from "../views/PencairanDeposito/upload-dokumen.vue";
 import PreviewScreenPencairanDeposito from "../views/PencairanDeposito/preview-dokumen.vue";
@@ -78,9 +82,40 @@ import DataInstruksiPencairanDeposito from "../views/PencairanDeposito/instruksi
 import DataPencairanDepositoOnUs from "../views/PencairanDeposito/data-pencairan-onUs.vue";
 import DataPencairanDepositoOfUs from "../views/PencairanDeposito/data-pencairan-ofUs.vue";
 import KonfirmasiDataPencairanDeposito from "../views/PencairanDeposito/konfirmasi-data.vue";
+import PanduanKameraPencairanDeposito from "../views/PencairanDeposito/panduan-kamera.vue";
 import EmailOTPPencairanDeposito from "../views/PencairanDeposito/otp-no-hp.vue";
 import HalamanSuksesPencairanDeposito from "../views/PencairanDeposito/halaman-sukses.vue";
+import TandaTanganDigitalPencairanDeposito from "../views/PencairanDeposito/tanda-tangan-digital.vue";
 
+// Pemindahbukuan
+import PemindahBukuan from "../views/Pemindahbukuan/onBoarding.vue";
+import FormPemindahbukuan from "../views/Pemindahbukuan/pemindahbukuan.vue";
+import verifikasiEmailPemindahbukuan from "../views/Pemindahbukuan/verifikasi-email.vue";
+import UploadDokumenPemindahbukuan from "../views/Pemindahbukuan/upload-dokumen.vue";
+import PreviewScreenPemindahbukuan from "../views/Pemindahbukuan/preview-dokumen.vue";
+import DataKTPPemindahbukuan from "../views/Pemindahbukuan/data-ktp.vue";
+import DataPengirimPemindahbukuan from "../views/Pemindahbukuan/data-pengirim.vue";
+import DataPenerimaPemindahbukuan from "../views/Pemindahbukuan/data-penerima.vue";
+import KonfirmasiDataPemindahbukuan from "../views/Pemindahbukuan/konfirmasi-data.vue";
+import EmailOTPPemindahbukuan from "../views/Pemindahbukuan/otp-no-hp.vue";
+import PanduanKameraPemindahbukuan from "../views/Pemindahbukuan/panduan-kamera.vue";
+import HalamanSuksesPemindahbukuan from "../views/Pemindahbukuan/halaman-sukses.vue";
+import TandaTanganDigitalPemindahbukuan from "../views/Pemindahbukuan/tanda-tangan-digital.vue";
+
+// Other
+import InfoProdukPembukaanRekeningNTB from "../views/Other/infoProdukPembukaanRekeningNTB.vue";
+import InfoProdukPembukaanRekeningExisting from "../views/Other/infoProdukPembukaanRekeningExisting.vue";
+import InfoProdukPenempatanDepositoNTB from "../views/Other/infoProdukPenempatanDepositoNTB.vue";
+import InfoProdukPenempatanDepositoExisting from "../views/Other/infoProdukPenempatanDepositoExisting.vue";
+import InfoProdukPencairanDeposito from "../views/Other/infoProdukPencairanDeposito.vue";
+import InfoProdukPengkinianData from "../views/Other/infoProdukPengkinianData.vue";
+import InfoProdukPemindahbukuan from "../views/Other/infoProdukPemindahbukuan.vue";
+import Tentang from "../views/Other/tentang.vue";
+import KebijakanPrivasi from "../views/Other/kebijakanPrivasi.vue";
+import SyaratKetentuan from "../views/Other/syaratKetentuan.vue";
+import Faq from "../views/Other/faq.vue";
+
+// import { title } from "node:process";
 
 
 const routes = [
@@ -93,6 +128,126 @@ const routes = [
     path: "/dashboard",
     component: Dashboard,
   },
+  {
+    path: "/pencairanDepositoRegular/",
+    component: PencairanDeposito,
+  },
+  {
+    path: "/pencairanDeposito/",
+    component: PencairanDeposito,
+  },
+  {
+    path: "/pemindahbukuan/",
+    component: PemindahBukuan,
+  },
+  {
+    path: "/dashboard",
+    name: "MainLayoutInfo",
+    component: MainLayoutInfo,
+    children: [
+      {
+        path: "infoProdukPembukaanRekeningNTB",
+        name: "infoProdukPembukaanRekeningNTB",
+        component: InfoProdukPembukaanRekeningNTB,
+        meta: {
+          title: "Pembukaan Rekening Non-Nasabah",
+          // subtitle: "Dapatkan informasi lengkap mengenai jenis rekening dan panduan pembukaan untuk nasabah non-eksisting.",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPembukaanRekeningExisting",
+        name: "infoProdukPembukaanRekeningExisting",
+        component: InfoProdukPembukaanRekeningExisting,
+        meta: {
+          title: "Pembukaan Rekening Nasabah",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPenempatanDepositoNTB",
+        name: "infoProdukPenempatanDepositoNTB",
+        component: InfoProdukPenempatanDepositoNTB,
+        meta: {
+          title: "Pembukaan Deposito Non-Nasabah",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPenempatanDepositoExisting",
+        name: "infoProdukPenempatanDepositoExisting",
+        component: InfoProdukPenempatanDepositoExisting,
+        meta: {
+          title: "Pembukaan Deposito",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPengkinianData",
+        name: "infoProdukPengkinianData",
+        component: InfoProdukPengkinianData,
+        meta: {
+          title: "Pengkinian Data",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPencairanDeposito",
+        name: "infoProdukPencairanDeposito",
+        component: InfoProdukPencairanDeposito,
+        meta: {
+          title: "Penutupan Deposito",
+          centerTitle: true
+        },
+      },
+      {
+        path: "infoProdukPemindahbukuan",
+        name: "infoProdukPemindahbukuan",
+        component: InfoProdukPemindahbukuan,
+        meta: {
+          title: "Transfer",
+          centerTitle: true
+        },
+      },
+      {
+        path: "tentang",
+        name: "tentang",
+        component: Tentang,
+        meta: {
+          title: "Tentang Kami",
+          centerTitle: true
+        },
+      },
+      {
+        path: "syaratKetentuan",
+        name: "syaratKetentuan",
+        component: SyaratKetentuan,
+        meta: {
+          title: "Syarat & Ketentuan",
+          centerTitle: true
+        },
+      },
+      {
+        path: "kebijakanPrivasi",
+        name: "kebijakanPrivasi",
+        component: KebijakanPrivasi,
+        meta: {
+          title: "Kebijakan Privasi",
+          centerTitle: true
+        },
+      },
+      {
+        path: "faq",
+        name: "faq",
+        component: Faq,
+        meta: {
+          title: "FAQ",
+          centerTitle: true
+        },
+      },
+    ]
+  },
+
   {
     path: "/dashboard",
     name: "MainLayout",
@@ -115,7 +270,18 @@ const routes = [
         component: verifikasiEmailPembukaanRekeningNTB,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Verifikasi Email"
+          title: "Verifikasi Email",
+          centerTitle: true
+        },
+      },
+      {
+        path: "dataPribadiPembukaanRekeningNTB",
+        name: "DataPribadiPembukaanRekeningNTB",
+        component: DataPribadiPembukaanRekeningNTB,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Data Pribadi",
+          subtitle: "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda."
         },
       },
       {
@@ -134,37 +300,53 @@ const routes = [
         component: NpwpNTB,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Pernyatan berkaitan NPWP",
+          title: "Pernyataan dan Persetujuan Nasabah Berkaitan NPWP",
           subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,"
         },
       },
       {
-        path: "fotoDiriPembukaanRekeningNTB",
-        name: "FotoDiriPembukaanRekeningNTB",
-        component: FotoDiriPembukaanRekeningNTB,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
-      },
-      {
-        path: "previewScreenPembukaanRekeningNTB",
+        path: "previewScreenPembukaanRekeningNTB", // Path tanpa parameter
         name: "PreviewScreenPembukaanRekeningNTB",
         component: PreviewScreenPembukaanRekeningNTB,
         meta: {
+          persistNavbar: true,
           feature: "Pembukaan Rekening Baru",
-          title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'npwp':
+                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP Anda bisa digunakan.';
+              case 'tandaTangan':
+                return 'Pastikan foto tanda tangan Anda terlihat jelas. Jika sudah, foto tanda tangan Anda bisa digunakan.';
+              case 'fotoDiri':
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
+        // Props bisa Anda sesuaikan jika Anda ingin menerima query sebagai props
+        // props: (route) => ({
+        //   documentType: route.query.documentType,
+        // }),
       },
       {
         path: "dataKTPPembukaanRekeningNTB",
@@ -179,17 +361,6 @@ const routes = [
         props: (route) => ({
           documentType: route.params.documentType,
         }),
-      },
-      {
-        path: "dataPribadiPembukaanRekeningNTB",
-        name: "DataPribadiPembukaanRekeningNTB",
-        component: DataPribadiPembukaanRekeningNTB,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Data Pribadi",
-          subtitle:
-            "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
-        },
       },
       {
         path: "konfirmasiDataPembukaanRekeningNTB",
@@ -213,12 +384,22 @@ const routes = [
         },
       },
       {
-        path: "emailOTPPembukaanRekeningNTB",
-        name: "emailOTPPembukaanRekeningNTB",
-        component: EmailOTPPembukaanRekeningNTB,
+        path: "panduanKameraPembukaanRekeningNTB",
+        name: "panduanKameraPembukaanRekeningNTB",
+        component: PanduanKameraPembukaanRekeningNTB,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Konfirmasi OTP"
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
+        },
+      },
+      {
+        path: "tandaTanganDigitalPembukaanRekeningNTB",
+        name: "tandaTanganDigitalPembukaanRekeningNTB",
+        component: TandaTanganDigitalPembukaanRekeningNTB,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -247,7 +428,8 @@ const routes = [
         component: verifikasiEmailPembukaanRekeningExisting,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Verifikasi Email"
+          title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -265,24 +447,31 @@ const routes = [
         name: "PreviewScreenPembukaanRekeningExisting",
         component: PreviewScreenPembukaanRekeningExisting,
         meta: {
+          persistNavbar: true,
           feature: "Pembukaan Rekening Baru",
-          title: "Hasil Foto Existing",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
-      },
-      {
-        path: "fotoDiriPembukaanRekeningExisting",
-        name: "FotoDiriPembukaanRekeningExisting",
-        component: FotoDiriPembukaanRekeningExisting,
-        meta: {
-          feature: "Pembukaan Rekening Baru",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -308,9 +497,9 @@ const routes = [
         component: PerubahanDataPembukaanRekeningExisting,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Perubahan Data Existing",
+          title: "Pembaharuan Data",
           subtitle:
-            "Untuk melanjutkan proses, kami memerlukan informasi tambahan yang tidak tercakup dalam KTP Anda.",
+            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah ini',
         },
       },
       {
@@ -323,12 +512,22 @@ const routes = [
         },
       },
       {
-        path: "emailOTPPembukaanRekeningExisting",
-        name: "emailOTPPembukaanRekeningExisting",
-        component: EmailOTPPembukaanRekeningExisting,
+        path: "panduanKameraPembukaanRekeningExisting",
+        name: "panduanKameraPembukaanRekeningExisting",
+        component: PanduanKameraPembukaanRekeningExisting,
         meta: {
           feature: "Pembukaan Rekening Baru",
-          title: "Konfirmasi OTP"
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
+        },
+      },
+      {
+        path: "tandaTanganDigitalPembukaanRekeningExisting",
+        name: "tandaTanganDigitalPembukaanRekeningExisting",
+        component: TandaTanganDigitalPembukaanRekeningExisting,
+        meta: {
+          feature: "Pembukaan Rekening Baru",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -345,9 +544,9 @@ const routes = [
         name: "PenempatanDepositoNTB",
         component: PenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Halo, Senang Bertemu Dengan Anda Kembali",
-          subtitle: "Sebagai Calon Nasabah Universal BPR yang hendak membuka deposito, Anda diwajibkan memiliki rekening Tabungan Universal, dan mengisi data diri Anda terlebih dahulu. Silakan pilih produk Tabungan Universal dibawah ini."
+          feature: "Pembukaan Deposito",
+          title: "Halo, Senang Bertemu Dengan Anda",
+          subtitle: "Sebagai calon Nasabah Universal BPR yang hendak membuka deposito, Anda diwajibkan terlebih dahulu membuka rekening Tabungan Universal sebagai rekening penyetoran dana deposito. Silakan pilih produk Tabungan Universal di bawah ini, lalu lanjutkan dengan memilih produk deposito, dan mengisi data diri Anda."
         },
       },
       {
@@ -355,8 +554,9 @@ const routes = [
         name: "verifikasiEmailPenempatanDepositoNTB",
         component: VerifikasiEmailPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Verifikasi Email"
+          feature: "Pembukaan Deposito",
+          title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -364,8 +564,8 @@ const routes = [
         name: "dataPenempatanDepositoNTB",
         component: DataPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Atur Penempatan Deposito",
+          feature: "Pembukaan Deposito",
+          title: "Atur Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },
@@ -375,8 +575,8 @@ const routes = [
         name: "NpwpDepositoNTB",
         component: NpwpDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Pernyatan berkaitan NPWP",
+          feature: "Pembukaan Deposito",
+          title: "Pernyataan dan Persetujuan Nasabah Berkaitan NPWP",
           subtitle: "Bahwa berkaitan dengan pemenuhan NPWP untuk pembukaan rekening,"
         },
       },
@@ -385,7 +585,7 @@ const routes = [
         name: "UploadDokumenPenempatanDepositoNTB",
         component: UploadFilePenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Upload Dokumen",
           subtitle:
             "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening",
@@ -396,27 +596,42 @@ const routes = [
         name: "PreviewScreenPenempatanDepositoNTB",
         component: PreviewScreenPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          persistNavbar: true,
+          feature: "Pembukaan Deposito",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'npwp':
+                return 'Pastikan foto NPWP Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto NPWP Anda bisa digunakan.';
+              case 'tandaTangan':
+                return 'Pastikan foto tanda tangan Anda terlihat jelas. Jika sudah, foto tanda tangan Anda bisa digunakan.';
+              case 'fotoDiri':
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType, // Ambil documentType dari params
-        }),
-      },
-      {
-        path: "fotoDiriPenempatanDepositoNTB",
-        name: "FotoDiriPenempatanDepositoNTB",
-        component: FotoDiriPenempatanDepositoNTB,
-        meta: {
-          feature: "Penempatan Deposito",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
         }),
       },
       {
@@ -424,7 +639,7 @@ const routes = [
         name: "DataKTPPenempatanDepositoNTB",
         component: DataKTPPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
@@ -435,7 +650,7 @@ const routes = [
         name: "DataPribadiPenempatanDepositoNTB",
         component: DataPribadiPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data Pribadi",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
@@ -446,7 +661,7 @@ const routes = [
         name: "konfirmasiDataPenempatanDepositoNTB",
         component: KonfirmasiDataPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi",
         },
       },
@@ -455,17 +670,27 @@ const routes = [
         name: "DataPekerjaanPenempatanDepositoNTB",
         component: DataPekerjaanPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data Pekerjaan & Finansial"
         },
       },
       {
-        path: "emailOTPPenempatanDepositoNTB",
-        name: "emailOTPPenempatanDepositoNTB",
-        component: EmailOTPPenempatanDepositoNTB,
+        path: "panduanKameraPenempatanDepositoNTB",
+        name: "panduanKameraPenempatanDepositoNTB",
+        component: PanduanKameraPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Konfirmasi OTP"
+          feature: "Pembukaan Deposito",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
+        },
+      },
+      {
+        path: "tandaTanganDigitalPenempatanDepositoNTB",
+        name: "tandaTanganDigitalPenempatanDepositoNTB",
+        component: TandaTanganDigitalPenempatanDepositoNTB,
+        meta: {
+          feature: "Pembukaan Deposito",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -473,17 +698,17 @@ const routes = [
         name: "halamanSuksesPenempatanDepositoNTB",
         component: HalamanSuksesPenempatanDepositoNTB,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
         },
       },
 
-      // Penempatan Deposito Existing
+      // Pembukaan Deposito Existing
       {
         path: "penempatanDepositoExisting",
         name: "penempatanDepositoExisting",
         component: PenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Halo, Senang Bertemu Dengan Anda Kembali",
           subtitle: "Yuk, pilih produk yang diinginkan dan isi data dirimu terlebih dahulu!"
         },
@@ -493,8 +718,9 @@ const routes = [
         name: "VerifikasiEmailPenempatanDepositoExisting",
         component: verifikasiEmailPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Email Verifikasi Existing"
+          feature: "Pembukaan Deposito",
+          title: "Verifikasi Email",
+          centerTitle: true
         },
       },
       {
@@ -502,8 +728,8 @@ const routes = [
         name: "dataPenempatanDepositoExisting",
         component: DataPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Atur Penempatan Deposito",
+          feature: "Pembukaan Deposito",
+          title: "Atur Pembukaan Deposito",
           subtitle:
             "Tentukan nominal dan jangka waktu Deposito. Kami akan coba perhitungkan bunganya!",
         },
@@ -513,7 +739,7 @@ const routes = [
         name: "UploadDokumenPenempatanDepositoExisting",
         component: UploadFilePenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Upload Dokumen",
           subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
         },
@@ -523,24 +749,35 @@ const routes = [
         name: "PreviewScreenPenempatanDepositoExisting",
         component: PreviewScreenPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Hasil Foto Existing",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
-        },
-        props: (route) => ({
-          documentType: route.params.documentType,
-        }),
-      },
-      {
-        path: "fotoDiriPenempatanDepositoExisting",
-        name: "FotoDiriPenempatanDepositoExisting",
-        component: FotoDiriPenempatanDepositoExisting,
-        meta: {
-          feature: "Penempatan Deposito",
-          title: "Foto Diri",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          persistNavbar: true,
+          feature: "Pembukaan Deposito",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -551,7 +788,7 @@ const routes = [
         name: "DataKTPPenempatanDepositoExisting",
         component: DataKTPPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian, Anda dapat memperbaikinya terlebih dahulu sebelum melanjutkan proses pembukaan rekening.",
@@ -562,10 +799,10 @@ const routes = [
         name: "PerubahanDataPenempatanDepositoExisting",
         component: PerubahanDataPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Perubahan Data Existing",
+          feature: "Pembukaan Deposito",
+          title: "Pembaharuan Data",
           subtitle:
-            "Untuk melanjutkan proses, kami memerlukan informasi tambahan yang tidak tercakup dalam KTP Anda.",
+            'Pastikan informasi pribadi Anda selalu terbaru untuk kelancaran transaksi dan komunikasi. Pembaharuan data dapat dilakukan dengan memilih opsi "YA" pada pertanyaan dibawah ini',
         },
       },
       {
@@ -573,17 +810,27 @@ const routes = [
         name: "konfirmasiDataPenempatanDepositoExisting",
         component: KonfirmasiDataPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
           title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
         },
       },
       {
-        path: "emailOTPPenempatanDepositoExisting",
-        name: "emailOTPPenempatanDepositoExisting",
-        component: EmailOTPPenempatanDepositoExisting,
+        path: "panduanKameraPenempatanDepositoExisting",
+        name: "panduanKameraPenempatanDepositoExisting",
+        component: PanduanKameraPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
-          title: "Konfirmasi OTP Existing"
+          feature: "Pembukaan Deposito",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
+        },
+      },
+      {
+        path: "tandaTanganDigitalPenempatanDepositoExisting",
+        name: "tandaTanganDigitalPenempatanDepositoExisting",
+        component: TandaTanganDigitalPenempatanDepositoExisting,
+        meta: {
+          feature: "Pembukaan Deposito",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -591,7 +838,7 @@ const routes = [
         name: "halamanSuksesPenempatanDepositoExisting",
         component: HalamanSuksesPenempatanDepositoExisting,
         meta: {
-          feature: "Penempatan Deposito",
+          feature: "Pembukaan Deposito",
         },
       },
 
@@ -608,22 +855,48 @@ const routes = [
       },
       {
         path: "uploadDokumenPengkinianData",
-        name: "uploadDokumenPengkinianData",
+        name: "UploadDokumenPengkinianData",
         component: UploadDokumenPengkinianData,
         meta: {
           feature: "Pengkinian Data",
           title: "Upload Dokumen",
           subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
         },
-      }, {
+      },
+      {
         path: "previewPengkinianData",
         name: "PreviewScreenPengkinianData",
         component: PreviewScreenPengkinianData,
         meta: {
+          persistNavbar: true,
           feature: "Pengkinian Data",
-          title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -648,7 +921,7 @@ const routes = [
           feature: "Pengkinian Data",
           title: "Data Pribadi",
           subtitle:
-            "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
+            "Untuk mendukung proses pengkinian data, silakan lengkapi informasi tambahan yang diperlukan di bawah ini.",
         },
       },
       {
@@ -670,12 +943,22 @@ const routes = [
         },
       },
       {
-        path: "emailOTPPengkinianData",
-        name: "emailOTPPengkinianData",
-        component: EmailOTPPengkinianData,
+        path: "panduanKameraPengkinianData",
+        name: "panduanKameraPengkinianData",
+        component: PanduanKameraPengkinianData,
         meta: {
           feature: "Pengkinian Data",
-          title: "Konfirmasi OTP"
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
+        },
+      },
+      {
+        path: "tandaTanganDigitalPengkinianData",
+        name: "tandaTanganDigitalPengkinianData",
+        component: TandaTanganDigitalPengkinianData,
+        meta: {
+          feature: "Pengkinian Data",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -687,15 +970,15 @@ const routes = [
         },
       },
 
-      // Pencairan Deposito
+      // Penutupan Deposito
       {
-        path: "pencairanDeposito",
-        name: "pencairanDeposito",
-        component: PencairanDeposito,
+        path: "formPencairanDeposito",
+        name: "formPencairanDeposito",
+        component: FormPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Formulir Permohonan Pencairan Deposito",
-          subtitle: "Silakan isi formulir berikut untuk mengajukan pencairan deposito Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
+          feature: "Penutupan Deposito",
+          title: "Formulir Permohonan Penutupan Deposito",
+          subtitle: "Silakan isi formulir berikut untuk mengajukan penutupan deposito Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
         },
       },
       {
@@ -703,8 +986,9 @@ const routes = [
         name: "VerifikasiEmailPencairanDeposito",
         component: verifikasiEmailPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Email Verifikasi"
+          feature: "Penutupan Deposito",
+          title: "Email Verifikasi",
+          centerTitle: true
         },
       },
       {
@@ -712,7 +996,7 @@ const routes = [
         name: "uploadDokumenPencairanDeposito",
         component: UploadDokumenPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Upload Dokumen",
           subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
         },
@@ -722,10 +1006,37 @@ const routes = [
         name: "PreviewScreenPencairanDeposito",
         component: PreviewScreenPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+
+          feature: "Penutupan Deposito",
           title: "Hasil Foto",
-          subtitle:
-            "Pastikan foto Anda terlihat jelas dan informasinya terbaca. Jika sudah, foto kamu bisa digunakan.",
+          persistNavbar: true,
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
         },
         props: (route) => ({
           documentType: route.params.documentType,
@@ -736,7 +1047,7 @@ const routes = [
         name: "DataKTPPencairanDeposito",
         component: DataKTPPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Data E-KTP",
           subtitle:
             "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
@@ -747,10 +1058,10 @@ const routes = [
         name: "dataInstruksiPencairanDeposito",
         component: DataInstruksiPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Instruksi Pencairan Deposito",
+          feature: "Penutupan Deposito",
+          title: "Instruksi Penutupan Deposito",
           subtitle:
-            "Untuk dapat memproses pencairan deposito Anda, kami memerlukan beberapa informasi tambahan. Mohon lengkapi informasi yang diperlukan agar proses dapat berjalan dengan lancar",
+            "Untuk dapat memproses penutupan deposito Anda, kami memerlukan beberapa informasi tambahan. Mohon lengkapi informasi yang diperlukan agar proses dapat berjalan dengan lancar",
         },
       },
       {
@@ -758,8 +1069,8 @@ const routes = [
         name: "dataPencairanDepositoOnUs",
         component: DataPencairanDepositoOnUs,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Pencairan Deposito ke Sesama Bank Universal BPR",
+          feature: "Penutupan Deposito",
+          title: "Penutupan Deposito ke Sesama Bank Universal BPR",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
         },
@@ -769,8 +1080,8 @@ const routes = [
         name: "dataPencairanDepositoOfUs",
         component: DataPencairanDepositoOfUs,
         meta: {
-          feature: "Pencairan Deposito",
-          title: "Pencairan Deposito ke Bank Lain",
+          feature: "Penutupan Deposito",
+          title: "Penutupan Deposito ke Bank Lain",
           subtitle:
             "Bantu kami mengenal Anda untuk memberikan layanan sesuai kebutuhan dengan memberikan tambahan informasi yang tidak tercakup dalam E-KTP Anda.",
         },
@@ -780,9 +1091,19 @@ const routes = [
         name: "konfirmasiDataPencairanDeposito",
         component: KonfirmasiDataPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Konfirmasi Semua Data Anda",
           subtitle: "Periksa semua informasi yang Anda isi sebelum melanjutkan ke pengiriman formulir."
+        },
+      },
+      {
+        path: "panduanKameraPencairanDeposito",
+        name: "panduanKameraPencairanDeposito",
+        component: PanduanKameraPencairanDeposito,
+        meta: {
+          feature: "Penutupan Deposito",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
         },
       },
       {
@@ -790,8 +1111,17 @@ const routes = [
         name: "emailOTPPencairanDeposito",
         component: EmailOTPPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
           title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "tandaTanganDigitalPencairanDeposito",
+        name: "tandaTanganDigitalPencairanDeposito",
+        component: TandaTanganDigitalPencairanDeposito,
+        meta: {
+          feature: "Penutupan Deposito",
+          title: "Tanda Tangan Digital"
         },
       },
       {
@@ -799,7 +1129,157 @@ const routes = [
         name: "halamanSuksesPencairanDeposito",
         component: HalamanSuksesPencairanDeposito,
         meta: {
-          feature: "Pencairan Deposito",
+          feature: "Penutupan Deposito",
+        },
+      },
+
+
+      //Pemindahbukuan
+      {
+        path: "formPemindahbukuan",
+        name: "formPemindahbukuan",
+        component: FormPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Formulir Elektronik Transfer",
+          subtitle: "Silakan isi formulir berikut untuk mengajukan transaksi  Transfer Anda. Pastikan semua informasi yang diberikan akurat agar proses pengajuan dapat berjalan dengan lancar."
+        },
+      },
+      {
+        path: "verifikasiEmailPemindahbukuan",
+        name: "verifikasiEmailPemindahbukuan",
+        component: verifikasiEmailPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Verifikasi Email",
+          centerTitle: true
+        },
+      },
+      {
+        path: "uploadDokumenPemindahbukuan",
+        name: "uploadDokumenPemindahbukuan",
+        component: UploadDokumenPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Upload Dokumen",
+          subtitle: "Lengkapi dokumen yang dibutuhkan untuk melanjutkan pembukaan rekening"
+        },
+      }, {
+        path: "previewPemindahbukuan",
+        name: "PreviewScreenPemindahbukuan",
+        component: PreviewScreenPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Hasil Foto",
+          persistNavbar: true,
+          title: (route) => {
+            const documentTypes = route.query.documentType; // Baca dari query parameters
+            console.log('Nilai documentType di meta.title:', documentTypes);
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Foto e-KTP';
+              case 'npwp':
+                return 'Foto NPWP';
+              case 'tandaTangan':
+                return 'Foto Tanda Tangan';
+              case 'fotoDiri':
+                return 'Ambil Foto Wajah';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+          subtitle: (route) => {
+            const documentTypes = route.query.documentType;
+            switch (documentTypes) {
+              case 'ktp':
+                return 'Pastikan foto e-KTP Anda memiliki kualitas yang baik sehingga semua informasi dapat terbaca dengan jelas. Jika sudah memenuhi syarat, foto tersebut dapat langsung diunggah atau diupload.';
+              case 'fotoDiri':
+                return 'Pastikan wajah Anda terlihat jelas, menghadap kamera, dan berada di dalam area yang ditentukan. Foto ini akan digunakan untuk proses verifikasi wajah sebagai bagian dari keamanan dan identifikasi data diri Anda.';
+              default:
+                return 'Hasil Foto';
+            }
+          },
+        },
+        props: (route) => ({
+          documentType: route.params.documentType,
+        }),
+      },
+      {
+        path: "dataKTPPemindahbukuan",
+        name: "dataKTPPemindahbukuan",
+        component: DataKTPPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Data E-KTP",
+          subtitle:
+            "Jika terdapat kesalahan atau ketidaksesuaian pada data, Anda dapat segera memperbaikinya sebelum proses dilanjutkan.",
+        },
+      },
+      {
+        path: "konfirmasiDataPemindahbukuan",
+        name: "konfirmasiDataPemindahbukuan",
+        component: KonfirmasiDataPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Yuk, Konfirmasi Semua Data Anda", subtitle: "Sebelum selesai, mohon untuk periksa kembali data yang telah Anda isi"
+        },
+      },
+      {
+        path: "dataPengirimPemindahbukuan",
+        name: "dataPengirimPemindahbukuan",
+        component: DataPengirimPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Lengkapi Data Pengirim dan Penerima",
+          subtitle: "Silakan lengkapi informasi data diri Pengirim dan Penerima secara lengkap dan sesuai dengan identitas asli masing-masing pihak agar proses transfer dapat diproses dengan aman dan akurat."
+
+        },
+      },
+      {
+        path: "dataPenerimaPemindahbukuan",
+        name: "dataPenerimaPemindahbukuan",
+        component: DataPenerimaPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Lengkapi Data Penerima",
+          subtitle: "Untuk melanjutkan proses, kami memerlukan informasi tambahan terkait data penerima sumber dana."
+
+        },
+      },
+      {
+        path: "emailOTPPemindahbukuan",
+        name: "emailOTPPemindahbukuan",
+        component: EmailOTPPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Konfirmasi OTP"
+        },
+      },
+      {
+        path: "panduanKameraPemindahbukuan",
+        name: "panduanKameraPemindahbukuan",
+        component: PanduanKameraPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Panduan untuk mengaktifkan Pop-up",
+          subtitle: "Untuk melanjutkan ke proses berikutnya, silakan aktifkan Pop-up di browser Anda terlebih dahulu."
+        },
+      },
+      {
+        path: "tandaTanganDigitalPemindahbukuan",
+        name: "tandaTanganDigitalPemindahbukuan",
+        component: TandaTanganDigitalPemindahbukuan,
+        meta: {
+          feature: "Transfer",
+          title: "Tanda Tangan Digital"
+        },
+      },
+      {
+        path: "halamanSuksesPemindahbukuan",
+        name: "halamanSuksesPemindahbukuan",
+        component: HalamanSuksesPemindahbukuan,
+        meta: {
+          feature: "Transfer",
         },
       },
     ],
@@ -819,255 +1299,6 @@ const router = createRouter({
   },
 });
 
+
+
 export default router;
-
-// import { createRouter, createWebHistory } from "vue-router";
-// import LoginView from "../views/LoginView.vue";
-// import HomeView from "../views/HomeView.vue";
-
-// import BeritaKampusView from "../views/beritakampus/BeritaKampusView.vue";
-// import LaporanViewVue from "../views/laporan/LaporanView.vue";
-
-// // Aset Gambar
-// import AsetGambarView from "../views/asetgambar/AsetGambarView.vue";
-// import AsetGambarDetailView from "@/views/asetgambar/AsetGambarDetailView.vue";
-
-// import UserProfileView from "../views/usercms/UserProfileView.vue";
-// import NotificationItemDetailView from "../views/notifikasi/NotificationItemDetailView.vue";
-// import DashboardWeAreUi from "../views/DashboardWeAreUi.vue";
-// import DataTempatView from "../views/tempat/DataTempatView.vue";
-
-// import CustomerView from "../views/CustomerView.vue";
-// import CustomerDetailView from "@/views/customermanagement/CustomerDetailView.vue";
-
-// // CMS User Management
-// import CmsUserView from "../views/CmsUserView.vue";
-// import CmsUserDetailView from "../views/cmsusermanagement/CmsUserDetailView.vue";
-
-// // E-money
-// import EmoneyView from "../views/emoney/EmoneyView.vue";
-// import TopUpMethodView from "../views/emoney/TopUpMethodView.vue";
-// import ExploreEmoneyView from "../views/emoney/ExploreEmoneyView.vue";
-// import TransactionEmoneyView from "../views/emoney/TransactionEmoneyView.vue";
-
-// // Asrama
-// import AsramaDashboardView from "../views/layanan/asrama/AsramaDashboardView.vue";
-// import AsramaKamarView from "../views/layanan/asrama/AsramaKamarView.vue";
-// import AsramaPendaftaranView from "../views/layanan/asrama/AsramaPendaftaranView.vue";
-// import AsramaPendaftaranEdit from "../views/layanan/asrama/EditScreen/AsramaPendaftaranEdit.vue";
-// import AsramaPembayaranView from "../views/layanan/asrama/AsramaPembayaranView.vue";
-// import AsramaPembayaranEdit from "../views/layanan/asrama/EditScreen/AsramaPembayaranEdit.vue";
-// import AsramaPengaturanView from "../views/layanan/asrama/AsramaPengaturanView.vue";
-// import AsramaPenghuniView from "../views/layanan/asrama/AsramaPenghuniView.vue";
-// import AsramaPenghuniEdit from "../views/layanan/asrama/EditScreen/AsramaPenghuniEdit.vue";
-// import PengaturanUmumAsramaView from "../views/layanan/asrama/pengaturan/PengaturanUmumAsrama.vue";
-// import PengaturanTataTertibAsramaView from "../views/layanan/asrama/pengaturan/PengaturanTataTertibAsrama.vue";
-// import PengaturanPaketAsramaView from "../views/layanan/asrama/pengaturan/PengaturanPaketAsrama.vue";
-// import PengaturanAlurPendaftaranAsramaView from "../views/layanan/asrama/pengaturan/PengaturanAlurPendaftaranAsrama.vue";
-// import PengaturanFaqAsramaView from "../views/layanan/asrama/pengaturan/PengaturanFaqAsrama.vue";
-// import PengaturanNotifikasiAsramaView from "../views/layanan/asrama/pengaturan/PengaturanNotifikasiAsrama.vue";
-// import AsramaNotifikasiEdit from "../views/layanan/asrama/EditScreen/AsramaPengaturanNotifikasiEdit.vue";
-
-// // Parkir
-// import ParkirDashboardView from "../views/layanan/parkir/ParkirDashboardView.vue";
-// import ParkirLanggananView from "../views/layanan/parkir/ParkirLanggananView.vue";
-// import ParkirLanggananEdit from "../views/layanan/parkir/EditScreen/ParkirLanggananEdit.vue";
-// import ParkirPengaturanView from "../views/layanan/parkir/ParkirPengaturanView.vue";
-// import ParkirRiwayatView from "../views/layanan/parkir/ParkirRiwayatView.vue";
-// import PengaturanAlurPendaftaranParkirView from "../views/layanan/parkir/pengaturan/PengaturanAlurPendaftaranParkirView.vue";
-// import PengaturanCaraPenggunaanParkirView from "../views/layanan/parkir/pengaturan/PengaturanCaraPenggunaanParkirView.vue";
-// import PengaturanFaqParkirView from "../views/layanan/parkir/pengaturan/PengaturanFaqParkirView.vue";
-// import PengaturanKetentuanPelangganParkirView from "../views/layanan/parkir/pengaturan/PengaturanKetentuanPelangganParkirView.vue";
-// import PengaturanNotifikasiParkirView from "../views/layanan/parkir/pengaturan/PengaturanNotifikasiParkirView.vue";
-// import PengaturanPaketParkirView from "../views/layanan/parkir/pengaturan/PengaturanPaketParkirView.vue";
-// import PengaturanPeraturanParkirView from "../views/layanan/parkir/pengaturan/PengaturanPeraturanParkirView.vue";
-// import PengaturanTempatParkirView from "../views/layanan/parkir/pengaturan/PengaturanTempatParkirView.vue";
-// import PengaturanUmumParkirView from "../views/layanan/parkir/pengaturan/PengaturanUmumParkirView.vue";
-// import ParkirNotifikasiEdit from "../views/layanan/parkir/EditScreen/ParkirPengaturanNotifikasiEdit.vue";
-
-// // Tenant
-// import TenantDashboardView from "../views/layanan/tenant/TenantDashboardView.vue";
-// import TenantPendaftaranView from "../views/layanan/tenant/TenantPendaftaranView.vue";
-// import TenantPendaftaranEdit from "../views/layanan/tenant/EditScreen/TenantPendaftaranEdit.vue";
-// import TenantPengaturanView from "../views/layanan/tenant/TenantPengaturanView.vue";
-// import TenantPenjualView from "../views/layanan/tenant/TenantPenjualView.vue";
-// import TenantNotifikasiEdit from "../views/layanan/tenant/EditScreen/TenantPengaturanNotifikasiEdit.vue";
-// import TenantPenjualEdit from "../views/layanan/tenant/EditScreen/TenantPenjualEdit.vue";
-// import TenantPengaturanAlurPendaftaranView from "../views/layanan/tenant/pengaturan/PengaturanAlurPendaftaranTenantView.vue";
-// import TenantPengaturanFaqView from "../views/layanan/tenant/pengaturan/PengaturanFaqTenantView.vue";
-// import TenantPengaturanNotifikasiView from "../views/layanan/tenant/pengaturan/PengaturanNotifikasiTenantView.vue";
-// import TenantPengaturanTataTertibView from "../views/layanan/tenant/pengaturan/PengaturanTataTertibTenantView.vue";
-// import TenantPengaturanUmumView from "../views/layanan/tenant/pengaturan/PengaturanUmumTenantView.vue";
-
-// // Pengaturan Umum
-// import PengaturanView from "../views/pengaturan/PengaturanView.vue";
-// import PengaturanNotifikasiView from "../views/pengaturan/detail/NotifikasiPengaturanView.vue";
-// import PengaturanUrutLayananView from "../views/pengaturan/detail/UrutanLayananPengaturanView.vue";
-
-// // Kantin
-// import KantinDashboardView from "../views/layanan/kantin/KantinDashboardView.vue";
-// import OtherKantinView from "../views/layanan/kantin/OtherKantinView.vue";
-
-// const router = createRouter({
-//   history: createWebHistory(import.meta.env.BASE_URL),
-//   routes: [
-//     {
-//       path: "/login",
-//       name: "login",
-//       component: LoginView,
-//     },
-//     {
-//       path: "/",
-//       name: "WeAreUI CMS",
-//       component: DashboardWeAreUi,
-//       children: [
-//         {
-//           path: "",
-//           name: "Dashboard",
-//           component: HomeView,
-//         },
-//         {
-//           path: "/data-tempat",
-//           name: "data tempat",
-//           component: DataTempatView,
-//         },
-//         {
-//           path: "/berita-kampus",
-//           name: "berita-kampus",
-//           component: BeritaKampusView,
-//         },
-//         { path: "/laporan", name: "laporan", component: LaporanViewVue },
-
-//         // aset gambar
-//         {
-//           path: "/aset-gambar",
-//           name: "asset gambar",
-//           component: AsetGambarView,
-//         },
-//         {
-//           path: "/aset-gambar/detail",
-//           name: "detail asset gambar",
-//           component: AsetGambarDetailView,
-//         },
-
-//         {
-//           path: "/profile-cms-user",
-//           name: "profile CMS User",
-//           component: UserProfileView,
-//         },
-//         {
-//           path: "/notification-item",
-//           name: "notification item",
-//           component: NotificationItemDetailView,
-//         },
-
-//         // customer management
-//         { path: "/customer", name: "Customer", component: CustomerView },
-//         {
-//           path: "/customer/detail-customer",
-//           name: "Customer Detail",
-//           component: CustomerDetailView,
-//         },
-
-//         // cms user management
-//         { path: "/cmsuser", name: "CMS User", component: CmsUserView },
-//         {
-//           path: "/cmsuser/detail-user",
-//           name: "CMS User Detail",
-//           component: CmsUserDetailView,
-//         },
-
-//         // emoney
-//         { path: "/emoney", name: "emoney", component: EmoneyView },
-//         {
-//           path: "/emoney/transaction",
-//           name: "Transaksi",
-//           component: TransactionEmoneyView,
-//         },
-//         {
-//           path: "/emoney/topupmethod",
-//           name: "Cara Top-Up",
-//           component: TopUpMethodView,
-//         },
-//         {
-//           path: "/emoney/explore",
-//           name: "Explore",
-//           component: ExploreEmoneyView,
-//         },
-//         {
-//           path: "/emoney/transaction",
-//           name: "Transaksi",
-//           component: TransactionEmoneyView,
-//         },
-
-//         // asrama
-//         { path: "/asrama", name: "Asrama", component: AsramaDashboardView },
-//         { path: "/asrama/kamar", name: "kamar asrama", component: AsramaKamarView },
-//         { path: "/asrama/pembayaran", name: "pembayaran asrama", component: AsramaPembayaranView },
-//         { path: "/asrama/pembayaran/edit", name: "edit pembayaran asrama", component: AsramaPembayaranEdit },
-//         { path: "/asrama/pendaftaran", name: "pendaftaran asrama", component: AsramaPendaftaranView },
-//         { path: "/asrama/pendaftaran/edit", name: "edit pendaftaran asrama", component: AsramaPendaftaranEdit },
-//         { path: "/asrama/pengaturan", name: "pengaturan asrama", component: AsramaPengaturanView },
-//         { path: "/asrama/pengaturan/notifikasi", name: "notifikasi asrama", component: PengaturanNotifikasiAsramaView },
-//         { path: "/asrama/pengaturan/pengaturan-umum", name: "pengaturan umum", component: PengaturanUmumAsramaView },
-//         { path: "/asrama/pengaturan/tata-tertib", name: "tata tertib", component: PengaturanTataTertibAsramaView },
-//         { path: "/asrama/pengaturan/paket", name: "paket asrama", component: PengaturanPaketAsramaView },
-//         { path: "/asrama/pengaturan/alur-pendaftaran", name: "alur pendaftaran", component: PengaturanAlurPendaftaranAsramaView },
-//         { path: "/asrama/pengaturan/faq", name: "faq", component: PengaturanFaqAsramaView },
-//         { path: "/asrama/penghuni", name: "penghuni asrama", component: AsramaPenghuniView },
-//         { path: "/asrama/penghuni/edit", name: "data penghuni", component: AsramaPenghuniEdit },
-//         { path: "/asrama/notifikasi/edit", name: "edit asrama notifikasi", component: AsramaNotifikasiEdit },
-
-//         // Parkir
-//         { path: "/parkir", name: "parkir", component: ParkirDashboardView },
-//         { path: "/parkir/langganan", name: "parkir langganan", component: ParkirLanggananView },
-//         { path: "/parkir/langganan/edit", name: "edit parkir langganan", component: ParkirLanggananEdit },
-//         { path: "/parkir/pengaturan", name: "parkir pengaturan", component: ParkirPengaturanView },
-//         { path: "/parkir/pengaturan/pengaturan-umum", name: "pengaturan umum parkir", component: PengaturanUmumParkirView },
-//         { path: "/parkir/pengaturan/tempat-parkir", name: "pengaturan tempat parkir", component: PengaturanTempatParkirView },
-//         { path: "/parkir/pengaturan/alur-parkir", name: "pengaturan alur pendaftaran langganan parkir", component: PengaturanAlurPendaftaranParkirView },
-//         { path: "/parkir/pengaturan/cara-penggunaan-parkir", name: "pengaturan cara penggunaan parkir", component: PengaturanCaraPenggunaanParkirView },
-//         { path: "/parkir/pengaturan/faq-parkir", name: "pengaturan faq parkir", component: PengaturanFaqParkirView },
-//         { path: "/parkir/pengaturan/peraturan-parkir", name: "pengaturan peraturan parkir", component: PengaturanPeraturanParkirView },
-//         { path: "/parkir/pengaturan/paket-parkir", name: "pengaturan paket parkir", component: PengaturanPaketParkirView },
-//         { path: "/parkir/pengaturan/notifikasi-parkir", name: "pengaturan notifikasi parkir", component: PengaturanNotifikasiParkirView },
-//         { path: "/parkir/pengaturan/ketentuan-pelanggan", name: "pengaturan ketentuan pelanggan", component: PengaturanKetentuanPelangganParkirView },
-//         { path: "/parkir/riwayat", name: "parkir riwayat", component: ParkirRiwayatView },
-//         { path: "/parkir/notifikasi/edit", name: "edit parkir notifikasi", component: ParkirNotifikasiEdit },
-
-//         // tenant
-//         { path: "/tenant", name: "tenant", component: TenantDashboardView },
-//         { path: "/tenant/pendaftaran", name: "tenant pendaftaran", component: TenantPendaftaranView },
-//         { path: "/tenant/pendaftaran/edit", name: "edit tenant pendaftaran", component: TenantPendaftaranEdit },
-//         { path: "/tenant/pengaturan", name: "tenant pengaturan", component: TenantPengaturanView },
-//         { path: "/tenant/pengaturan/alur-pendaftaran", name: "alur pendaftaran tenant", component: TenantPengaturanAlurPendaftaranView },
-//         { path: "/tenant/pengaturan/faq", name: "faq tenant", component: TenantPengaturanFaqView },
-//         { path: "/tenant/pengaturan/notifikasi", name: "notifikasi tenant", component: TenantPengaturanNotifikasiView },
-//         { path: "/tenant/pengaturan/tata-tertib", name: "tata tertib tenant", component: TenantPengaturanTataTertibView },
-//         { path: "/tenant/pengaturan/pengaturan-umum", name: "pengaturan umum tenant", component: TenantPengaturanUmumView },
-//         { path: "/tenant/penjual", name: "tenant penjual", component: TenantPenjualView },
-//         { path: "/tenant/penjual/edit", name: "edit tenant penjual", component: TenantPenjualEdit },
-//         { path: "/tenant/notifikasi/edit", name: "edit tenant notifikasi", component: TenantNotifikasiEdit },
-
-//         // kantin
-//         { path: "/kantin", name: "Kantin", component: KantinDashboardView },
-//         { path: "/kantin/other", name: "Other", component: OtherKantinView },
-
-//         // pengaturan
-//         { path: "/pengaturan", name: "pengaturan", component: PengaturanView },
-//         {
-//           path: "/pengaturan/notifikasi",
-//           name: "notifikasi",
-//           component: PengaturanNotifikasiView,
-//         },
-//         {
-//           path: "/pengaturan/urutan-layanan",
-//           name: "urutan layanan",
-//           component: PengaturanUrutLayananView,
-//         },
-//       ],
-//     },
-//   ],
-// });
-
-// export default router;

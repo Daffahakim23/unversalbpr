@@ -13,7 +13,7 @@
     <!-- Menampilkan alamat setelah memilih kantor cabang -->
     <div v-if="form.kantorCabang" class="mt-4">
       <FormField
-        label="Alamat Kantor Cabang"
+        label="Alamat Jaringan Kantor"
         id="alamatKantorCabang"
         v-model="form.alamatKantorCabang"
         :readonly="true"
@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     isButtonDisabled() {
-      return !this.form.kantorCabang; // Memastikan input tidak hanya berupa spasi
+      return !this.form.kantorCabang; 
     },
   },
   methods: {

@@ -1,7 +1,7 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" role="dialog">
         <div tabindex="0"
-            class="w-1/2 sm:w-1/2 max-w-lg flex flex-col bg-white rounded-3xl py-16 px-8 border border-neutral-200 relative">
+            class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="flex flex-col">
                 <div v-for="(feature, index) in features" :key="index" class="rounded-lg text-center">
                     <div class="flex justify-center items-center mb-8">

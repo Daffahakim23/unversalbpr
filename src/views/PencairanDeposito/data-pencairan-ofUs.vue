@@ -1,13 +1,63 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <FormField label="Nama Bank*" id="namaBank" v-model="form.namaBank" placeholder="Masukkan Nama Bank" required />
-
-    <FormField label="Nomor Rekening*" id="nomorRekening" v-model="form.nomorRekening"
-      placeholder="Masukkan Nomor Rekening" required />
-
-    <FormField label="Nama Pemilik Rekening*" id="namaPemilikRekening" v-model="form.namaPemilikRekening"
-      placeholder="Masukkan Nama Pemilik Rekening" required />
-
+    <div class="mb-4">
+      <div v-if="form.namaLengkap && form.nomorRekening && form.namaBank">
+        <div class="flex flex-row items-center justify-between mb-2 w-full">
+          <h2 class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900">Detail Penerima</h2>
+          <button @click="openModalUbah"
+            class="flex items-center gap-2 text-primary-500 hover:text-primary-600 focus:outline-none">
+            <h2 class="text-xs sm:text-sm md:text-sm font-medium text-primary">Ubah</h2>
+            <img src="@/assets/icon-edit.svg" alt="Icon" class="w-5 h-5" />
+          </button>
+        </div>
+        <div class="border border-gray-300 rounded-md px-4 py-4">
+          <div class="flex justify-between items-center w-full">
+            <div class="flex flex-col gap-2">
+              <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nama Lengkap</p>
+              <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.namaLengkap }}</p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nomor rekening</p>
+              <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.nomorRekening }}</p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <p class="text-xs sm:text-sm md:text-sm font-regular text-neutral-700">Nama Bank</p>
+              <p class="text-xs sm:text-sm md:text-sm font-semibold">{{ form.namaBank }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="">
+        <h2 class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900 mb-2">Detail Penerima*</h2>
+        <div class="border border-dashed border-gray-300 rounded-md px-4 py-3 flex items-center justify-between">
+          <span class="text-gray-500">Belum Ada Penerima</span>
+          <ButtonComponent variant="outline" @click="openModal" class="mb-1">
+            Masukkan
+          </ButtonComponent>
+        </div>
+      </div>
+    </div>
+    <div v-if="filteredMetodePencairan.length > 0" class="space-y-2 mb-4">
+      <h2 class="block text-xs sm:text-sm md:text-sm font-medium text-neutral-900 mb-2">Metode Transfer*</h2>
+      <div v-for="method in filteredMetodePencairan" :key="method.id" @click="selectedTransferMethod = method.id"
+        :class="[
+          'border rounded-md p-4 cursor-pointer',
+          { 'border-green-500 bg-green-50': selectedTransferMethod === method.id }
+        ]">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-semibold">{{ method.name }} (Biaya {{ formatCurrency(method.fee) }})</h3>
+            <p class="text-sm text-gray-600">{{ method.limit }}</p>
+            <p class="text-xs text-gray-500">{{ method.availability }}</p>
+          </div>
+          <img v-if="selectedTransferMethod === method.id" src="@/assets/Checkmark-icon.svg" alt="Terpilih"
+            class="w-5 h-5 m-1 text-green-500">
+        </div>
+      </div>
+    </div>
+    <div v-else class="text-gray-500 mb-4">
+      Metode pencairan tidak tersedia untuk nominal ini.
+    </div>
     <div class="flex justify-between mt-6">
       <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>
       <ButtonComponent variant="default" type="submit" :disabled="isButtonDisabled">
@@ -15,6 +65,8 @@
       </ButtonComponent>
     </div>
   </form>
+  <ReusableModal :isOpen="isModalOpen" rekeningData="rekeningData" @close="isModalOpen = false"
+    :handleTransfer="handleTransferFromModal" />
 </template>
 
 <script>
@@ -24,15 +76,18 @@ import FormField from "@/components/FormField.vue";
 import RadioButtonChoose from "@/components/RadioButton.vue";
 import ButtonComponent from "@/components/button.vue";
 import { useFileStore } from "@/stores/filestore";
-import { jangkaWaktuDepositoUniversalOptions, jangkaWaktuDepositoDEBUTSanmereOptions, jangkaWaktuDepositoDEBUTMatiusOptions, jangkaWaktuDepositoPeduliOptions, jangkaWaktuDepositoGreenOptions, metodePencairanOptions, pembayaranBungaOptions, produkDepositoOptions, } from "@/data/option.js";
 import { FormModelPenempatanDeposito } from "@/models/formModel";
+import ReusableModal from "@/components/ModalRekeningTransfer.vue";
+import { toTerbilang } from "@/utils/toTerbilang.js";
 
 export default {
   components: {
     FormField,
     RadioButtonChoose,
     ButtonComponent,
+    ReusableModal,
   },
+  emits: ['updateProgress'],
   setup() {
     const fileStore = useFileStore();
     return { fileStore };
@@ -41,24 +96,76 @@ export default {
     return {
       form: new FormModelPenempatanDeposito(),
       isChecked: false,
-      metodePencairanOptions,
-      produkDepositoOptions,
-      jangkaWaktuDepositoUniversalOptions,
-      jangkaWaktuDepositoDEBUTMatiusOptions,
-      jangkaWaktuDepositoDEBUTSanmereOptions,
-      jangkaWaktuDepositoPeduliOptions,
-      jangkaWaktuDepositoGreenOptions,
-      pembayaranBungaOptions
-
+      isModalOpen: false,
+      transferMethods: [
+        {
+          id: "RTGS",
+          name: "RTGS",
+          fee: "30000",
+          limit: "> Rp 100.000.001",
+          availability: "Tersedia pukul 08:30-12:00 WIB di hari kerja. Pengajuan transaksi di luar jam ini akan diproses di hari kerja berikutnya.",
+          value: 1,
+        },
+        {
+          id: "LLG",
+          name: "LLG",
+          fee: "2900",
+          limit: "Limit Rp50.000.001-100.000.000",
+          availability: "Tersedia pukul 08:30-12:00 WIB di hari kerja. Pengajuan transaksi di luar jam kerja ini akan diproses di hari kerja berikutnya.",
+          value: 2,
+        },
+        {
+          id: "Transfer Online",
+          name: "Transfer Online",
+          fee: "7500",
+          limit: "Limit Rp 10.000-50.000.000",
+          availability: "Tersedia pukul 08:30-14:00 WIB di hari kerja. Pengajuan transaksi di luar jam ini akan diproses di hari kerja berikutnya.",
+          value: 3,
+        },
+      ],
+      modelData: {
+        namaLengkap: "",
+        nomorRekening: "",
+        namaBank: "",
+        pembayaranBunga: "",
+      },
+      selectedTransferMethod: null,
     };
   },
   computed: {
     isButtonDisabled() {
-      return !(
-        this.form.namaBank &&
-        this.form.nomorRekening &&
-        this.form.namaPemilikRekening
-      );
+      // Cek apakah detail penerima sudah diisi
+      const isRecipientFilled = this.form.namaLengkap && this.form.nomorRekening && this.form.namaBank;
+
+      // Cek apakah metode transfer sudah dipilih
+      const isTransferMethodSelected = this.selectedTransferMethod !== null;
+
+      // Tombol akan disabled jika salah satu kondisi di atas tidak terpenuhi
+      return !(isRecipientFilled && isTransferMethodSelected);
+    },
+    formattedNominal: {
+      get() {
+        return this.form.nominal !== null && this.form.nominal !== undefined
+          ? `Rp ${this.form.nominal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+          : "";
+      },
+      set(value) {
+        this.updateNominal(value);
+      },
+    },
+
+    filteredMetodePencairan() {
+      const nominal = parseInt(this.form.nominal) || 0;
+      console.log("Nominal saat filter:", nominal);
+      if (nominal >= 10000 && nominal <= 50000000) {
+        return this.transferMethods.filter((method) => method.id === "Transfer Online");
+      } else if (nominal >= 50000001 && nominal <= 100000000) {
+        return this.transferMethods.filter((method) => method.id === "Transfer Online" || method.id === "LLG");
+      } else if (nominal > 100000000) {
+        return this.transferMethods;
+      } else {
+        return [];
+      }
     },
 
     formattedBunga() {
@@ -71,29 +178,130 @@ export default {
         currency: "IDR",
       }).format(bunga);
     },
+
   },
   watch: {
+    "fileStore.formPenempatanDeposito": {
+      handler() {
+        this.fetchData();
+      },
+      deep: true,
+    },
     "form.nominal"(newVal) {
       this.form.terbilang = this.toTerbilang(parseInt(newVal) || 0);
     },
+    isModalOpen(newValue) {
+      if (!newValue) {
+        this.modalData = {
+          namaLengkap: "",
+          nomorRekening: "",
+          namaBank: "",
+        };
+      }
+    },
+    "form.nominal"(newVal) {
+      console.log("form.nominal berubah menjadi:", newVal);
+      if (newVal !== null && newVal !== undefined) {
+        this.selectedTransferMethod = null;
+      }
+      this.form.terbilang = this.toTerbilang(parseInt(newVal) || 0);
+      if (newVal === 0) {
+        this.nominalError = "Nominal tidak boleh 0.";
+      } else {
+        this.nominalError = null;
+        // this.validateNominal();
+      }
+      if (newVal && newVal.toString().length > 12) {
+        this.nominalError = "Nominal tidak boleh lebih dari 12 digit.";
+      }
+    },
   },
   methods: {
+    formatCurrency(amount) {
+      let amountNumber = parseFloat(amount);
+      if (isNaN(amountNumber)) {
+        return amount;
+      }
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amountNumber);
+    },
+    handleTransferFromModal(data) {
+      this.fileStore.setFormPenempatanDeposito({
+        namaLengkap: data.namaLengkap,
+        namaBank: data.namaBank,
+        nomorRekening: data.nomorRekening,
+      });
+      this.isModalOpen = false;
+    },
+    clearRecipientData() {
+      this.fileStore.setFormPenempatanDeposito({
+        ...this.fileStore.formPenempatanDeposito,
+        namaLengkap: "",
+        nomorRekening: "",
+        namaBank: "",
+      });
+
+      this.form.namaLengkap = "";
+      this.form.nomorRekening = "";
+      this.form.namaBank = "";
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    openModalUbah() {
+      this.clearRecipientData();
+    },
     updateNominal(value) {
       const rawValue = value.replace(/\D/g, "");
       this.form.nominal = rawValue ? parseInt(rawValue, 10) : 0;
     },
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/penempatan-deposito");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
+    async fetchData() {
+      try {
+        const fileStore = useFileStore();
+        const emailData = fileStore.formEmailRequestDepositoNTB;
+        const depositoData = fileStore.formPenempatanDeposito;
+        const pencairanDeposito = fileStore.formInstruksiPencairanDeposito;
+
+        if (emailData) {
+          Object.keys(this.form).forEach((key) => {
+            if (emailData[key] !== undefined) {
+              this.form[key] = emailData[key];
+            }
+          });
+        }
+
+        if (depositoData) {
+          Object.keys(this.form).forEach((key) => {
+            if (depositoData[key] !== undefined) {
+              this.form[key] = depositoData[key];
+            }
+          });
+        }
+
+        if (depositoData && depositoData.namaLengkap !== undefined) {
+          this.form.namaLengkap = depositoData.namaLengkap;
+        }
+
+        if (depositoData && depositoData.nomorRekening !== undefined) {
+          this.form.nomorRekening = depositoData.nomorRekening;
+        }
+
+        if (depositoData && depositoData.namaBank !== undefined) {
+          this.form.namaBank = depositoData.namaBank;
+        }
+
+        if (pencairanDeposito && pencairanDeposito.nominal !== undefined) {
+          this.form.nominal = pencairanDeposito.nominal;
+        }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
     goBack() {
       this.$router.push({ path: "/dashboard/dataInstruksiPencairanDeposito" });
     },
@@ -107,11 +315,22 @@ export default {
           return;
         }
 
+        const selectedMethodObject = this.transferMethods.find(
+          (method) => method.id === this.selectedTransferMethod
+        );
+
+        const metodeTransferValue = selectedMethodObject ? selectedMethodObject.value : null;
+        const metodeTransferName = selectedMethodObject ? selectedMethodObject.name : null;
+        // const metodeTransferFee = selectedMethodObject ? selectedMethodObject.fee : null;
+        const metodeTransferFee = selectedMethodObject ? parseFloat(selectedMethodObject.fee) : null;
+
         const requestData = {
           uuid: uuid,
           nama_bank: this.form.namaBank,
           nomor_rekening: this.form.nomorRekening,
           nama_pemilik: this.form.namaPemilikRekening,
+          metode_transfer: metodeTransferValue,
+          biaya_transfer: metodeTransferFee
         };
 
         console.log("Request data:", requestData);
@@ -125,7 +344,11 @@ export default {
 
         if (response.status === 201 || response.status === 200) {
           console.log("Data berhasil dikirim:", response.data);
-          this.fileStore.setFormInstruksiPencairanDeposito(this.form);
+          this.fileStore.setFormDataPencairanDeposito({
+            ...this.form,
+            metodeTransfer: metodeTransferName,
+            biayaTransfer: metodeTransferFee,
+          });
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/konfirmasiDataPencairanDeposito" });
         } else {
@@ -138,79 +361,13 @@ export default {
         console.error("Error saat mengirim data:", error);
       }
     },
-    toTerbilang(angka) {
-      const satuan = [
-        "",
-        "Satu",
-        "Dua",
-        "Tiga",
-        "Empat",
-        "Lima",
-        "Enam",
-        "Tujuh",
-        "Delapan",
-        "Sembilan",
-      ];
-      const belasan = [
-        "Sepuluh",
-        "Sebelas",
-        "Dua Belas",
-        "Tiga Belas",
-        "Empat Belas",
-        "Lima Belas",
-        "Enam Belas",
-        "Tujuh Belas",
-        "Delapan Belas",
-        "Sembilan Belas",
-      ];
-      const puluhan = [
-        "",
-        "",
-        "Dua Puluh",
-        "Tiga Puluh",
-        "Empat Puluh",
-        "Lima Puluh",
-        "Enam Puluh",
-        "Tujuh Puluh",
-        "Delapan Puluh",
-        "Sembilan Puluh",
-      ];
-      const ribuan = ["", "Ribu", "Juta", "Miliar", "Triliun"];
-
-      if (angka === 0) return "Masukkan Nominal Penempatan Deposito";
-
-      let hasil = "";
-      let i = 0;
-      while (angka > 0) {
-        let tigaDigit = angka % 1000;
-        if (tigaDigit !== 0) {
-          let ratus = Math.floor(tigaDigit / 100);
-          let puluh = Math.floor((tigaDigit % 100) / 10);
-          let satu = tigaDigit % 10;
-          let bagian = "";
-
-          if (ratus > 0) {
-            bagian += ratus === 1 ? "Seratus " : satuan[ratus] + " Ratus ";
-          }
-          if (puluh === 1) {
-            bagian += belasan[satu] + " ";
-          } else {
-            if (puluh > 1) bagian += puluhan[puluh] + " ";
-            if (satu > 0) bagian += satuan[satu] + " ";
-          }
-          hasil = bagian + ribuan[i] + " " + hasil;
-        }
-        angka = Math.floor(angka / 1000);
-        i++;
-      }
-      return hasil.trim() + " Rupiah";
-    },
+    toTerbilang,
   },
   mounted() {
     this.$emit("update-progress", 60);
   },
-  // created() {
-  //   this.fetchData();
-  // },
+  created() {
+    this.fetchData();
+  },
 };
 </script>

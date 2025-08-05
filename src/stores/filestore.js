@@ -1,15 +1,26 @@
 import { defineStore } from "pinia";
 export const useFileStore = defineStore("fileStore", {
   state: () => ({
+    envelope_id: null,
+    nik: null,
+    no_npwp: null,
+    npwp: null,
+    sign_url: null,
     uuid: null,
     alamat_email: null,
+    nama_lengkap: null,
     no_hp: null,
+    penalty: null,
     uploadedFiles: {
       ktp: null,
       npwp: null,
       fotoDiri: null,
       tandaTangan: null,
     },
+    ktpImage: null,
+    tandaTanganImage: null,
+    npwpImage: null,
+    fotoDiriImage: null,
     isKtpUploaded: false,
     isNpwpUploaded: false,
     isFotoDiriUploaded: false,
@@ -31,6 +42,10 @@ export const useFileStore = defineStore("fileStore", {
     formEmailRequestPencairanDeposito: {},
     formInstruksiPencairanDeposito: {},
     formDataPencairanDeposito: {},
+    formDataPemindahbukuan: {},
+    formDataPengirimPemindahbukuan: {},
+    formDataPenerimaPemindahbukuan: {},
+
   }),
   actions: {
     resetStore() {
@@ -39,8 +54,29 @@ export const useFileStore = defineStore("fileStore", {
     setUuid(value) {
       this.uuid = value;
     },
+    setNik(value) {
+      this.nik = value;
+    },
+    setNpwp(value) {
+      this.npwp = value;
+    },
+    setPenalty(value) {
+      this.penalty = value;
+    },
+    setNoNpwp(value) {
+      this.no_npwp = value;
+    },
     setEmail(value) {
       this.alamat_email = value;
+    },
+    setNamaLengkap(value) {
+      this.nama_lengkap = value;
+    },
+    setEnvelopeId(value) {
+      this.envelope_id = value;
+    },
+    setSignUrl(value) {
+      this.sign_url = value;
     },
     setNoHP(value) {
       this.no_hp = value;
@@ -104,5 +140,26 @@ export const useFileStore = defineStore("fileStore", {
     setFormDataPencairanDeposito(data) {
       this.formDataPencairanDeposito = data;
     },
+    setFormDataPemindahbukuan(data) {
+      this.formDataPemindahbukuan = data;
+    },
+    setFormDataPengirimPemindahbukuan(data) {
+      this.formDataPengirimPemindahbukuan = data;
+    },
+    setFormDataPenerimaPemindahbukuan(data) {
+      this.formDataPenerimaPemindahbukuan = data;
+    },
+    setKtpImage(imageData) {
+      this.ktpImage = imageData;
+    },
+    setTandaTanganImage(imageData) {
+      this.tandaTanganImage = imageData;
+    },
+    setNpwpImage(imageData) {
+      this.npwpImage = imageData;
+    },
+    setFotoDiriImage(imageData) {
+      this.fotoDiriImage = imageData;
+    }
   },
 });

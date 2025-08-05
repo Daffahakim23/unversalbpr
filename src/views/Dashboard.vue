@@ -2,26 +2,28 @@
   <div class="bg-neutral-white min-h-screen flex flex-col">
     <div class="flex items-center justify-between my-6 mx-10">
       <div class="flex text-center">
-        <button>
+        <button @click="goBack">
           <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 sm:h-12 md:h-12" />
         </button>
       </div>
 
-      <div class="flex flex-row gap-4">
-        <button class="flex items-center text-primary">
-          <img src="@/assets/info-button.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+      <div class="flex gap-4">
+        <button id="mainDropdownButton" data-dropdown-toggle="main-dropdown" class="focus:outline-none" type="button">
+          <img src="@/assets/info-mini-icon.svg" alt="Info Produk" class="h-8 block md:hidden" />
+          <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini" class="h-10 hidden md:block" />
         </button>
-        <button class="flex items-center text-primary">
-          <img src="@/assets/cs-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+        <DropdownMenu />
+        <button class="flex items-center text-primary" @click="openWhatsApp">
+          <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 md:h-10 lg:h-10" />
         </button>
       </div>
     </div>
 
     <!-- Main content section -->
-    <div class="flex-grow flex flex-col items-center p-10 bg-gray-100">
+    <div class="flex-grow flex flex-col items-center p-10 bg-neutral-50">
       <div class="flex flex-col justify-center w-full">
         <div class="flex flex-col mb-10">
-          <Header headerText="Selamat Datang Di E-Form Universal BPR"
+          <Header headerText="Selamat Datang Di Layanan E-Form Universal BPR"
             bodyText="Akses berbagai layanan Universal BPR kapan saja, di mana saja!" />
         </div>
       </div>
@@ -34,75 +36,76 @@
                   label: 'Pembukaan Rekening Tabungan',
                   description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningExisting')"
-                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
+              ]" icon="illus-pembukaan-rekening.svg"
+                :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningExisting')" @cardClick="handleCardClick"
+                buttonString="Ajukan Pembukaan Rekening Tabungan" />
               <Card type="1" :features="[
                 {
-                  label: 'Penempatan Deposito',
+                  label: 'Pembukaan Deposito',
                   description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoExisting')"
-                @cardClick="handleCardClick" buttonString="Ajukan Penempatan Deposito" />
+              ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoExisting')"
+                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Deposito" />
             </div>
 
             <div class="flex flex-col md:flex-row gap-4">
               <Card type="1" :features="[
                 {
-                  label: 'Pencairan Deposito',
+                  label: 'Penutupan Deposito',
                   description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => openCSModal({
-                label: 'Pencairan Deposito',
+              ]" icon="illus-penutupan-deposito.svg" :onBtnClick="() => openCSModal({
+                label: 'Penutupan Deposito',
                 description: 'Pencairan deposito khusus untuk nasabah yang menggunakan E-Advice',
-              })" @cardClick="handleCardClick" buttonString="Ajukan Pencairan Deposito" />
+              })" @cardClick="handleCardClick" buttonString="Ajukan Penutupan Deposito" />
 
               <Card type="1" :features="[
                 {
-                  label: 'Pemindahbukuan',
-                  description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
+                  label: 'Transfer',
+                  description: 'Layanan transfer ke bank lain atau transfer ke rekening sesama Universal BPR hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="icon-deposito.svg" :onBtnClick="() => openCSModal({
-                label: 'Pemindah Bukuan',
-                description: 'Layanan transfer ke bank lain atau pemindahbukuan ke rekening sesama BPR Universal hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
+              ]" icon="illus-transfer.svg" :onBtnClick="() => openCSModal({
+                label: 'Transfer',
+                description: 'Layanan transfer ke bank lain atau transfer ke rekening sesama Universal BPR hanya dapat dilakukan secara pribadi dan tidak dapat diwakilkan',
                 dokumen: 'Foto/Scan KTP Elektronik',
-              })" @cardClick="handleCardClick" buttonString="Ajukan Pemindahbukuan" />
+              })" @cardClick="handleCardClick" buttonString="Ajukan Transfer" />
 
               <Card type="1" :features="[
                 {
                   label: 'Pengkinian Data',
                   description: 'Perbarui data Anda untuk meningkatkan keamanan dan kenyamanan dalam bertransaksi',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
                     { icon: 'mini-icon-phone.svg', text: 'No. Handphone Aktif' },
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/pengkinianData')"
+              ]" icon="illus-pengkinian.svg" :onBtnClick="() => navigateTo('/dashboard/pengkinianData')"
                 @cardClick="handleCardClick" buttonString="Ajukan Pengkinian Data" />
             </div>
           </div>
@@ -116,7 +119,7 @@
                   label: 'Pembukaan Rekening Tabungan',
                   description: 'Buka rekening tabungan untuk pribadi / individu tanpa ke kantor cabang.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'npwp.svg', text: 'NPWP' },
                     { icon: 'tanda-tangan.svg', text: 'Tanda Tangan Basah' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
@@ -124,14 +127,14 @@
                     { icon: 'mini-icon-fotoDiri.svg', text: 'Foto Diri' },
                   ]
                 }
-              ]" icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningNTB')"
+              ]" icon="illus-pembukaan-rekening.svg" :onBtnClick="() => navigateTo('/dashboard/pembukaanRekeningNTB')"
                 @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Rekening Tabungan" />
               <Card type="1" :features="[
                 {
-                  label: 'Penempatan Deposito',
+                  label: 'Pembukaan Deposito',
                   description: 'Buka Deposito berjangka untuk pribadi / individu dengan suku bunga deposito tinggi s.d. 6.75% aman dijamin LPS.',
                   dokumen: [
-                    { icon: 'ektp.svg', text: 'Foto/Scan KTP Elektronik' },
+                    { icon: 'ktp-mini-icon.svg', text: 'Foto/Scan KTP Elektronik' },
                     { icon: 'npwp.svg', text: 'NPWP' },
                     { icon: 'tanda-tangan.svg', text: 'Tanda Tangan Basah' },
                     { icon: 'mini-icon-email.svg', text: 'Email Aktif' },
@@ -140,7 +143,7 @@
                   ]
                 }
               ]" icon="icon-deposito.svg" :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoNTB')"
-                @cardClick="handleCardClick" buttonString="Ajukan Penempatan Deposito" />
+                @cardClick="handleCardClick" buttonString="Ajukan Pembukaan Deposito" />
             </div>
           </div>
         </Section>
@@ -153,7 +156,7 @@
   <CSModal :isOpen="showModalCS" @close="closeCSModal" :features="[selectedFeature]"
     :icon="selectedFeature ? 'icon-deposito.svg' : ''"
     :onBtnClick="() => navigateTo('/dashboard/penempatanDepositoNTB')" @cardClick="handleCardClick"
-    buttonString="Ajukan Penempatan Deposito" />
+    buttonString="Ajukan Pembukaan Deposito" />
 
 </template>
 
@@ -164,6 +167,13 @@ import Section from "@/components/Section.vue";
 import Card from "@/components/Card.vue";
 import Footer from "@/components/Footer.vue";
 import CSModal from "@/components/ModalCS.vue";
+import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
+import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
+import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
+import faqPdf from '@/assets/FAQ.pdf';
+import tentangKamiPdf from '@/assets/Tentang.pdf';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import { initDropdowns } from 'flowbite';
 
 var userType = '';
 
@@ -173,14 +183,93 @@ export default {
   mounted() {
     console.log('User Type:', this.$route.query.userType);
     userType = this.$route.query.userType;
+    document.addEventListener('click', this.handleClickOutside);
+    import('flowbite').then(() => {
+    });
+    initDropdowns();
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+    // this.resetNavbarConfig();
   },
   data() {
     return {
       showModalCS: false,
       selectedFeature: null,
+      isInfoProductDropdownOpen: false,
+      isInfoDropdownOpen: false,
     };
   },
   methods: {
+    getWhatsAppLink(number = 622122213993) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        return `https://wa.me/${number}`;
+      } else {
+        return `https://web.whatsapp.com/send?phone=${number}`;
+      }
+    },
+    openWhatsApp() {
+      if (this.whatsappContact.whatsapp) {
+        window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
+      }
+    },
+    toggleInfoProductDropdown() {
+      this.isInfoProductDropdownOpen = !this.isInfoProductDropdownOpen;
+    },
+    handleClickOutside(event) {
+      if (this.isInfoProductDropdownOpen && !this.$el.contains(event.target)) {
+        this.isInfoProductDropdownOpen = false;
+      }
+    },
+    downloadProductDetails() {
+      const fileUrl = infoProdukPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "INFO-PRODUK.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadSK() {
+      const fileUrl = syaratKetentuanPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Syarat & ketentuan.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadKP() {
+      const fileUrl = kebijakanPrivasiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Kebijakan Privasi.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadFAQ() {
+      const fileUrl = faqPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "FAQ.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadTentang() {
+      const fileUrl = tentangKamiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Tentang.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    goToHome() {
+      this.$router.push("/");
+    },
     openCSModal(feature) {
       this.selectedFeature = feature;
       this.showModalCS = true;
@@ -202,7 +291,9 @@ export default {
     Card,
     Footer,
     CSModal,
+    DropdownMenu
   },
+
 };
 </script>
 

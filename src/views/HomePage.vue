@@ -2,17 +2,19 @@
   <div class="bg-neutral-white min-h-screen flex flex-col">
     <div class="flex items-center justify-between my-6 mx-10">
       <div class="flex text-center">
-        <button>
+        <button @click="goBack">
           <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 sm:h-12 md:h-12" />
         </button>
       </div>
 
-      <div class="flex flex-row gap-4">
-        <button class="flex items-center text-primary">
-          <img src="@/assets/info-button.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+      <div class="flex gap-4">
+        <button id="mainDropdownButton" data-dropdown-toggle="main-dropdown" class="focus:outline-none" type="button">
+          <img src="@/assets/info-mini-icon.svg" alt="Info Produk" class="h-8 block md:hidden" />
+          <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini" class="h-10 hidden md:block" />
         </button>
-        <button class="flex items-center text-primary">
-          <img src="@/assets/cs-icon.svg" alt="Universal Care" class="h-8 sm:h-10 md:h-10" />
+        <DropdownMenu />
+        <button class="flex items-center text-primary" @click="openWhatsApp">
+          <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 md:h-10 lg:h-10" />
         </button>
       </div>
     </div>
@@ -22,10 +24,10 @@
       <div class="w-full md:w-2/3 flex-shrink-0 mb-16">
         <div class="text-center sm:text-center">
           <h1 class="text-3xl sm:text-4xl md:text-5xl mb-8 font-medium items-center">
-            Selamat Datang di Layanan Digital Universal BPR
+            Selamat Datang di Layanan E-Form Universal BPR
           </h1>
-          <p class="text-sm sm:text-base md:text-xl text-gray-500 ">
-            Silahkan pilih tipe nasabah untuk melanjutkan.
+          <p class="text-sm sm:text-base md:text-xl text-neutral-600 ">
+            Silakan pilih tipe nasabah untuk melanjutkan.
           </p>
         </div>
       </div>
@@ -37,14 +39,14 @@
             icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard', 'nasabah')"
             @cardClick="handleCardClick" buttonString="Saya adalah Nasabah Universal BPR" :items="[
               'Pembukaan Rekening Tabungan',
-              'Penempatan Deposito',
+              'Pembukaan Deposito',
               'Pengkinian Data',
-              'Pemindah bukuan',
-              'Pencairan Deposito'
+              'Transfer',
+              'Penutupan Deposito'
             ]" />
           <Card type="1" title="Masuk di sini"
             :features="[{ label: 'Non-Nasabah Universal BPR', description: 'Apabila Anda belum terdaftar sebagai Nasabah Universal BPR, silakan melalui registrasi pembukaan rekening Nasabah Baru, baik Tabungan maupun Deposito untuk dapat memperoleh berbagai layanan digital kami.' }]"
-            icon="homepage-icon.svg" :onBtnClick="() => navigateTo('/dashboard', 'non-nasabah')"
+            icon="illus-ntb.svg" :onBtnClick="() => navigateTo('/dashboard', 'non-nasabah')"
             @cardClick="handleCardClick" buttonString="Saya bukan Nasabah Universal BPR" />
         </Section>
       </div>
@@ -60,9 +62,71 @@ import Header from "@/components/Header.vue";
 import Section from "@/components/Section.vue";
 import Card from "@/components/Card.vue";
 import Footer from "@/components/Footer.vue";
+import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
+import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
+import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
+import faqPdf from '@/assets/FAQ.pdf';
+import tentangKamiPdf from '@/assets/Tentang.pdf';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import { initDropdowns } from 'flowbite';
 
 export default {
+  data() {
+    return {
+      isInfoProductDropdownOpen: false,
+      isInfoDropdownOpen: false,
+    }
+  },
+
   methods: {
+    downloadProductDetails() {
+      const fileUrl = infoProdukPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "INFO-PRODUK.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadSK() {
+      const fileUrl = syaratKetentuanPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Syarat & ketentuan.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadKP() {
+      const fileUrl = kebijakanPrivasiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Kebijakan Privasi.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadFAQ() {
+      const fileUrl = faqPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "FAQ.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadTentang() {
+      const fileUrl = tentangKamiPdf;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "Tentang.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    goToHome() {
+      this.$router.push("/");
+    },
     navigateTo(route, type) {
       this.$router.push({ path: route, query: { userType: type } }); // Navigasi ke rute tertentu
     },
@@ -70,11 +134,20 @@ export default {
       console.log("Card clicked!");
     }
   },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside);
+    initDropdowns();
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+    // this.resetNavbarConfig();
+  },
   components: {
     Header,
     Section,
     Card,
     Footer,
+    DropdownMenu
   },
 };
 </script>
