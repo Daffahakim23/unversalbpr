@@ -5,9 +5,69 @@
         Data e-KTP
       </h1>
       <div v-if="formKTP" class="form-container">
-        <div class="form-item" v-for="(value, key) in formKTP" :key="key">
+        <!-- <div class="form-item" v-for="(value, key) in formKTP" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
+        </div> -->
+        <div class="form-item" v-if="formKTP.namaLengkap">
+          <div class="form-label">Nama Lengkap</div>
+          <strong class="form-value">{{ formKTP.namaLengkap }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.nik">
+          <div class="form-label">NIK</div>
+          <strong class="form-value">{{ formKTP.nik }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.tanggalLahir">
+          <div class="form-label">Tanggal Lahir</div>
+          <strong class="form-value">{{ formKTP.tanggalLahir }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.tempatLahir">
+          <div class="form-label">Tempat Lahir</div>
+          <strong class="form-value">{{ formKTP.tempatLahir }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.jenisKelamin">
+          <div class="form-label">Jenis Kelamin</div>
+          <strong class="form-value">{{ formKTP.jenisKelamin }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.agama">
+          <div class="form-label">Agama</div>
+          <strong class="form-value">{{ formKTP.agama }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.statusPerkawinan">
+          <div class="form-label">Status Perkawinan</div>
+          <strong class="form-value">{{ formKTP.statusPerkawinan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.namaGadisIbuKandung">
+          <div class="form-label">Nama Gadis Ibu Kandung</div>
+          <strong class="form-value">{{ formKTP.namaGadisIbuKandung }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.alamat">
+          <div class="form-label">Alamat</div>
+          <strong class="form-value">{{ formKTP.alamat }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.rtRw">
+          <div class="form-label">RT/RW</div>
+          <strong class="form-value">{{ formKTP.rtRw }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.provinsi">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formKTP.provinsi }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kabupaten">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formKTP.kabupaten }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kecamatan">
+          <div class="form-label">Kecamatan</div>
+          <strong class="form-value">{{ formKTP.kecamatan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kelurahan">
+          <div class="form-label">Desa/Kelurahan</div>
+          <strong class="form-value">{{ formKTP.kelurahan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kodePos">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formKTP.kodePos }}</strong>
         </div>
       </div>
     </div>
@@ -65,26 +125,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
-          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
-          file
-            ? 'bg-semantic/success-100 border-semantic/success-600'
-            : 'bg-neutral-100 border-primary-100',
-        ]">
-          <div class="flex items-center">
-            <img :src="getFileIcon(key)" :alt="formatFileLabel(key)" class="h-12 mr-4" />
-            <span class="text-sm font-medium" :class="file ? 'text-semantic/success-700' : 'text-neutral-900'">
-              {{ formatFileLabel(key) }}
-            </span>
-          </div>
-
-          <div>
-            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
-            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <div class="border-t border-neutral-200 my-4"></div>
@@ -148,24 +188,27 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
-      <div class="space-y-3 text-neutral-900 text-sm">
+      <div class="space-y-3 text-neutral-900 text-sm text-justify">
         <p>
           Dengan ini, saya/kami menyatakan bahwa:
         </p>
         <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
-          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT BPR Universal (selanjutnya
-            disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
-          <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
-            ini.</li>
-          <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik Produk Bank yang akan saya/kami
-            manfaatkan dan saya telah mengerti serta memahami segala konsekuensi pemanfaatan Produk Bank, termasuk
+          <li>Seluruh data yang Saya isi dalam Layanan E-Form PT BPR Universal (selanjutnya disebut sebagai “Bank”)
+            adalah
+            benar dan merupakan data terbaru.</li>
+          <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang Saya berikan dalam Layanan E-Form ini.</li>
+          <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik produk/fasilitas/layanan Bank yang akan
+            Saya manfaatkan dan Saya telah menerima serta memahami segala konsekuensi pemanfaatan produk Bank, termasuk
             manfaat, risiko, dan biaya-biaya yang melekat pada produk Bank tersebut.</li>
-          <li>Saya/kami telah menerima, membaca, mengerti, dan menyetujui isi Ketentuan Umum dan Persyaratan Pembukaan
-            Rekening baru. Untuk itu dengan ini saya/kami menyatakan tunduk dan terikat dengan ketentuan-ketentuan
-            tersebut, serta ketentuan lain terkait produk/fasilitas yang saya/kami pilih yang berlaku di Bank beserta
-            segala bentuk perubahannya yang akan diberitahukan dengan sarana yang ditetapkan Bank.</li>
-          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening,
-            apabila menurut pertimbangan Bank :
+          <li>Dengan menekan tombol “Saya Setuju dan Mengerti”, Saya telah menerima, membaca, mengerti dan menyetujui
+            isi
+            Ketentuan dan Persyaratan Pembukaan Rekening (ditampilkan pada Layanan E-Form Universal BPR). Untuk itu
+            dengan
+            ini Saya menyatakan tunduk dan terikat dengan ketentuan-ketentuan yang berlaku, serta ketentuan lain terkait
+            produk/fasilitas/layanan yang Saya pilih yang berlaku di Bank beserta segala bentuk perubahannya di kemudian
+            hari, yang akan diberitahukan melalui sarana yang ditetapkan Bank.</li>
+          <li>Saya memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan/atau penutupan Rekening, apabila
+            menurut pertimbangan Bank:
             <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
               <li>Saya/kami tidak mematuhi ketentuan Prinsip Mengenal Nasabah <span class="italic">(Knowing Your
                   Customer)</span>.</li>
@@ -173,6 +216,35 @@
               <li>Saya/kami menyalahgunakan rekening.</li>
             </ul>
           </li>
+          <li>Saya setuju dan memberikan kuasa kepada Bank untuk mendebet dan/atau mengkredit rekening “default” Saya
+            sesuai
+            dengan data yang telah diisi pada Layanan E-Form dan tidak akan membatalkan secara sepihak.</li>
+          <li>Saya menyatakan setuju dan bersedia menerima risiko apabila produk/fasilitas/layanan Bank yang saya pilih,
+            tidak memenuhi ketentuan penjaminan simpanan yang ditetapkan oleh LPS.</li>
+          <li>Saya memberikan izin dan wewenang kepada Bank untuk melanjutkan data Saya kepada pihak yang bekerjasama
+            dengan
+            Bank, dalam rangka namun tidak terbatas pada kegiatan pemasaran Bank maupun peningkatan layanan Bank, dengan
+            ketentuan bahwa pihak tersebut telah mengikatkan diri untuk menjaga kerahasiaan data yang
+            diterima/diproses/digunakan.</li>
+          <li>Saya dengan ini menyatakan telah membaca, memahami, dan menyetujui Syarat dan Ketentuan Layanan
+            Penyelenggara
+            Sertifikasi Elektronik serta menjamin keakuratan data pribadi Saya untuk diproses lebih lanjut oleh PT
+            Indonesia
+            Digital Identity sebagai mitra dari Bank untuk
+            keperluan penerbitan dan pengelolaan sertifikat elektronik.</li>
+          <li>Saya menyatakan bahwa Tanda Tangan Digital yang Saya bubuhkan melalui Layanan E-Form menggunakan
+            Sertifikat
+            Elektronik yang diterbitkan oleh Penyelenggara Sertifikasi Elektronik (PSrE) PT Indonesia Digital Identity
+            memiliki kekuatan hukum yang sah dan mengikat, serta dianggap setara dengan tanda tangan basah atau perintah
+            tertulis yang ditandatangani secara fisik.</li>
+          <li> Saya setuju Bank dapat memperoleh, menggunakan, mengelola, dan menyimpan data biometrik Saya, termasuk
+            namun
+            tidak
+            terbatas pada pemanfaatan dokumen identitas diri Saya, face recognition, teknologi Tanda Tangan Digital,
+            rekaman
+            suara, untuk tujuan verifikasi identitas Saya dalam memproses Pembukaan Rekening yang Saya ajukan melalui
+            Layanan
+            E-Form berdasarkan ketentuan peraturan perundang-undangan yang berlaku.</li>
         </ul>
       </div>
     </div>
@@ -658,18 +730,18 @@ export default {
         sumber: "Sumber Informasi Nasabah",
 
         // Data Pekerjaan (Beneficial Owner)
-        penghasilanLainnya: "Penghasilan Lainnya",
+        penghasilanLainnya: "Sumber Dana Lainnya",
         sumberDanaMilikPribadi: "Sumber Dana Milik Pribadi",
-        hubunganNasabahLainnyaBO: "Hubungan Nasabah Lainnya",
+        hubunganNasabahLainnyaBO: "Hubungan dengan Nasabah Lainnya",
         jenisIdentitasLainnyaBO: "Jenis Identitas Lainnya",
         pekerjaanLainnyaBO: "Pekerjaan Lainnya",
         jabatanLainnyaBO: "Jabatan Lainnya",
-        penghasilanLainnyaBO: "Penghasilan Lainnya",
+        penghasilanLainnyaBO: "Sumber Dana Lainnya",
         pekerjaan: "Pekerjaan",
         pekerjaanLainnya: "Pekerjaan Lainnya",
         penghasilan: "Sumber Dana",
         jumlahPenghasilan: "Jumlah Penghasilan",
-        hubunganNasabah: "Hubungan Nasabah",
+        hubunganNasabah: "Hubungan dengan Nasabah",
         jenisIdentitasBO: "Jenis Identitas",
         hubunganNasabahBO: "Hubungan dengan Nasabah",
         kotaPerusahaanBO: "Kota Perusahaan",

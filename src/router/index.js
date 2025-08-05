@@ -110,6 +110,11 @@ import InfoProdukPenempatanDepositoExisting from "../views/Other/infoProdukPenem
 import InfoProdukPencairanDeposito from "../views/Other/infoProdukPencairanDeposito.vue";
 import InfoProdukPengkinianData from "../views/Other/infoProdukPengkinianData.vue";
 import InfoProdukPemindahbukuan from "../views/Other/infoProdukPemindahbukuan.vue";
+import Tentang from "../views/Other/tentang.vue";
+import KebijakanPrivasi from "../views/Other/kebijakanPrivasi.vue";
+import SyaratKetentuan from "../views/Other/syaratKetentuan.vue";
+import Faq from "../views/Other/faq.vue";
+
 // import { title } from "node:process";
 
 
@@ -125,6 +130,10 @@ const routes = [
   },
   {
     path: "/pencairanDepositoRegular/",
+    component: PencairanDeposito,
+  },
+  {
+    path: "/pencairanDeposito/",
     component: PencairanDeposito,
   },
   {
@@ -197,6 +206,42 @@ const routes = [
         component: InfoProdukPemindahbukuan,
         meta: {
           title: "Transfer",
+          centerTitle: true
+        },
+      },
+      {
+        path: "tentang",
+        name: "tentang",
+        component: Tentang,
+        meta: {
+          title: "Tentang Kami",
+          centerTitle: true
+        },
+      },
+      {
+        path: "syaratKetentuan",
+        name: "syaratKetentuan",
+        component: SyaratKetentuan,
+        meta: {
+          title: "Syarat & Ketentuan",
+          centerTitle: true
+        },
+      },
+      {
+        path: "kebijakanPrivasi",
+        name: "kebijakanPrivasi",
+        component: KebijakanPrivasi,
+        meta: {
+          title: "Kebijakan Privasi",
+          centerTitle: true
+        },
+      },
+      {
+        path: "faq",
+        name: "faq",
+        component: Faq,
+        meta: {
+          title: "FAQ",
           centerTitle: true
         },
       },

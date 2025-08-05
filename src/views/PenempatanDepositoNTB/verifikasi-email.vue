@@ -11,7 +11,8 @@
           @keydown.backspace="handleBackspace(index, $event)" />
       </div>
 
-      <p v-if="errorMessage" class="text-semantic/error-400 text-center mb-4">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-semantic/error-400 text-center mb-4">{{ errorMessage }} ({{ otpErrorCount }}/5)
+      </p>
       <p class="text-base text-neutral-700 text-center">
         Masukkan kode OTP yang sudah kami kirimkan melalui email <strong>{{ email }}</strong>.
       </p>
@@ -34,9 +35,13 @@
         {{ isResending ? "Mengirim..." : `Belum dapat kode? Kirim Ulang Kode (${resendCount}/3)` }}
       </p> -->
 
-      <p class="text-primary mt-4 cursor-pointer" @click="resendOTP"
+      <p class="text-regular text-neutral-700 text-center mt-4 ">
+        Belum dapat kode OTP / Kode OTP Kadaluarsa?
+      </p>
+
+      <p class="text-primary mt-2 cursor-pointer" @click="resendOTP"
         :class="{ 'opacity-50 pointer-events-none': isResending || countdown > 0 }">
-        {{ isResending ? "Mengirim..." : `Belum dapat kode? Kirim Ulang Kode (${resendCount}/3)` }}
+        {{ isResending ? "Mengirim..." : `Kirim Ulang Kode (${resendCount}/3)` }}
       </p>
 
       <ButtonComponent type="submit" class="mt-6" :disabled="isButtonDisabled">
@@ -322,8 +327,8 @@ export default {
           let buttons = ["Coba Lagi", "Hubungi Universal Care"];
 
           if (otpErrorCount.value === 3) {
-              subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
-              buttons = ["Coba Lagi", "Hubungi Universal Care"];
+            subtitle = "Anda telah salah memasukkan kode OTP sebanyak 3 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan lebih lanjut.";
+            buttons = ["Coba Lagi", "Hubungi Universal Care"];
           } else if (otpErrorCount.value === 4) {
             subtitle = "Anda telah salah memasukkan kode OTP sebanyak 4 kali. Jika terjadi 5 kali kesalahan, pengiriman OTP ke email Anda akan dibatasi selama 30 menit. Periksa kembali kode Anda atau hubungi Universal Care untuk bantuan.";
             buttons = ["Coba Lagi", "Hubungi Universal Care"];

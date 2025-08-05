@@ -23,6 +23,11 @@ export const metodePenyetoranExisitingOptions = [
   { label: " Debet Rekening Tabungan Universal", value: "2" },
 ];
 
+export const tujuanTransferOptions = [
+  { label: "Pindah buku ke Rekening Tabungan Universal atas nama pihak lain", value: "1" },
+  { label: "Transfer ke Rekening Bank Lain", value: "2" },
+];
+
 // DEPOSITO UNIVERSAL
 export const jangkaWaktuDepositoUniversalOptions = [
   { label: "1 Bulan (5.5% per tahun)", value: "1", jangkaWaktu: "1", sukuBunga: "5.5" },
@@ -30,7 +35,7 @@ export const jangkaWaktuDepositoUniversalOptions = [
   { label: "6 Bulan (6,75% per tahun)", value: "3", jangkaWaktu: "6", sukuBunga: "6.75" },
   { label: "9 Bulan (6,75% per tahun)", value: "4", jangkaWaktu: "9", sukuBunga: "6.75" },
   { label: "12 Bulan (6,75% per tahun)", value: "5", jangkaWaktu: "12", sukuBunga: "6.75" },
-  { label: "24 Bulan (6,75% per tahun)", value: "5", jangkaWaktu: "24", sukuBunga: "6.75" },
+  { label: "24 Bulan (6,75% per tahun)", value: "6", jangkaWaktu: "24", sukuBunga: "6.75" },
 ];
 
 export const jangkaWaktuDepositoUniversalOptionsTier1 = [
@@ -152,8 +157,6 @@ export const pembayaranBungaOptions = [
 
 export const metodePencairanOptions = [
   { label: "Automatic Roll Over (ARO)", subtitle: "Rekening Deposito otomatis diperpanjang", value: "1" },
-  // { label: "Automatic Roll Over & Bunga", value: "ARO & Bunga" },
-  // { label: "Non Automatic Roll Over", value: "NARO" },
 ];
 
 export const kantorCabangOptions = [
@@ -242,7 +245,7 @@ export const produkDepositoOptions = [
 export const korespondensiOptions = [
   { label: "Alamat Tempat Tinggal sesuai e-KTP", value: "1" },
   { label: "Alamat Tempat Tinggal Terkini", value: "2" },
-  { label: "Alamat kantor", value: "3" },
+  { label: "Alamat Kantor", value: "3" },
 ];
 
 export const hubunganNasabahOptions = [
@@ -313,7 +316,7 @@ export const tujuanOptions = [
   { label: "Simpanan", value: "1" },
   { label: "Transaksi", value: "2" },
   { label: "Investasi", value: "3" },
-  { label: "lainnya", value: "0" },
+  { label: "Lainnya", value: "0" },
 ];
 
 export const alasanPencairanOptions = [

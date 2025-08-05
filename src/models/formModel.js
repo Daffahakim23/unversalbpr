@@ -35,6 +35,7 @@ export class FormModelDataPribadi {
     this.hobi = "";
     this.hobiLainnya = "";
     this.nomorTelepon = "";
+    this.phone = "";
     this.nomorFax = "";
     this.alamatSesuaiEktp = "";
     this.ubahNoTelepon = "";
@@ -51,7 +52,7 @@ export class FormModelDataPribadi {
 
 
 export class FormModelPengirimPemindahbukuan {
-  constructor() {
+  constructor(namaBankBPR = "") {
     this.namaPemilikRekening = "";
     this.namaLengkapPengirim = "";
     this.tanggalPengajuan = "";
@@ -59,6 +60,17 @@ export class FormModelPengirimPemindahbukuan {
     this.sumberDana = "";
     this.phonePengirim = "";
     this.email = "";
+    this.tujuanTransfer = "";
+    this.namaLengkap = "";
+    this.phone = "";
+    this.alamat = "";
+    this.nomorRekening = "";
+    this.namaBank = "";
+    this.namaBankBPR = namaBankBPR;
+    this.keteranganTransaksi = "";
+    this.nominal = "";
+    this.metodeTransfer = "";
+    this.biayaTransfer = "";
   }
 }
 
@@ -73,6 +85,7 @@ export class FormModelPenerimaPemindahbukuan {
     this.nominal = "";
     this.metodeTransfer = "";
     this.biayaTransfer = "";
+    this.tujuanTransfer = "";
   }
 }
 
@@ -122,7 +135,7 @@ export class FormModelPenempatanDeposito {
     this.belumPunyaRekening = "";
     this.memilikiTabungan = "";
     this.isChecked = "";
-    this.setujuPenyetoran = "";
+    this.setujuPenyetoran = false;
   }
 }
 

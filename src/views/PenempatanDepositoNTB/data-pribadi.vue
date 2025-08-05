@@ -3,10 +3,11 @@
     <FormField label="Nama Alias/Panggilan" id="namaPanggilan" :isDropdown="false" v-model="form.namaPanggilan"
       placeholder="Masukkan Nama Alias/Panggilan Anda" :required="true" variant="alpha" />
 
-    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan" name="tujuan" />
+    <RadioButtonChoose label="Tujuan Pembukaan Rekening*" :options="tujuanOptions" v-model="form.tujuan"
+      name="tujuan" />
     <div v-if="form.tujuan === '0'">
       <FormField label="Tujuan Pembukaan Rekening Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
-        placeholder="Masukkan Hobi Lainnya" :required="true" />
+        placeholder="Masukkan Tujuan Pembukaan Rekening Lainnya" :required="true" />
     </div>
     <!-- <div v-if="form.tujuan === '0'">
       <FormField label="Tujuan Simpanan Lainnya*" id="otherSource" type="text" v-model="form.tujuanLainnya"
@@ -335,10 +336,12 @@ export default {
           // uuid: "4d0083ea-1509-4a6a-a8e0-89a218ddf366",
           nama_alias_panggilan: this.form.namaPanggilan,
           tujuan_buka_rekening: Number(this.form.tujuan),
+          tujuan_buka_rekening_lainnya: this.form.tujuanLainnya,
           kantor_cabang: selectedBranch ? selectedBranch.label : "",
           kode_kantor_cabang: this.form.kantorCabang,
           pendidikan_terakhir: Number(this.form.pendidikanTerakhir),
           hobi: Number(this.form.hobi),
+          hobi_lainnya: this.form.hobiLainnya,
           nomor_telp: this.form.nomorTelepon,
           nomor_fax: this.form.nomorFax,
           detail_alamat: this.form.alamat,

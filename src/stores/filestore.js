@@ -10,6 +10,7 @@ export const useFileStore = defineStore("fileStore", {
     alamat_email: null,
     nama_lengkap: null,
     no_hp: null,
+    penalty: null,
     uploadedFiles: {
       ktp: null,
       npwp: null,
@@ -58,6 +59,9 @@ export const useFileStore = defineStore("fileStore", {
     },
     setNpwp(value) {
       this.npwp = value;
+    },
+    setPenalty(value) {
+      this.penalty = value;
     },
     setNoNpwp(value) {
       this.no_npwp = value;

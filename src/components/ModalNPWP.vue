@@ -4,14 +4,14 @@
             <div
                 class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
                 <div class="relative text-center items-baseline">
-                    <h3 class="text-xl font-semibold text-primary dark:text-white items-center">
+                    <h3 class="text-xl font-semibold text-primary  items-center">
                         Apakah Anda sudah memiliki NPWP (Nomor Wajib Pajak)?
                     </h3>
                     <button @click="$emit('close')" class="absolute -right-4 -top-4 rounded-lg hover:bg-gray-200">
                         <img src="@/assets/close-icon.svg" alt="Close" class="h-6 w-6">
                     </button>
                 </div>
-                <p class="text-neutral-800 dark:text-gray-300 text-center mt-4">
+                <p class="text-neutral-800 text-center mt-4">
                     Pilih salah satu status NPWP anda terkini.
                 </p>
                 <div class="flex flex-col justify-between mt-2 gap-1">

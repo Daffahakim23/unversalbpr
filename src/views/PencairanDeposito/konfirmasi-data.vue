@@ -5,10 +5,70 @@
         Data e-KTP
       </h1>
       <div v-if="formKTP" class="form-container">
-        <div class="form-item" v-for="(value, key) in formKTP" :key="key">
+        <div class="form-item" v-if="formKTP.namaLengkap">
+          <div class="form-label">Nama Lengkap</div>
+          <strong class="form-value">{{ formKTP.namaLengkap }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.nik">
+          <div class="form-label">NIK</div>
+          <strong class="form-value">{{ formKTP.nik }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.tanggalLahir">
+          <div class="form-label">Tanggal Lahir</div>
+          <strong class="form-value">{{ formKTP.tanggalLahir }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.tempatLahir">
+          <div class="form-label">Tempat Lahir</div>
+          <strong class="form-value">{{ formKTP.tempatLahir }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.jenisKelamin">
+          <div class="form-label">Jenis Kelamin</div>
+          <strong class="form-value">{{ formKTP.jenisKelamin }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.agama">
+          <div class="form-label">Agama</div>
+          <strong class="form-value">{{ formKTP.agama }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.statusPerkawinan">
+          <div class="form-label">Status Perkawinan</div>
+          <strong class="form-value">{{ formKTP.statusPerkawinan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.namaGadisIbuKandung">
+          <div class="form-label">Nama Gadis Ibu Kandung</div>
+          <strong class="form-value">{{ formKTP.namaGadisIbuKandung }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.alamat">
+          <div class="form-label">Alamat</div>
+          <strong class="form-value">{{ formKTP.alamat }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.rtRw">
+          <div class="form-label">RT/RW</div>
+          <strong class="form-value">{{ formKTP.rtRw }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.provinsi">
+          <div class="form-label">Provinsi</div>
+          <strong class="form-value">{{ formKTP.provinsi }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kabupaten">
+          <div class="form-label">Kota/Kabupaten</div>
+          <strong class="form-value">{{ formKTP.kabupaten }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kecamatan">
+          <div class="form-label">Kecamatan</div>
+          <strong class="form-value">{{ formKTP.kecamatan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kelurahan">
+          <div class="form-label">Desa/Kelurahan</div>
+          <strong class="form-value">{{ formKTP.kelurahan }}</strong>
+        </div>
+        <div class="form-item" v-if="formKTP.kodePos">
+          <div class="form-label">Kode Pos</div>
+          <strong class="form-value">{{ formKTP.kodePos }}</strong>
+        </div>
+        <!-- <div class="form-item" v-for="(value, key) in formKTP" :key="key">
           <div class="form-label">{{ formatLabel(key) }}:</div>
           <strong class="form-value">{{ value }}</strong>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -65,26 +125,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
-          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
-          file
-            ? 'bg-semantic/success-100 border-semantic/success-600'
-            : 'bg-neutral-100 border-primary-100',
-        ]">
-          <div class="flex items-center">
-            <img :src="getFileIcon(key)" :alt="formatFileLabel(key)" class="h-12 mr-4" />
-            <span class="text-sm font-medium" :class="file ? 'text-semantic/success-700' : 'text-neutral-900'">
-              {{ formatFileLabel(key) }}
-            </span>
-          </div>
-
-          <div>
-            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
-            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <div class="border-t border-neutral-200 my-4"></div>
@@ -128,7 +168,7 @@
             formatCurrency(parseInt(formDataPencairanDeposito.biayaTransfer)) }})</strong>
         </div>
         <div class="form-item" v-if="formDataPencairanDeposito.namaLengkap">
-          <div class="form-label">Nama Pemilik Penutupan Deposito:</div>
+          <div class="form-label">Nama Pemilik Rekening Penutupan Deposito:</div>
           <strong class="form-value">{{ formDataPencairanDeposito.namaLengkap }}</strong>
         </div>
         <div class="form-item" v-if="formDataPencairanDeposito.namaBank">
@@ -147,27 +187,21 @@
           <div class="form-label">Pilihan Jaringan Kantor:</div>
           <strong class="form-value">{{ formInstruksiPencairan.kantorCabang }}</strong>
         </div>
-        <!-- <div class="form-item" v-if="formRekeningSumber.nomorRekeningPengirim">
-          <div class="form-label">Nomor Rekening:</div>
-          <strong class="form-value">{{ formRekeningSumber.nomorRekeningPengirim }}</strong>
-        </div>
-        <div class="form-item" v-if="formRekeningSumber.sumberDana">
-          <div class="form-label">Sumber Dana:</div>
-          <strong class="form-value">{{ formRekeningSumber.sumberDana }}</strong>
-        </div> -->
       </div>
-      <!-- <div v-if="formInstruksiPencairan" class="form-container">
-        <div class="form-item" v-for="(value, key) in formInstruksiPencairan" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
+    </div>
+
+    <div class="border-t border-neutral-200 my-4"></div>
+
+    <div class="py-4">
+      <h1 class="text-base sm:text-lg md:text-xl font-semibold text-primary text-left mb-4">
+        Biaya Pinalti
+      </h1>
+      <div class="form-container">
+        <div class="form-item">
+          <div class="form-label">Biaya Pinalti:</div>
+          <strong class="form-value">{{ displayedPenalty }}</strong>
         </div>
       </div>
-      <div v-if="formDataPencairan" class="form-container">
-        <div class="form-item" v-for="(value, key) in formDataPencairan" :key="key">
-          <div class="form-label">{{ formatLabel(key) }}:</div>
-          <strong class="form-value">{{ value }}</strong>
-        </div>
-      </div> -->
     </div>
 
     <div class="border-t border-neutral-200 my-4"></div>
@@ -179,7 +213,7 @@
       <p>
         Sehubungan dengan pengajuan aplikasi ini, maka saya menyatakan bahwa:
       </p>
-      <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
+      <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2 text-justify">
         <li>Deposito dan rekening tujuan Penutupan deposito sebagaimana tersebut di atas adalah benar merupakan atas
           nama saya.</li>
         <li>Saya menyatakan bahwa instruksi Penutupan dan rekening tujuan Penutupan deposito sebagaimana tersebut diatas
@@ -187,7 +221,7 @@
           penuh atas pemberian instruksi yang tercantum dalam pernyataan.</li>
         <li>Saya menyetujui pemotongan biaya administrasi atas biaya transfer pokok dan  bunga deposito ke rekening bank
           lain sesuai dengan ketentuan PT BPR Universal (selanjutnya disebut "Bank").</li>
-        <li>Apabila Deposito Berjangka dicairkan sebelum jatuh tempo, Bank berhak untuk membebankan biaya penalti yang
+        <li>Apabila Deposito Berjangka dicairkan sebelum jatuh tempo, Bank berhak untuk membebankan biaya pinalti yang
           berlaku sesuai kebijakan Bank dan dikenakan dari dana Penutupan Deposito Berjangka. </li>
         <li>Saya telah menerima, membaca, mengerti, menyetujui isi Ketentuan dan Persyaratan Penutupan Deposito melalui
           Layanan E-Form Universal BPR yang telah dicantumkan. Untuk itu dengan ini saya menyatakan tunduk dan terikat
@@ -268,6 +302,27 @@ export default {
   },
   name: "DataPribadi",
   computed: {
+    displayedPenalty() {
+      const penaltyValue = this.penalty;
+      const nominal = parseFloat(this.formInstruksiPencairan.nominal) || 0;
+
+      if (penaltyValue === null || penaltyValue === undefined || penaltyValue === "") {
+        return "-";
+      }
+
+      const parsedPenalty = parseFloat(penaltyValue);
+
+      if (!isNaN(parsedPenalty) && parsedPenalty < 1 && parsedPenalty > 0) {
+        const calculatedPenalty = nominal * parsedPenalty * 0.01;
+        return this.formatCurrency(calculatedPenalty);
+      }
+      else if (!isNaN(parsedPenalty) && parsedPenalty >= 1) {
+        return this.formatCurrency(parsedPenalty);
+      }
+      else {
+        return String(penaltyValue);
+      }
+    },
     isButtonDisabled() {
       return !this.agreement1 || !this.agreement2;
     },
@@ -355,7 +410,9 @@ export default {
     const fileStore = useFileStore();
     const no_hp = computed(() => fileStore.no_hp || "user@example.com");
     const nik = computed(() => fileStore.nik || "123123123");
-    return { fileStore, nik, no_hp }
+    const penalty = computed(() => fileStore.penalty);
+
+    return { fileStore, nik, no_hp, penalty };
   },
 
   data() {

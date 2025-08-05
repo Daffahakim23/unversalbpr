@@ -88,7 +88,7 @@
     <div v-if="form.pembayaranBunga == 3" class="mt-2">
       <div class=" flex items-baseline mb-6">
         <div class="mr-2 mb-6">
-          <CustomCheckbox v-if="form.memilikiTabungan == 1" v-model="isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
+          <CustomCheckbox v-if="form.memilikiTabungan == 1" v-model="form.isChecked" labelText="Saya setuju bahwa pembayaran bunga deposito akan dipindahbukukan ke Rekening Tabungan Universal atas nama saya
           sendiri, yang akan dibuat oleh Petugas Bank dengan nomor rekening yang akan diinformasikan melalui email resmi
           PT BPR Universal: notifikasi@universalbpr.co.id" />
         </div>
@@ -162,19 +162,29 @@
       </label>
     </div>
 
-    <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
+    <h2 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-2">
       Cara Penyetoran
     </h2>
-    <FormField label="Metode Penyetoran*" id="pembayaranBunga" :isDropdown="true" v-model="form.metodePenyetoran"
-      placeholder="PIlih Metode Penyetoran" :options="metodePenyetoranNTBOptions" required />
+    <h2  v-if="form.memilikiTabungan == 1" class="text-base sm:text-base md:text-base font-semibold text-primary text-left mb-4">
+      Debet Rekening Tabungan Universal
+    </h2>
 
-    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekeningPenyetoran" variant="numeric" :maxlength="10"
-      v-model="form.nomorRekeningPenyetoran" placeholder="Masukkan Nomor Rekening Tabungan Universal" required
-      @blur="handleNomorRekeningPenyetoranBlur" :error="nomorRekeningPenyetoranError"
+    <CustomCheckbox v-if="form.memilikiTabungan == 1" v-model="form.setujuPenyetoran"
+      labelText="Saya setuju bahwa penyetoran untuk pembukaan deposito akan dilakukan pendebetan melalui rekening Tabungan Universal atas nama saya sendiri yang akan dibuat oleh Petugas Bank, dan diinformasikan kepada saya melalui email resmi PT BPR Universal: notifikasi@universalbpr.co.id" />
+
+    <FormField v-if="form.memilikiTabungan == 2" label="Metode Penyetoran*" id="pembayaranBunga" :isDropdown="true"
+      v-model="form.metodePenyetoran" placeholder="PIlih Metode Penyetoran" :options="metodePenyetoranNTBOptions"
+      required />
+
+    <FormField v-if="form.memilikiTabungan == 2" label="Nomor Rekening Tabungan Universal*" id="nomorRekeningPenyetoran"
+      variant="numeric" :maxlength="10" v-model="form.nomorRekeningPenyetoran"
+      placeholder="Masukkan Nomor Rekening Tabungan Universal" required @blur="handleNomorRekeningPenyetoranBlur"
+      :error="nomorRekeningPenyetoranError"
       :hint="nomorRekeningPenyetoranError ? 'Nomor rekening yang Anda masukkan tidak valid. Silakan periksa kembali.' : ''" />
 
-    <FormField label="Nama Pemilik Rekening Tabungan Universal*" id="namaRekeningPenyetoran" variant="alpha"
-      v-model="form.namaRekeningPenyetoran" placeholder="Masukkan Nama Rekening Tabungan Universal" required />
+    <FormField v-if="form.memilikiTabungan == 2" label="Nama Pemilik Rekening Tabungan Universal*"
+      id="namaRekeningPenyetoran" variant="alpha" v-model="form.namaRekeningPenyetoran"
+      placeholder="Masukkan Nama Rekening Tabungan Universal" required />
 
     <div class="text-right">
       <!-- <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent> -->
@@ -443,29 +453,34 @@ export default {
     //   }
     // },
     isButtonDisabled() {
-      return (
+      let isDisabled = (
+        // Validasi Dasar (selalu ada)
         !this.form.nominal ||
         !this.form.terbilang ||
         !this.form.jangkaWaktu ||
         !this.form.metodePencairan ||
         !this.form.pembayaranBunga ||
-        !this.form.nomorRekeningPenyetoran ||
-        !this.form.namaRekeningPenyetoran ||
-
-        (this.form.pembayaranBunga == 2 && (!this.form.nomorRekening || !this.form.namaLengkap)) ||
-
-        (this.form.pembayaranBunga == 3 &&
-          (
-            (!this.isChecked && (!this.form.nomorRekeningPemilik || !this.form.namaLengkap)) ||
-            !!this.nomorRekeningPemilikError
-          )
-        ) ||
-        (this.form.pembayaranBunga == 4 && (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.setujuBiayaTransfer)) ||
-        !!this.nomorRekeningError ||
-        !!this.nomorRekeningPenyetoranError ||
         !!this.nominalError
       );
 
+      if (this.form.pembayaranBunga == 2) {
+        isDisabled = isDisabled || (!this.form.nomorRekening || !this.form.namaLengkap) || !!this.nomorRekeningError;
+      } else if (this.form.pembayaranBunga == 3) {
+        if (this.form.memilikiTabungan == 2) {
+          isDisabled = isDisabled || (!this.form.isChecked && (!this.form.nomorRekeningPemilik || !this.form.namaLengkap)) || !!this.nomorRekeningPemilikError;
+        } else if (this.form.memilikiTabungan == 1) {
+          isDisabled = isDisabled || !this.form.isChecked;
+        }
+      } else if (this.form.pembayaranBunga == 4) {
+        isDisabled = isDisabled || (!this.form.namaBank || !this.form.nomorRekening || !this.form.namaLengkap || !this.setujuBiayaTransfer) || !!this.nomorRekeningError;
+      }
+
+      if (this.form.memilikiTabungan == 1) {
+        isDisabled = isDisabled || !this.form.setujuPenyetoran;
+      } else if (this.form.memilikiTabungan == 2) {
+        isDisabled = isDisabled || !this.form.metodePenyetoran || !this.form.nomorRekeningPenyetoran || !this.form.namaRekeningPenyetoran || !!this.nomorRekeningPenyetoranError;
+      }
+      return isDisabled;
     },
     // formattedBunga() {
     //   const nominal = parseFloat(this.form.nominal) || 0;
@@ -490,6 +505,15 @@ export default {
   },
 
   watch: {
+    // 'form.nomorRekeningPemilik': {
+    //   handler(newValue) {
+    //     if (newValue && newValue.length > 0 && !this.isNomorRekeningPenyetoranInitialized) {
+    //       this.form.nomorRekeningPenyetoran = newValue;
+    //       this.isNomorRekeningPenyetoranInitialized = true;
+    //     }
+    //   },
+    //   immediate: true // Penting! Ini membuat watcher dijalankan segera saat komponen dibuat
+    // },
     'form.nomorRekening'(newValue) {
       const cleanedValue = String(newValue).replace(/\D/g, '').slice(0, 10);
       if (newValue !== cleanedValue) {
@@ -533,7 +557,7 @@ export default {
         this.form.nomorRekening = "";
         this.form.namaBank = "";
         this.setujuBiayaTransfer = false;
-        this.isChecked = false;
+        this.form.isChecked = false;
       } else if (newValue !== 2 && newValue !== 4) {
         this.form.namaLengkap = "";
         this.form.nomorRekening = "";
@@ -541,10 +565,9 @@ export default {
         this.setujuBiayaTransfer = false;
       }
       if (newValue !== 3) {
-        this.isChecked = false;
+        this.form.isChecked = false;
         this.form.namaLengkap = "";
         // this.form.nomorRekeningPemilik = "";
-
       }
     },
 
@@ -640,7 +663,7 @@ export default {
         ...this.fileStore.formPenempatanDeposito,
         pembayaranBunga: "2",
         namaLengkap: data.namaLengkap,
-        namaBank: "BPR UNIVERSAL",
+        namaBank: "Universal BPR",
         nomorRekening: data.nomorRekening,
       });
       this.isModalOpen = false;
@@ -779,7 +802,7 @@ export default {
     },
     async handleSubmit() {
       try {
-        const namaBank = this.form.pembayaranBunga == 4 ? this.form.namaBank : (this.form.pembayaranBunga == 3 ? "BPR UNIVERSAL" : "");
+        const namaBank = this.form.pembayaranBunga == 4 ? this.form.namaBank : (this.form.pembayaranBunga == 3 ? "Universal BPR" : "");
         // const nomorRekening = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 3 || this.form.pembayaranBunga == 4 ? this.form.nomorRekening : ""; // Komentar ini tetap ada
         const namaPemilik = this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 3 || this.form.pembayaranBunga == 4 ? this.form.namaLengkap : "";
         const selectedOption = this.currentJangkaWaktuOptions.find(option => option.value === this.form.jangkaWaktu);
@@ -819,12 +842,7 @@ export default {
           saat_jatuh_tempo_nominal: Number(this.form.metodePencairan),
           pembayaran_bunga: Number(this.form.pembayaranBunga),
           nama_bank: namaBank,
-          // Logic untuk nomor_rekening di requestData, tetap menggunakan variabel 'nomorRekening' Anda
-          // dan menyesuaikannya berdasarkan 'pembayaranBunga'
           nomor_rekening: (this.form.pembayaranBunga == 3) ? this.form.nomorRekeningPemilik : this.form.nomorRekening,
-          // Jika Anda memiliki field terpisah di backend untuk nomor_rekening_pemilik,
-          // Anda mungkin perlu menambahkan properti ini secara kondisional.
-          // Contoh: ...(this.form.pembayaranBunga == 3 && { nomor_rekening_pemilik: this.form.nomorRekeningPemilik }),
           nama_pemilik: namaPemilik,
           s_k_penempatan_deposito: true,
           produk_yang_diinginkan: Number(this.form.produkDeposito),
@@ -841,27 +859,21 @@ export default {
         if (response.status === 201 || response.status === 200) {
           console.log("Data berhasil dikirim:", response.data);
 
-          // --- LOGIKA PENYIMPANAN KE FILESTORE DIMODIFIKASI DI SINI ---
           const dataToStore = {
             ...this.form,
             namaBank: namaBank,
           };
 
           if (this.form.pembayaranBunga == 2 || this.form.pembayaranBunga == 4) {
-            // Jika pembayaranBunga adalah 2 atau 4, simpan nomorRekening, kosongkan nomorRekeningPemilik
             dataToStore.nomorRekening = this.form.nomorRekening;
-            dataToStore.nomorRekeningPemilik = ''; // Kosongkan nomorRekeningPemilik
+            dataToStore.nomorRekeningPemilik = '';
           } else if (this.form.pembayaranBunga == 3) {
-            // Jika pembayaranBunga adalah 3, simpan nomorRekeningPemilik, kosongkan nomorRekening
             dataToStore.nomorRekeningPemilik = this.form.nomorRekeningPemilik;
-            dataToStore.nomorRekening = ''; // Kosongkan nomorRekening
+            dataToStore.nomorRekening = '';
           } else {
-            // Untuk kasus lain jika ada, pastikan kedua field dikosongkan atau sesuai default form.
-            // Asumsi jika bukan 2, 3, atau 4, maka rekening tidak relevan.
             dataToStore.nomorRekening = '';
             dataToStore.nomorRekeningPemilik = '';
           }
-          // --- AKHIR LOGIKA PENYIMPANAN KE FILESTORE ---
 
           this.fileStore.setFormPenempatanDeposito(dataToStore);
 
@@ -959,6 +971,11 @@ export default {
   mounted() {
     this.$emit("update-progress", 60);
     this.fetchData();
+  },
+  created() {
+    if (this.fileStore.formEmailRequestDepositoNTB && this.fileStore.formEmailRequestDepositoNTB.nomorRekeningPemilik) {
+      this.form.nomorRekeningPenyetoran = this.fileStore.formEmailRequestDepositoNTB.nomorRekeningPemilik;
+    }
   },
 };
 </script>

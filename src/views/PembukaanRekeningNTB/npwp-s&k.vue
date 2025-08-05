@@ -29,6 +29,7 @@ import ButtonComponent from "@/components/button.vue";
 import { npwpOptions, npwp2Options } from "@/data/option.js";
 import { useFileStore } from "@/stores/filestore";
 import FlagBox from "@/components/flagbox.vue";
+import { FormModelNPWP } from "@/models/formModel";
 
 export default {
     components: {
@@ -38,10 +39,11 @@ export default {
     },
     data() {
         return {
-            form: {
-                npwp: null,
-                npwp2: null,
-            },
+            form: new FormModelNPWP(),
+            // form: {
+            //     npwp: null,
+            //     npwp2: null,
+            // },
             npwpOptions,
             npwp2Options,
         };
@@ -67,7 +69,7 @@ export default {
             const requestData = {
                 // uuid: "abc8dc93-b21c-4644-9c26-c9cfdb57f1ab",
                 uuid: fileStore.uuid || "",
-                s_k_nasabah_npwp: this.form.npwp == 1,
+                s_k_nasabah_npwp: this.form.npwp == 2,
                 s_k_nasabah_npwp_suami: this.form.npwp2 === "SUAMI",
                 s_k_nasabah_npwp_penerima_manfaat: this.form.npwp2 === "PEMILIK_MANFAAT",
             };
@@ -79,7 +81,7 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 });
                 console.log("Response:", response.data);
-                fileStore.setFormDataNPWP(response.data);
+                fileStore.setFormDataNPWP(this.form);
                 fileStore.isNpwpUploaded = true;
                 this.$router.push({ path: "/dashboard/uploadDokumenPembukaanRekeningNTB" });
                 fileStore.setNpwp(this.form);

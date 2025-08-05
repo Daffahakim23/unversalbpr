@@ -2,10 +2,10 @@
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div
             class="w-sm max-w-xl flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto h-[80vh]">
-            <div class="flex items-center pb-4 justify-between dark:border-gray-600">
-                <h3 class="text-2xl font-semibold text-primary dark:text-white">{{ apiData ? apiData.title : title }}
+            <div class="flex items-center pb-4 justify-between">
+                <h3 class="text-2xl font-semibold text-primary dark:text-primary">{{ apiData ? apiData.title : title }}
                 </h3>
-                <button @click="closeModal" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">
+                <button @click="closeModal" class="p-2 rounded-lg hover:bg-gray-200">
                     <img src="@/assets/close-icon.svg" alt="Close" class="h-6 w-6">
                 </button>
             </div>

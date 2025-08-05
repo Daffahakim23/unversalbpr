@@ -83,6 +83,7 @@
     @buttonClick1="handleCloseModal" @buttonClick2="openWhatsApp" />
 </template>
 
+
 <script>
 import { useFileStore } from "@/stores/filestore";
 import ButtonComponent from "@/components/button.vue";
@@ -240,8 +241,6 @@ export default {
         if (response.status === 200) {
           this.$router.push({ path: "/dashboard/dataInstruksiPencairanDeposito" });
         } else if (response.status === 400) {
-          alert("Isi tanda tangan digital dahulu.");
-        } else {
           alert(`Terjadi kesalahan: ${response.status} - ${response.statusText}. Silakan coba lagi.`);
         }
       } catch (error) {

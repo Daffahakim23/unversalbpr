@@ -136,51 +136,77 @@
         </div>
         <div class="form-item">
           <div class="form-label">Tujuan Pembukaan Rekening</div>
-          <strong class="form-value">{{ formGabungan.tujuan }}</strong>
+          <strong class="form-value">
+            <template v-if="formPribadi.tujuan === 'Lainnya'">
+              {{ formPribadi.tujuanLainnya || '-' }}
+            </template>
+            <template v-else-if="formPribadi.tujuan">
+              {{ formPribadi.tujuan }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
         <div class="form-item">
           <div class="form-label">RT/RW</div>
           <strong class="form-value">{{ formGabungan.rt }}/{{ formGabungan.rw }}</strong>
         </div>
         <div class="form-item">
+          <div class="form-label">Email</div>
+          <strong class="form-value">{{ formGabungan.email }}</strong>
+        </div>
+        <div class="form-item">
           <div class="form-label">Provinsi</div>
           <strong class="form-value">{{ formGabungan.provinsi }}</strong>
         </div>
+
         <div class="form-item">
-          <div class="form-label">Email</div>
-          <strong class="form-value">{{ formGabungan.email }}</strong>
+          <div class="form-label">Nomor Handphone</div>
+          <strong class="form-value">0{{ formGabungan.phone }}</strong>
         </div>
         <div class="form-item">
           <div class="form-label">Kota/Kabupaten</div>
           <strong class="form-value">{{ formGabungan.kabupaten }}</strong>
         </div>
         <div class="form-item">
-          <div class="form-label">Nomor Fax</div>
-          <strong class="form-value">{{ formGabungan.nomorFax }}</strong>
+          <div class="form-label">Kecamatan</div>
+          <strong class="form-value">{{ formGabungan.kecamatan }}</strong>
+        </div>
+        <div class="form-item">
+          <div class="form-label">Kelurahan</div>
+          <strong class="form-value">{{ formGabungan.kelurahan }}</strong>
+        </div>
+
+        <div class="form-item">
+          <div class="form-label">Pendidikan Terakhir</div>
+          <strong class="form-value">{{ formGabungan.pendidikanTerakhir }}</strong>
         </div>
         <div class="form-item">
           <div class="form-label">Kode Pos</div>
           <strong class="form-value">{{ formGabungan.kodePos }}</strong>
         </div>
         <div class="form-item">
-          <div class="form-label">Pendidikan Terakhir</div>
-          <strong class="form-value">{{ formGabungan.pendidikanTerakhir }}</strong>
+          <div class="form-label">Nomor Fax</div>
+          <strong class="form-value">{{ formGabungan.nomorFax }}</strong>
         </div>
         <div class="form-item">
           <div class="form-label">Nomor Telepon</div>
           <strong class="form-value">{{ formGabungan.nomorTelepon }}</strong>
         </div>
         <div class="form-item">
-          <div class="form-label">Nomor Handphone</div>
-          <strong class="form-value">0{{ formGabungan.phone }}</strong>
-        </div>
-        <div class="form-item">
           <div class="form-label">Hobi</div>
-          <strong class="form-value">{{ formGabungan.hobi }}</strong>
-        </div>
-        <div class="form-item">
-          <div class="form-label">Sumber Informasi Nasabah</div>
-          <strong class="form-value">{{ formGabungan.sumber }}</strong>
+          <strong class="form-value">
+            <template v-if="formGabungan.hobi === 'Lainnya'">
+              {{ formGabungan.hobiLainnya || '-' }}
+            </template>
+            <template v-else-if="formGabungan.hobi">
+              {{ formGabungan.hobi }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
         <div class="form-item" v-if="formPekerjaan.korespondensi">
           <div class="form-label">Alamat Korespondensi Surat Menyurat</div>
@@ -202,21 +228,26 @@
         </div>
       </div> -->
       <div class="form-container">
-        <div class="form-item" v-if="formPekerjaan.pekerjaan">
+        <div class="form-item">
           <div class="form-label">Pekerjaan</div>
-          <strong class="form-value">{{ formPekerjaan.pekerjaan }}</strong>
-        </div>
-
-        <div class="form-item" v-if="formPekerjaan.pekerjaanLainnya">
-          <div class="form-label">Pekerjaan Lainnya</div>
-          <strong class="form-value">{{ formPekerjaan.pekerjaanLainnya }}</strong>
+          <strong class="form-value">
+            <template v-if="formPekerjaan.pekerjaan === 'LAINNYA'">
+              {{ formPekerjaan.pekerjaanLainnya || '-' }}
+            </template>
+            <template v-else-if="formPekerjaan.pekerjaan">
+              {{ formPekerjaan.pekerjaan }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
         <div class="form-item" v-if="formPekerjaan.alamatDK">
           <div class="form-label">Alamat Perusahaan/Instansi</div>
           <strong class="form-value">{{ formPekerjaan.alamatDK }}</strong>
         </div>
         <div class="form-item" v-if="formPekerjaan.namaPerusahaanDK">
-          <div class="form-label">Nama Perusahaan/Instansi</div>
+          <div class="form-label">Nama Perusahaan/ Instansi</div>
           <strong class="form-value">{{ formPekerjaan.namaPerusahaanDK }}</strong>
         </div>
         <div class="form-item" v-if="formPekerjaan.lamaBekerjaTahunDK">
@@ -247,17 +278,27 @@
           <div class="form-label">Kode Pos Perusahaan</div>
           <strong class="form-value">{{ formPekerjaan.kodePosPerusahaanDK }}</strong>
         </div>
-        <div class="form-item" v-if="formPribadi.tujuan">
+        <!-- <div class="form-item" v-if="formPribadi.tujuan">
           <div class="form-label">Tujuan Pembukaan Rekening</div>
           <strong class="form-value">{{ formPribadi.tujuan }}</strong>
-        </div>
+        </div> -->
         <div class="form-item" v-if="formPekerjaan.nomorTeleponFaxDK">
           <div class="form-label">Nomor Fax Kantor</div>
           <strong class="form-value">{{ formPekerjaan.nomorTeleponFaxDK }}</strong>
         </div>
-        <div class="form-item" v-if="formPekerjaan.penghasilan">
+        <div class="form-item">
           <div class="form-label">Sumber Dana</div>
-          <strong class="form-value">{{ formPekerjaan.penghasilan }}</strong>
+          <strong class="form-value">
+            <template v-if="formPekerjaan.penghasilan === 'Lainnya'">
+              {{ formPekerjaan.penghasilanLainnya || '-' }}
+            </template>
+            <template v-else-if="formPekerjaan.penghasilan">
+              {{ formPekerjaan.penghasilan }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
         <div class="form-item" v-if="formPekerjaan.jumlahPenghasilan">
           <div class="form-label">Penghasilan Perbulan</div>
@@ -278,9 +319,19 @@
         </div>
       </div> -->
       <div class="form-container">
-        <div class="form-item" v-if="formBeneficialOwner.hubunganNasabahBO">
+        <div class="form-item">
           <div class="form-label">Hubungan dengan Nasabah</div>
-          <strong class="form-value">{{ formBeneficialOwner.hubunganNasabahBO }}</strong>
+          <strong class="form-value">
+            <template v-if="formBeneficialOwner.hubunganNasabahBO === 'Lainnya'">
+              {{ formBeneficialOwner.hubunganNasabahLainnyaBO || '-' }}
+            </template>
+            <template v-else-if="formBeneficialOwner.hubunganNasabahBO">
+              {{ formBeneficialOwner.hubunganNasabahBO }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
         <div class="form-item" v-if="formBeneficialOwner.alamatBO">
           <div class="form-label">Alamat</div>
@@ -328,9 +379,19 @@
           <div class="form-label">Desa/Kelurahan</div>
           <strong class="form-value">{{ formBeneficialOwner.kelurahanBO }}</strong>
         </div>
-        <div class="form-item" v-if="formBeneficialOwner.pekerjaanBO">
+        <div class="form-item">
           <div class="form-label">Pekerjaan</div>
-          <strong class="form-value">{{ formBeneficialOwner.pekerjaanBO }}</strong>
+          <strong class="form-value">
+            <template v-if="formBeneficialOwner.pekerjaanBO === 'LAINNYA'">
+              {{ formBeneficialOwner.pekerjaanLainnyaBO || '-' }}
+            </template>
+            <template v-else-if="formBeneficialOwner.pekerjaanBO">
+              {{ formBeneficialOwner.pekerjaanBO }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
         <div class="form-item" v-if="formBeneficialOwner.kodePosBO">
           <div class="form-label">Kode Pos</div>
@@ -353,7 +414,7 @@
           <strong class="form-value">{{ formBeneficialOwner.kecamatanBO }}</strong>
         </div> -->
         <!-- <div class="form-item" v-if="formBeneficialOwner.hubunganNasabahLainnyaBO">
-          <div class="form-label">Hubungan Nasabah Lainnya</div>
+          <div class="form-label">Hubungan dengan Nasabah Lainnya</div>
           <strong class="form-value">{{ formBeneficialOwner.hubunganNasabahLainnyaBO }}</strong>
         </div>
         <div class="form-item" v-if="formBeneficialOwner.pekerjaanLainnyaBO">
@@ -497,11 +558,11 @@
           <strong class="form-value">{{ formPenempatanDeposito.namaLengkap }}</strong>
         </div>
         <div class="form-item">
-          <div class=" form-label">Nama Bank</div>
+          <div class=" form-label">Nama Bank Penyetoran Deposito</div>
           <strong class="form-value">Universal BPR</strong>
         </div>
         <div class="form-item" v-if="formPenempatanDeposito.namaBank">
-          <div class=" form-label">Nama Bank</div>
+          <div class=" form-label">Nama Bank Pembayaran Bunga</div>
           <strong class="form-value">{{ formPenempatanDeposito.namaBank }}</strong>
         </div>
       </div>
@@ -563,24 +624,27 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
-      <div class="space-y-3 text-neutral-900 text-sm">
+      <div class="space-y-3 text-neutral-900 text-sm text-justify">
         <p>
           Dengan ini, saya/kami menyatakan bahwa:
         </p>
         <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
-          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT BPR Universal (selanjutnya
-            disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
-          <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
-            ini.</li>
-          <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik Produk Bank yang akan saya/kami
-            manfaatkan dan saya telah mengerti serta memahami segala konsekuensi pemanfaatan Produk Bank, termasuk
+          <li>Seluruh data yang Saya isi dalam Layanan E-Form PT BPR Universal (selanjutnya disebut sebagai “Bank”)
+            adalah
+            benar dan merupakan data terbaru.</li>
+          <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang Saya berikan dalam Layanan E-Form ini.</li>
+          <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik produk/fasilitas/layanan Bank yang akan
+            Saya manfaatkan dan Saya telah mengerti serta memahami segala konsekuensi pemanfaatan produk Bank, termasuk
             manfaat, risiko, dan biaya-biaya yang melekat pada produk Bank tersebut.</li>
-          <li>Saya/kami telah menerima, membaca, mengerti, dan menyetujui isi Ketentuan Umum dan Persyaratan Pembukaan
-            Rekening baru. Untuk itu dengan ini saya/kami menyatakan tunduk dan terikat dengan ketentuan-ketentuan
-            tersebut, serta ketentuan lain terkait produk/fasilitas yang saya/kami pilih yang berlaku di Bank beserta
-            segala bentuk perubahannya yang akan diberitahukan dengan sarana yang ditetapkan Bank.</li>
-          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening,
-            apabila menurut pertimbangan Bank :
+          <li>Dengan menekan tombol “Saya Setuju dan Mengerti”, Saya telah menerima, membaca, mengerti dan menyetujui
+            isi
+            Ketentuan dan Persyaratan Pembukaan Rekening (ditampilkan pada Layanan E-Form Universal BPR). Untuk itu
+            dengan
+            ini Saya menyatakan tunduk dan terikat dengan ketentuan-ketentuan tersebut, serta ketentuan lain terkait
+            produk/fasilitas/layanan yang Saya pilih yang berlaku di Bank beserta segala bentuk perubahannya yang akan
+            diberitahukan melalui sarana yang ditetapkan Bank.</li>
+          <li>Saya memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan/atau penutupan Rekening, apabila
+            menurut pertimbangan Bank:
             <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
               <li>Saya/kami tidak mematuhi ketentuan Prinsip Mengenal Nasabah <span class="italic">(Knowing Your
                   Customer)</span>.</li>
@@ -604,6 +668,30 @@
                 :options="npwp2Options" :readonly="true" v-model="formNPWP.npwp2" name="npwpSelection" required />
             </div>
           </li>
+          <li>Saya setuju dan memberikan kuasa kepada Bank untuk mendebet dan/atau mengkredit rekening “<i>default</i>” Saya
+            sesuai
+            dengan data yang telah diisi pada Layanan E-Form dan tidak akan membatalkan secara sepihak.</li>
+          <li>Saya menyatakan setuju dan bersedia menerima risiko apabila produk/fasilitas/layanan Bank yang saya pilih,
+            tidak memenuhi ketentuan penjaminan simpanan yang ditetapkan oleh LPS. Termasuk perubahan-perubahannya dikemudian hari, yang akan diberitahukan dengan sarana yang ditetapkan
+            Bank.
+          </li>
+          <li>Saya dengan ini menyatakan telah membaca, memahami, dan menyetujui Syarat dan Ketentuan Layanan
+            Penyelenggara
+            Sertifikasi Elektronik serta menjamin keakuratan data pribadi Saya untuk diproses lebih lanjut oleh PT
+            Indonesia
+            Digital Identity sebagai mitra dari Bank untuk keperluan penerbitan dan pengelolaan sertifikat elektronik.
+          </li>
+          <li>Saya menyatakan bahwa Tanda Tangan Digital yang Saya bubuhkan melalui Layanan E-Form menggunakan
+            Sertifikat
+            Elektronik yang diterbitkan oleh Penyelenggara Sertifikasi Elektronik (PSrE) PT Indonesia Digital Identity
+            memiliki kekuatan hukum yang sah dan mengikat, serta dianggap setara dengan tanda tangan basah atau perintah
+            tertulis yang ditandatangani secara fisik.</li>
+          <li>Saya setuju Bank dapat memperoleh, menggunakan, mengelola, dan menyimpan data biometrik Saya, termasuk
+            namun
+            tidak terbatas pada pemanfaatan dokumen identitas diri Saya, <i>face recognition</i>, teknologi Tanda Tangan
+            Digital,
+            rekaman suara, untuk tujuan verifikasi identitas Saya dalam memproses Pembukaan Rekening yang Saya ajukan
+            melalui Layanan E-Form berdasarkan ketentuan peraturan perundang-undangan yang berlaku.</li>
         </ul>
       </div>
     </div>
@@ -614,22 +702,16 @@
       <label for="agreement1" class="text-sm text-neutral-900 cursor-pointer">
         Saya setuju dengan pernyataan dan persetujuan di atas
       </label>
-    </div>
-
-    <div class="flex items-center mt-2">
-      <input type="checkbox" id="agreement2" v-model="agreement2" class="mr-2 cursor-pointer items-baseline" />
-      <label for="agreement2" class="text-sm text-neutral-900 cursor-pointer">
-        Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*
-      </label>
     </div> -->
 
-    <div class="">
-      <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
+    <div class="mt-2">
+      <CustomCheckbox v-model="agreement1"
+        labelText="Dengan ini Saya menyatakan telah membaca dan menyetujui seluruh isi pernyataan dan persetujuan nasabah di atas." />
     </div>
 
     <div class="mt-2">
       <CustomCheckbox v-model="agreement2"
-        labelText="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*" />
+        labelText="Saya bersedia mendapatkan informasi tambahan melalui email, SMS, Whatsapp, dan lainnya*" />
     </div>
 
 
@@ -643,7 +725,7 @@
   <ModalKonfirmasi :isOpen="isModalOpen" @close="closeModalKonfirmasi" @yes="handleKonfirmasi" />
   <!-- <ModalOTP :isOpen="isModalOTPOpen" @close="isModalOTPOpen = false" @otp-method-selected="handleOTPMethodSelected"
     :icon="'nama-icon.svg'" :features="features" :no_hp="no_hp" /> -->
-</template>s
+</template>
 
 <script>
 import { computed } from 'vue';
@@ -1213,17 +1295,17 @@ export default {
         email: "Email",
 
         // Data Pekerjaan (Beneficial Owner)
-        penghasilanLainnya: "Penghasilan Lainnya",
+        penghasilanLainnya: "Sumber Dana Lainnya",
         sumberDanaMilikPribadi: "Sumber Dana Milik Pribadi",
-        hubunganNasabahLainnyaBO: "Hubungan Nasabah Lainnya",
+        hubunganNasabahLainnyaBO: "Hubungan dengan Nasabah Lainnya",
         jenisIdentitasLainnyaBO: "Jenis Identitas Lainnya",
         pekerjaanLainnyaBO: "Pekerjaan Lainnya",
         jabatanLainnyaBO: "Jabatan Lainnya",
-        penghasilanLainnyaBO: "Penghasilan Lainnya",
+        penghasilanLainnyaBO: "Sumber Dana Lainnya",
         pekerjaan: "Pekerjaan",
         penghasilan: "Penghasilan",
         jumlahPenghasilan: "Penghasilan Perbulan",
-        hubunganNasabah: "Hubungan Nasabah",
+        hubunganNasabah: "Hubungan dengan Nasabah",
         jenisIdentitasBO: "Jenis Identitas",
         hubunganNasabahBO: "Hubungan dengan Nasabah",
         kotaPerusahaanBO: "Kota Perusahaan",

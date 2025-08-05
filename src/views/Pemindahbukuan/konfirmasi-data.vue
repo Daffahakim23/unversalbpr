@@ -187,7 +187,7 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
-      <div class="space-y-3 text-gray-700 text-sm">
+      <div class="space-y-3 text-gray-700 text-sm text-justify">
         <p>
           Sehubungan dengan pengajuan aplikasi ini, maka saya menyatakan bahwa: 
         </p>
@@ -233,7 +233,8 @@
 
     <!-- Checkbox Persetujuan -->
     <div class="mt-2">
-      <CustomCheckbox v-model="agreement" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
+      <CustomCheckbox v-model="agreement"
+        labelText="Dengan ini saya/kami menyatakan telah membaca dan menyetujui seluruh isi pernyataan dan persetujuan nasabah di atas." />
     </div>
     <!-- <div class="flex items-center">
       <input type="checkbox" id="agreement" v-model="agreement" class="mr-2 cursor-pointer" />

@@ -2,7 +2,7 @@
     <transition name="fade">
         <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div
-                class="w-full max-w-lg flex flex-col bg-white rounded-2xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
+                class="w-full max-w-md flex flex-col bg-white rounded-2xl p-6 border border-neutral-200 relative mx-4 sm:mx-auto">
                 <div v-if="rekeningDitemukan" class="flex flex-col items-center py-4">
                     <div class="flex justify-center items-center mb-8">
                         <img :src="iconPath" alt="Icon" class="h-24 sm:h-28 md:h-32" />

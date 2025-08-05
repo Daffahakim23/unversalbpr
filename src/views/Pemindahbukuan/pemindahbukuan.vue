@@ -13,22 +13,30 @@
         : form.phonePengirim?.startsWith('0')
           ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
           : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
-          
+
+    <!-- <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
+      placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+        ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
+        : form.phone?.startsWith('0')
+          ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
+          : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" /> -->
+
 
     <FormField label="Sumber Dana" id="sumberDana" :isDropdown="true" v-model="form.sumberDana"
       :options="sumberDanaOptions" placeholder="Pilih Sumber Dana Anda" />
 
     <div v-if="form.sumberDana === 'lainnya'" class="">
       <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" type="text" v-model="form.sumberDanaLainnya"
-        placeholder="Masukkan Sumber Penghasilan Lainnya" />
+        placeholder="Masukkan Sumber Dana Lainnya" />
     </div>
 
-    <FormField label="Nomor Rekening Tabungan Universal*" id="nomorRekening" variant="numeric" :maxlength="10"
-      v-model="form.nomorRekeningPengirim" placeholder="Masukkan Nomor Rekening Anda" required
-      @input="form.nomorRekeningPengirim = form.nomorRekeningPengirim.replace(/\D/g, '')" />
+    <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening"
+      v-model="form.nomorRekeningPengirim" variant="numeric" :maxlength="10" placeholder="Masukkan Nomor Rekening"
+      required @input="handleNomorRekeningInput" @blur="handleNomorRekeningBlur" :error="nomorRekeningError"
+      :hint="nomorRekeningError ? 'Nomor rekening tidak valid. Silakan periksa kembali' : ''" />
 
-    <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" variant="alpha" v-model="form.namaLengkapPengirim" :maxlength="50"
-      placeholder="Masukkan Nama Pemilik Sumber Dana" />
+    <FormField label="Nama Pemilik Sumber Dana*" id="namaLengkap" variant="alpha" v-model="form.namaLengkapPengirim"
+      :maxlength="50" placeholder="Masukkan Nama Pemilik Sumber Dana" />
 
     <div class="text-right">
       <ButtonComponent type="submit" :disabled="isButtonDisabled">
@@ -53,10 +61,13 @@ import ButtonComponent from "@/components/button.vue";
 import ReusableModal from "@/components/ModalT&C.vue";
 import { FormModelPengirimPemindahbukuan } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
+import { useRoute, useRouter } from 'vue-router';
 import { sumberDanaOptions } from "@/data/option.js";
 import ModalError from "@/components/ModalError.vue";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   emits: ["update-progress"],
   components: {
     FormField,
@@ -72,15 +83,21 @@ export default {
       touched: {
         email: false,
         phone: false,
+
+        phonePengirim: false,
       },
       sumberDanaOptions,
       isSubmitting: false,
       emailError: false,
       phoneError: false,
+      phonePengirimError: false,
       selectedCountryCode: "ID",
       isModalOpen: false,
       isModalErrorEmail: false,
       isWhatsAppOpenCoolingDown: false,
+      nomorRekeningError: false,
+      validBranchCodes: [],
+      isFetchingBranches: false,
       modalContentEmail: [
         {
           label: "",
@@ -105,7 +122,8 @@ export default {
       const phoneValid = this.form.phonePengirim && /^(8)\d{6,12}$/.test(this.form.phonePengirim);
       const sumberDanaValid = this.form.sumberDana;
       const sumberDanaLainnyaValid = this.form.sumberDana === 'lainnya' ? !!this.form.sumberDanaLainnya : true;
-      const nomorRekeningValid = !!this.form.nomorRekeningPengirim;
+      // const nomorRekeningValid = !!this.form.nomorRekeningPengirim;
+      const nomorRekeningValid = this.form.nomorRekeningPengirim && this.validateNomorRekening(this.form.nomorRekeningPengirim);
       const namaPemilikSumberDanaValid = !!this.form.namaLengkapPengirim;
       const tanggalPengajuanValid = !!this.form.tanggalPengajuan;
 
@@ -121,7 +139,96 @@ export default {
     },
   },
 
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    const fileStore = useFileStore();
+
+    return { route, router, fileStore };
+  },
+
+  watch: {
+    nomorRekeningError(newValue, oldValue) {
+      console.log(`nomorRekeningError changed from ${oldValue} to ${newValue}`);
+      if (newValue) {
+        console.log("Nomor Rekening is now in an error state.");
+      } else {
+        console.log("Nomor Rekening is no longer in an error state.");
+      }
+    },
+  },
+
   methods: {
+    async fetchBranchCodes() {
+      this.isFetchingBranches = true;
+      try {
+        const response = await api.get("/list-branch", {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.status === 200 && response.data && response.data.branch) {
+          this.validBranchCodes = response.data.branch.map(branch => branch.branch_code);
+          console.log("Valid Branch Codes:", this.validBranchCodes);
+        } else {
+          console.error("Gagal mengambil daftar cabang, status:", response.status, "data:", response.data);
+          // Handle error, maybe show an alert to the user
+        }
+      } catch (error) {
+        console.error("Error fetching branch codes:", error);
+        // Handle network/server error
+      } finally {
+        this.isFetchingBranches = false;
+      }
+    },
+    validateNomorRekening(nomorRekening) {
+      // Pastikan panjang 10 digit
+      if (!/^\d{10}$/.test(nomorRekening)) {
+        return false;
+      }
+
+      // Ambil 3 digit pertama
+      const branchCode = nomorRekening.substring(0, 3);
+
+      // Periksa apakah branchCode ada di daftar validBranchCodes
+      const isValidBranchCode = this.validBranchCodes.includes(branchCode);
+
+      if (!isValidBranchCode) {
+        console.warn(`Branch code '${branchCode}' from rekening number is not valid.`);
+      }
+
+      return isValidBranchCode; // Mengembalikan true hanya jika panjang dan branch code valid
+    },
+
+    handleNomorRekeningInput() {
+      this.form.nomorRekeningPengirim = this.form.nomorRekeningPengirim.replace(/\D/g, "").slice(0, 10);
+
+      if (this.form.nomorRekeningPengirim.length > 0) {
+        this.nomorRekeningError = this.form.nomorRekeningPengirim.length !== 10;
+      } else {
+        this.nomorRekeningError = false;
+      }
+
+      if (this.form.nomorRekeningPengirim.length > 0) {
+        this.form.belumPunyaRekening = false;
+        this.form.kantorCabang = "";
+      }
+    },
+
+    // handleNomorRekeningBlur() {
+    //   if (this.form.nomorRekeningPengirim) {
+    //     this.nomorRekeningError = !this.validateNomorRekening(this.form.nomorRekeningPengirim);
+    //   } else {
+    //     this.nomorRekeningError = false;
+    //   }
+    // },
+
+    handleNomorRekeningBlur() {
+      if (this.form.nomorRekeningPengirim) {
+        this.nomorRekeningError = !this.validateNomorRekening(this.form.nomorRekeningPengirim);
+      } else {
+        this.nomorRekeningError = false; // Jika kosong, tidak ada error format
+      }
+    },
     getWhatsAppLink(number = 622122213993) {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       if (isMobile) {
@@ -130,11 +237,6 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
-    // openWhatsApp() {
-    //   if (this.whatsappContact.whatsapp) {
-    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
-    //   }
-    // },
     openWhatsApp() {
       if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
         console.log("openWhatsApp dipanggil!");
@@ -167,7 +269,8 @@ export default {
       this.isModalErrorEmail = true;
     },
     handleCloseModal() {
-      this.isModalErrorEmail = false;
+      // this.isModalErrorEmail = false;
+      this.$router.push("/");
     },
     validatePhone(phone) {
       return /^(8)\d{6,12}$/.test(phone) && !phone.startsWith('0');
@@ -184,7 +287,18 @@ export default {
     handlePhoneBlur() {
       this.touched.phone = true;
       if (this.form.phonePengirim) {
-        this.phoneError = !this.validatePhone(this.form.phonePengirim);
+        // ✨ Hapus '0' di awal secara otomatis saat blur, jika ada
+        let cleanedPhone = this.form.phonePengirim.startsWith('0')
+          ? this.form.phonePengirim.substring(1) // Hapus 0 pertama
+          : this.form.phonePengirim;
+
+        // Update form model agar perubahan terlihat jika pengguna tidak ketik '8'
+        this.form.phonePengirim = cleanedPhone;
+
+        // Lakukan validasi pada nomor yang sudah bersih
+        this.phoneError = !this.validatePhone(cleanedPhone);
+      } else {
+        this.phoneError = false;
       }
     },
 
@@ -203,6 +317,7 @@ export default {
           alamat_email: this.form.email,
           no_hp: this.form.phonePengirim,
           sumber_dana: Number(this.form.sumberDana),
+          sumber_dana_lainnya: this.form.sumberDanaLainnya,
           nomor_rekening: this.form.nomorRekeningPengirim,
           nama_lengkap: this.form.namaLengkapPengirim,
           tanggal: this.form.tanggalPengajuan
@@ -227,6 +342,7 @@ export default {
 
         const finalData = {
           ...this.requestData,
+          uuid: this.fileStore.uuid,
           syarat_ketentuan: true,
           syarat_cutoff: true,
         };
@@ -243,51 +359,71 @@ export default {
         if (response.status === 200) {
           const fileStore = useFileStore();
           fileStore.setFormDataPengirimPemindahbukuan(this.form);
-          // fileStore.setUuid(response.data.uuid);
           fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setNoHP(this.requestData.no_hp);
           window.scrollTo(0, 0);
           this.$router.push({ path: "/dashboard/verifikasiEmailPemindahbukuan" });
         } else {
           console.error("Gagal mengirim data, status:", response.status);
+          // Ini adalah fallback yang mungkin juga perlu diisi dengan pesan default
+          let subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
+          let modalTitle = "Terjadi Kesalahan";
+          let modalIcon = "otp-error-illus.svg";
+          let button1 = "Tutup";
+          let button2 = "Hubungi Universal Care";
+          this.isModalError = false; // Asumsi ini ada di data()
+          this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
         }
 
       } catch (error) {
-        let subtitle = "";
-        let modalTitle = "Terjadi Kesalahan";
-        let modalIcon = "otp-error-illus.svg";
+        let subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses."; // Default subtitle
+        let modalTitle = "Terjadi Kesalahan"; // Default title
+        let modalIcon = "otp-error-illus.svg"; // Default icon
         let button1 = "Tutup";
         let button2 = "Hubungi Universal Care";
 
-        if (error.response && error.response.data && error.response.data.message) {
-          this.temporaryBanMessage = error.response.data.message;
-          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
-          modalTitle = "Alamat Email Dibatasi Sementara";
-          modalIcon = "data-failed-illus.svg";
-        } else {
-          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
+        // ✨ MODIFIKASI PENTING DI SINI: Gunakan optional chaining (?.)
+        const errorMessage = error.response?.data?.message; // Ambil pesan jika ada, kalau tidak undefined
+
+        if (errorMessage) { // Jika errorMessage ada (bukan undefined/null)
+          this.temporaryBanMessage = errorMessage; // Simpan pesan lengkap jika diperlukan
+
+          const cleanedMessage = errorMessage.replace(/ .*/, ''); // Ambil kata pertama
+
+          if (cleanedMessage === "liveness" || cleanedMessage === "Verifikasi") {
+            subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+            modalTitle = "Verifikasi Gagal"; // Ubah sesuai pesan baru
+            modalIcon = "data-failed-illus.svg";
+          } else if (cleanedMessage === "fraud") {
+            subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+            modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+            modalIcon = "data-failed-illus.svg"; // Sesuaikan jika ini ikon yang berbeda
+          } else if (errorMessage.includes("batas maksimum") || errorMessage.includes("sementara untuk pengiriman OTP")) {
+            // Tangani kasus specific OTP error message yang lebih panjang
+            subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+            modalTitle = "Alamat Email Dibatasi Sementara";
+            modalIcon = "data-failed-illus.svg";
+          } else {
+            // Fallback untuk pesan error dari API yang tidak cocok dengan kondisi di atas
+            subtitle = errorMessage;
+          }
         }
-        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        }
-        this.isModalError = false;
+        // Jika error tidak memiliki response.data.message, subtitle tetap default.
+
+        this.isModalError = false; // Ini perlu diatur ke true jika Anda ingin menampilkan modal
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }
-    }
+    },
   },
 
   mounted() {
     this.$emit("update-progress", 15);
+    this.fetchBranchCodes();
   },
 
   created() {
-    // this.fetchData();
   },
 };
 </script>

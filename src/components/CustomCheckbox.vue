@@ -8,7 +8,7 @@
                 <img v-if="modelValue" :src="checkedIcon" :alt="checkedAlt" :width=20 :height=20 />
                 <img v-else :src="uncheckedIcon" :alt="uncheckedAlt" :width=20 :height=20 />
             </span>
-            <span class="text-xs sm:text-sm md:text-sm">{{ labelText }}</span>
+            <span class="text-xs text-justify sm:text-sm md:text-sm">{{ labelText }}</span>
         </label>
     </div>
 </template>

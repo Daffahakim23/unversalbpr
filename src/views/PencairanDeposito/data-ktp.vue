@@ -5,7 +5,7 @@
       :hint="nikError ? 'NIK tidak valid (harus antara 16 sampai 20 digit angka).' : ''" />
 
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
-      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
+      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silakan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" variant="alpha" placeholder="Masukkan Nama Lengkap Anda" required />
 
     <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir"
@@ -370,7 +370,7 @@ export default {
     },
     goBack() {
       if (this.isDataFromFilestore == true) {
-        this.$router.push({ name: "UploadDokumenPencairanDeposito" });
+        this.$router.push({ name: "uploadDokumenPencairanDeposito" });
       } else {
         this.$router.push({
           name: "PreviewScreenPencairanDeposito",

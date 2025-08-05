@@ -25,46 +25,55 @@
       <ol class="list-none p-0 m-0" v-if="activeBrowser === 'chrome'">
         <li class="flex items-start mb-3">
           <div
-            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-semibold mr-3">
+            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-bold mr-3">
             1
           </div>
           <p class="text-sm md:text-base text-neutral-600">Buka Aplikasi Chrome</p>
         </li>
         <li class="flex items-start mb-3">
           <div
-            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-semibold mr-3">
+            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-bold mr-3">
             2
           </div>
           <p class="text-sm md:text-base text-neutral-600">Klik ikon tiga titik di bagian kanan atas</p>
         </li>
         <li class="flex items-start mb-3">
           <div
-            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-semibold mr-3">
+            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-bold mr-3">
             3
           </div>
           <p class="text-sm md:text-base text-neutral-600">Pilih menu Settings (Setelan)</p>
         </li>
         <li class="flex items-start mb-3">
           <div
-            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-semibold mr-3">
+            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-bold mr-3">
             4
           </div>
-          <p class="text-sm md:text-base text-neutral-600">Klik Site Settings</p>
+          <p class="text-sm md:text-base text-neutral-600">Di sidebar kiri, Klik tombol Privacy & Security (Privasi dan
+            Keamanan) </p>
         </li>
         <li class="flex items-start mb-3">
           <div
-            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-semibold mr-3">
+            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-bold mr-3">
             5
           </div>
-          <p class="text-sm md:text-base text-neutral-600">Pilih Pop-ups and redirects (Pop-up dan pengalihan).</p>
+          <p class="text-sm md:text-base text-neutral-600">Scroll ke bawah dan Klik menu Site Settings</p>
+        </li>
+        <li class="flex items-start mb-3">
+          <div
+            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-bold mr-3">
+            6
+          </div>
+          <p class="text-sm md:text-base text-neutral-600">Pilih Menu Pop-ups and redirects (Pop-up dan pengalihan).</p>
         </li>
         <li class="flex items-start">
           <div
-            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-semibold mr-3">
-            6
+            class="flex-shrink-0 flex items-center justify-center h-5 w-5 rounded-full bg-semantic/info-base text-white text-xs font-bold mr-3">
+            7
           </div>
-          <p class="text-sm md:text-base text-neutral-600">Pilih Menu Sites can send pop-ups and use redirects (Situs
-            dapat menampilkan pop-up).</p>
+          <p class="text-sm md:text-base text-neutral-600">Aktifkan menu Sites can send pop-ups and use redirects (Situs
+            dapat menampilkan
+            pop-up)..</p>
         </li>
       </ol>
 

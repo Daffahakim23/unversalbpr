@@ -275,14 +275,13 @@ export default {
           rt: this.form.rt,
           rw: this.form.rw,
           provinsi: this.form.provinsi,
-          kota_kabupaten: this.form.kota,
+          kota_kabupaten: this.form.kabupaten,
           kecamatan: this.form.kecamatan,
           desa_kelurahan: this.form.kelurahan,
           kode_pos: Number(this.form.kodePos),
           alamat_kantor: this.form.alamat_kantor,
           nomor_telp: String(this.form.nomor_telp),
           nomor_fax: String(this.form.nomor_fax),
-
           email: this.form.email,
         };
 

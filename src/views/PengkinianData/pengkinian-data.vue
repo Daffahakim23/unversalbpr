@@ -1,16 +1,21 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap" placeholder="Masukkan Nama Lengkap Anda"
-      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
+      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silakan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" variant="alpha" required />
 
     <!-- <FormField label="Nomor Rekening*" id="nomorRekening" type="text" v-model="form.nomorRekening" variant="numeric"
       :maxlength="10" placeholder="Masukkan Nomor Rekening Anda" required
       @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" /> -->
-    <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
+    <!-- <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
       variant="numeric" :maxlength="10" placeholder="Masukkan Nomor Rekening" required @blur="handleNomorRekeningBlur"
       :error="nomorRekeningError"
-      :hint="nomorRekeningError ? 'Nomor rekening yang Anda masukkan tidak valid. Silakan periksa kembali.' : ''" />
+      :hint="nomorRekeningError ? 'Nomor rekening yang Anda masukkan tidak valid. Silakan periksa kembali.' : ''" /> -->
+
+    <FormField class="mb-2" label="Nomor Rekening Tabungan Universal*" id="nomorRekening" v-model="form.nomorRekening"
+      variant="numeric" :maxlength="10" placeholder="Masukkan Nomor Rekening" required @input="handleNomorRekeningInput"
+      @blur="handleNomorRekeningBlur" :error="nomorRekeningError"
+      :hint="nomorRekeningError ? 'Nomor rekening tidak valid. Silakan periksa kembali' : ''" />
 
 
     <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
@@ -85,6 +90,8 @@ export default {
       isModalError: false,
       isModalErrorEmail: false,
       isWhatsAppOpenCoolingDown: false,
+      validBranchCodes: [],
+      isFetchingBranches: false,
       modalContent: [
         {
           label: "Konfirmasi Pembukaan Deposito",
@@ -116,7 +123,8 @@ export default {
   computed: {
     isButtonDisabled() {
       const namaLengkapValid = this.form.namaLengkap && /^[^\d]+$/.test(this.form.namaLengkap);
-      return !(namaLengkapValid && !this.emailError && !this.phoneError && this.form.tandaPengenal && this.form.nomorRekening && !this.nomorRekeningError);
+      const nomorRekeningValid = this.form.nomorRekening && this.validateNomorRekening(this.form.nomorRekening);
+      return !(namaLengkapValid && !this.emailError && !this.phoneError && this.form.tandaPengenal && nomorRekeningValid && !this.nomorRekeningError);
     },
   },
 
@@ -136,9 +144,45 @@ export default {
   },
 
   methods: {
+    async fetchBranchCodes() {
+      this.isFetchingBranches = true;
+      try {
+        const response = await api.get("/list-branch", {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.status === 200 && response.data && response.data.branch) {
+          this.validBranchCodes = response.data.branch.map(branch => branch.branch_code);
+          console.log("Valid Branch Codes:", this.validBranchCodes);
+        } else {
+          console.error("Gagal mengambil daftar cabang, status:", response.status, "data:", response.data);
+          // Handle error, maybe show an alert to the user
+        }
+      } catch (error) {
+        console.error("Error fetching branch codes:", error);
+        // Handle network/server error
+      } finally {
+        this.isFetchingBranches = false;
+      }
+    },
+
     validateNomorRekening(nomorRekening) {
-      const cleanedNomor = String(nomorRekening).replace(/\D/g, '');
-      return /^\d{10}$/.test(cleanedNomor);
+      // Pastikan panjang 10 digit
+      if (!/^\d{10}$/.test(nomorRekening)) {
+        return false;
+      }
+
+      // Ambil 3 digit pertama
+      const branchCode = nomorRekening.substring(0, 3);
+
+      // Periksa apakah branchCode ada di daftar validBranchCodes
+      const isValidBranchCode = this.validBranchCodes.includes(branchCode);
+
+      if (!isValidBranchCode) {
+        console.warn(`Branch code '${branchCode}' from rekening number is not valid.`);
+      }
+
+      return isValidBranchCode; // Mengembalikan true hanya jika panjang dan branch code valid
     },
 
     handleNomorRekeningBlur() {
@@ -198,25 +242,13 @@ export default {
     },
 
     handleCloseModal() {
-      this.isModalErrorEmail = false;
+      // this.isModalErrorEmail = false;
+      this.$router.push("/");
     },
 
     handleModalClose() {
       this.isModalError = false;
     },
-
-    // async fetchData() {
-    //   try {
-    //     const response = await axios.get("https://testapi.io/api/daffa/request-email-verification");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
-    //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // },
 
     async handleSubmit() {
       if (this.emailError) {
@@ -316,9 +348,9 @@ export default {
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        if (error.response.data.message.replace(/ .*/, '') === "liveness" || error.response.data.message.replace(/ .*/, '') === "Verifikasi") {
+          subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
         } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
@@ -333,7 +365,7 @@ export default {
 
   mounted() {
     this.$emit("update-progress", 15);
-    // this.fetchBranches();
+    this.fetchBranchCodes();
   },
 
   created() {

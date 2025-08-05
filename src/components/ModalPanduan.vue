@@ -3,19 +3,19 @@
         <div
             class="w-sm max-w-sm flex flex-col bg-white rounded-2xl p-10 border border-neutral-200 relative mx-4 sm:mx-auto">
             <div class="text-left">
-                <h3 class="text-2xl font-semibold text-primary dark:text-white items-center">
+                <h3 class="text-2xl font-semibold text-primary  items-center">
                     Panduan {{ documentTypeText }}
                 </h3>
-                <p class="text-neutral-800 dark:text-gray-300 mt-2">
-                    Pastikan hal berikut saat {{ documentTypeText }}:
+                <p class="text-neutral-800  mt-2">
+                    Pastikan hal berikut saat {{ documentTypeTextSub }}:
                 </p>
             </div>
 
             <div class="mt-4 space-y-4">
                 <div v-for="(guide, index) in guideList" :key="index"
-                    class="flex items-center bg-gray-100 p-3 rounded-lg dark:bg-gray-800">
+                    class="flex items-center bg-gray-100 p-3 rounded-lg">
                     <img :src="guide.icon" :alt="guide.text" class="w-6 h-6 mr-3" />
-                    <p class="text-gray-800 dark:text-gray-300 text-sm">{{ guide.text }}</p>
+                    <p class="text-gray-800 text-sm">{{ guide.text }}</p>
                 </div>
             </div>
 
@@ -35,7 +35,7 @@
 
                 <div>
                     <FormField v-model="userInput" placeholder="Masukkan Captcha" label="" id=""
-                        :hint="isValid ? 'Captcha tidak valid, silahkan periksa kembali' : ''" :error="isValid"
+                        :hint="isValid ? 'Captcha tidak valid, silakan periksa kembali' : ''" :error="isValid"
                         class="mb--4" />
                 </div>
             </div>
@@ -119,7 +119,18 @@ export default {
                 ktp: "Upload e-KTP",
                 npwp: "Upload NPWP",
                 tandaTangan: "Upload Tanda Tangan",
-                fotoDiri: "Upload Foto Diri",
+                // fotoDiri: "Upload Foto Diri",
+                fotoDiri: "Ambil Foto Wajah",
+            };
+            return textMap[this.documentType] || "Dokumen";
+        },
+        documentTypeTextSub() {
+            const textMap = {
+                ktp: "Upload e-KTP",
+                npwp: "Upload NPWP",
+                tandaTangan: "Upload Tanda Tangan",
+                // fotoDiri: "Upload Foto Diri",
+                fotoDiri: "ambil foto wajah Anda",
             };
             return textMap[this.documentType] || "Dokumen";
         },

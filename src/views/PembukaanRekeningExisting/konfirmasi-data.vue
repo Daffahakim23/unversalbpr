@@ -65,26 +65,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div v-for="(file, key) in uploadedFiles" :key="key" :class="[
-          'flex flex-row items-center justify-between p-4 border rounded-lg hover:shadow-md relative',
-          file
-            ? 'bg-semantic/success-100 border-semantic/success-600'
-            : 'bg-neutral-100 border-primary-100',
-        ]">
-          <div class="flex items-center">
-            <img :src="getFileIcon(key)" :alt="formatFileLabel(key)" class="h-12 mr-4" />
-            <span class="text-sm font-medium" :class="file ? 'text-semantic/success-700' : 'text-neutral-900'">
-              {{ formatFileLabel(key) }}
-            </span>
-          </div>
-
-          <div>
-            <img v-if="file" src="/src/assets/success.svg" alt="Status Upload" class="h-6" />
-            <img v-else src="/src/assets/download.svg" alt="Status Upload" class="h-6" />
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <div class="border-t border-neutral-200 my-4"></div>
@@ -102,13 +82,33 @@
           <div class="form-label">Nomor Handphone</div>
           <strong class="form-value">0{{ formPribadi.phone }}</strong>
         </div>
-        <div class="form-item" v-if="formPribadi.tujuan">
+        <div class="form-item">
           <div class="form-label">Tujuan Simpanan</div>
-          <strong class="form-value">{{ formPribadi.tujuan }}</strong>
+          <strong class="form-value">
+            <template v-if="formPribadi.tujuan === 'Lainnya'">
+              {{ formPribadi.tujuanLainnya || '-' }}
+            </template>
+            <template v-else-if="formPribadi.tujuan">
+              {{ formPribadi.tujuan }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
-        <div class="form-item" v-if="formPribadi.sumberDana">
+        <div class="form-item">
           <div class="form-label">Sumber Dana</div>
-          <strong class="form-value">{{ formPribadi.sumberDana }}</strong>
+          <strong class="form-value">
+            <template v-if="formPribadi.sumberDana === 'Lainnya'">
+              {{ formPribadi.sumberDanaLainnya || '-' }}
+            </template>
+            <template v-else-if="formPribadi.sumberDana">
+              {{ formPribadi.sumberDana }}
+            </template>
+            <template v-else>
+              -
+            </template>
+          </strong>
         </div>
       </div>
     </div>
@@ -217,24 +217,27 @@
       <h1 class="text-base sm:text-base md:text-xl font-semibold text-primary text-left mb-4">
         Pernyataan dan Persetujuan Nasabah
       </h1>
-      <div class="space-y-3 text-neutral-900 text-sm">
+      <div class="space-y-3 text-neutral-900 text-sm text-justify">
         <p>
           Dengan ini, saya/kami menyatakan bahwa:
         </p>
         <ul class="list-decimal list-outside ml-4 text-neutral-900 space-y-2">
-          <li>Data Nasabah yang diisikan dalam Formulir Pembukaan Rekening baru pada PT BPR Universal (selanjutnya
-            disebut "Bank") ini adalah data yang sebenar-benarnya.</li>
-          <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang kami berikan dalam formulir Data Nasabah
-            ini.</li>
-          <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik Produk Bank yang akan saya/kami
-            manfaatkan dan saya telah mengerti serta memahami segala konsekuensi pemanfaatan Produk Bank, termasuk
+          <li>Seluruh data yang Saya isi dalam Layanan E-Form PT BPR Universal (selanjutnya disebut sebagai “Bank”)
+            adalah
+            benar dan merupakan data terbaru.</li>
+          <li>Bank dapat melakukan pemeriksaan terhadap kebenaran data yang Saya berikan dalam Layanan E-Form ini.</li>
+          <li>Bank telah memberikan penjelasan yang cukup mengenai karakteristik produk/fasilitas/layanan Bank yang akan
+            Saya manfaatkan dan Saya telah menerima serta memahami segala konsekuensi pemanfaatan produk Bank, termasuk
             manfaat, risiko, dan biaya-biaya yang melekat pada produk Bank tersebut.</li>
-          <li>Saya/kami telah menerima, membaca, mengerti, dan menyetujui isi Ketentuan Umum dan Persyaratan Pembukaan
-            Rekening baru. Untuk itu dengan ini saya/kami menyatakan tunduk dan terikat dengan ketentuan-ketentuan
-            tersebut, serta ketentuan lain terkait produk/fasilitas yang saya/kami pilih yang berlaku di Bank beserta
-            segala bentuk perubahannya yang akan diberitahukan dengan sarana yang ditetapkan Bank.</li>
-          <li>Saya/kami memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan atau penutupan rekening,
-            apabila menurut pertimbangan Bank :
+          <li>Dengan menekan tombol “Saya Setuju dan Mengerti”, Saya telah menerima, membaca, mengerti dan menyetujui
+            isi
+            Ketentuan dan Persyaratan Pembukaan Rekening (ditampilkan pada Layanan E-Form Universal BPR). Untuk itu
+            dengan
+            ini Saya menyatakan tunduk dan terikat dengan ketentuan-ketentuan yang berlaku, serta ketentuan lain terkait
+            produk/fasilitas/layanan yang Saya pilih yang berlaku di Bank beserta segala bentuk perubahannya di kemudian
+            hari, yang akan diberitahukan melalui sarana yang ditetapkan Bank.</li>
+          <li>Saya memberi hak dan wewenang kepada Bank untuk melakukan pemblokiran dan/atau penutupan Rekening, apabila
+            menurut pertimbangan Bank:
             <ul class="list-disc list-outside ml-4 mt-2 space-y-1">
               <li>Saya/kami tidak mematuhi ketentuan Prinsip Mengenal Nasabah <span class="italic">(Knowing Your
                   Customer)</span>.</li>
@@ -242,6 +245,35 @@
               <li>Saya/kami menyalahgunakan rekening.</li>
             </ul>
           </li>
+          <li>Saya setuju dan memberikan kuasa kepada Bank untuk mendebet dan/atau mengkredit rekening “<i>default</i>” Saya
+            sesuai
+            dengan data yang telah diisi pada Layanan E-Form dan tidak akan membatalkan secara sepihak.</li>
+          <li>Saya menyatakan setuju dan bersedia menerima risiko apabila produk/fasilitas/layanan Bank yang saya pilih,
+            tidak memenuhi ketentuan penjaminan simpanan yang ditetapkan oleh LPS.</li>
+          <li>Saya memberikan izin dan wewenang kepada Bank untuk melanjutkan data Saya kepada pihak yang bekerjasama
+            dengan
+            Bank, dalam rangka namun tidak terbatas pada kegiatan pemasaran Bank maupun peningkatan layanan Bank, dengan
+            ketentuan bahwa pihak tersebut telah mengikatkan diri untuk menjaga kerahasiaan data yang
+            diterima/diproses/digunakan.</li>
+          <li>Saya dengan ini menyatakan telah membaca, memahami, dan menyetujui Syarat dan Ketentuan Layanan
+            Penyelenggara
+            Sertifikasi Elektronik serta menjamin keakuratan data pribadi Saya untuk diproses lebih lanjut oleh PT
+            Indonesia
+            Digital Identity sebagai mitra dari Bank untuk
+            keperluan penerbitan dan pengelolaan sertifikat elektronik.</li>
+          <li>Saya menyatakan bahwa Tanda Tangan Digital yang Saya bubuhkan melalui Layanan E-Form menggunakan
+            Sertifikat
+            Elektronik yang diterbitkan oleh Penyelenggara Sertifikasi Elektronik (PSrE) PT Indonesia Digital Identity
+            memiliki kekuatan hukum yang sah dan mengikat, serta dianggap setara dengan tanda tangan basah atau perintah
+            tertulis yang ditandatangani secara fisik.</li>
+          <li> Saya setuju Bank dapat memperoleh, menggunakan, mengelola, dan menyimpan data biometrik Saya, termasuk
+            namun
+            tidak
+            terbatas pada pemanfaatan dokumen identitas diri Saya, <i>face recognition</i>, teknologi Tanda Tangan Digital,
+            rekaman
+            suara, untuk tujuan verifikasi identitas Saya dalam memproses Pembukaan Rekening yang Saya ajukan melalui
+            Layanan
+            E-Form berdasarkan ketentuan peraturan perundang-undangan yang berlaku.</li>
         </ul>
       </div>
     </div>
@@ -262,12 +294,13 @@
     </div> -->
 
     <div class="mt-2">
-      <CustomCheckbox v-model="agreement1" labelText="Saya telah menyetujui pernyataan dan persetujuan di atas" />
+      <CustomCheckbox v-model="agreement1"
+        labelText="Dengan ini Saya menyatakan telah membaca dan menyetujui seluruh isi pernyataan dan persetujuan nasabah di atas." />
     </div>
 
     <div class="mt-2">
       <CustomCheckbox v-model="agreement2"
-        labelText="Nasabah bersedia mendapatkan informasi tambahan melalui email,SMS, Whatsapp, dan lainnya*" />
+        labelText="Saya bersedia mendapatkan informasi tambahan melalui email, SMS, Whatsapp, dan lainnya*" />
     </div>
 
     <div class="flex justify-between mt-6">

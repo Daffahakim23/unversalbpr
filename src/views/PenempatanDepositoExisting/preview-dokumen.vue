@@ -19,7 +19,7 @@
           <img src="@/assets/upload-dokumen.svg" alt="Tambah Dokumen" class="h-16 sm:h-24 md:h-32 lg:h-48 mt-12">
           <div class="flex flex-col md:flex-row mt-12 justify-between w-full px-4 md:px-16 gap-y-4 md:gap-x-8">
             <ButtonComponent variant="ghost" @click="startWebcamDokumen" class="w-full md:w-auto">
-              Gunakan Foto
+              Ambil Foto
             </ButtonComponent>
             <ButtonComponent variant="ghost" @click="openFilePicker" class="w-full md:w-auto">
               Upload Gambar
@@ -119,9 +119,9 @@
             maxlength="20" />
         </div>
         <img :src="fileUrl" alt="Preview Dokumen" class="w-full rounded-lg" @error="handleFileNotFound" />
-          <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
-            {{ flagMessage }}
-          </Flagbox>
+        <Flagbox v-if="showFlag" :type="flagType" class="mt-4 !font-normal">
+          {{ flagMessage }}
+        </Flagbox>
         <div v-if="documentType === 'tandaTangan'" class="flex items-baseline mt-4">
           <div class="mt-2">
             <CustomCheckbox v-model="isAgreementChecked"
@@ -138,8 +138,8 @@
 
       <div class="mt-6 flex justify-between" v-if="documentType !== 'fotoDiri' && fileUrl">
         <!-- <ButtonComponent variant="outline" @click="reuploadFile">Upload Ulang</ButtonComponent> -->
-        <ButtonComponent variant="outline" @click="changeFile">Ulangi</ButtonComponent>
-        <ButtonComponent @click="saveFile" :disabled="isSubmitting || isButtonDisabled || isUploading">
+        <ButtonComponent variant="outline" @click="changeFile">Foto Ulang</ButtonComponent>
+        <ButtonComponent @click="saveFile" :disabled="isSubmitting || isButtonDisabled || isUploading || isDataFail">
           {{ isSubmitting ? "Mengirim..." : "Simpan" }}
         </ButtonComponent>
       </div>
@@ -148,6 +148,9 @@
     <input type="file" ref="fileInput" class="hidden" @change="handleFileUpload" accept="image/*" />
     <ModalError :isOpen="isModalError" :features="modalContent" icon="data-failed-illus.svg"
       @close="isModalError = false" @buttonClick1="retakePhoto" @buttonClick2="handleModalErrorClose" />
+    <ModalError :isOpen="isModalErrorLiveness" :features="modalContent" icon="data-failed-illus.svg"
+      @close="isModalError = false" @buttonClick1="handleButtonClick1(modalContent[0])"
+      @buttonClick2="handleButtonClick2(modalContent[0])" />
     <Toaster :type="toasterType" :message="toasterMessage" :show="showToaster" @close="closeToaster" />
   </div>
 </template>
@@ -218,7 +221,7 @@ export default {
         ktp: "Foto e-KTP",
         npwp: "Foto NPWP",
         tandaTangan: "Foto Tanda Tangan",
-        fotoDiri: "Upload Foto Diri",
+        fotoDiri: "Ambil Foto Wajah",
       };
       return textMap[this.documentType] || "Dokumen";
     },
@@ -322,6 +325,8 @@ export default {
         // window.location.reload();
       } else if (feature.buttonString1 === "Coba Lagi") {
         isModalErrorLiveness.value = false;
+      } else if (feature.buttonString1 === "Beranda") {
+        router.push({ path: "/" });
       }
     };
 
@@ -334,6 +339,8 @@ export default {
         router.push({ path: "/" });
       } else if (feature.buttonString2 === "Batal" || feature.buttonString2 === "Tutup") {
         isModalErrorLiveness.value = false;
+      } else if (feature.buttonString2 === "Beranda") {
+        router.push({ path: "/" });
       }
     };
 
@@ -475,7 +482,7 @@ export default {
         if (!documentType.value || !fileStore.uuid) {
           showFlag.value = true;
           flagType.value = 'warning';
-          flagMessage.value = "User ID tidak ditemukan silahkan ulangi pengisian data dari awal.";
+          flagMessage.value = "User ID tidak ditemukan silakan ulangi pengisian data dari awal.";
           isDataFail.value = true
           return;
         }
@@ -537,9 +544,9 @@ export default {
           let subtitle = "Periksa kembali koneksi internet Anda";
           let buttons = ["Coba Lagi", "Hubungi Universal Care"];
           if (livenessFailuresCount.value >= maxLivenessFailures) {
-            title = "Akun Anda dibatasi";
-            subtitle = "Verifikasi tidak dapat dilanjutkan karena telah melewati batas percobaan harian. Silakan coba kembali besok atau hubungi Universal Care untuk bantuan lebih lanjut.";
-            buttons = ["Hubungi Universal Care"];
+            title = "Alamat Email Dibatasi Sementara";
+            subtitle = "Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.";
+            buttons = ["Hubungi Universal Care", "Beranda"];
             livenessFailuresCount.value = 0;
             showErrorModalLiveness(title, subtitle, buttons);
           }
@@ -620,6 +627,8 @@ export default {
       this.photoUrl = null;
       this.fileUrl = null;
       this.showInitialUI = true;
+      this.isDataFail = false;
+      this.showFlag = false;
       if (this.$refs.fileInput) {
         this.$refs.fileInput.value = null;
       }
@@ -750,7 +759,7 @@ export default {
         if (!this.documentType || !this.fileStore.uuid) {
           this.showFlag = true;
           this.flagType = "warning";
-          this.flagMessage = "User ID tidak ditemukan silahkan ulangi pengisian data dari awal.";
+          this.flagMessage = "User ID tidak ditemukan silakan ulangi pengisian data dari awal.";
           return;
         }
         console.log(`📤 Mengunggah file untuk: ${this.documentType}`);
@@ -833,6 +842,7 @@ export default {
           this.isDataFail = true;
           this.flagMessage = error.response?.data?.message;
         } else if (this.documentType === "ktp") {
+          this.isDataFail = true;
           this.flagMessage = "Verifikasi e-KTP gagal. Pastikan gambar e-KTP jelas dan terbaca.";
         } else if (this.documentType === "npwp") {
           this.flagMessage = "Verifikasi NPWP gagal. Pastikan gambar NPWP jelas dan terbaca.";
@@ -854,6 +864,7 @@ export default {
       this.isClicking = true;
       this.isAgreementChecked = false;
       this.showFlag = false;
+      this.isDataFail = false;
 
       setTimeout(() => {
         this.$refs.fileInput.click();

@@ -9,7 +9,7 @@
     <!-- <div v-else> -->
     <form @submit.prevent="handleSubmit">
       <FormField label="Nomor Deposito*" id="nomorRekeningDeposito" v-model="form.nomorRekeningDeposito"
-        placeholder="Masukkan Nomor Rekening Deposito Anda" required :maxlength="12"
+        variant="alphanumeric" placeholder="Masukkan Nomor Rekening Deposito Anda" required :maxlength="12"
         @input="form.nomorRekening = form.nomorRekening.replace(/\D/g, '')" />
 
       <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
@@ -218,6 +218,7 @@ export default {
 
         const finalData = {
           ...this.requestData,
+          uuid: this.fileStore.uuid,
           syarat_ketentuan: true,
           dek_pajak_indo: true,
           dek_pajak_amerika: true,
@@ -240,24 +241,13 @@ export default {
           fileStore.setEmail(this.requestData.alamat_email);
           fileStore.setNoHP(this.requestData.no_hp);
 
-          this.$router.push({
-            path: "/dashboard/verifikasiEmailPencairanDeposito",
-          });
+          this.$router.push({ path: "/dashboard/verifikasiEmailPencairanDeposito", });
+          // this.$router.push({path: "/dashboard/uploadDokumenPencairanDeposito"});
+
         } else {
           console.error("Gagal mengirim data, status:", response.status);
         }
       } catch (error) {
-        console.error("Terjadi error saat mengirim data:", error);
-        if (error.response) {
-          console.error("Detail error response:", error.response.data);
-          console.error("Status error response:", error.response.status);
-          console.error("Headers error response:", error.response.headers);
-        } else if (error.request) {
-          console.error("Tidak ada response dari server:", error.request);
-        } else {
-          console.error("Error saat menyiapkan request:", error.message);
-        }
-
         let subtitle = "";
         let modalTitle = "Terjadi Kesalahan";
         let modalIcon = "otp-error-illus.svg";
@@ -266,15 +256,15 @@ export default {
 
         if (error.response && error.response.data && error.response.data.message) {
           this.temporaryBanMessage = error.response.data.message;
-          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 Menit Kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
           modalTitle = "Alamat Email Dibatasi Sementara";
           modalIcon = "data-failed-illus.svg";
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        if (error.response.data.message.replace(/ .*/, '') === "liveness" || error.response.data.message.replace(/ .*/, '') === "Verifikasi") {
+          subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
         } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";

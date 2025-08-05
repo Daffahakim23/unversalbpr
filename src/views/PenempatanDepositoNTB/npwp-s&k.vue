@@ -70,7 +70,7 @@ export default {
             const requestData = {
                 // uuid: "abc8dc93-b21c-4644-9c26-c9cfdb57f1ab",
                 uuid: fileStore.uuid || "",
-                s_k_nasabah_npwp: this.form.npwp == 1,
+                s_k_nasabah_npwp: this.form.npwp == 2,
                 s_k_nasabah_npwp_suami: this.form.npwp2 === "SUAMI",
                 s_k_nasabah_npwp_penerima_manfaat: this.form.npwp2 === "PEMILIK_MANFAAT",
             };
@@ -83,6 +83,7 @@ export default {
                 });
                 console.log("Response:", response.data);
                 fileStore.setFormDataNPWP(this.form);
+                fileStore.setNpwp(this.form);
                 fileStore.isNpwpUploaded = true;
                 this.$router.push({ path: "/dashboard/uploadDokumenPenempatanDepositoNTB" });
             } catch (error) {

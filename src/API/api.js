@@ -12,9 +12,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-    // baseURL: "http://10.14.237.130:8001/api",
-    baseURLQA : "https://10.14.237.130:1903/api",
+    baseURL: "http://10.14.237.130:8001/api",  // Dev
+    // baseURL: "https://10.14.237.130:3000/api", // QA
     // baseURL: "/api",
+
 
     timeout: 10000, // Contoh timeout
     headers: {

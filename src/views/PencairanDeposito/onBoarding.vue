@@ -43,38 +43,7 @@
                             <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini"
                                 class="h-10 hidden md:block" />
                         </button>
-                        <div id="dropdown"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
-                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownDefaultButton">
-                                <li>
-                                    <a @click="downloadProductDetails" download="info-produk.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
-                                        Produk</a>
-                                </li>
-                                <li>
-                                    <a @click="downloadSK" download="syarat-ketentuan.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
-                                        &
-                                        Ketentuan</a>
-                                </li>
-                                <li>
-                                    <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
-                                        Privasi</a>
-                                </li>
-                                <li>
-                                    <a @click="downloadFAQ" download="FAQ.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
-                                    </a>
-                                </li>
-                                <li>
-                                    <a @click="downloadTentang" download="Tentang.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <DropdownMenu />
                         <button class="flex items-center text-primary" @click="openWhatsApp">
                             <img src="@/assets/customer-service-icon.svg" alt="Universal Care"
                                 class="h-8 md:h-10 lg:h-10" />
@@ -86,7 +55,7 @@
                 <div class="text-center sm:text-center">
                     <h1
                         class="text-2xl xs:text-2xl sm:text-3xl md:text-4xl mb-4 mt-8 mx-8 md:mx-14 font-medium leading-">
-                        Selamat Datang Nasabah di Layanan Permohonan Penutupan Deposito
+                        Selamat Datang di Layanan E-Form Instruksi Penutupan Deposito
                     </h1>
                     <p class="text-sm sm:text-base md:text-xl mx-8 md:mx-14 text-neutral-600 font-semibold ">
                         Nikmati kemudahan melakukan transaksi tanpa batasan tempat.
@@ -181,6 +150,7 @@ import tentangKamiPdf from '@/assets/Tentang.pdf';
 import ButtonComponent from "@/components/button.vue";
 import { useRoute, useRouter } from 'vue-router';
 import { useFileStore } from "@/stores/filestore";
+import DropdownMenu from '@/components/DropdownMenu.vue';
 
 export default {
     name: "MainLayout",
@@ -189,6 +159,7 @@ export default {
         Footer,
         ModalError,
         ButtonComponent,
+        DropdownMenu,
     },
     data() {
         return {
@@ -300,11 +271,48 @@ export default {
             });
         },
 
+        // async validateOtl() {
+        //     try {
+        //         const response = await api.get(`/check-otl?token=${this.token}`);
+        //         if (response.status === 200) {
+        //             this.loading = false;
+        //         } else {
+        //             this.loading = false;
+        //             this.error = true;
+        //             this.modalContent = [
+        //                 {
+        //                     label: "Terjadi Kesalahan",
+        //                     description: "Tautan tidak valid atau sudah kadaluarsa.",
+        //                     icon: "data-failed-illus.svg",
+        //                     buttonString1: "Tutup",
+        //                     buttonString2: "Hubungi Universal Care",
+        //                 },
+        //             ];
+        //         }
+        //     } catch (error) {
+        //         this.loading = false;
+        //         this.error = true;
+        //         this.modalContent = [
+        //             {
+        //                 label: "Terjadi Kesalahan",
+        //                 description: "Tautan tidak valid atau sudah kadaluarsa.",
+        //                 icon: "/src/assets/data-failed-illus.svg",
+        //                 buttonString1: "Tutup",
+        //                 buttonString2: "Hubungi Universal Care",
+        //             },
+        //         ];
+        //         console.error("Error validating OTL:", error);
+        //     }
+        // },
+
         async validateOtl() {
             try {
                 const response = await api.get(`/check-otl?token=${this.token}`);
                 if (response.status === 200) {
                     this.loading = false;
+                    if (response.data && response.data.penalty) {
+                        this.fileStore.setPenalty(response.data.penalty);// For debugging
+                    }
                 } else {
                     this.loading = false;
                     this.error = true;

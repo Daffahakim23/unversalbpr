@@ -28,7 +28,7 @@
           </div>
           <div v-if="feature.dokumen" class="mt-4">
             <img src="@/assets/document-divider-icon.svg" class="h-1 sm:h-1 md:h-1" />
-            <p class="text-base sm:text-base md:text-base lg:text-base text-neutral-900 mt-3 font-semibold">
+            <p class="text-sm sm:text-sm md:text-base lg:text-base text-neutral-900 mt-3 font-semibold">
               Hal-hal yang diperlukan
             </p>
             <div class="flex lg:flex-row gap-2 flex-wrap">
@@ -48,7 +48,7 @@
     <div v-if="buttonString" class="flex mt-auto w-full">
       <div @click="handleBtnClick"
         class="w-full bg-white hover:bg-primary  hover:text-white text-primary flex items-center justify-between border-2 border-grey px-4 py-4 rounded-full cursor-pointer">
-        <p class="ml-3 font-medium text-base sm:text-base md:text-base lg:text-base"> {{
+        <p class="ml-3 font-medium text-sm sm:text-sm md:text-base lg:text-base"> {{
           buttonString }}
         </p>
         <img src="@/assets/right-arrow-circle-orange.svg" alt="Arrow Icon" class="h-6 sm:h-6 md:h-6 lg:h-6 ml-auto" />

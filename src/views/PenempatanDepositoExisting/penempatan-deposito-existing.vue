@@ -22,11 +22,6 @@
       :isDropdown="true" v-model="form.produkDeposito" placeholder="Pilih Produk Deposito yang Anda Inginkan"
       :options="produkDepositoOptions" required />
 
-    <!-- <FormField v-if="form.memilikiTabungan == 2" class="mb-2" label="Nomor Rekening Tabungan Universal*"
-      id="nomorRekening" v-model="form.nomorRekeningPemilik" variant="numeric" maxlength="10"
-      placeholder="Masukkan Nomor Rekening" required
-      @input="form.nomorRekeningPemilik = form.nomorRekeningPemilik.replace(/\D/g, '')" /> -->
-
     <FormField v-if="form.memilikiTabungan == 2" class="mb-2" label="Nomor Rekening Tabungan Universal*"
       id="nomorRekening" v-model="form.nomorRekeningPemilik" variant="numeric" :maxlength="10"
       placeholder="Masukkan Nomor Rekening" required
@@ -45,36 +40,10 @@
       :isDropdown="true" v-model="form.produkDeposito" placeholder="Pilih Produk Deposito yang Anda Inginkan"
       :options="produkDepositoOptions" required />
 
-
-    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekeningPemilik"
-      variant="numeric" maxlength="16" placeholder="Masukkan Nomor Rekening" required
-      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Jaringan Kantor Pembukaan Bank."
-      @input="form.nomorRekeningPemilik = form.nomorRekeningPemilik.replace(/\D/g, '')" /> -->
-
     <FlagBox type="info" closable class="mb-4">
       <p class="text-sm font-normal">Informasi mengenai Produk dan Layanan dapat diakses melalui website
         universalbpr.co.id atau dengan mengklik tombol "Info Produk" di bagian atas halaman ini.</p>
     </FlagBox>
-
-    <!-- <FormField class="mb-2" label="Nomor Rekening *" id="nomorRekening" type="text" v-model="form.nomorRekeningPemilik"
-      placeholder="Masukkan Nomor Rekening" required :readonly="form.belumPunyaRekening"
-      @input="handleNomorRekeningInput"
-      hint="*Jika Anda belum memiliki Rekening Tabungan, silakan melanjutkan pemilihan Jaringan Kantor Pembukaan Bank." /> -->
-
-    <!-- <div class="flex items-center mb-6">
-      <input type="checkbox" id="belumPunyaRekening" v-model="form.belumPunyaRekening" @change="handleCheckboxChange"
-        class="mr-2" />
-      <label for="belumPunyaRekening" class="text-sm font-semibold text-neutral-800 cursor-pointer">
-        Belum Punya Rekening Tabungan Universal
-      </label>
-    </div> -->
-
-    <!-- <FormField v-if="form.belumPunyaRekening" label="Pilih Jaringan Kantor *" id="kantorCabang" :isDropdown="true"
-      v-model="form.kantorCabang" placeholder="Pilih Jaringan Kantor" :options="kantorCabangOptions" required />
-    <div v-if="form.kantorCabang" class="mt-4">
-      <FormField label="Alamat Jaringan Kantor Pembukaan Rekening" id="alamatKantorCabang"
-        v-model="form.alamatKantorCabang" :readonly="true" />
-    </div> -->
 
     <FormField label="Email *" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
       :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
@@ -99,7 +68,7 @@
 
     <div v-if="form.sumberDana === '0'" class="">
       <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" type="text" v-model="form.sumberDanaLainnya"
-        placeholder="Masukkan Sumber Penghasilan Lainnya" variant="alpha" />
+        placeholder="Masukkan Sumber Dana Lainnya" variant="alpha" />
     </div>
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" type="text" variant="alpha"
@@ -256,11 +225,7 @@ export default {
         return `https://web.whatsapp.com/send?phone=${number}`;
       }
     },
-    // openWhatsApp() {
-    //   if (this.whatsappContact.whatsapp) {
-    //     window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
-    //   }
-    // },
+
     openWhatsApp() {
       if (this.whatsappContact && this.whatsappContact.whatsapp && !this.isWhatsAppOpenCoolingDown) {
         console.log("openWhatsApp dipanggil!");
@@ -300,7 +265,7 @@ export default {
       this.form.memilikiTabungan = '';
     },
     handleCloseModal() {
-      this.isModalErrorEmail = false;
+      this.$router.push("/");
     },
 
     validateNomorRekening(nomorRekening) {
@@ -311,9 +276,6 @@ export default {
       if (this.form.nomorRekeningPemilik) {
         this.nomorRekeningError = !this.validateNomorRekening(this.form.nomorRekeningPemilik);
       } else {
-        // Jika field kosong tapi required, ini akan ditangani oleh `required` bawaan browser/komponen
-        // Atau Anda bisa set error di sini jika kosong
-        this.nomorRekeningError = false; // Biarkan `required` yang menangani jika kosong
       }
     },
     handleNomorRekeningInput() {
@@ -414,27 +376,33 @@ export default {
         let button1 = "Tutup";
         let button2 = "Hubungi Universal Care";
 
-        if (error.response && error.response.data && error.response.data.message) {
-          this.temporaryBanMessage = error.response.data.message;
-          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
-          modalTitle = "Alamat Email Dibatasi Sementara";
-          modalIcon = "data-failed-illus.svg";
+        const errorMessage = error.response && error.response.data && error.response.data.message;
+
+        if (errorMessage) { 
+          this.temporaryBanMessage = errorMessage; 
+
+          if (errorMessage.replace(/ .*/, '') === "liveness" || errorMessage.replace(/ .*/, '') === "Verifikasi") {
+            subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+            modalTitle = "Verifikasi Wajah Gagal"; 
+            modalIcon = "data-failed-illus.svg"; 
+          } else if (errorMessage.replace(/ .*/, '') === "fraud") {
+            subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+            modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+          } else { 
+            subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+            modalTitle = "Alamat Email Dibatasi Sementara";
+            modalIcon = "data-failed-illus.svg";
+          }
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        }
-        this.isModalError = false;
+
+        this.isModalError = false; 
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
       } finally {
         this.isSubmitting = false;
       }
-    }
+    },
   },
 
   watch: {

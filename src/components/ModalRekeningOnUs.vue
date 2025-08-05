@@ -141,7 +141,7 @@ export default {
             }
         },
         resetForm() {
-            this.form = new FormModelPenempatanDeposito("BPR Universal",),
+            this.form = new FormModelPenempatanDeposito("Universal BPR",),
                 this.rekeningDitemukan = false;
             this.rekeningData = {
                 account_bank: "",

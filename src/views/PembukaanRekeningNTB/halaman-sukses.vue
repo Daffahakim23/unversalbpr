@@ -14,14 +14,12 @@
     <div class="py-4">
       <h3 class="text-md sm:text-md md:text-base font-semibold mb-3">Informasi Penting</h3>
       <ul class="list-disc pl-8 space-y-2 text-sm sm:text-sm md:text-sm">
-        <li>Verifikasi data Anda akan segera dilakukan oleh Petugas Bank</li>
-        <li>
-          Pastikan no. Handphone Anda aktif dan dapat dihubungi untuk tambahan verifikasi via telepon oleh Petugas Bank
-          kami jika diperlukan
-        </li>
-        <li>
-          Harap cek email Anda secara berkala untuk pembaharuan informasi
-        </li>
+        <li>Hari kerja layanan E-Form yaitu Senin s/d Jumat.</li>
+        <li>Verifikasi data Anda akan segera dilakukan oleh Petugas Bank.</li>
+        <li>Pengajuan Pembukaan Rekening Tabungan di atas pukul 15.00 WIB akan diproses pada hari kerja berikutnya.</li>
+        <li>Apabila diperlukan konfirmasi tambahan, Bank akan menghubungi Anda melalui nomor resmi Universal BPR di
+          (021-2221-3993). Oleh karena itu, pastikan nomor ponsel Anda aktif dan dapat dihubungi.</li>
+        <li>Harap cek email Anda secara berkala untuk pembaharuan informasi.</li>
       </ul>
     </div>
 
@@ -61,8 +59,14 @@
       </div>
 
       <p class="text-sm my-4">
-        Sebagai contoh,apabila tanggal lahir Anda adalah 23 Januari 2000 maka gunakan 230100 sebagai kata sandi untuk
+        Sebagai contoh, apabila tanggal lahir Anda adalah 23 Januari 2000 maka gunakan 230100 sebagai kata sandi untuk
         membuka dokumen Anda.
+      </p>
+
+      <p class="text-sm my-4">
+        Untuk membuka folder ZIP ini, Anda dapat menggunakan aplikasi kompresi arsip yang umum tersedia seperti WinRAR,
+        7-Zip, ZArchiver, atau perangkat lunak sejenis lainnya. Panduan cara membuka file ZIP dapat Anda lihat melalui
+        tautan FAQ berikut: (diberikan link menuju hal FAQ). Tolong diperhatikan diberikan link ke halaman FAQ ya.
       </p>
 
       <p class="text-sm my-4">

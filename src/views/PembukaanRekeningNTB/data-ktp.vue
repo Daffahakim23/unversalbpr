@@ -5,7 +5,7 @@
       :hint="nikError ? 'NIK tidak valid (harus antara 16 sampai 20 digit angka).' : ''" />
 
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
-      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
+      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silakan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" required variant="alpha" placeholder="Masukkan Nama Lengkap Anda" />
 
     <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir" required

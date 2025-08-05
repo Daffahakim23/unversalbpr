@@ -2,7 +2,7 @@
   <div class="bg-neutral-white min-h-screen flex flex-col">
     <div class="flex items-center justify-between my-6 mx-10">
       <div class="flex text-center">
-        <button @click="goToHome">
+        <button @click="goBack">
           <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 sm:h-12 md:h-12" />
         </button>
       </div>
@@ -12,86 +12,7 @@
           <img src="@/assets/info-mini-icon.svg" alt="Info Produk" class="h-8 block md:hidden" />
           <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini" class="h-10 hidden md:block" />
         </button>
-        <div id="main-dropdown"
-          class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
-          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="mainDropdownButton">
-            <!-- <li>
-                <a @click="downloadProductDetails" download="info-produk.pdf"
-                  class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
-                  Produk</a>
-              </li> -->
-            <li>
-              <button id="nestedDropdownButton" data-dropdown-toggle="nested-dropdown"
-                data-dropdown-placement="right-start" type="button"
-                class="px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex justify-between items-center w-full">Info
-                Produk<svg class="w-2.5 h-2.5 ms-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  fill="none" viewBox="0 0 6 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m1 9 4-4-4-4" />
-                </svg></button>
-              <div id="nested-dropdown"
-                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="nestedDropdownButton">
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPembukaanRekeningNTB')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Rekening Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPembukaanRekeningExisting')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Rekening Non-Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPenempatanDepositoNTB')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Deposito Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPenempatanDepositoExisting')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Deposito Non-Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPencairanDeposito')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Penutupan
-                      Deposito</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPemindahbukuan')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Transfer</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPengkinianData')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pengkinian
-                      Data</a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <a @click="downloadSK" download="syarat-ketentuan.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
-                &
-                Ketentuan</a>
-            </li>
-            <li>
-              <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
-                Privasi</a>
-            </li>
-            <li>
-              <a @click="downloadFAQ" download="FAQ.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
-              </a>
-            </li>
-            <li>
-              <a @click="downloadTentang" download="Tentang.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
-              </a>
-            </li>
-          </ul>
-        </div>
+        <DropdownMenu />
         <button class="flex items-center text-primary" @click="openWhatsApp">
           <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 md:h-10 lg:h-10" />
         </button>
@@ -102,7 +23,7 @@
     <div class="flex-grow flex flex-col items-center p-10 bg-neutral-50">
       <div class="flex flex-col justify-center w-full">
         <div class="flex flex-col mb-10">
-          <Header headerText="Selamat Datang Di E-Form Universal BPR"
+          <Header headerText="Selamat Datang Di Layanan E-Form Universal BPR"
             bodyText="Akses berbagai layanan Universal BPR kapan saja, di mana saja!" />
         </div>
       </div>
@@ -251,6 +172,8 @@ import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
 import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
 import faqPdf from '@/assets/FAQ.pdf';
 import tentangKamiPdf from '@/assets/Tentang.pdf';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import { initDropdowns } from 'flowbite';
 
 var userType = '';
 
@@ -263,6 +186,7 @@ export default {
     document.addEventListener('click', this.handleClickOutside);
     import('flowbite').then(() => {
     });
+    initDropdowns();
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
@@ -367,6 +291,7 @@ export default {
     Card,
     Footer,
     CSModal,
+    DropdownMenu
   },
 
 };

@@ -133,6 +133,16 @@ export default {
     };
   },
   computed: {
+    isButtonDisabled() {
+      // Cek apakah detail penerima sudah diisi
+      const isRecipientFilled = this.form.namaLengkap && this.form.nomorRekening && this.form.namaBank;
+
+      // Cek apakah metode transfer sudah dipilih
+      const isTransferMethodSelected = this.selectedTransferMethod !== null;
+
+      // Tombol akan disabled jika salah satu kondisi di atas tidak terpenuhi
+      return !(isRecipientFilled && isTransferMethodSelected);
+    },
     formattedNominal: {
       get() {
         return this.form.nominal !== null && this.form.nominal !== undefined
@@ -157,14 +167,6 @@ export default {
         return [];
       }
     },
-
-    // isButtonDisabled() {
-    //   return !(
-    //     this.form.namaBank &&
-    //     this.form.nomorRekening &&
-    //     this.form.namaPemilikRekening
-    //   );
-    // },
 
     formattedBunga() {
       const nominal = parseFloat(this.form.nominal) || 0;
@@ -319,7 +321,8 @@ export default {
 
         const metodeTransferValue = selectedMethodObject ? selectedMethodObject.value : null;
         const metodeTransferName = selectedMethodObject ? selectedMethodObject.name : null;
-        const metodeTransferFee = selectedMethodObject ? selectedMethodObject.fee : null;
+        // const metodeTransferFee = selectedMethodObject ? selectedMethodObject.fee : null;
+        const metodeTransferFee = selectedMethodObject ? parseFloat(selectedMethodObject.fee) : null;
 
         const requestData = {
           uuid: uuid,
@@ -327,6 +330,7 @@ export default {
           nomor_rekening: this.form.nomorRekening,
           nama_pemilik: this.form.namaPemilikRekening,
           metode_transfer: metodeTransferValue,
+          biaya_transfer: metodeTransferFee
         };
 
         console.log("Request data:", requestData);

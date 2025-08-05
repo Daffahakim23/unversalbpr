@@ -21,8 +21,8 @@
     <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui Universal BPR?*"
       :options="sumberDataNasabahOptions" v-model="form.sumber" name="sumber" />
     <div v-if="form.sumber === '0'">
-      <FormField label="Lainnya*" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder="Masukkan Sumber Informasi Lainnya"
-        :required="true" />
+      <FormField label="Lainnya*" id="otherSource" type="text" v-model="form.sumberLainnya"
+        placeholder="Masukkan Sumber Informasi Lainnya" :required="true" />
     </div>
 
     <div class="text-right">
@@ -191,7 +191,8 @@ export default {
       this.isModalError = false;
     },
     handleCloseModal() {
-      this.isModalErrorEmail = false;
+      // this.isModalErrorEmail = false;
+      this.$router.push("/");
     },
 
     async handleSubmit() {
@@ -275,13 +276,13 @@ export default {
           this.temporaryBanMessage = error.response.data.message;
           subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
           modalTitle = "Alamat Email Dibatasi Sementara";
-          modalIcon = "data-failed-illus.svg"; // Ganti ikon jika sesuai
+          modalIcon = "data-failed-illus.svg";
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        if (error.response.data.message.replace(/ .*/, '') === "Verifikasi") {
+          subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
         } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";

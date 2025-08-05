@@ -1,10 +1,9 @@
 <template>
-  <div class="flex flex-col h-screen bg-neutral-50 overflow-hidden">
-    <div class="bg-neutral-white p-6 flex items-center justify-between">
-
+  <div class="bg-neutral-white min-h-screen flex flex-col">
+    <div class="flex items-center justify-between my-6 mx-10">
       <div class="flex text-center">
-        <button @click="isModalError = true">
-          <img src="@/assets/LogoBPR.png" alt="Logo" class="h-10 hidden md:block" />
+        <button @click="goBack">
+          <img src="@/assets/LogoBPR.png" alt="Logo" class="h-12 sm:h-12 md:h-12" />
         </button>
       </div>
 
@@ -13,81 +12,7 @@
           <img src="@/assets/info-mini-icon.svg" alt="Info Produk" class="h-8 block md:hidden" />
           <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini" class="h-10 hidden md:block" />
         </button>
-        <div id="main-dropdown"
-          class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
-          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="mainDropdownButton">
-            <li>
-              <button id="nestedDropdownButton" data-dropdown-toggle="nested-dropdown"
-                data-dropdown-placement="right-start" type="button"
-                class="px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex justify-between items-center w-full">Info
-                Produk<svg class="w-2.5 h-2.5 ms-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  fill="none" viewBox="0 0 6 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m1 9 4-4-4-4" />
-                </svg></button>
-              <div id="nested-dropdown"
-                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="nestedDropdownButton">
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPembukaanRekeningNTB')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Rekening Non-Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPembukaanRekeningExisting')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Rekening Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPenempatanDepositoNTB')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Deposito Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPenempatanDepositoExisting')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pembukaan
-                      Deposito Non-Nasabah</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPencairanDeposito')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Penutupan
-                      Deposito</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPemindahbukuan')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Transfer</a>
-                  </li>
-                  <li>
-                    <a @click="$router.push('/dashboard/infoProdukPengkinianData')"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pengkinian
-                      Data</a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <a @click="downloadSK" download="syarat-ketentuan.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
-                &
-                Ketentuan</a>
-            </li>
-            <li>
-              <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
-                Privasi</a>
-            </li>
-            <li>
-              <a @click="downloadFAQ" download="FAQ.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
-              </a>
-            </li>
-            <li>
-              <a @click="downloadTentang" download="Tentang.pdf"
-                class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
-              </a>
-            </li>
-          </ul>
-        </div>
+        <DropdownMenu />
         <button class="flex items-center text-primary" @click="openWhatsApp">
           <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 md:h-10 lg:h-10" />
         </button>
@@ -95,24 +20,27 @@
     </div>
 
     <div class="flex-grow flex flex-col">
-      <div class="w-full rounded-full h-1.5">
-        <div class="bg-secondary-base h-1.5 rounded-r-full" :style="{ width: progress + '%' }"></div>
-      </div>
       <div class="flex items-start">
-        <div class="container mx-auto py-9">
-          <div class="rounded-xl max-w-5xl mx-auto bg-neutral-white py-9 px-10 shadow-md">
-            <p class="text-sm text-gray-600 text-center">
-              Info Produk
-            </p>
-            <div class="flex flex-col mb-6 gap-2">
-              <div class="flex items-center">
+        <div class="container py-9">
+          <div class="rounded-xl max-w-full bg-neutral-white px-10">
+            <div class="flex flex-col mb-10 gap-1">
+              <div class="flex items-center relative">
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2">
+                  <button @click="kembali"
+                    class="flex items-center text-primary font-semibold hover:text-primary-900 transition-colors">
+                    <i class="fas fa-arrow-left mr-0 md:mr-2"></i>
+                    <span class="sr-only md:not-sr-only">Kembali</span>
+                  </button>
+                </div>
                 <div class="flex justify-center w-full">
-                  <h2 class="text-lg sm:text-lg md:text-xl font-semibold text-primary text-center">
+                  <h2 class="text-lg md:text-xl lg:text-2xl font-bold text-primary text-center">
                     {{ pageTitle }}</h2>
                 </div>
               </div>
             </div>
-            <router-view @update-progress="updateProgress" @set-cancel-route="setCancelRoute" />
+            <div>
+              <router-view @update-progress="updateProgress" @set-cancel-route="setCancelRoute" />
+            </div>
           </div>
         </div>
       </div>
@@ -131,19 +59,22 @@ import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
 import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
 import faqPdf from '@/assets/FAQ.pdf';
 import tentangKamiPdf from '@/assets/Tentang.pdf';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import { initDropdowns } from 'flowbite';
 
 export default {
   name: "MainLayout",
   components: {
     ModalError,
+    DropdownMenu
   },
   data() {
     return {
       isInfoProductDropdownOpen: false,
-      isInfoDropdownOpen: false, 
+      isInfoDropdownOpen: false,
       pageTitle: "",
       pageSubtitle: "",
-      featureTitle: "", 
+      featureTitle: "",
       progress: 0,
       isModalError: false,
       modalContent: [
@@ -188,8 +119,6 @@ export default {
         window.open(this.getWhatsAppLink(this.whatsappContact.whatsapp), '_blank');
       }
     },
-    // Hapus setNavbarConfig(config) { ... }
-    // Hapus resetNavbarConfig(route) { ... }
     toggleInfoProductDropdown() {
       this.isInfoProductDropdownOpen = !this.isInfoProductDropdownOpen;
     },
@@ -202,21 +131,14 @@ export default {
       this.isModalError = false;
     },
     goBack() {
-      window.location.href = "/"; // Ini adalah goBack yang dipanggil dari modal error
+      window.location.href = "/";
+    },
+    kembali() {
+      this.$router.go(-1);
     },
     setCancelRoute(route) {
       this.cancelRoute = route;
     },
-    // goBack2() { // Tombol "Batalkan" sudah dihapus dari UI, jadi method ini mungkin tidak perlu lagi
-    //   if (this.cancelRoute) {
-    //     this.$router.push(this.cancelRoute);
-    //   } else {
-    //     this.$router.back();
-    //   }
-    // },
-    // goToHome() { // Tombol logo BPR kini memanggil isModalError = true, method ini mungkin tidak perlu lagi
-    //   this.$router.push("/");
-    // },
     updatePageTitle(route) {
       this.featureTitle = route.meta.feature || "";
       this.pageTitle = typeof route.meta.title === 'function' ? route.meta.title(route) : route.meta.title || "";
@@ -276,6 +198,7 @@ export default {
     document.addEventListener('click', this.handleClickOutside);
     import('flowbite').then(() => {
     });
+    initDropdowns();
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);

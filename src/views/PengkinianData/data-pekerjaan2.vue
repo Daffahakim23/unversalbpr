@@ -17,8 +17,8 @@
                 :options="penghasilanOptions" placeholder="Pilih Sumber Penghasilan Anda" />
 
             <div v-if="form.penghasilan === 'lainnya'" class="">
-                <FormField label="penghasilan Lainnya *" id="penghasilanLainnya" type="text"
-                    v-model="form.penghasilanLainnya" placeholder="Masukkan Sumber Penghasilan Lainnya" />
+                <FormField label="Sumber Dana Lainnya *" id="penghasilanLainnya" type="text"
+                    v-model="form.penghasilanLainnya" placeholder="Masukkan Sumber Dana Lainnya" />
             </div>
 
             <FormField label="Penghasilan Perbulan*" id="jumlahPenghasilan" :isDropdown="true"
@@ -74,10 +74,10 @@
             <FormField label="Nomor Telepon Kantor (Opsional)" id="nomorTeleponKantorDK"
                 v-model="form.nomorTeleponKantorDK" placeholder="Masukkan Nomor Telepon Kantor Anda" />
 
-            <FormField label="Nomor Telepon Fax (Opsional)" id="nomorTeleponFaxDK" v-model="form.nomorTeleponFaxDK"
-                placeholder="Masukkan Nomor Telepon Fax Anda" />
+            <FormField label="Nomor Fax Kantor (Opsional)" id="nomorTeleponFaxDK" v-model="form.nomorTeleponFaxDK"
+                placeholder="Masukkan Nomor Fax Kantor Anda" />
 
-            <RadioButtonChoose label="Alamat korespondensi/Pengiriman Surat Menyurat*" :options="korespondensiOptions"
+            <RadioButtonChoose label="Alamat Korespondensi Surat Menyurat*" :options="korespondensiOptions"
                 v-model="form.korespondensi" name="korespondensi" />
         </div>
 
@@ -91,13 +91,13 @@
                 melakukan pengendalian akhir dari transaksi yang dilakukan
             </p>
 
-            <FormField label="Hubungan Nasabah*" id="hubunganNasabahBO" :isDropdown="true"
+            <FormField label="Hubungan dengan Nasabah*" id="hubunganNasabahBO" :isDropdown="true"
                 :options="hubunganNasabahOptions" v-model="form.hubunganNasabahBO"
-                placeholder="Pilih Hubungan Nasabah" />
+                placeholder="Pilih Hubungan dengan Nasabah" />
 
             <div v-if="form.hubunganNasabahBO === 'lainnya'" class="">
-                <FormField label="Hubungan Nasabah Lainnya *" id="hubunganNasabahLainnyaBO" type="text"
-                    v-model="form.hubunganNasabahLainnyaBO" placeholder="Masukkan Hubungan Nasabah Lainnya" />
+                <FormField label="Hubungan dengan Nasabah Lainnya *" id="hubunganNasabahLainnyaBO" type="text"
+                    v-model="form.hubunganNasabahLainnyaBO" placeholder="Masukkan Hubungan dengan Nasabah Lainnya" />
 
             </div>
             <FormField label="Jenis Identitas*" id="jenisIdentitasBO" :isDropdown="true"
@@ -121,17 +121,19 @@
             <FormField label="Nama Lengkap*" id="namaLengkapBO" :isDropdown="false" v-model="form.namaLengkapBO"
                 placeholder="Masukkan Nama Lengkap Beneficial Owner Anda" />
 
-                <div v-if="form.jenisIdentitasBO === '1'" class="">
-        <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
-          v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
-          :required="true" variant="numeric" :maxlength="20" />
-      </div>
+            <div v-if="form.jenisIdentitasBO === '1'" class="">
+                <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
+                    v-model="form.nomorDokumenIdentitasBO"
+                    placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda" :required="true"
+                    variant="numeric" :maxlength="20" />
+            </div>
 
-      <div v-if="form.jenisIdentitasBO === '2'" class="">
-        <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
-          v-model="form.nomorDokumenIdentitasBO" placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda"
-          :required="true" variant="alphanumeric" :maxlength="20" />
-      </div>
+            <div v-if="form.jenisIdentitasBO === '2'" class="">
+                <FormField label="Nomor Dokumen Identitas*" id="nomorDokumenIdentitasBO" :isDropdown="false"
+                    v-model="form.nomorDokumenIdentitasBO"
+                    placeholder="Masukkan Nomor Dokumen Identitas Beneficial Owner Anda" :required="true"
+                    variant="alphanumeric" :maxlength="20" />
+            </div>
 
             <FormField label="Detail Alamat Tempat Tinggal Terkini*" id="alamatBO" v-model="form.alamatBO"
                 placeholder="Masukkan Alamat Beneficial Owner Anda" />
@@ -163,8 +165,8 @@
             <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosBO"
                 placeholder="Masukkan Kode Pos Beneficial Owner Anda" />
 
-            <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO" variant="alpha"
-                placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" />
+            <FormField label="Tempat Lahir*" id="tempatLahirBO" :isDropdown="false" v-model="form.tempatLahirBO"
+                variant="alpha" placeholder="Masukkan Tempat Lahir Beneficial Owner Anda" />
 
             <FormField label="Tanggal Lahir*" id="tanggalLahirBO" type="date" v-model="form.tanggalLahirBO"
                 placeholder="Pilih Tanggal Lahir Beneficial Owner Anda" />
@@ -191,10 +193,10 @@
                 placeholder="Masukkan Alamat Perusahaan Beneficial Owner Anda" />
 
             <div class="flex flex-row gap-4">
-                <FormField label="Kota*" id="kotaBO" v-model="form.kotaPerusahaanBO"
+                <FormField label="Kota Perusahaan*" id="kotaBO" v-model="form.kotaPerusahaanBO"
                     placeholder="Masukkan Kota Perusahaan" class="flex-1" />
 
-                <FormField label="Kode Pos*" id="kodePosBO" v-model="form.kodePosPerusahaanBO" type="Number"
+                <FormField label="Kode Pos Perusahaan*" id="kodePosBO" v-model="form.kodePosPerusahaanBO" type="Number"
                     placeholder="Masukkan Kode Pos Perusahaan" class="flex-1" />
 
             </div>
@@ -219,7 +221,7 @@
 
             <div v-if="form.penghasilanBO === 'lainnya'" class="">
                 <FormField label="Sumber Dana Lainnya *" id="penghasilanLainnyaBO" type="text"
-                    placeholder="Masukkan Penghasilan Lainnya" v-model="form.penghasilanLainnyaBO" />
+                    placeholder="Masukkan Sumber Dana Lainnya" v-model="form.penghasilanLainnyaBO" />
 
             </div>
             <FormField label="Penghasilan Perbulan*" id="jumlahPenghasilanBO" :isDropdown="true"
@@ -233,9 +235,7 @@
                 <input type="checkbox" v-model="form.pernyataanChecked"
                     class="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded-sm focus:ring-primary dark:focus:ring-primary dark:ring-offset-neutral-800 focus:ring-2 dark:bg-primary dark:border-neutral-600">
                 <div class="flex flex-col items-start pt-0">
-                    <p class="ml-2 mt-0 text-neutral-900 text-xs sm:text-sm md:text-sm">Dengan menandatangani aplikasi
-                        ini,
-                        saya/kami menyatakan bahwa:</p>
+                    <p class="ml-2 mt-0 text-neutral-900 text-xs sm:text-sm md:text-sm">Saya/kami menyatakan bahwa:</p>
                     <ul class="list-decimal list-outside text-neutral-900 text-xs sm:text-sm md:text-sm space-y-2 ml-6">
                         <li>Data Beneficial Owner yang diisikan dalam Formulir Beneficial Owner ini adalah data yang
                             sebenar-benarnya dan sebagai ketentuan untuk melakukan transaksi/pembukaan rekening di PT
@@ -281,8 +281,8 @@
             v-model="form.namaLengkapKD" placeholder="Masukkan Nama Lengkap Kontak Darurat" />
 
         <FormField label="Hubungan dengan Pemohon*" id="hubunganDenganPemohonKD" :options="hubunganPemohonKDOptions"
-            :isDropdown="true" placeholder="Pilih Hubungan dengan Pemohon Kontak Darurat"
-            v-model="form.hubunganPemohonKD" name="hubunganPemohonKD" />
+            variant="alpha" placeholder="Pilih Hubungan dengan Pemohon Kontak Darurat" v-model="form.hubunganPemohonKD"
+            name="hubunganPemohonKD" />
 
         <div v-if="form.hubunganPemohonKD === 'lainnya'" class="">
             <FormField label="Hubungan dengan Pemohon Lainnya *" id="hubunganPemohonKDLainnya" type="text"
@@ -292,8 +292,8 @@
         <FormField label="Alamat Terkini Kontak Darurat*" id="alamatKD" :isDropdown="false" v-model="form.alamatKD"
             placeholder="Masukkan Alamat Kontak Darurat" />
 
-        <FormField label="Nomor Telepon Kontak Darurat*" id="nomorTeleponKD" v-model="form.nomorTeleponKD" type="Number"
-            placeholder="Masukkan Nomor Telepon Kontak Darurat" />
+        <FormField label="Nomor Telepon Kontak Darurat*" id="nomorTeleponKD" v-model="form.nomorTeleponKD"
+            variant="numeric" placeholder="Masukkan Nomor Telepon Kontak Darurat" />
 
         <div class="flex justify-between mt-6">
             <ButtonComponent variant="outline" @click="goBack">Kembali</ButtonComponent>

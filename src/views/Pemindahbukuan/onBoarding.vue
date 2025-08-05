@@ -20,7 +20,7 @@
                             <img src="@/assets/home-icon.svg" alt="Logo" class="h-8 md:h-8 lg:h-10 mr-2" />
                             <p class="text-sm sm:text-md md:text-md font-semibold text-left hidden sm:block">{{
                                 featureTitle
-                                }}</p>
+                            }}</p>
                         </button>
                     </div>
 
@@ -43,41 +43,11 @@
                             <img src="@/assets/info-product-icon.svg" alt="Info Produk Mini"
                                 class="h-10 hidden md:block" />
                         </button>
-                        <div id="dropdown"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 shadow-primary-100 ">
-                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownDefaultButton">
-                                <li>
-                                    <a @click="downloadProductDetails" download="info-produk.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Info
-                                        Produk</a>
-                                </li>
-                                <li>
-                                    <a @click="downloadSK" download="syarat-ketentuan.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Syarat
-                                        &
-                                        Ketentuan</a>
-                                </li>
-                                <li>
-                                    <a @click="downloadKP" download="Kebijakan-Privasi.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Kebijakan
-                                        Privasi</a>
-                                </li>
-                                <li>
-                                    <a @click="downloadFAQ" download="FAQ.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ
-                                    </a>
-                                </li>
-                                <li>
-                                    <a @click="downloadTentang" download="Tentang.pdf"
-                                        class="block px-4 py-2 font-medium text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tentang
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <DropdownMenu />
                         <button class="flex items-center text-primary" @click="openWhatsApp">
-            <img src="@/assets/customer-service-icon.svg" alt="Universal Care" class="h-8 md:h-10 lg:h-10" />
-          </button>
+                            <img src="@/assets/customer-service-icon.svg" alt="Universal Care"
+                                class="h-8 md:h-10 lg:h-10" />
+                        </button>
                     </div>
                 </div>
             </div>
@@ -178,6 +148,7 @@ import tentangKamiPdf from '@/assets/Tentang.pdf';
 import ButtonComponent from "@/components/button.vue";
 import { useRoute, useRouter } from 'vue-router';
 import { useFileStore } from "@/stores/filestore";
+import DropdownMenu from '@/components/DropdownMenu.vue';
 
 export default {
     name: "MainLayout",
@@ -186,6 +157,7 @@ export default {
         Footer,
         ModalError,
         ButtonComponent,
+        DropdownMenu,
     },
     data() {
         return {
@@ -221,7 +193,7 @@ export default {
                 whatsapp: "+622122213993",
             },
             cancelRoute: null,
-            navbarConfig: { 
+            navbarConfig: {
                 showBackButton: false,
                 showInfoButton: true,
                 showLogoBPR: true,
@@ -286,7 +258,7 @@ export default {
                     buttonString2: btnString2,
                 },
             ];
-            this.error = true; 
+            this.error = true;
             this.loading = false;
         },
         async startDepositClosure() {

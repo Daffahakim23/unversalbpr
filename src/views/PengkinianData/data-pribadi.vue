@@ -8,34 +8,49 @@
 
     <FormField label="Pilih Hobi (Opsional)" id="hobi" :isDropdown="true" v-model="form.hobi" :options="hobiOptions"
       placeholder="Pilih Hobi" />
+    <div v-if="form.hobi === '0'">
+      <FormField label="Hobi Lainnya*" id="otherSource" type="text" v-model="form.hobiLainnya"
+        placeholder="Masukkan Hobi Lainnya" :required="true" />
+    </div>
 
-    <RadioButtonChoose label="Apakah Anda ingin mengubah No. Telepon Anda? (Opsional)" :options="trueFalseOptions"
+    <RadioButtonChoose label="Apakah Anda ingin mengubah No. Handphone Anda? (Opsional)" :options="trueFalseOptions"
       v-model="form.ubahNoTelepon" name="ubahNoTelepon" />
 
     <div v-if="form.ubahNoTelepon === true" class="mt-4">
-      <FormField label="Detail Nomor Telepon Terikini*" id="nomorTelepon" v-model="form.nomorTelepon" variant="numeric"
-        :maxlength="13" placeholder="Masukkan Nomor Telepon Terkini" />
+      <FormField label="Nomor Handphone*" id="phone" type="phone" v-model="form.phone" variant="phone"
+        placeholder="Masukkan nomor handphone Anda" v-model:selectedCountryCode="selectedCountryCode" :hint="phoneError
+          ? 'Nomor handphone tidak valid. Silakan periksa kembali.'
+          : form.phone?.startsWith('0')
+            ? 'Nomor handphone tidak valid, tidak boleh diawali dengan angka 0'
+            : 'Pastikan Anda mengisi nomor handphone yang aktif'" :error="phoneError" @blur="handlePhoneBlur" />
     </div>
 
-    <FormField label="Nomor Fax (opsional)" id="nomorFax" v-model="form.nomorFax" variant="numeric"
-      placeholder="Masukkan Nomor Fax" :maxlength="10" />
+    <!-- <FormField label="Nomor Fax (opsional)" id="nomorFax" v-model="form.nomorFax" variant="numeric"
+      placeholder="Masukkan Nomor Fax" :maxlength="10" /> -->
 
-    <FormField label="Email (Opsional)" id="email" type="email" v-model="form.email" placeholder="Masukkan Email"
-      hint="Pastikan Anda mengisi alamat email yang aktif" />
+    <FormField label="Nomor Fax (opsional)" id="nomorFax" variant="numeric" v-model="form.nomorFax" :maxlength="10"
+      placeholder="Masukkan Nomor Fax" required :error="nomorFaxError"
+      :hint="nomorFaxError ? 'Nomor Fax tidak valid. Silakan periksa kembali' : ''" />
+
+    <FormField label="Email (Opsional)" id="email" type="email" v-model="form.email" placeholder="Masukkan Email Anda"
+      :hint="emailError ? 'Alamat Email tidak valid. Silakan periksa kembali' : 'Pastikan Anda mengisi alamat email yang aktif'"
+      :error="emailError" @blur="handleEmailBlur" />
 
     <RadioButtonChoose label="Apakah alamat domisili sesuai dengan alamat E-KTP?*" :options="alamatSesuaiEktpOptions"
       v-model="form.alamatSesuaiEktp" name="alamatSesuaiEktp" />
 
-    <div v-if="form.alamatSesuaiEktp === false" class="">
-      <FormField label="Detail Alamat Tempat Tinggal Terkini*" id="alamat" v-model="form.alamat" :required="true"
+    <div v-if="form.alamatSesuaiEktp === false" class="mt-4">
+      <FormField label="Detail Alamat Tempat Tinggal Terikini*" id="alamat" v-model="form.alamat" :required="true"
         placeholder="Masukkan Alamat Anda" />
-      <div class="flex flex-row gap-4 w-full">
-        <FormField label="RT*" id="rt" v-model="form.rt" :required="true" placeholder="Masukkan RT" class="flex-1"
-          variant="numeric" :maxlength="3" />
 
-        <FormField label="RW*" id="rw" v-model="form.rw" :required="true" placeholder="Masukkan RW" class="flex-1"
-          variant="numeric" :maxlength="3" />
+      <div class="flex flex-row gap-4 w-full">
+        <FormField label="RT*" id="rt" v-model="form.rt" :required="true" placeholder="Masukkan RT" variant="numeric"
+          :maxlength="3" class="flex-1" />
+
+        <FormField label="RW*" id="rw" v-model="form.rw" :required="true" placeholder="Masukkan RW" variant="numeric"
+          :maxlength="3" class="flex-1" />
       </div>
+
       <FormField label="Provinsi*" id="provinsi" :isDropdown="true" v-model="form.provinsi" :options="provinsiOptions"
         placeholder="Pilih Provinsi" @change="fetchKabupaten" required />
 
@@ -50,8 +65,12 @@
       <FormField label="Kelurahan*" id="kelurahan" :isDropdown="true" v-model="form.kelurahan"
         :options="kelurahanOptions" placeholder="Pilih Kelurahan" :disabled="!form.kecamatan" required />
 
-      <FormField label="Kode Pos*" id="kodePos" v-model="form.kodePos" :required="true" variant="numeric" :maxlength="5"
-        placeholder="Masukkan Kode Pos" />
+      <!-- <FormField label="Kode Pos*" id="kodePos" v-model="form.kodePos" :required="true" variant="numeric"
+        placeholder="Masukkan Kode Pos" :maxlength="5" /> -->
+
+      <FormField label="Kode Pos*" id="kodePos" variant="numeric" v-model="form.kodePos" :maxlength="5"
+        placeholder="Masukkan Kode Pos" required :error="kodePosError"
+        :hint="kodePosError ? 'Kode pos tidak valid. Silakan periksa kembali' : ''" />
     </div>
 
     <div class="flex justify-between mt-6">
@@ -72,8 +91,10 @@ import ButtonComponent from "@/components/button.vue";
 import { FormModelDataPribadi } from "@/models/formModel";
 import { useFileStore } from "@/stores/filestore";
 import { pendidikanOptions, hobiOptions, alamatSesuaiEktpOptions, trueFalseOptions } from "@/data/option.js";
+import { handleFieldMixin } from "@/handler/handleField.js";
 
 export default {
+  mixins: [handleFieldMixin],
   components: { FormField, RadioButtonChoose, ButtonComponent },
   data() {
     return {
@@ -83,6 +104,9 @@ export default {
       alamatSesuaiEktpOptions,
       trueFalseOptions,
       isSubmitting: false,
+      phoneError: false,
+      emailError: false,
+      selectedCountryCode: "ID",
       fileStore: useFileStore(),
       kantorCabangOptions: [],
       kantorCabangAlamat: {},
@@ -90,6 +114,9 @@ export default {
       kabupatenOptions: [],
       kecamatanOptions: [],
       kelurahanOptions: [],
+      fileStore: useFileStore(),
+      kodePosError: false,
+      nomorFaxError: false
     };
   },
 
@@ -98,6 +125,7 @@ export default {
       const isAlamatSesuaiEktpFilled = this.form.alamatSesuaiEktp !== null;
       const isUbahNoTeleponFilled = this.form.ubahNoTelepon !== null;
       const isKodePosValid = this.form.kodePos && String(this.form.kodePos).length === 5;
+      const isOtherHobbyFilled = this.form.hobi === '0' ? this.form.hobiLainnya : true;
 
       // Kondisi wajib jika "Apakah alamat domisili sesuai dengan alamat E-KTP?" adalah False
       const isAlamatLengkapFilled =
@@ -110,21 +138,35 @@ export default {
         this.form.kelurahan &&
         isKodePosValid;
 
-      // Kondisi wajib jika "Apakah Anda ingin mengubah No. Telepon Anda?" adalah True
-      const isNomorTeleponTerisiJikaUbah = this.form.ubahNoTelepon === true ? !!this.form.nomorTelepon : true;
+      let isNomorTeleponTerisiJikaUbah = true;
+      if (this.form.ubahNoTelepon === true) {
 
-      // Kondisi awal: tombol non-aktif jika kedua pertanyaan mandatory belum dijawab
+        isNomorTeleponTerisiJikaUbah = this.form.phone && !this.phoneError; // Sekarang, true jika phoneError true, false jika phoneError false
+      }
+
+      const isEmailOptionalValid = this.form.email ? !this.emailError : true;
+
+      // Validasi awal untuk pertanyaan wajib (alamatSesuaiEktp dan ubahNoTelepon harus dijawab)
       if (!isAlamatSesuaiEktpFilled || !isUbahNoTeleponFilled) {
-        return true;
+        return true; // Disabled jika belum dijawab
       }
 
-      // Kondisi jika alamat tidak sesuai E-KTP
+      // Validasi khusus untuk kondisi "alamat tidak sesuai E-KTP"
       if (this.form.alamatSesuaiEktp === false) {
-        return !isAlamatLengkapFilled;
+        if (!isAlamatLengkapFilled) {
+          return true; // Disabled jika alamat tidak lengkap
+        }
       }
 
-      // Kondisi jika ingin mengubah nomor telepon
-      return !(isNomorTeleponTerisiJikaUbah && this.form.alamatSesuaiEktp);
+      // Gabungkan semua kondisi untuk menentukan apakah form secara keseluruhan valid (enabled)
+      const allConditionsMet =
+        isAlamatSesuaiEktpFilled &&
+        isUbahNoTeleponFilled &&
+        (this.form.alamatSesuaiEktp === true || (this.form.alamatSesuaiEktp === false && isAlamatLengkapFilled)) &&
+        isNomorTeleponTerisiJikaUbah && isOtherHobbyFilled &&
+        isEmailOptionalValid;
+
+      return !allConditionsMet;
     },
   },
 
@@ -133,11 +175,10 @@ export default {
       if (!newProvinsi) {
         this.form.kabupaten = "";
         this.form.kecamatan = "";
-        this.form.kelurahan = ""; // Tambahkan reset kelurahan juga
-        this.form.kodePos = "";     // Tambahkan reset kode pos juga
+        this.form.kelurahan = "";
         this.kabupatenOptions = [];
         this.kecamatanOptions = [];
-        this.kelurahanOptions = []; // Tambahkan reset options kelurahan
+        this.kelurahanOptions = [];
       } else {
         this.fetchKabupaten();
       }
@@ -145,10 +186,9 @@ export default {
     "form.kabupaten": function (newKabupaten) {
       if (!newKabupaten) {
         this.form.kecamatan = "";
-        this.form.kelurahan = ""; // Tambahkan reset kelurahan juga
-        this.form.kodePos = "";     // Tambahkan reset kode pos juga
+        this.form.kelurahan = "";
         this.kecamatanOptions = [];
-        this.kelurahanOptions = []; // Tambahkan reset options kelurahan
+        this.kelurahanOptions = [];
       } else {
         this.fetchKecamatan();
       }
@@ -156,7 +196,6 @@ export default {
     "form.kecamatan": function (newKecamatan) {
       if (!newKecamatan) {
         this.form.kelurahan = "";
-        this.form.kodePos = "";     // Tambahkan reset kode pos juga
         this.kelurahanOptions = [];
       } else {
         this.fetchKelurahan();
@@ -164,7 +203,7 @@ export default {
     },
     "form.ubahNoTelepon": function (newVal) {
       if (!newVal) {
-        this.form.nomorTelepon = "";
+        this.form.phone = "";
       }
     },
     "form.alamatSesuaiEktp": function (newVal) {
@@ -185,32 +224,32 @@ export default {
   },
 
   methods: {
-   normalizeKabupaten(kabupaten) {
+    normalizeKabupaten(kabupaten) {
       return kabupaten.replace(/^KOTA\s*|^KABUPATEN\s*|^KAB\.\s*|^ADM\.\s*|^KOTA ADM\.\s*|^KAB\. ADM\.\s*/i, "").trim();
     },
+
     async fetchProvinsi() {
-      this.provinsiOptions = [];
-      this.kabupatenOptions = [];
       try {
         const response = await api.get("/provinsi");
+        console.log("Data provinsi diterima:", response.data); // Debugging
 
         if (response.data && response.data.provinsi) {
           this.provinsiOptions = response.data.provinsi.map(p => ({
             label: p.provinsi,
             value: p.provinsi
           }));
-          this.fetchKabupaten();
+          console.log("Provinsi options:", this.provinsiOptions);
         }
       } catch (error) {
         console.error("Gagal mengambil data provinsi:", error);
       }
     },
 
-    async fetchKabupaten() {
+    async fetchKabupatenFileStore() {
       this.kabupatenOptions = [];
       this.kecamatanOptions = [];
 
-      if (!this.form.provinsi || !this.form.kabupaten) return;
+      if (!this.form.provinsi) return;
 
       try {
         const response = await api.get(
@@ -241,6 +280,28 @@ export default {
           }
 
           this.fetchKecamatan();
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data kabupaten:", error);
+      }
+    },
+
+    async fetchKabupaten() {
+      this.kabupatenOptions = [];
+      this.kecamatanOptions = [];
+
+      if (!this.form.provinsi) return;
+
+      try {
+        const response = await api.get(`/provinsi?provinsi=${this.form.provinsi}`);
+        console.log("Data kabupaten diterima:", response.data); // Debugging
+
+        if (response.data && response.data.kabupaten) {
+          this.kabupatenOptions = response.data.kabupaten.map(k => ({
+            label: k.kabupaten,
+            value: k.kabupaten
+          }));
+          console.log("Kabupaten options:", this.kabupatenOptions);
         }
       } catch (error) {
         console.error("Gagal mengambil data kabupaten:", error);
@@ -290,31 +351,68 @@ export default {
     },
 
     async fetchData() {
-      try {
-        const fileStore = useFileStore();
-        const data = fileStore.formPribadi;
+      // Pastikan fileStore.formPribadi sudah terisi
+      const data = this.fileStore.formPribadi;
+      console.log("Data from Pinia (formPribadi):", data);
 
-        console.log("Data from Pinia:", data);
+      if (data && Object.keys(data).length > 0) { // Cek jika data ada dan tidak kosong
+        // ✨ Isi form dengan data dari Pinia
+        Object.keys(this.form).forEach((key) => {
+          if (data[key] !== undefined) {
+            this.form[key] = data[key];
+          }
+        });
 
-        if (data) {
-          Object.keys(this.form).forEach((key) => {
-            if (data[key] !== undefined) {
-              this.form[key] = data[key];
+        // ✨ Panggil fetch untuk dropdown alamat jika alamatSesuaiEktp === false dan data sudah ada
+        if (this.form.alamatSesuaiEktp === false) {
+          // Anda perlu memastikan urutan fetch-nya benar
+          // Ini akan dipicu oleh watcher pada form.provinsi, form.kabupaten, dll.
+          // Tapi untuk initial load, kita bisa panggil secara berurutan
+          if (this.form.provinsi) {
+            await this.fetchKabupatenFileStore();
+            if (this.form.kabupaten) {
+              await this.fetchKecamatan();
+              if (this.form.kecamatan) {
+                await this.fetchKelurahan();
+              }
             }
-          });
+          }
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+
+        // ✨ Panggil validasi blur secara manual jika Anda ingin error state terlihat
+        // Misalnya, jika form.phone memiliki nilai dari Pinia, validasi itu
+        if (this.form.phone) {
+          this.handlePhoneBlur(); // Untuk menginisialisasi phoneError
+        }
+        if (this.form.email) {
+          this.handleEmailBlur(); // Untuk menginisialisasi emailError
+        }
+        if (this.form.kodePos) { // Jika kodePos tidak null, panggil blur untuk validasi
+          // Asumsi FormField untuk kodePos memicu validasi onBlur
+          // Anda mungkin butuh handleKodePosBlur() terpisah jika tidak ada
+        }
+
+
+        // this.isDataFromFilestore = true; // Set flag jika diperlukan
+        console.log("Form filled from Pinia (formPribadi):", this.form);
+      } else {
+        console.log("No data found in Pinia (formPribadi) to pre-fill form.");
       }
     },
 
     // async fetchData() {
     //   try {
-    //     const response = await axios.get("https://67a0439924322f8329c5aae7.mockapi.io/data-diluar-ktp");
-    //     console.log("Response data:", response.data);
-    //     const data = Array.isArray(response.data) ? response.data[0] : response.data;
+    //     const fileStore = useFileStore();
+    //     const data = fileStore.formPribadi;
+
+    //     console.log("Data from Pinia:", data);
+
     //     if (data) {
-    //       Object.keys(this.form).forEach(key => { if (data[key] !== undefined) this.form[key] = data[key]; });
+    //       Object.keys(this.form).forEach((key) => {
+    //         if (data[key] !== undefined) {
+    //           this.form[key] = data[key];
+    //         }
+    //       });
     //     }
     //   } catch (error) {
     //     console.error("Error fetching data:", error);
@@ -339,12 +437,13 @@ export default {
 
         const requestData = {
           uuid: uuid,
+          email: this.form.email,
           nama_alias_panggilan: this.form.namaPanggilan,
           pendidikan_terakhir: Number(this.form.pendidikanTerakhir),
           hobi: Number(this.form.hobi),
-          nomor_telp: this.form.nomorTelepon,
+          hobi_lainnya: this.form.hobiLainnya,
+          nomor_telp: this.form.phone,
           nomor_fax: this.form.nomorFax,
-          email: this.form.email,
           detail_alamat: this.form.alamat,
           rt: this.form.rt,
           rw: this.form.rw,
@@ -385,6 +484,7 @@ export default {
   mounted() {
     this.$emit("update-progress", 60);
     this.fetchData();
+    // this.loadInitialDataAndDropdowns();
     this.fetchProvinsi();
     this.fetchKabupaten();
     this.fetchKecamatan();

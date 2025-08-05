@@ -5,7 +5,7 @@
       :hint="nikError ? 'NIK tidak valid (harus antara 16 sampai 20 digit angka).' : ''" />
 
     <FormField label="Nama Lengkap" id="namaLengkap" v-model="form.namaLengkap"
-      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silahkan periksa kembali' : ''" :error="namaLengkapError"
+      :hint="namaLengkapError ? 'Nama lengkap tidak valid, silakan periksa kembali' : ''" :error="namaLengkapError"
       @blur="handleNamaLengkapBlur" variant="alpha" placeholder="Masukkan Nama Lengkap Anda" required />
 
     <FormField label="Tanggal Lahir" id="tanggalLahir" type="date" v-model="form.tanggalLahir"
@@ -163,7 +163,6 @@ export default {
         return true;
       }
 
-
       const requiredFields = [
         'nik', 'namaLengkap', 'tanggalLahir', 'tempatLahir', 'jenisKelamin',
         'agama', 'alamat', 'rt', 'rw', 'provinsi', 'kabupaten',
@@ -177,6 +176,7 @@ export default {
             return true;
           }
         }
+        
         else if (field === 'masaAktifKtp') {
           if (this.form.masaAktifKtp === null || this.form.masaAktifKtp === undefined || this.form.masaAktifKtp === '') {
             return true;
@@ -370,15 +370,6 @@ export default {
         }
       }
     },
-    // goBack() {
-    //   this.$router.push({
-    //     name: "previewScreenPemindahbukuan",
-    //     query: {
-    //       documentType: "ktp",
-    //       fileUrl: this.$route.query.fileUrl,
-    //     },
-    //   });
-    // },
     goBack() {
       if (this.isDataFromFilestore == true) {
         this.$router.push({ name: "UploadDokumenPemindahbukuan" });

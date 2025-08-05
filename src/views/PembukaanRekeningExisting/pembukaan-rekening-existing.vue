@@ -34,7 +34,7 @@
 
     <div v-if="form.sumberDana === '0'" class="">
       <FormField label="Sumber Dana Lainnya *" id="sumberDanaLainnya" variant="alpha" v-model="form.sumberDanaLainnya"
-        placeholder="Masukkan Sumber Penghasilan Lainnya" />
+        placeholder="Masukkan Sumber Dana Lainnya" />
     </div>
 
     <FormField label="Nama Funding Officer (Opsional)" id="namaFundingOfficer" variant="alpha"
@@ -229,7 +229,8 @@ export default {
       this.$router.push({ path: "/dashboard/penempatanDepositoExisting" });
     },
     handleCloseModal() {
-      this.isModalErrorEmail = false;
+      // this.isModalErrorEmail = false;
+      this.$router.push("/");
     },
 
     handleModalClose() {
@@ -267,7 +268,9 @@ export default {
           alamat_email: this.form.email,
           no_hp: this.form.phone,
           tujuan_simpanan: Number(this.form.tujuan),
+          tujuan_simpanan_lainnya: this.form.tujuanLainnya,
           sumber_dana: Number(this.form.sumberDana),
+          sumber_dana_lainnya: this.form.sumberDanaLainnya,
           nama_fo: this.form.namaFundingOfficer,
           kategori_nasabah: Number("1"),
           tanggal: new Date().toISOString().split("T")[0],
@@ -337,9 +340,9 @@ export default {
         } else {
           subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
         }
-        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        if (error.response.data.message.replace(/ .*/, '') === "liveness" || error.response.data.message.replace(/ .*/, '') === "Verifikasi") {
+          subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+          modalTitle = "Alamat Email Dibatasi Sementara";
         } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
           subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
           modalTitle = "Verifikasi Data Gagal sudah mencapai limit";

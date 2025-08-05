@@ -29,7 +29,8 @@
     <RadioButtonChoose label="Dari mana Anda pertama kali mengetahui Universal BPR?*"
       :options="sumberDataNasabahOptions" v-model="form.sumber" name="sumber" />
     <div v-if="form.sumber === '0'">
-      <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya" placeholder="Masukkan Sumber Informasi Lainnya" required />
+      <FormField label="Lainnya *" id="otherSource" type="text" v-model="form.sumberLainnya"
+        placeholder="Masukkan Sumber Informasi Lainnya" required />
     </div>
 
     <div class="text-right">
@@ -168,7 +169,8 @@ export default {
       this.isModalErrorEmail = true;
     },
     handleCloseModal() {
-      this.isModalErrorEmail = false;
+      // this.isModalErrorEmail = false;
+      this.$router.push("/");
     },
 
     async handleSubmit() {
@@ -234,31 +236,81 @@ export default {
           console.error("Gagal mengirim data, status:", response.status);
         }
 
-      } catch (error) {
+      }
+      // catch (error) {
+      //   let subtitle = "";
+      //   let modalTitle = "Terjadi Kesalahan";
+      //   let modalIcon = "otp-error-illus.svg";
+      //   let button1 = "Tutup";
+      //   let button2 = "Hubungi Universal Care";
+
+      //   if (error.response && error.response.data && error.response.data.message) {
+      //     this.temporaryBanMessage = error.response.data.message;
+      //     subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+      //     modalTitle = "Alamat Email Dibatasi Sementara";
+      //     modalIcon = "data-failed-illus.svg";
+      //   } else {
+      //     subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
+      //   }
+      //   if (error.response.data.message.replace(/ .*/, '') === "liveness" || error.response.data.message.replace(/ .*/, '') === "Verifikasi Wajah") {
+      //     subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+      //     modalTitle = "Alamat Email Dibatasi Sementara";
+      //   } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
+      //     subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
+      //     modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+      //   }
+      //   this.isModalError = false;
+      //   this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
+      // } 
+      catch (error) {
         let subtitle = "";
         let modalTitle = "Terjadi Kesalahan";
         let modalIcon = "otp-error-illus.svg";
         let button1 = "Tutup";
         let button2 = "Hubungi Universal Care";
 
-        if (error.response && error.response.data && error.response.data.message) {
-          this.temporaryBanMessage = error.response.data.message;
-          subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit kedepan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
-          modalTitle = "Alamat Email Dibatasi Sementara";
-          modalIcon = "data-failed-illus.svg";
-        } else {
-          subtitle = "Terjadi kesalahan saat melanjutkan proses verifikasi. Pastikan koneksi internet Anda stabil untuk melanjutkan proses.";
+        // Safely get the error message if it exists, otherwise it's an empty string
+        const errorMessage = error?.response?.data?.message || '';
+        const firstWordOfMessage = errorMessage.replace(/ .*/, '');
+
+        // Check for specific error messages like 'liveness' or 'Verifikasi Wajah' first
+        if (firstWordOfMessage === "liveness" || firstWordOfMessage === "Verifikasi") {
+          subtitle = `Verifikasi wajah Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, silakan coba kembali dalam waktu 24 jam. Jika Anda memerlukan bantuan segera, silakan hubungi Universal Care.`;
+          modalTitle = "Verifikasi Wajah Dibatasi Sementara"; // Changed from "Alamat Email Dibatasi Sementara" for clarity
+          modalIcon = "data-failed-illus.svg"; // Assuming you want a general data failed icon for this
         }
-        if (error.response.data.message.replace(/ .*/, '') == "liveness") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
-        } else if (error.response.data.message.replace(/ .*/, '') == "fraud") {
-          subtitle = `Sehingga selama 24 jam kedepan tidak dapat melakukan pengisian e-form kembali`;
-          modalTitle = "Verifikasi Data Gagal sudah mencapai limit";
+        // Check for 'fraud' error
+        else if (firstWordOfMessage === "fraud") {
+          subtitle = `Verifikasi data Anda telah gagal melebihi batas maksimum. Untuk alasan keamanan, Anda tidak dapat melakukan pengisian e-form kembali selama 24 jam ke depan.`;
+          modalTitle = "Verifikasi Data Gagal Sudah Mencapai Limit";
+          modalIcon = "data-failed-illus.svg"; // Assuming you want a general data failed icon for this
         }
-        this.isModalError = false;
+        // Handle OTP error or other structured API errors
+        else if (errorMessage) { // If there is a message from the API response
+          // Assuming the error.response.data.message itself indicates the OTP limit
+          // You might want to refine this check if 'message' contains other things
+          if (errorMessage.includes("batas maksimum")) { // A more robust check for OTP limit
+            this.temporaryBanMessage = errorMessage; // Store the full message if needed
+            subtitle = `Kesalahan memasukkan OTP telah mencapai batas maksimum. Alamat email Anda akan dibatasi sementara untuk pengiriman OTP sampai 30 menit ke depan. Hubungi Universal Care untuk bantuan lebih lanjut.`;
+            modalTitle = "Alamat Email Dibatasi Sementara";
+            modalIcon = "data-failed-illus.svg";
+          } else {
+            // For any other specific API message not covered by liveness/fraud
+            subtitle = errorMessage; // Display the actual error message from the backend
+            modalIcon = "data-failed-illus.svg"; // Or a more generic error icon
+          }
+        }
+        // Fallback for generic errors (network issues, etc.)
+        else {
+          subtitle = "Terjadi kesalahan saat melanjutkan proses. Pastikan koneksi internet Anda stabil atau coba lagi nanti.";
+          modalIcon = "otp-error-illus.svg"; // Default icon for generic errors
+          button2 = "Hubungi Universal Care"; // Keep the button for generic errors
+        }
+
+        this.isModalError = true; // Make sure the modal is set to open
         this.showErrorModal(modalTitle, subtitle, button1, button2, modalIcon);
-      } finally {
+      }
+      finally {
         this.isSubmitting = false;
       }
     },

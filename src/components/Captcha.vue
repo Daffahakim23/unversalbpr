@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between">
         <p class="text-sm font-medium text-neutral-900">Masukkan kode berikut:</p>
         <button @click="closeModal"
-          class="text-neutral-800 hover:bg-gray-200 hover:text-gray-900 rounded-lg  dark:hover:bg-gray-600 dark:hover:text-white">&times;</button>
+          class="text-neutral-800 hover:bg-gray-200 hover:text-gray-900 rounded-lg   ">&times;</button>
       </div>
       <div class="captcha-box bg-neutral-100">
         <span class="font-bold text-lg">{{ captcha }}</span>

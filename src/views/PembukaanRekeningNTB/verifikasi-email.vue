@@ -11,7 +11,8 @@
           @keydown.backspace="handleBackspace(index, $event)" />
       </div>
 
-      <p v-if="errorMessage" class="text-semantic/error-400 text-center mb-4">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-semantic/error-400 text-center mb-4">{{ errorMessage }} ({{ otpErrorCount }}/5)
+      </p>
       <p class="text-base text-neutral-700 text-center">
         Masukkan kode OTP yang sudah kami kirimkan melalui email <strong>{{ email }}</strong>.
       </p>
@@ -34,9 +35,13 @@
         {{ isResending ? "Mengirim..." : `Belum dapat kode? Kirim Ulang Kode (${resendCount}/3)` }}
       </p> -->
 
-      <p class="text-primary mt-4 cursor-pointer" @click="resendOTP"
+      <p class="text-regular text-neutral-700 text-center mt-4 ">
+        Belum dapat kode OTP / Kode OTP Kadaluarsa?
+      </p>
+
+      <p class="text-primary mt-2 cursor-pointer" @click="resendOTP"
         :class="{ 'opacity-50 pointer-events-none': isResending || countdown > 0 }">
-        {{ isResending ? "Mengirim..." : `Belum dapat kode? Kirim Ulang Kode (${resendCount}/3)` }}
+        {{ isResending ? "Mengirim..." : `Kirim Ulang Kode (${resendCount}/3)` }}
       </p>
 
       <!-- <ButtonComponent
