@@ -48,7 +48,7 @@
 <script>
 import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
 import syaratKetentuanPdf from '@/assets/SYARAT-KETENTUAN.pdf';
-import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
+import kebijakanPrivasiPdf from '@/assets/KEBIJAKAN-PRIVASI.pdf';
 import faqPdf from '@/assets/FAQ.pdf';
 import tentangKamiPdf from '@/assets/Tentang.pdf';
 

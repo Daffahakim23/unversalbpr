@@ -56,7 +56,7 @@ import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/account-icon.svg";
 import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
 import syaratKetentuanPdf from '@/assets/SYARAT-KETENTUAN.pdf';
-import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
+import kebijakanPrivasiPdf from '@/assets/KEBIJAKAN-PRIVASI.pdf';
 import faqPdf from '@/assets/FAQ.pdf';
 import tentangKamiPdf from '@/assets/Tentang.pdf';
 import DropdownMenu from '@/components/DropdownMenu.vue';
