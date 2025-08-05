@@ -63,7 +63,7 @@ import Section from "@/components/Section.vue";
 import Card from "@/components/Card.vue";
 import Footer from "@/components/Footer.vue";
 import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
-import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
+import syaratKetentuanPdf from '@/assets/SYARAT-KETENTUAN.pdf';
 import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
 import faqPdf from '@/assets/FAQ.pdf';
 import tentangKamiPdf from '@/assets/Tentang.pdf';
