@@ -20,7 +20,7 @@
                             <img src="@/assets/home-icon.svg" alt="Logo" class="h-8 md:h-8 lg:h-10 mr-2" />
                             <p class="text-sm sm:text-md md:text-md font-semibold text-left hidden sm:block">{{
                                 featureTitle
-                            }}</p>
+                                }}</p>
                         </button>
                     </div>
 
@@ -141,7 +141,7 @@ import Footer from "@/components/Footer.vue";
 import ModalError from "@/components/ModalError.vue";
 import errorIcon from "@/assets/account-icon.svg";
 import infoProdukPdf from '@/assets/INFO-PRODUK.pdf';
-import syaratKetentuanPdf from '@/assets/syarat-ketentuan.pdf';
+import syaratKetentuanPdf from '@/assets/SYARAT-KETENTUAN.pdf';
 import kebijakanPrivasiPdf from '@/assets/kebijakan-privasi.pdf';
 import faqPdf from '@/assets/FAQ.pdf';
 import tentangKamiPdf from '@/assets/Tentang.pdf';
