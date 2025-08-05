@@ -31,7 +31,7 @@
           <img src="@/assets/Youtube.png" alt="YouTube" class="h-6" />
         </a>
         <a href="https://www.facebook.com/universalbpr/about/" target="_blank" rel="noopener noreferrer">
-          <img src="@/assets/Facebook.png" alt="Facebook" class="h-6" />
+          <img src="@/assets/facebook.png" alt="Facebook" class="h-6" />
         </a>
         <a href="https://www.universalbpr.co.id/" target="_blank" rel="noopener noreferrer">
           <img src="@/assets/Website.png" alt="Website" class="h-6" />
